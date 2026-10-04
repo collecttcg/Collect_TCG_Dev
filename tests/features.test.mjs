@@ -69,7 +69,7 @@ test('critical retained features remain registered and their public intents rema
  const posts=postGeneratorSource();
  assert.match(posts,/Facebook Group/i);
  assert.match(posts,/Carousell/i);
- const analytics=source('../dev/src/services/analytics.js');
+ const analytics=readSource('../dev/src/services/analytics.js');
  assert.match(analytics,/analyticsExclusionPairingUrl/);
 });
 
@@ -380,7 +380,7 @@ test('Phase 2A discovery surfaces keep clean-card routing and source context',()
 
 test('Phase 2B1 records discovery attribution only after qualified views',()=>{
  const source=path=>fs.readFileSync(new URL(path,import.meta.url),'utf8');
- const analytics=source('../dev/src/services/analytics.js');
+ const analytics=readSource('../dev/src/services/analytics.js');
  const sql=source('../migrations/2026/2026-09-24-v07-DISCOVERY-ATTRIBUTION.sql');
 
  assert.match(analytics,/async function recordQualifiedViewDiscoveryAttribution\(cardId,visitorId\)/);
@@ -412,7 +412,7 @@ test('Phase 2 Trending ranks unique collectors ahead of repeat-heavy views',()=>
 test('Phase 2 discovery summary is owner-only and intentionally lightweight',()=>{
  const source=path=>fs.readFileSync(new URL(path,import.meta.url),'utf8');
  const sql=source('../migrations/2026/2026-09-24-v08-DISCOVERY-SUMMARY.sql');
- const analytics=source('../dev/src/services/analytics.js');
+ const analytics=readSource('../dev/src/services/analytics.js');
  const dashboard=source('../dev/src/features/owner/insights-dashboard.js');
  assert.match(sql,/create or replace function public\.get_card_discovery_summary/);
  assert.match(sql,/public\.is_app_owner\(\)/);
@@ -478,7 +478,7 @@ test('Phase 3 buyer inquiries carry full card context and record explicit copies
 
 test('Phase 3 owner card details reuse existing analytics for a private conversion summary',()=>{
  const source=path=>fs.readFileSync(new URL(path,import.meta.url),'utf8');
- const analytics=source('../dev/src/services/analytics.js');
+ const analytics=readSource('../dev/src/services/analytics.js');
  const details=source('../dev/src/features/cards/details.js');
  assert.match(analytics,/async function fetchOwnerCardConversionSummary\(cardId/);
  assert.match(analytics,/appContext\.fetchInsights\(start,end,\{silent:true\}\)/);
@@ -1063,9 +1063,9 @@ test('Development 2026-09-30-v02 places Prepare eBay Listing above the listing f
 
 
 test('Development Qualified Views retain request-country attribution across embedded-browser visitor-ID races',()=>{
-  const analytics=source('../dev/src/services/analytics.js');
-  const migration=source('../migrations/2026/2026-10-05-v01-QUALIFIED-VIEW-COUNTRY.sql');
-  const edge=source('../supabase/functions/record-card-view-dev/index.ts');
+  const analytics=readSource('../dev/src/services/analytics.js');
+  const migration=readSource('../migrations/2026/2026-10-05-v01-QUALIFIED-VIEW-COUNTRY.sql');
+  const edge=readSource('../supabase/functions/record-card-view-dev/index.ts');
 
   assert.match(analytics,/functions\.invoke\("record-card-view-dev"/);
   assert.match(analytics,/record_qualified_card_view_event_with_country/);
