@@ -95,9 +95,18 @@ SQL required: Yes — `migrations/2026/2026-10-05-v01-QUALIFIED-VIEW-COUNTRY.sql
 SQL status: applied to the connected Collect TCG Supabase project on 2026-10-05.
 Edge Function status: Development-only `record-card-view-dev` version 1 deployed successfully.
 
-Validation status: in progress.
+Release records:
+- Implementation commit: `d7e6002558b0a465d44613541ebbda06480f0de8`
+- Final validation source commit: `01565a13c390469950150f1d932afd3586babd2d`
+- SEO refresh/source commit: `36e06ab1e622dbd6af9c3bfa3de70653bec63011`
+- Package-validation commit: `bc3455b3a73c6fae3af1f7b327d20d8bb7b91c17`
+- Successful Development workflow: `37218962818`
+- Full ZIP SHA256: `74559c66b946728eaa7e962da9957e26507244eaece7daf2c1b18701a985183c`
+- Patch ZIP SHA256: `3e6e1579d0b5276d945cea6429f7cceb34e08693cc2e586818bba69f04ae27e3`
 
-Validation limitation: interactive desktop/mobile/Safari browser testing has not yet been performed.
+Validation status: completed successfully. The final feature regression suite passed (65/65). SEO syntax/self-test/generation, repository-wide JavaScript/import/reference validation, CSS and retained release contracts, Development package creation/integrity, artifact upload and GitHub Pages deployment all passed. The Supabase migration was applied and the Development-only `record-card-view-dev` Edge Function version 1 was deployed successfully.
+
+Validation limitation: interactive desktop/mobile/Safari browser testing was not performed; the country-attribution path was validated through repository regression/static checks plus confirmed Supabase migration/function deployment. No synthetic buyer analytics event was inserted for testing.
 
 ### Development `2026-09-30-v03`
 
