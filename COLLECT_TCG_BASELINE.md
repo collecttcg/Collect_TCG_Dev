@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-09-30
+Last reconciled against GitHub: 2026-10-05
 
 ## Repositories
 
@@ -37,9 +37,9 @@ Use the actual build date. Development and Production have independent counters 
 
 ## Current Versions
 
-Latest Development: `2026-09-30-v03`
+Latest Development: `2026-10-05-v01`
 
-Previous Development: `2026-09-30-v02`
+Previous Development: `2026-09-30-v03`
 
 Previous validated Beta release: `2026-09-26-v20`
 
@@ -76,6 +76,28 @@ Important promotion state:
 ---
 
 ## Current Release State
+
+### Development `2026-10-05-v01`
+
+Previous Development: `2026-09-30-v03`
+
+Purpose: preserve country attribution for Qualified Views when embedded browsers use a different anonymous visitor ID for the card-view request than the earlier site-visit request.
+
+Changes:
+- Development Qualified Views call the Development-only `record-card-view-dev` Edge Function.
+- The function records the existing legacy card view and returns the request country without storing visitor IP addresses.
+- `qualified_card_view_events.country_code` stores that request country when available.
+- Owner Market Demand prefers the Qualified View country, then falls back to the historical visitor-ID country join for older rows.
+- Existing Production `record-card-view` is unchanged.
+- The client retains backward-compatible fallbacks if the Development-only function or migration is unavailable.
+
+SQL required: Yes — `migrations/2026/2026-10-05-v01-QUALIFIED-VIEW-COUNTRY.sql`.
+SQL status: applied to the connected Collect TCG Supabase project on 2026-10-05.
+Edge Function status: Development-only `record-card-view-dev` version 1 deployed successfully.
+
+Validation status: in progress.
+
+Validation limitation: interactive desktop/mobile/Safari browser testing has not yet been performed.
 
 ### Development `2026-09-30-v03`
 
