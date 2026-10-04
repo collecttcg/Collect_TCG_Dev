@@ -1060,3 +1060,19 @@ test('Development 2026-09-30-v02 places Prepare eBay Listing above the listing f
   assert.ok(prepareIndex<titleIndex,'Prepare eBay Listing should appear above the eBay listing fields');
   assert.equal((posts.match(/id="ebayPrepareListing"/g)||[]).length,1);
 });
+
+
+test('Development Qualified Views retain request-country attribution across embedded-browser visitor-ID races',()=>{
+  const analytics=source('../dev/src/services/analytics.js');
+  const migration=source('../migrations/2026/2026-10-05-v01-QUALIFIED-VIEW-COUNTRY.sql');
+  const edge=source('../supabase/functions/record-card-view-dev/index.ts');
+
+  assert.match(analytics,/functions\.invoke\("record-card-view-dev"/);
+  assert.match(analytics,/record_qualified_card_view_event_with_country/);
+  assert.match(analytics,/p_country_code:countryCode\|\|null/);
+  assert.match(analytics,/functions\.invoke\("record-card-view"/);
+  assert.match(migration,/add column if not exists country_code text/i);
+  assert.match(migration,/coalesce\(nullif\(q\.country_code,'XX'\),country_event\.country_code,'XX'\)/);
+  assert.match(edge,/country_code: code \|\| null/);
+  assert.match(edge,/record_card_view_event/);
+});

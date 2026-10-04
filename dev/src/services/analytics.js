@@ -459,27 +459,64 @@ async function sendQualifiedCardViewEvent(card,token){
       if(document.visibilityState && document.visibilityState!=="visible") return false;
 
       const visitorId=appContext.getVisitorId();
-      const {error}=await appContext.supabaseClient.functions.invoke("record-card-view",{
-        body:{
-          card_id:cardId,
-          visitor_id:visitorId
-        }
-      });
 
-      if(error){
-        console.error("Record qualified view event error:",error);
-        return false;
+      // Development uses a dedicated card-view endpoint that returns the
+      // request country alongside the existing legacy view write. This keeps
+      // country attribution attached to the Qualified View even when embedded
+      // browsers create competing anonymous visitor IDs during startup.
+      let countryCode="";
+      let viewError=null;
+      try{
+        const {data,error}=await appContext.supabaseClient.functions.invoke("record-card-view-dev",{
+          body:{
+            card_id:cardId,
+            visitor_id:visitorId
+          }
+        });
+        viewError=error||null;
+        const candidate=String(data?.country_code||"").trim().toUpperCase();
+        if(/^[A-Z]{2}$/.test(candidate) && candidate!=="XX") countryCode=candidate;
+      }catch(error){
+        viewError=error;
       }
 
-      // Mirror the qualified view into the owner analytics event table when V5
-      // is installed. This makes the timeline filterable by current Status/Game.
-      // Failure here never affects the public card-view experience.
-      try{
-        await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
-          p_card_id:cardId,
-          p_visitor_id:visitorId
+      // Backward-compatible fallback while the Development-only Edge Function
+      // is unavailable. Production continues to use its existing endpoint.
+      if(viewError){
+        const {error}=await appContext.supabaseClient.functions.invoke("record-card-view",{
+          body:{
+            card_id:cardId,
+            visitor_id:visitorId
+          }
         });
-      }catch{}
+        if(error){
+          console.error("Record qualified view event error:",error);
+          return false;
+        }
+      }
+
+      // Prefer the country-aware Development RPC. If its migration has not
+      // been applied yet, fall back to the existing Qualified View RPC.
+      try{
+        const {error:countryAwareError}=await appContext.supabaseClient.rpc("record_qualified_card_view_event_with_country",{
+          p_card_id:cardId,
+          p_visitor_id:visitorId,
+          p_country_code:countryCode||null
+        });
+        if(countryAwareError){
+          await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
+            p_card_id:cardId,
+            p_visitor_id:visitorId
+          });
+        }
+      }catch{
+        try{
+          await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
+            p_card_id:cardId,
+            p_visitor_id:visitorId
+          });
+        }catch{}
+      }
 
       // Discovery attribution is recorded only after the same 2-second
       // Qualified View succeeds. This keeps accidental taps and Owner/testing
