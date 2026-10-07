@@ -193,10 +193,19 @@ export function register(appContext){
 export function initialize(appContext){
   const originalClose=appContext.closeEditModal;
   appContext.closeEditModal=function(options){
-    const standalone=appContext.isStandaloneMobileEditorRoute?.();
+    // The shared editor may update/rerender routing as part of its save flow.
+    // Capture the standalone state from the body marker as well as the hash so
+    // a successful mobile edit always returns to Card Manager, never Inventory.
+    const standalone=appContext.isStandaloneMobileEditorRoute?.() ||
+      document.body.classList.contains("mobile-owner-card-editor-editing");
     const result=originalClose(options);
     document.body.classList.remove("mobile-owner-card-editor-editing");
-    if(standalone) appContext.renderMobileCardEditorPage();
+    if(standalone){
+      if(location.hash!=="#/mobile-card-editor"){
+        history.replaceState(null,"","#/mobile-card-editor");
+      }
+      appContext.renderMobileCardEditorPage();
+    }
     return result;
   };
 
