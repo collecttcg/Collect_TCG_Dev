@@ -47,6 +47,7 @@ import * as module45 from '../features/owner/editor.js?v=2026-09-29-v09';
 import * as module46 from '../app/theme.js?v=2026-09-29-v09';
 import * as module47 from '../app/startup.js?v=2026-09-29-v09';
 import * as module48 from '../features/owner/mobile-card-editor.js?v=2026-10-07-v03';
+import * as module49 from '../features/social/posts-hidden-ebay.js?v=2026-10-14-v01';
 
 export function registerFeatures(appContext){
   module0.register(appContext);
@@ -98,6 +99,7 @@ export function registerFeatures(appContext){
   module46.register(appContext);
   module47.register(appContext);
   module48.register(appContext);
+  module49.register(appContext);
 }
 
 export function initializeApp(appContext,runtime){
