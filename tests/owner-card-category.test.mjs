@@ -1,6 +1,5 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
 import { register } from '../dev/src/features/owner/card-owner-category.js';
 
 test('owner card categories stay private while Add/Edit and owner filters can use them', async ()=>{
@@ -38,7 +37,8 @@ test('owner card categories stay private while Add/Edit and owner filters can us
             {card_id:'2',tags:[]}
           ],
           error:null
-        })
+        }),
+        upsert:rows=>({rows})
       })
     },
     view:null
@@ -49,6 +49,7 @@ test('owner card categories stay private while Add/Edit and owner filters can us
   const addHtml=appContext.fieldsTemplate('add');
   for(const owner of ['Zakwan','Yen','Daniel','Jack']) assert.match(addHtml,new RegExp(`>${owner}<`));
   assert.match(addHtml,/id="addOwnerCategory" required/);
+  assert.match(addHtml,/Select owner/);
 
   elements.addOwnerCategory={value:'Daniel'};
   const collected=appContext.collectFields('add',null,{});
@@ -67,11 +68,13 @@ test('owner card categories stay private while Add/Edit and owner filters can us
   assert.deepEqual(appContext.getFiltered().map(card=>card.id),['1']);
   assert.match(appContext.inventoryPageHTML(),/filterOwnerCategory/);
 
+  cards[0]._owner_category='Zakwan';
+  const bulkLikeSave=appContext.supabaseClient
+    .from('card_owner_private')
+    .upsert([{card_id:'1',tags:[]}]);
+  assert.equal(bulkLikeSave.rows[0].tags[0],'__owner_category__:Zakwan');
+
   ownerMode=false;
   assert.doesNotMatch(appContext.inventoryPageHTML(),/filterOwnerCategory/);
   assert.deepEqual(appContext.getFiltered().map(card=>card.id),['1','2']);
-
-  const bulkSource=fs.readFileSync(new URL('../dev/src/features/owner/bulk-metadata.js',import.meta.url),'utf8');
-  assert.match(bulkSource,/reservedOwnerTags/);
-  assert.match(bulkSource,/isOwnerCategoryTag/);
 });
