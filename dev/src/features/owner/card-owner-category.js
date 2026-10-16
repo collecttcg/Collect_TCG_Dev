@@ -246,6 +246,119 @@ export function register(appContext){
     };
   }
 
+  async function bulkAssignOwnerCategory(cardIds,category){
+    if(!appContext.requireOwner("bulk edit card owner")) return {saved:0,failed:cardIds.length};
+    if(!appContext.ownerPrivateSupported) throw new Error("Private owner information migration is required.");
+    const cleanCategory=sanitizeOwnerCategory(category);
+    const ids=[...new Set(cardIds.map(appContext.safeCardId).filter(Boolean))];
+    if(!ids.length) return {saved:0,failed:0};
+
+    const currentById=new Map(ids.map(id=>[id,{tags:[],notes:""}]));
+    for(let start=0;start<ids.length;start+=100){
+      const chunk=ids.slice(start,start+100);
+      const {data,error}=await appContext.supabaseClient
+        .from("card_owner_private")
+        .select("card_id,tags,notes")
+        .in("card_id",chunk);
+      if(error) throw error;
+      (data||[]).forEach(row=>{
+        const id=appContext.safeCardId(row.card_id);
+        if(id) currentById.set(id,{tags:row.tags||[],notes:row.notes||""});
+      });
+    }
+
+    const rows=ids.map(id=>{
+      const current=currentById.get(id)||{tags:[],notes:""};
+      return {
+        card_id:id,
+        tags:ownerTagsWithCategory(current.tags,cleanCategory),
+        notes:appContext.sanitizeOwnerPrivateNotes(current.notes||"")
+      };
+    });
+
+    for(let start=0;start<rows.length;start+=100){
+      const chunk=rows.slice(start,start+100);
+      const {error}=await originalPrivateFrom("card_owner_private").upsert(chunk,{onConflict:"card_id"});
+      if(error) throw error;
+    }
+
+    ids.forEach(id=>{
+      const card=appContext.getCardById?.(id);
+      if(card) card._owner_category=cleanCategory;
+    });
+    return {saved:ids.length,failed:0};
+  }
+
+  function wireBulkOwnerCategoryEditor(){
+    if(!appContext.isOwnerMode()) return;
+    const privateFields=appContext.view?.querySelector?.(".bulk-private-fields");
+    const picker=appContext.$("bulkMetaPicker");
+    if(!privateFields || !picker || appContext.$("bulkOwnerCategoryValue")) return;
+
+    const field=document.createElement("div");
+    field.className="bulk-private-field owner-only";
+    field.innerHTML=`
+      <div class="bulk-private-field-top"><strong>Card owner</strong></div>
+      <div class="bulk-private-field-controls">
+        <select id="bulkOwnerCategoryValue" ${appContext.ownerPrivateSupported?"":"disabled"}>
+          <option value="__choose__">Choose owner…</option>
+          <option value="">Unassigned</option>
+          ${OWNER_CATEGORIES.map(name=>`<option value="${appContext.escapeHtml(name)}">${appContext.escapeHtml(name)}</option>`).join("")}
+        </select>
+        <button type="button" class="btn-primary" id="bulkOwnerCategoryApply" disabled>Apply Card Owner to Selected</button>
+      </div>
+      <div class="hint">Updates only the private Card Owner category for the listings selected above.</div>`;
+    privateFields.prepend(field);
+
+    const select=appContext.$("bulkOwnerCategoryValue");
+    const button=appContext.$("bulkOwnerCategoryApply");
+    const status=appContext.$("bulkMetaStatus");
+    const sync=()=>{
+      const selectedCount=picker.querySelectorAll("input[data-bulk-meta-id]:checked").length;
+      button.disabled=!appContext.ownerPrivateSupported || select.value==="__choose__" || selectedCount===0;
+    };
+    select.addEventListener("change",sync);
+    picker.addEventListener("change",sync);
+
+    button.addEventListener("click",async()=>{
+      if(!appContext.requireOwner("bulk edit card owner")) return;
+      const ids=Array.from(picker.querySelectorAll("input[data-bulk-meta-id]:checked"))
+        .map(input=>appContext.safeCardId(input.dataset.bulkMetaId)).filter(Boolean);
+      if(!ids.length){ appContext.showToast("Select at least one listing"); return; }
+      if(select.value==="__choose__"){ appContext.showToast("Choose a Card Owner"); return; }
+      const category=sanitizeOwnerCategory(select.value);
+      const label=category || "Unassigned";
+      if(!confirm(`Set Card Owner to ${label} for ${ids.length} selected listing${ids.length===1?"":"s"}?`)) return;
+
+      const originalText=button.textContent;
+      button.disabled=true;
+      button.textContent="Saving…";
+      try{
+        const result=await bulkAssignOwnerCategory(ids,category);
+        if(status) status.textContent=`${result.saved} listing${result.saved===1?"":"s"} updated: Card Owner → ${label}.`;
+        appContext.showToast(`Updated Card Owner for ${result.saved} listing${result.saved===1?"":"s"}`);
+      }catch(error){
+        console.error("Bulk Card Owner update failed:",error);
+        const detail=String(error?.message||error?.details||error?.hint||"").trim();
+        if(status) status.textContent=detail ? `Card Owner bulk update failed: ${detail}` : "Card Owner bulk update failed.";
+        appContext.showToast("Could not update Card Owner");
+      }finally{
+        button.textContent=originalText;
+        sync();
+      }
+    });
+    sync();
+  }
+
+  const originalRenderBulkMetadataPage=appContext.renderBulkMetadataPage;
+  if(typeof originalRenderBulkMetadataPage==="function"){
+    appContext.renderBulkMetadataPage=function(...args){
+      const result=originalRenderBulkMetadataPage(...args);
+      wireBulkOwnerCategoryEditor();
+      return result;
+    };
+  }
+
   Object.assign(appContext,{
     OWNER_CATEGORIES,
     OWNER_CATEGORY_TAG_PREFIX,
@@ -254,6 +367,7 @@ export function register(appContext){
     ownerCategoryFromTags,
     ownerTagsWithoutCategory,
     ownerTagsWithCategory,
-    loadOwnerCategoriesIntoCards
+    loadOwnerCategoriesIntoCards,
+    bulkAssignOwnerCategory
   });
 }
