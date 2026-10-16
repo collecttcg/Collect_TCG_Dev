@@ -363,90 +363,111 @@ function renderBulkMetadataPage(fromInventoryTools=false){
     const preview=appContext.$("bulkMetaPreview");
     const applyBtn=appContext.$("bulkMetaApplyBtn");
     const status=appContext.$("bulkMetaStatus");
+    const privateSection=appContext.$("bulkPrivateSection");
     const privateTagsEnable=appContext.$("bulkPrivateTagsEnable");
     const privateTagsMode=appContext.$("bulkPrivateTagsMode");
     const privateTagsValue=appContext.$("bulkPrivateTagsValue");
-    const privateTagsField=appContext.$("bulkPrivateTagsField");
     const privateNotesEnable=appContext.$("bulkPrivateNotesEnable");
     const privateNotesMode=appContext.$("bulkPrivateNotesMode");
     const privateNotesValue=appContext.$("bulkPrivateNotesValue");
+    const privateTagsField=appContext.$("bulkPrivateTagsField");
     const privateNotesField=appContext.$("bulkPrivateNotesField");
 
-    function visibleCards(){
-      const q=appContext.normalizeFilterValue(search.value);
-      const game=appContext.normalizeFilterValue(gameFilter.value);
-      const era=appContext.normalizeFilterValue(eraFilter.value);
-      const format=appContext.normalizeFilterValue(formatFilter.value);
-      const language=appContext.normalizeFilterValue(languageFilter.value);
-      const availability=appContext.normalizeFilterValue(availabilityFilter.value);
-      const grade=appContext.normalizeFilterValue(gradeFilter.value);
-      const series=appContext.normalizeFilterValue(seriesFilter.value);
+    const fieldInputs={};
+    document.querySelectorAll("[data-bulk-meta-enable]").forEach(toggle=>{
+      const field=toggle.dataset.bulkMetaEnable;
+      fieldInputs[field]={toggle,value:appContext.$(`bulkMetaValue_${field}`)};
+    });
 
-      return eligibleCards.filter(card=>{
-        if(game && appContext.normalizeFilterValue(card.game)!==game) return false;
-        if(era && appContext.normalizeFilterValue(card.era)!==era) return false;
-        if(format && appContext.normalizeFilterValue(appContext.effectiveFormat(card))!==format) return false;
-        if(language && appContext.normalizeFilterValue(card.language)!==language) return false;
-        if(availability && appContext.normalizeFilterValue(card.availability||"Available")!==availability) return false;
-        if(series && appContext.normalizeFilterValue(card.series)!==series) return false;
+    function cardMatchesFilters(card){
+      const q=String(search?.value||"").trim().toLowerCase();
+      if(q){
+        const haystack=[card.name,card.card_code,card.game,card.series,card.era,card.language]
+          .map(v=>String(v||"").toLowerCase())
+          .join(" ");
+        if(!haystack.includes(q)) return false;
+      }
 
-        if(grade){
-          const values=[];
-          (Array.isArray(card.grading)?card.grading:[]).forEach(g=>{
-            if(g?.company && String(g.grade??"").trim()){
-              values.push(`${String(g.company).trim().toUpperCase()} ${String(g.grade).trim()}`);
-            }
-          });
-          const cardFormat=appContext.effectiveFormat(card);
-          if(cardFormat==="Raw"){
-            values.push(appContext.CONDITION_LABEL[card.condition]||card.condition||"");
-          }else if(cardFormat==="Sealed"){
-            values.push("Sealed");
-          }
+      if(gameFilter?.value && appContext.normalizeFilterValue(card.game)!==appContext.normalizeFilterValue(gameFilter.value)) return false;
+      if(eraFilter?.value && appContext.normalizeFilterValue(card.era)!==appContext.normalizeFilterValue(eraFilter.value)) return false;
+      if(formatFilter?.value && appContext.normalizeFilterValue(appContext.effectiveFormat(card))!==appContext.normalizeFilterValue(formatFilter.value)) return false;
+      if(languageFilter?.value && appContext.normalizeFilterValue(card.language)!==appContext.normalizeFilterValue(languageFilter.value)) return false;
+      if(availabilityFilter?.value && appContext.normalizeFilterValue(card.availability)!==appContext.normalizeFilterValue(availabilityFilter.value)) return false;
+      if(seriesFilter?.value && appContext.normalizeFilterValue(card.series)!==appContext.normalizeFilterValue(seriesFilter.value)) return false;
 
-          if(!values.some(value=>appContext.normalizeFilterValue(value)===grade)) return false;
-        }
+      if(gradeFilter?.value){
+        const wanted=appContext.normalizeFilterValue(gradeFilter.value);
+        const gradeValues=[];
+        (Array.isArray(card.grading)?card.grading:[]).forEach(g=>{
+          if(g?.company && String(g.grade??"").trim()) gradeValues.push(`${String(g.company).trim().toUpperCase()} ${String(g.grade).trim()}`);
+        });
+        const format=appContext.effectiveFormat(card);
+        if(format==="Raw") gradeValues.push(appContext.CONDITION_LABEL[card.condition]||card.condition||"");
+        else if(format==="Sealed") gradeValues.push("Sealed");
+        if(!gradeValues.some(value=>appContext.normalizeFilterValue(value)===wanted)) return false;
+      }
 
-        if(q){
-          const hay=[card.name,card.card_code,card.game,card.series,card.year,card.language,card.language_details]
-            .map(v=>appContext.normalizeFilterValue(v)).join(" ");
-          if(!hay.includes(q)) return false;
-        }
-        return true;
+      return true;
+    }
+
+    function filteredCards(){
+      return eligibleCards.filter(cardMatchesFilters);
+    }
+
+    function cardRowHTML(card){
+      const image=appContext.getImages(card)[0]||"";
+      const grade=appContext.gradingSummaryLabel(card);
+      const selected=selectedIds.has(String(card.id));
+      return `
+        <label class="bulk-meta-card-row ${selected?"selected":""}" data-bulk-meta-card-row="${appContext.escapeHtml(card.id)}">
+          <input type="checkbox" data-bulk-meta-card="${appContext.escapeHtml(card.id)}" ${selected?"checked":""}>
+          <span class="bulk-meta-card-thumb">
+            ${image?`<img src="${appContext.escapeHtml(image)}" alt="" loading="lazy" decoding="async">`:`<span>No image</span>`}
+          </span>
+          <span class="bulk-meta-card-copy">
+            <strong>${appContext.escapeHtml(card.name||"Untitled")}</strong>
+            <small>${appContext.escapeHtml([card.card_code,card.game,card.series].filter(Boolean).join(" · "))}</small>
+            <small>${appContext.escapeHtml([card.language,grade,card.availability].filter(Boolean).join(" · "))}</small>
+          </span>
+        </label>`;
+    }
+
+    function renderPicker(){
+      const cards=filteredCards();
+      picker.innerHTML=cards.map(cardRowHTML).join("");
+      pickerEmpty.hidden=cards.length>0;
+      pickerCount.textContent=`${cards.length} shown`;
+
+      picker.querySelectorAll("[data-bulk-meta-card]").forEach(input=>{
+        input.addEventListener("change",()=>{
+          const id=String(input.dataset.bulkMetaCard||"");
+          if(input.checked) selectedIds.add(id);
+          else selectedIds.delete(id);
+          input.closest(".bulk-meta-card-row")?.classList.toggle("selected",input.checked);
+          updateSummary();
+        });
       });
     }
 
-    function selectedCards(){
-      return [...selectedIds].map(id=>byId.get(id)).filter(Boolean);
-    }
-
-    function enabledChanges(){
+    function collectChanges(){
       const changes={};
-
-      document.querySelectorAll("[data-bulk-meta-enable]").forEach(box=>{
-        if(!box.checked) return;
-        const field=String(box.dataset.bulkMetaEnable||"");
-        const input=appContext.$(`bulkMetaValue_${field}`);
-        if(!input) return;
-
-        const raw=appContext.bulkMetadataCleanString(input.value, field==="series" ? 80 : 120);
-        if(!raw) return;
-
-        changes[field]=raw;
+      Object.entries(fieldInputs).forEach(([field,entry])=>{
+        if(!entry.toggle.checked) return;
+        const raw=entry.value?.value ?? "";
+        changes[field]=field==="series"
+          ? appContext.normalizeStoredLabel(appContext.bulkMetadataCleanString(raw,80))
+          : raw;
       });
-
       return changes;
     }
 
-    function enabledPrivateChanges(){
+    function collectPrivateChanges(){
       const changes={};
-
       if(privateTagsEnable?.checked){
         const mode=String(privateTagsMode?.value||"add");
         const tags=appContext.sanitizeOwnerTags(privateTagsValue?.value||"");
         changes.tags={mode,tags};
       }
-
       if(privateNotesEnable?.checked){
         const mode=String(privateNotesMode?.value||"replace");
         const notes=appContext.sanitizeOwnerPrivateNotes(privateNotesValue?.value||"");
@@ -501,8 +522,14 @@ function renderBulkMetadataPage(fromInventoryTools=false){
       let tags=appContext.sanitizeOwnerTags(current?.tags||[]);
       let notes=appContext.sanitizeOwnerPrivateNotes(current?.notes||"");
 
+      // Card ownership is stored as a reserved owner-only private tag. Bulk
+      // tag operations must never remove or expose that reserved category.
+      const reservedOwnerTags=tags.filter(tag=>appContext.isOwnerCategoryTag?.(tag));
+      tags=tags.filter(tag=>!appContext.isOwnerCategoryTag?.(tag));
+
       if(changes.tags){
-        const incoming=appContext.sanitizeOwnerTags(changes.tags.tags||[]);
+        const incoming=appContext.sanitizeOwnerTags(changes.tags.tags||[])
+          .filter(tag=>!appContext.isOwnerCategoryTag?.(tag));
         if(changes.tags.mode==="clear") tags=[];
         else if(changes.tags.mode==="replace") tags=incoming;
         else if(changes.tags.mode==="add") tags=appContext.sanitizeOwnerTags([...tags,...incoming]);
@@ -511,6 +538,8 @@ function renderBulkMetadataPage(fromInventoryTools=false){
           tags=tags.filter(tag=>!remove.has(tag.toLowerCase()));
         }
       }
+
+      tags=appContext.sanitizeOwnerTags([...reservedOwnerTags,...tags]);
 
       if(changes.notes){
         const incoming=appContext.sanitizeOwnerPrivateNotes(changes.notes.notes||"");
@@ -568,260 +597,193 @@ function renderBulkMetadataPage(fromInventoryTools=false){
           if(!allowed.includes(value)) return `Invalid ${appContext.bulkMetadataFieldLabel(field)} value`;
         }
       }
+
+      if(changes.format==="Sealed" && changes.condition && changes.condition!=="SEALED"){
+        return "Sealed format must use Sealed condition.";
+      }
+
       return "";
     }
 
     function updateSummary(){
-      syncPrivateFieldState();
-      const changes=enabledChanges();
-      const privateChanges=enabledPrivateChanges();
-      const fields=Object.keys(changes);
-      const privateFields=Object.keys(privateChanges);
-      const selected=selectedCards();
-      const totalFields=fields.length+privateFields.length;
+      const changes=collectChanges();
+      const privateChanges=collectPrivateChanges();
+      const privateFieldCount=Object.keys(privateChanges).length;
+      selectedCount.textContent=String(selectedIds.size);
+      fieldCount.textContent=String(Object.keys(changes).length+privateFieldCount);
 
-      selectedCount.textContent=selected.length;
-      fieldCount.textContent=totalFields;
-
-      const err=validateChanges(changes) || validatePrivateChanges(privateChanges);
-      applyBtn.disabled=selected.length===0 || totalFields===0 || !!err;
-
-      if(err){
-        preview.textContent=err;
+      const validation=validateChanges(changes) || validatePrivateChanges(privateChanges);
+      if(validation){
+        preview.textContent=validation;
+        preview.classList.add("error");
+        applyBtn.disabled=true;
         return;
       }
+      preview.classList.remove("error");
 
-      if(!selected.length || !totalFields){
+      if(!selectedIds.size || (!Object.keys(changes).length && !privateFieldCount)){
         preview.textContent="Select listings and at least one field to see a preview.";
+        applyBtn.disabled=true;
         return;
       }
 
-      const details=fields.map(field=>
-        `${appContext.bulkMetadataFieldLabel(field)} → ${changes[field]}`
-      );
-
+      const publicSummary=Object.entries(changes)
+        .map(([field,value])=>`${appContext.bulkMetadataFieldLabel(field)} → ${field==="condition"?(appContext.CONDITION_LABEL[value]||value):value}`);
+      const privateSummary=[];
       if(privateChanges.tags){
-        const label={add:"Add tags",replace:"Replace tags",remove:"Remove tags",clear:"Clear tags"}[privateChanges.tags.mode];
-        details.push(`Private: ${label}${privateChanges.tags.mode==="clear"?"":` → ${privateChanges.tags.tags.join(", ")}`}`);
+        privateSummary.push(`Private tags → ${privateChanges.tags.mode}${privateChanges.tags.mode==="clear"?"":`: ${privateChanges.tags.tags.join(", ")}`}`);
       }
       if(privateChanges.notes){
-        const label={replace:"Replace notes",append:"Append notes",clear:"Clear notes"}[privateChanges.notes.mode];
-        details.push(`Private: ${label}`);
+        privateSummary.push(`Private notes → ${privateChanges.notes.mode}`);
       }
 
       preview.innerHTML=`
-        <strong>${selected.length} listing${selected.length===1?"":"s"} will be updated.</strong>
-        <span>${appContext.escapeHtml(details.join(" · "))}</span>
+        <strong>Ready to update ${selectedIds.size} listing${selectedIds.size===1?"":"s"}</strong>
+        <span>${[...publicSummary,...privateSummary].map(text=>appContext.escapeHtml(text)).join(" · ")}</span>
+        <small>Only these selected fields will change.</small>
       `;
+      applyBtn.disabled=false;
     }
 
-    function renderPicker(){
-      const visible=visibleCards();
-      pickerCount.textContent=`${visible.length} shown`;
-      pickerEmpty.hidden=visible.length>0;
-
-      picker.innerHTML=visible.map(card=>{
-        const id=String(card.id);
-        const image=appContext.getImages(card)[0]||"";
-        return `
-          <label class="bulk-meta-card ${selectedIds.has(id)?"selected":""}">
-            <input type="checkbox" data-bulk-meta-id="${appContext.escapeHtml(id)}" ${selectedIds.has(id)?"checked":""}>
-            <span class="bulk-meta-thumb">${image?`<img src="${appContext.escapeHtml(image)}" alt="">`:"—"}</span>
-            <span class="bulk-meta-copy">
-              <strong>${appContext.escapeHtml(card.name||"Untitled card")}</strong>
-              <small>${appContext.escapeHtml([card.card_code,card.year,card.series,card.language].filter(Boolean).join(" · "))}</small>
-            </span>
-            <span class="bulk-meta-status-badge">${appContext.escapeHtml(card.availability||"Available")}</span>
-          </label>
-        `;
-      }).join("");
-
-      picker.querySelectorAll("[data-bulk-meta-id]").forEach(box=>{
-        box.addEventListener("change",()=>{
-          const id=String(box.dataset.bulkMetaId||"");
-          if(box.checked) selectedIds.add(id);
-          else selectedIds.delete(id);
-          box.closest(".bulk-meta-card")?.classList.toggle("selected",box.checked);
-          updateSummary();
-        });
+    function setSelected(ids,selected){
+      ids.forEach(id=>{
+        if(selected) selectedIds.add(String(id));
+        else selectedIds.delete(String(id));
       });
-
+      renderPicker();
       updateSummary();
     }
 
-    function setVisibleSelection(select){
-      visibleCards().forEach(card=>{
-        const id=String(card.id);
-        if(select) selectedIds.add(id);
-        else selectedIds.delete(id);
+    [search,gameFilter,eraFilter,formatFilter,languageFilter,availabilityFilter,gradeFilter,seriesFilter].forEach(input=>{
+      input?.addEventListener(input===search?"input":"change",renderPicker);
+    });
+
+    appContext.$("bulkMetaSelectAllBtn")?.addEventListener("click",()=>setSelected(eligibleCards.map(c=>c.id),true));
+    appContext.$("bulkMetaClearAllBtn")?.addEventListener("click",()=>setSelected(Array.from(selectedIds),false));
+    appContext.$("bulkMetaSelectFilteredBtn")?.addEventListener("click",()=>setSelected(filteredCards().map(c=>c.id),true));
+    appContext.$("bulkMetaClearFilteredBtn")?.addEventListener("click",()=>setSelected(filteredCards().map(c=>c.id),false));
+
+    Object.values(fieldInputs).forEach(entry=>{
+      entry.toggle.addEventListener("change",()=>{
+        entry.value.disabled=!entry.toggle.checked;
+        updateSummary();
       });
-      renderPicker();
-    }
-
-    [
-      search,gameFilter,eraFilter,formatFilter,
-      languageFilter,availabilityFilter,gradeFilter,seriesFilter
-    ].forEach(el=>{
-      el.addEventListener("input",renderPicker);
-      el.addEventListener("change",renderPicker);
+      entry.value.disabled=true;
+      entry.value.addEventListener(entry.value.tagName==="INPUT"?"input":"change",updateSummary);
     });
 
-    appContext.$("bulkMetaSelectAllBtn").addEventListener("click",()=>{
-      eligibleCards.forEach(card=>selectedIds.add(String(card.id)));
-      renderPicker();
-    });
+    [privateTagsEnable,privateNotesEnable].forEach(input=>input?.addEventListener("change",()=>{
+      syncPrivateFieldState();
+      updateSummary();
+    }));
+    [privateTagsMode,privateNotesMode].forEach(input=>input?.addEventListener("change",()=>{
+      syncPrivateFieldState();
+      updateSummary();
+    }));
+    privateTagsValue?.addEventListener("input",updateSummary);
+    privateNotesValue?.addEventListener("input",updateSummary);
 
-    appContext.$("bulkMetaClearAllBtn").addEventListener("click",()=>{
-      selectedIds.clear();
-      renderPicker();
-    });
-
-    appContext.$("bulkMetaSelectFilteredBtn").addEventListener("click",()=>setVisibleSelection(true));
-    appContext.$("bulkMetaClearFilteredBtn").addEventListener("click",()=>setVisibleSelection(false));
-
-    document.querySelectorAll("[data-bulk-meta-enable]").forEach(box=>{
-      box.addEventListener("change",updateSummary);
-    });
-
-    // Private owner fields are separate from the public metadata checkboxes,
-    // so wire them explicitly. Without this, checking Private owner tags/notes
-    // does not enable the controls or refresh the Apply button state.
-    [privateTagsEnable,privateTagsMode,privateTagsValue,privateNotesEnable,privateNotesMode,privateNotesValue]
-      .filter(Boolean)
-      .forEach(el=>{
-        el.addEventListener("input",updateSummary);
-        el.addEventListener("change",updateSummary);
-      });
-
-    ["game","series","era","language","format","condition","availability"].forEach(field=>{
-      const input=appContext.$(`bulkMetaValue_${field}`);
-      if(!input) return;
-      input.addEventListener("input",updateSummary);
-      input.addEventListener("change",updateSummary);
-    });
+    syncPrivateFieldState();
 
     applyBtn.addEventListener("click",async()=>{
-      if(!appContext.requireOwner("apply bulk metadata changes")) return;
-
-      const selected=selectedCards();
-      const changes=enabledChanges();
-      const privateChanges=enabledPrivateChanges();
-      const fields=Object.keys(changes);
-      const privateFields=Object.keys(privateChanges);
-      const totalFields=fields.length+privateFields.length;
-      const err=validateChanges(changes) || validatePrivateChanges(privateChanges);
-
-      if(err){
-        status.textContent=err;
-        appContext.showToast(err);
-        return;
-      }
-      if(!selected.length){
-        status.textContent="Select at least one listing first.";
-        appContext.showToast("Select at least one listing");
-        return;
-      }
-      if(!totalFields){
-        status.textContent="Enable at least one field to update.";
-        appContext.showToast("Choose at least one field to update");
-        return;
-      }
-
-      const includesSold=changes.availability==="Sold";
-      const privateLabel=privateFields.length ? ` including ${privateFields.length} private owner field${privateFields.length===1?"":"s"}` : "";
-      const confirmText=includesSold
-        ? `Apply ${totalFields} field change${totalFields===1?"":"s"} to ${selected.length} listings${privateLabel}? Some listings will be marked Sold.`
-        : `Apply ${totalFields} field change${totalFields===1?"":"s"} to ${selected.length} listings${privateLabel}?`;
-
-      if(!confirm(confirmText)) return;
-
-      const originalText=applyBtn.textContent;
-      applyBtn.disabled=true;
-      let savedCount=0;
-      let failedCount=0;
-
-      try{
-        let privateMap=new Map();
-        if(privateFields.length){
-          applyBtn.textContent="Loading private data…";
-          try{
-            privateMap=await fetchSelectedPrivateMeta(selected.map(card=>card.id));
-          }catch(error){
-            console.error("Bulk private metadata read error:",error);
-            appContext.showToast("Could not load private owner information");
-            status.textContent="Private owner information could not be loaded. No changes were applied.";
-            return;
-          }
-        }
-
-        const privateRows=[];
-
-        for(let i=0;i<selected.length;i++){
-          const card=selected[i];
-          applyBtn.textContent=`Saving ${i+1}/${selected.length}…`;
-          let cardOk=true;
-
-          if(fields.length){
-            const saved=await appContext.updateCardMetadataFields(card,changes);
-            if(saved){
-              const index=appContext.getCardIndexById(card.id);
-              if(index>-1) appContext.cards[index]=saved;
-              byId.set(String(card.id),saved);
-            }else{
-              cardOk=false;
-            }
-          }
-
-          if(privateFields.length){
-            const id=appContext.safeCardId(card.id);
-            const current=privateMap.get(id)||{tags:[],notes:""};
-            const next=applyPrivateChangeToMeta(current,privateChanges);
-            privateRows.push({card_id:id,...next});
-          }
-
-          if(cardOk) savedCount++;
-          else{
-            failedCount++;
-            status.textContent=`Could not update ${card.name||card.card_code||"a listing"}. Continuing with the remaining selections…`;
-          }
-        }
-
-        if(privateFields.length){
-          applyBtn.textContent="Saving private owner information…";
-          status.textContent=`Saving private owner information for ${privateRows.length} listing${privateRows.length===1?"":"s"}…`;
-          try{
-            await savePrivateMetaRows(privateRows);
-          }catch(error){
-            console.error("Bulk private metadata save error:",error);
-            const detail=String(error?.message||error?.details||error?.hint||"").trim();
-            appContext.showToast(detail ? `Private owner save failed: ${detail.slice(0,120)}` : "Could not save private owner information");
-            status.textContent=detail
-              ? `Private owner information failed to save: ${detail}`
-              : "Public changes may have saved, but private owner information failed to save.";
-            return;
-          }
-        }
-
-        status.textContent=failedCount
-          ? `${savedCount} saved · ${failedCount} failed.`
-          : `${savedCount} listing${savedCount===1?"":"s"} updated successfully.`;
-
-        appContext.showToast(
-          failedCount
-            ? `Bulk edit: ${savedCount} saved · ${failedCount} failed`
-            : `Updated ${savedCount} listing${savedCount===1?"":"s"}`
-        );
-
-        selectedIds.clear();
-        renderPicker();
-      }finally{
-        applyBtn.textContent=originalText;
+      const changes=collectChanges();
+      const privateChanges=collectPrivateChanges();
+      const validation=validateChanges(changes) || validatePrivateChanges(privateChanges);
+      if(validation){
+        appContext.showToast(validation);
         updateSummary();
+        return;
       }
+      if(!selectedIds.size || (!Object.keys(changes).length && !Object.keys(privateChanges).length)) return;
+
+      const selectedCards=Array.from(selectedIds).map(id=>byId.get(id)).filter(Boolean);
+      const confirmed=appContext.confirmOwnerAction(
+        `Apply ${Object.keys(changes).length+Object.keys(privateChanges).length} field change${Object.keys(changes).length+Object.keys(privateChanges).length===1?"":"s"} to ${selectedCards.length} listing${selectedCards.length===1?"":"s"}?\n\n`+
+        `This updates the selected listings in Supabase.`
+      );
+      if(!confirmed) return;
+
+      applyBtn.disabled=true;
+      applyBtn.textContent="Updating…";
+      status.textContent="Applying changes…";
+
+      let privateMetaById=new Map();
+      if(Object.keys(privateChanges).length){
+        try{
+          privateMetaById=await fetchSelectedPrivateMeta(selectedCards.map(card=>card.id));
+        }catch(error){
+          console.error("Bulk private metadata read failed:",error);
+          status.textContent="Private owner information could not be loaded. No changes were applied.";
+          appContext.showToast("Bulk update stopped before changes were applied");
+          applyBtn.textContent="Apply Changes";
+          updateSummary();
+          return;
+        }
+      }
+
+      let success=0;
+      let failed=0;
+      let privateFailed=0;
+      const privateRows=[];
+      const publicChangeCount=Object.keys(changes).length;
+
+      for(const card of selectedCards){
+        let publicOk=true;
+        if(publicChangeCount){
+          const updated=await appContext.updateCardMetadataFields(card,changes);
+          if(updated){
+            appContext.replaceCardInMemory(updated);
+          }else{
+            publicOk=false;
+            failed++;
+          }
+        }
+
+        if(Object.keys(privateChanges).length){
+          const id=appContext.safeCardId(card.id);
+          const current=privateMetaById.get(id)||{tags:[],notes:""};
+          privateRows.push({card_id:id,...applyPrivateChangeToMeta(current,privateChanges)});
+        }
+
+        if(publicOk) success++;
+      }
+
+      if(privateRows.length){
+        try{
+          await savePrivateMetaRows(privateRows);
+        }catch(error){
+          console.error("Bulk private metadata save failed:",error);
+          privateFailed=privateRows.length;
+        }
+      }
+
+      appContext.invalidateCardLookup();
+      appContext.updateSidebarFooter();
+
+      const publicSummaryText=publicChangeCount
+        ? `${success} public update${success===1?"":"s"}${failed?` · ${failed} public failed`:""}`
+        : "No public fields changed";
+      const privateSummaryText=privateRows.length
+        ? (privateFailed?`${privateFailed} private update${privateFailed===1?"":"s"} failed`:`${privateRows.length} private update${privateRows.length===1?"":"s"}`)
+        : "";
+      status.textContent=[publicSummaryText,privateSummaryText].filter(Boolean).join(" · ");
+
+      if(failed || privateFailed){
+        appContext.showToast("Bulk update finished with some failures");
+      }else{
+        appContext.showToast(`Bulk update complete · ${selectedCards.length} listing${selectedCards.length===1?"":"s"}`);
+      }
+
+      applyBtn.textContent="Apply Changes";
+      renderPicker();
+      updateSummary();
     });
 
     renderPicker();
+    updateSummary();
   }
 
   Object.assign(appContext,{bulkMetadataCleanString,updateCardMetadataFields,bulkMetadataFieldLabel,bulkMetadataValueOptions,renderBulkMetadataPage});
 }
+
+export function initialize(appContext,runtime){}
