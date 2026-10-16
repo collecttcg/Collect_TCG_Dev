@@ -7,16 +7,20 @@ import { setup as setup3 } from './ui/enhancement-3.js';
 
 try{
   const runtime=createProductionRuntime();
-  const appContext={...runtime};
+  const appContext={
+    localStorage:runtime.localStorage,
+    sessionStorage:runtime.sessionStorage,
+    fetch:runtime.fetch
+  };
   registerFeatures(appContext);
+  initializeApp(appContext,runtime);
   setup1(appContext);
   setup2(appContext);
   setup3(appContext);
-  await initializeApp(appContext,runtime);
 }catch(error){
-  console.error('Application startup failed:',error);
-  const view=document.getElementById('view');
-  if(view){
-    view.innerHTML='<div class="panel"><h2>Unable to start Collect TCG</h2><p>Please refresh the page. If the problem continues, contact the site owner.</p></div>';
-  }
+  console.error('Collect TCG startup failed:',error);
+  const notice=document.createElement('p');
+  notice.setAttribute('role','alert');
+  notice.textContent='Collect TCG could not start: '+error.message;
+  document.body.prepend(notice);
 }
