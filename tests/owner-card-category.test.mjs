@@ -45,6 +45,7 @@ test('owner card categories stay private while Add/Edit and owner filters can us
   };
 
   register(appContext);
+  assert.deepEqual(appContext.OWNER_CATEGORIES,['Zakwan','Yen','Daniel','Jack','Shue']);
 
   const addHtml=appContext.fieldsTemplate('add');
   for(const owner of ['Zakwan','Yen','Daniel','Jack','Shue']) assert.match(addHtml,new RegExp(`>${owner}<`));
