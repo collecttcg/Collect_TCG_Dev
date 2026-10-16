@@ -42,6 +42,37 @@ export function register(appContext){
     ).join("")}`;
   }
 
+  // Preserve the reserved ownership marker whenever existing owner-only private
+  // tags are changed by another owner tool (including Bulk Metadata). Public
+  // card queries never touch this private table.
+  const originalPrivateFrom=appContext.supabaseClient?.from?.bind(appContext.supabaseClient);
+  if(originalPrivateFrom){
+    appContext.supabaseClient.from=function(table){
+      const builder=originalPrivateFrom(table);
+      if(table!=="card_owner_private" || !builder || typeof builder.upsert!=="function") return builder;
+
+      return new Proxy(builder,{
+        get(target,property){
+          if(property==="upsert"){
+            return (values,options)=>{
+              const isArray=Array.isArray(values);
+              const rows=(isArray ? values : [values]).map(row=>{
+                if(!row || typeof row!=="object") return row;
+                const id=appContext.safeCardId(row.card_id);
+                const card=id ? appContext.getCardById?.(id) : null;
+                const category=sanitizeOwnerCategory(card?._owner_category) || ownerCategoryFromTags(row.tags||[]);
+                return {...row,tags:ownerTagsWithCategory(row.tags||[],category)};
+              });
+              return target.upsert(isArray ? rows : rows[0],options);
+            };
+          }
+          const value=Reflect.get(target,property,target);
+          return typeof value==="function" ? value.bind(target) : value;
+        }
+      });
+    };
+  }
+
   const originalFieldsTemplate=appContext.fieldsTemplate;
   appContext.fieldsTemplate=function(prefix){
     const html=originalFieldsTemplate(prefix);
@@ -49,7 +80,7 @@ export function register(appContext){
     if(!html.includes(marker)) return html;
 
     const required=prefix==="add" ? " required" : "";
-    const categoryField=`<div class="field owner-card-category-field">\n          <label for="${prefix}OwnerCategory">Card owner${prefix==="add" ? ` <span class="field-required-note">required*</span>` : ""}</label>\n          <select id="${prefix}OwnerCategory"${required}>\n            ${ownerCategoryOptionsHTML("",true)}\n          </select>\n          <div class="hint">Owner-only category. Stored in private metadata and never included in public card data.</div>\n        </div>\n        `;
+    const categoryField=`<div class="field owner-card-category-field">\n          <label for="${prefix}OwnerCategory">Card owner${prefix==="add" ? ` <span class="field-required-note">required*</span>` : ""}</label>\n          <select id="${prefix}OwnerCategory"${required}>\n            ${ownerCategoryOptionsHTML("",prefix!=="add")}\n          </select>\n          <div class="hint">Owner-only category. Stored in private metadata and never included in public card data.</div>\n        </div>\n        `;
     return html.replace(marker,categoryField+marker);
   };
 
