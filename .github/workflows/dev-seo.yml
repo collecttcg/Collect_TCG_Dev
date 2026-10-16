@@ -102,7 +102,16 @@ jobs:
         path: dev
     - name: Commit refreshed SEO pages
       shell: bash
-      run: "git config user.name \"github-actions[bot]\"\ngit config user.email \"41898282+github-actions[bot]@users.noreply.github.com\"\n        \ngit add dev/cards dev/sitemap.xml dev/robots.txt dev/seo-slugs.json dev/owner-card-routes.json\nif git diff --cached\n        \ --quiet; then\n  echo \"SEO output already current.\"\n  exit 0\nfi\ngit commit -m \"chore: refresh Development\n        \ SEO card pages [skip ci]\"\ngit push\n"
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add dev/cards dev/sitemap.xml dev/robots.txt dev/seo-slugs.json dev/owner-card-routes.json
+        if git diff --cached --quiet; then
+          echo "SEO output already current."
+          exit 0
+        fi
+        git commit -m "chore: refresh Development SEO card pages [skip ci]"
+        git push
     - name: Create Development release packages
       shell: bash
       env:
