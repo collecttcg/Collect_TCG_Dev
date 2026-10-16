@@ -1,6 +1,6 @@
 /** Owner-only card ownership categories stored inside private owner metadata. */
 export function register(appContext){
-  const OWNER_CATEGORIES=["Zakwan","Yen","Daniel","Jack"];
+  const OWNER_CATEGORIES=["Zakwan","Yen","Daniel","Jack","Shue"];
   const OWNER_CATEGORY_TAG_PREFIX="__owner_category__:";
 
   function sanitizeOwnerCategory(value){
