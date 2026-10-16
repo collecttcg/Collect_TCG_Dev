@@ -38,7 +38,7 @@ import * as module36 from '../features/owner/bulk-status.js?v=2026-09-29-v09';
 import * as module37 from '../features/owner/image-maintenance.js?v=2026-09-29-v09';
 import * as module38 from '../features/owner/lifecycle.js?v=2026-09-29-v09';
 import * as module39 from '../features/owner/bulk-price.js?v=2026-09-29-v09';
-import * as module40 from '../features/owner/bulk-metadata.js?v=2026-09-29-v09';
+import * as module40 from '../features/owner/bulk-metadata.js?v=2026-10-16-v01';
 import * as module41 from '../features/owner/history.js?v=2026-09-29-v09';
 import * as module42 from '../features/owner/export.js?v=2026-09-29-v09';
 import * as module43 from '../features/owner/add.js?v=2026-09-29-v09';
@@ -48,6 +48,7 @@ import * as module46 from '../app/theme.js?v=2026-09-29-v09';
 import * as module47 from '../app/startup.js?v=2026-09-29-v09';
 import * as module48 from '../features/owner/mobile-card-editor.js?v=2026-10-07-v03';
 import * as module49 from '../features/social/posts-hidden-ebay.js?v=2026-10-14-v01';
+import * as module50 from '../features/owner/card-owner-category.js?v=2026-10-16-v01';
 
 export function registerFeatures(appContext){
   module0.register(appContext);
@@ -100,6 +101,7 @@ export function registerFeatures(appContext){
   module47.register(appContext);
   module48.register(appContext);
   module49.register(appContext);
+  module50.register(appContext);
 }
 
 export function initializeApp(appContext,runtime){
