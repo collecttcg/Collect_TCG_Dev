@@ -47,14 +47,14 @@ test('owner card categories stay private while Add/Edit and owner filters can us
   register(appContext);
 
   const addHtml=appContext.fieldsTemplate('add');
-  for(const owner of ['Zakwan','Yen','Daniel','Jack']) assert.match(addHtml,new RegExp(`>${owner}<`));
+  for(const owner of ['Zakwan','Yen','Daniel','Jack','Shue']) assert.match(addHtml,new RegExp(`>${owner}<`));
   assert.match(addHtml,/id="addOwnerCategory" required/);
   assert.match(addHtml,/Select owner/);
 
-  elements.addOwnerCategory={value:'Daniel'};
+  elements.addOwnerCategory={value:'Shue'};
   const collected=appContext.collectFields('add',null,{});
-  assert.equal(collected._owner_category,'Daniel');
-  assert.equal(collected._owner_tags[0],'__owner_category__:Daniel');
+  assert.equal(collected._owner_category,'Shue');
+  assert.equal(collected._owner_tags[0],'__owner_category__:Shue');
 
   const privateMeta=await appContext.fetchOwnerPrivateMeta('2');
   assert.equal(privateMeta.owner_category,'Yen');
