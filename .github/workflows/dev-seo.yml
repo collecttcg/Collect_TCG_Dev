@@ -1,7 +1,6 @@
 name: Refresh Development SEO card pages
 # Development validation/packages. GitHub Pages itself deploys from main via the repository's dynamic Pages workflow.
-# IMPORTANT: wait for the source commit's Pages deployment to settle before pushing the release-manifest commit,
-# otherwise GitHub Pages rejects the second deployment as an overlapping in-progress deployment.
+# Wait for the source commit's Pages deployment before pushing the manifest commit to avoid overlapping deployments.
 on:
   workflow_dispatch: null
   schedule:
@@ -113,9 +112,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-24-v05
-        PREVIOUS_VERSION: 2026-10-24-v04
-        PREVIOUS_COMMIT: 120a00e8af00148123aa5ccde3f103096b40d147
+        RELEASE_VERSION: 2026-10-24-v06
+        PREVIOUS_VERSION: 2026-10-24-v05
+        PREVIOUS_COMMIT: 17074ea89a804a84e5774c9b7c04532dbf076744
       run: |
         set -euo pipefail
         mkdir -p release
@@ -135,10 +134,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-24-v05-packages
+        name: Collect-TCG-Dev-2026-10-24-v06-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-24-v05-full.zip
-          release/Collect-TCG-Dev-2026-10-24-v04-to-2026-10-24-v05-patch.zip
+          release/Collect-TCG-Dev-2026-10-24-v06-full.zip
+          release/Collect-TCG-Dev-2026-10-24-v05-to-2026-10-24-v06-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -169,13 +168,13 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-24-v05.txt"
+        MANIFEST="release-manifests/2026-10-24-v06.txt"
         {
-          echo "Version: 2026-10-24-v05"
-          echo "Previous version: 2026-10-24-v04"
+          echo "Version: 2026-10-24-v06"
+          echo "Previous version: 2026-10-24-v05"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v05-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v04-to-2026-10-24-v05-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v06-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v05-to-2026-10-24-v06-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
@@ -184,5 +183,5 @@ jobs:
           echo "Package validation manifest already current."
           exit 0
         fi
-        git commit -m "Development 2026-10-24-v05: record package validation"
+        git commit -m "Development 2026-10-24-v06: record package validation"
         git push
