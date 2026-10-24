@@ -32,6 +32,8 @@ on:
     - dev/src/styles/01-foundation.css
     - dev/src/styles/02-components.css
     - dev/src/styles/27-insights-dashboard.css
+    - dev/src/styles/29-home-brand-spotlight.css
+    - dev/src/styles/30-ai-card-scanner.css
     - dev/src/features/inventory/filtering.js
     - dev/src/features/inventory/ordering.js
     - dev/src/features/owner/lifecycle.js
@@ -40,6 +42,7 @@ on:
     - dev/src/features/owner/bulk-metadata.js
     - dev/src/features/owner/card-owner-category.js
     - dev/src/features/owner/card-scanner.js
+    - dev/src/features/owner/card-scanner-style.js
     - dev/src/features/owner/image-maintenance.js
     - dev/src/app/navigation.js
     - dev/src/features/cards/repository.js
@@ -56,7 +59,6 @@ on:
     - dev/src/features/core/utilities.js
     - dev/src/features/cards/details.js
     - dev/src/features/cards/compare.js
-    - dev/src/styles/29-home-brand-spotlight.css
     - dev/src/main.js
     - tests/**
     - tools/check.mjs
@@ -83,7 +85,9 @@ jobs:
     - name: Run feature regression tests
       run: npm test
     - name: Validate scanner JavaScript
-      run: node --check dev/src/features/owner/card-scanner.js
+      run: |
+        node --check dev/src/features/owner/card-scanner.js
+        node --check dev/src/features/owner/card-scanner-style.js
     - name: Validate SEO generator syntax and self-test
       run: |
         node --check tools/generate-seo.mjs
@@ -112,9 +116,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-24-v09
-        PREVIOUS_VERSION: 2026-10-24-v08
-        PREVIOUS_COMMIT: 2238cd831b2c994e3822db743659113831bd9a22
+        RELEASE_VERSION: 2026-10-25-v03
+        PREVIOUS_VERSION: 2026-10-25-v02
+        PREVIOUS_COMMIT: c98bf95bb05f0687901356eddb1b406075317167
       run: |
         set -euo pipefail
         mkdir -p release
@@ -134,10 +138,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-24-v09-packages
+        name: Collect-TCG-Dev-2026-10-25-v03-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-24-v09-full.zip
-          release/Collect-TCG-Dev-2026-10-24-v08-to-2026-10-24-v09-patch.zip
+          release/Collect-TCG-Dev-2026-10-25-v03-full.zip
+          release/Collect-TCG-Dev-2026-10-25-v02-to-2026-10-25-v03-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -168,13 +172,13 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-24-v09.txt"
+        MANIFEST="release-manifests/2026-10-25-v03.txt"
         {
-          echo "Version: 2026-10-24-v09"
-          echo "Previous version: 2026-10-24-v08"
+          echo "Version: 2026-10-25-v03"
+          echo "Previous version: 2026-10-25-v02"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v09-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v08-to-2026-10-24-v09-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v03-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v02-to-2026-10-25-v03-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
@@ -183,5 +187,5 @@ jobs:
           echo "Package validation manifest already current."
           exit 0
         fi
-        git commit -m "Development 2026-10-24-v09: record package validation"
+        git commit -m "Development 2026-10-25-v03: record package validation"
         git push
