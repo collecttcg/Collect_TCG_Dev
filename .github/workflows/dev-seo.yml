@@ -1,5 +1,5 @@
 name: Refresh Development SEO card pages
-# 2026-10-24-v02 uses the final v01 release HEAD as its patch baseline.
+# 2026-10-24-v03 uses the final v02 release HEAD as its patch baseline.
 on:
   workflow_dispatch: null
   schedule:
@@ -117,9 +117,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-24-v02
-        PREVIOUS_VERSION: 2026-10-24-v01
-        PREVIOUS_COMMIT: 6ce2990b4f27064b9bc6d343ba682ace12cfa4df
+        RELEASE_VERSION: 2026-10-24-v03
+        PREVIOUS_VERSION: 2026-10-24-v02
+        PREVIOUS_COMMIT: 3070caaa90c97414375e861c8c7b8ce043e1ec22
       run: |
         set -euo pipefail
         mkdir -p release
@@ -146,10 +146,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-24-v02-packages
+        name: Collect-TCG-Dev-2026-10-24-v03-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-24-v02-full.zip
-          release/Collect-TCG-Dev-2026-10-24-v01-to-2026-10-24-v02-patch.zip
+          release/Collect-TCG-Dev-2026-10-24-v03-full.zip
+          release/Collect-TCG-Dev-2026-10-24-v02-to-2026-10-24-v03-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Record package validation manifest
@@ -157,18 +157,18 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-24-v02.txt"
+        MANIFEST="release-manifests/2026-10-24-v03.txt"
         {
-          echo "Version: 2026-10-24-v02"
-          echo "Previous version: 2026-10-24-v01"
+          echo "Version: 2026-10-24-v03"
+          echo "Previous version: 2026-10-24-v02"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v02-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v01-to-2026-10-24-v02-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v03-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v02-to-2026-10-24-v03-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-24-v02: record package validation"
+        git commit -m "Development 2026-10-24-v03: record package validation"
         git push
   deploy:
     needs: refresh
