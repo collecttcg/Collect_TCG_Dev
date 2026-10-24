@@ -83,20 +83,18 @@ jobs:
     - name: Validate scanner JavaScript
       run: node --check dev/src/features/owner/card-scanner.js
     - name: Validate SEO generator syntax and self-test
-      run: 'node --check tools/generate-seo.mjs
-
+      run: |
+        node --check tools/generate-seo.mjs
         node tools/generate-seo.mjs --self-test
-
-        '
     - name: Generate Development SEO card pages
       run: node tools/generate-seo.mjs --dev
     - name: Validate JavaScript and repository references
       run: npm run check
     - name: Validate CSS and retained release contracts
       shell: bash
-      run: 'npm run check:css
-
-        bash tools/release-contracts.sh'
+      run: |
+        npm run check:css
+        bash tools/release-contracts.sh
     - name: Configure GitHub Pages
       uses: actions/configure-pages@v5
     - name: Upload Development site for GitHub Pages
@@ -118,24 +116,59 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-24-v01
-        PREVIOUS_VERSION: 2026-10-16-v03
-        PREVIOUS_COMMIT: 575e88c03c832b8bfb09586b3371e20e65bea7f7
-      run: "set -euo pipefail\nmkdir -p release\nFULL=\"release/Collect-TCG-Dev-${RELEASE_VERSION}-full.zip\"\nPATCH=\"release/Collect-TCG-Dev-${PREVIOUS_VERSION}-to-${RELEASE_VERSION}-patch.zip\"\n\ngit archive --format=zip --output=\"${FULL}\" HEAD\n\nrm -rf .release-patch\nmkdir -p .release-patch\nwhile IFS= read -r -d '' path; do\n  mkdir -p \".release-patch/$(dirname \"$path\")\"\n  cp -a \"$path\" \".release-patch/$path\"\ndone < <(git diff --name-only --diff-filter=ACMRT -z \"${PREVIOUS_COMMIT}\" HEAD)\n\ngit diff --name-only --diff-filter=D \"${PREVIOUS_COMMIT}\" HEAD > .release-patch/PATCH-DELETIONS.txt\n(\n  cd .release-patch\n  zip -qr \"../${PATCH}\" .\n)\n\nunzip -tq \"${FULL}\"\nunzip -tq \"${PATCH}\"\n"
+        RELEASE_VERSION: 2026-10-24-v02
+        PREVIOUS_VERSION: 2026-10-24-v01
+        PREVIOUS_COMMIT: 384f0c686d9c3856574795071e19c21c3c0e8c07
+      run: |
+        set -euo pipefail
+        mkdir -p release
+        FULL="release/Collect-TCG-Dev-${RELEASE_VERSION}-full.zip"
+        PATCH="release/Collect-TCG-Dev-${PREVIOUS_VERSION}-to-${RELEASE_VERSION}-patch.zip"
+
+        git archive --format=zip --output="${FULL}" HEAD
+
+        rm -rf .release-patch
+        mkdir -p .release-patch
+        while IFS= read -r -d '' path; do
+          mkdir -p ".release-patch/$(dirname "$path")"
+          cp -a "$path" ".release-patch/$path"
+        done < <(git diff --name-only --diff-filter=ACMRT -z "${PREVIOUS_COMMIT}" HEAD)
+
+        git diff --name-only --diff-filter=D "${PREVIOUS_COMMIT}" HEAD > .release-patch/PATCH-DELETIONS.txt
+        (
+          cd .release-patch
+          zip -qr "../${PATCH}" .
+        )
+
+        unzip -tq "${FULL}"
+        unzip -tq "${PATCH}"
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-24-v01-packages
-        path: 'release/Collect-TCG-Dev-2026-10-24-v01-full.zip
-
-          release/Collect-TCG-Dev-2026-10-16-v03-to-2026-10-24-v01-patch.zip
-
-          '
+        name: Collect-TCG-Dev-2026-10-24-v02-packages
+        path: |
+          release/Collect-TCG-Dev-2026-10-24-v02-full.zip
+          release/Collect-TCG-Dev-2026-10-24-v01-to-2026-10-24-v02-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Record package validation manifest
       shell: bash
-      run: "set -euo pipefail\nmkdir -p release-manifests\nMANIFEST=\"release-manifests/2026-10-24-v01.txt\"\n{\n  echo \"Version: 2026-10-24-v01\"\n  echo \"Previous version: 2026-10-16-v03\"\n  echo \"Source commit: $(git rev-parse HEAD)\"\n  echo \"Full ZIP: Collect-TCG-Dev-2026-10-24-v01-full.zip\"\n  echo \"Patch ZIP: Collect-TCG-Dev-2026-10-16-v03-to-2026-10-24-v01-patch.zip\"\n  echo\n  sha256sum release/*.zip\n} > \"$MANIFEST\"\ngit add \"$MANIFEST\"\ngit commit -m \"Development 2026-10-24-v01: record package validation\"\ngit push\n"
+      run: |
+        set -euo pipefail
+        mkdir -p release-manifests
+        MANIFEST="release-manifests/2026-10-24-v02.txt"
+        {
+          echo "Version: 2026-10-24-v02"
+          echo "Previous version: 2026-10-24-v01"
+          echo "Source commit: $(git rev-parse HEAD)"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v02-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v01-to-2026-10-24-v02-patch.zip"
+          echo
+          sha256sum release/*.zip
+        } > "$MANIFEST"
+        git add "$MANIFEST"
+        git commit -m "Development 2026-10-24-v02: record package validation"
+        git push
   deploy:
     needs: refresh
     runs-on: ubuntu-latest
