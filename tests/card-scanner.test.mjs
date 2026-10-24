@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   extractCardCode, extractPsaCert, extractGradingCompany, extractGrade, extractYear, extractLanguage, extractGame, extractPsaLabelName,
-  resolveCreateWorker, findExistingCardByCode, buildCardScanResult, buildInventoryPriceRecommendation, buildMarketSearches, normalizeAiScanResult
+  resolveCreateWorker, findExistingCardByCode, buildCardScanResult, buildInventoryPriceRecommendation, buildMarketSearches, normalizeAiScanResult, normalizeAiMarketPrice
 } from '../dev/src/features/owner/card-scanner.js';
 
 test('card scanner extracts ONE PIECE card numbers from OCR variants',()=>{
@@ -71,6 +71,12 @@ test('AI result clears grading data for raw cards and keeps general TCG metadata
   assert.equal(raw.name,'Laboon'); assert.equal(raw.card_code,'C410'); assert.equal(raw.language,'JP'); assert.equal(raw.format,'Raw'); assert.equal(raw.company,''); assert.equal(raw.grade,''); assert.equal(raw.cert,'');
   const pokemon=normalizeAiScanResult({name:'Charizard',card_code:'4/102',game:'Pokémon',language:'English',series:'Base Set',era:'Vintage',format:'Raw',condition:'LP',confidence:.8},[]);
   assert.equal(pokemon.game,'Pokémon'); assert.equal(pokemon.card_code,'4/102'); assert.equal(pokemon.language,'ENG');
+});
+
+test('AI web market price is normalized conservatively',()=>{
+  const price=normalizeAiMarketPrice({myr:120,min_myr:100,max_myr:140,count:3,basis:'recent exact raw sales',confidence:.82,sources:[{title:'Market',url:'https://example.com/card'},{title:'bad',url:'javascript:alert(1)'}]});
+  assert.equal(price.myr,120); assert.equal(price.min_myr,100); assert.equal(price.max_myr,140); assert.equal(price.count,3); assert.equal(price.sources.length,1); assert.equal(price.source,'ai_web');
+  assert.equal(normalizeAiMarketPrice({myr:0,basis:'insufficient evidence'}),null);
 });
 
 test('market searches use detected identity without inventing a price',()=>{
