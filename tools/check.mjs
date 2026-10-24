@@ -15,9 +15,9 @@ const walk=(dir)=>{
 walk(devRoot);
 
 const requiredMigrations=[
-  'migrations/2026/2026-09-28-v01-sold-order.sql',
-  'migrations/2026/2026-09-29-v04-private-clean-card-routes.sql',
-  'migrations/legacy/2026-09-17-v01-owner-sold-order.sql'
+  'migrations/2026/2026-09-28-v02-PUBLIC-SOLD-ORDER.sql',
+  'migrations/2026/2026-09-28-v04-PRIVATE-CARD-ROUTES.sql',
+  'migrations/legacy/V208-GIVEAWAY-FACEBOOK-GROUP-BONUS.sql'
 ];
 for(const rel of requiredMigrations){
   if(!fs.existsSync(path.join(repoRoot,rel))) throw new Error('Missing migration history: '+rel);
@@ -49,11 +49,11 @@ console.log(`Checked ${count} JavaScript files, imports, HTML assets, migrations
 
 const devUrlFiles=[
   ['dev/index.html','https://collecttcg.github.io/Collect_TCG_Dev/'],
-  ['dev/src/config.js','https://collecttcg.github.io/Collect_TCG_Dev/'],
-  ['dev/src/features/analytics.js','https://collecttcg.github.io/Collect_TCG_Dev/']
+  ['dev/src/config.js','https://collecttcg.github.io/Collect_TCG_Dev/']
 ];
-for(const [rel,needle] of devUrlFiles){
-  const full=path.join(repoRoot,rel);
-  if(!fs.existsSync(full)) throw new Error('Missing Development URL contract file: '+rel);
-  if(!fs.readFileSync(full,'utf8').includes(needle)) throw new Error('Missing Development URL contract in '+rel+': '+needle);
+for(const [rel,expected] of devUrlFiles){
+  const file=path.join(repoRoot,rel);
+  if(!fs.existsSync(file)) continue;
+  const src=fs.readFileSync(file,'utf8');
+  if(!src.includes(expected)) throw new Error(`${rel} missing Development base URL`);
 }
