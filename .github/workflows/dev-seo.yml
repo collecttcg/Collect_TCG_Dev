@@ -1,5 +1,5 @@
 name: Refresh Development SEO card pages
-# 2026-10-24-v03 uses the final v02 release HEAD as its patch baseline.
+# 2026-10-24-v03 uses the final v02 release HEAD as its patch baseline; keep the validated v02 manifest unchanged.
 on:
   workflow_dispatch: null
   schedule:
