@@ -26,20 +26,17 @@ Reconciliation priority: current GitHub HEAD > latest release manifest > this ba
 
 ### Development
 
-Current Development work: `2026-10-25-v03`
-Previous Development checkpoint: `2026-10-25-v02`
-Latest previously packaged Development release: `2026-10-24-v09`
+Current Development work: `2026-10-25-v04`
+Previous Development release: `2026-10-25-v03`
 
-`2026-10-25-v03` source history:
-- `c98bf95bb05f0687901356eddb1b406075317167` — previous v02 scanner layout/cache checkpoint.
-- `8cf3ab2167240f3d7b32db969c3709bccee1ecee` — AI scanner Series detection committed to GitHub.
-- `d043a614e0f86bdf38eb40ddf55ec1fa6ea872d9` — Development validation/package workflow corrected for v03 and scanner CSS/style validation coverage.
-- `23611e425301770e3eb14507f3f46e6d48950cbb` — restored historical `2026-10-24-v09` manifest after stale workflow overwrite.
-- `957858b2d1d9357a67445650bd593863d31f474f` — repository baseline validation markers reconciled with current versions.
+`2026-10-25-v03` release manifest: `release-manifests/2026-10-25-v03.txt`.
+- Source commit: `fa1e598381f2bc8087a0c798ceee4f5ca7b44974`
+- Full ZIP: `Collect-TCG-Dev-2026-10-25-v03-full.zip`
+- Full SHA256: `fdd300a1a064e46c01c18a13f7b37d08e37e79bc97270961ed6188d158ed63d9`
+- Patch ZIP: `Collect-TCG-Dev-2026-10-25-v02-to-2026-10-25-v03-patch.zip`
+- Patch SHA256: `3e45814e6a7fb560542dd9d9967882e7ba6d8cbd79163ca421b707a280bf93bc`
 
-Current v03 validation/package status: in progress. Do not call v03 complete until workflow, package integrity, manifest, Pages deployment, and committed-file inspection are confirmed.
-
-Latest previously packaged Development release manifest: `release-manifests/2026-10-24-v09.txt`.
+Latest earlier packaged Development release manifest: `release-manifests/2026-10-24-v09.txt`.
 Canonical v09 release record:
 - Source commit: `39bec0768c863a3fa33365dad6ac35490e60a7a8`
 - Full ZIP: `Collect-TCG-Dev-2026-10-24-v09-full.zip`
@@ -78,13 +75,41 @@ Current scanner architecture:
 - Raw/Sealed scans must not retain grading company, grade, or certification values.
 - Market pricing keeps raw and graded comparables separated; graded pricing should match grading company/grade where possible.
 - Identification is separated from slower market research so detected fields can return first.
-- No SQL is required for the current Series-detection change.
+- No SQL is required for the current Series-detection changes.
 
 ### Series detection — `2026-10-25-v03`
 
-The AI scanner treats `series` as a first-class detected field and should identify the most useful collector release grouping when reliable. Examples include `OP01`, `OP02`, `Promo`, `First Stage`, `Second Stage`, anniversary releases, Championship, Tournament Pack, Starter Deck, Limited Edition, and other specific release groupings.
+The AI scanner treats `series` as a first-class detected field and should identify the most useful collector release grouping when reliable. Examples include `OP01`, `OP02`, `Promo`, anniversary releases, Championship, Tournament Pack, Starter Deck, Limited Edition, and other specific release groupings.
 
 The scanner must not use the franchise/game name as Series and must leave Series blank when the release grouping cannot be identified reliably. Existing `Apply detected fields` behavior populates the editable Series field.
+
+### Hyper Battle canonical Series mapping — `2026-10-25-v04`
+
+For One Piece Carddass Hyper Battle, do not let the AI guess a Stage after it has correctly read a canonical `C###` card code. The Development Edge Function applies a deterministic Series correction based on the Hyper Battle set/card lists published by Grand Line Wiki (`grandlinewiki.net/tcg/carddasshyper.html`).
+
+Canonical C-card ranges currently enforced:
+- `C001-C034` → `1st Stage`
+- `C035-C066` → `2nd Stage`
+- `C067-C110` → `Grand Box`
+- `C111-C144` → `3rd Stage`
+- `C145-C177` → `4th Stage`
+- `C178-C220` → `Grand Box 2`
+- `C221-C254` → `5th Stage`
+- `C255-C287` → `6th Stage`
+- `C288-C332` → `Grand Box 3`
+- `C333-C368` → `7th Stage`
+- `C369-C397` → `Grand Box 4`
+- `C398-C427` → `Grand Line Compilation 1`
+- `C428-C456` → `Grand Line Compilation 2`
+- `C457-C489` → `Grand Box 5`
+- `C490-C519` → `Grand Line Compilation 3`
+- `C520-C546` → `Grand Box DX`
+
+Example: `C222` is canonically `5th Stage`, not `1st Stage`. `C409`/`C410` are `Grand Line Compilation 1`.
+
+The deterministic override is limited to cards that look like vintage One Piece Hyper Battle/Carddass based on game identity/year, so unrelated modern `C###` codes are not remapped. Other Hyper Battle code families (such as Special/Hyper/Field Point/reprint codes) remain AI-detected unless/until an equally reliable canonical mapping is added.
+
+Development Edge Function `scan-card-ai-dev` version 13 contains this correction and retains `verify_jwt: true` plus the existing `is_app_owner` authorization check.
 
 ## Canonical Retained History / Files
 
