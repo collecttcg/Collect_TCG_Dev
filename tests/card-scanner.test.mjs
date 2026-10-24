@@ -12,7 +12,8 @@ import {
   resolveCreateWorker,
   findExistingCardByCode,
   buildCardScanResult,
-  buildInventoryPriceRecommendation
+  buildInventoryPriceRecommendation,
+  buildMarketSearches
 } from '../dev/src/features/owner/card-scanner.js';
 
 test('card scanner extracts ONE PIECE card numbers from OCR variants',()=>{
@@ -21,6 +22,8 @@ test('card scanner extracts ONE PIECE card numbers from OCR variants',()=>{
   assert.equal(extractCardCode('Promo P - 001'),'P-001');
   assert.equal(extractCardCode('1999 ONE PIECE CHB #C01'),'C01');
   assert.equal(extractCardCode(`HYPER BATTLE\nG415`),'G415');
+  assert.equal(extractCardCode('C410'),'C410');
+  assert.equal(extractCardCode('C 410'),'C410');
   assert.equal(extractCardCode('OCR noise S 48 near artwork'),'');
   assert.equal(extractCardCode('OCR 8717-0041'),'ST17-004');
   assert.equal(extractCardCode('ordinary listing without a card code'),'');
@@ -71,7 +74,20 @@ test('price recommendation prefers sold same-grade comparables and returns media
   assert.match(recommendation.basis,/sold inventory comparables/);
 });
 
-test('price recommendation falls back to exact card-code inventory and ignores missing prices',()=>{
+test('raw recommendation excludes graded copies and prefers sold raw copies',()=>{
+  const cards=[
+    {card_code:'C410',price_myr:20,availability:'Available',format:'Raw',grading:[]},
+    {card_code:'C410',price_myr:30,availability:'Sold',format:'Raw',grading:[]},
+    {card_code:'C410',price_myr:40,availability:'Sold',format:'Raw',grading:[]},
+    {card_code:'C410',price_myr:500,availability:'Sold',format:'Graded',grading:[{company:'PSA',grade:'10'}]}
+  ];
+  const recommendation=buildInventoryPriceRecommendation(cards,{card_code:'C410'});
+  assert.equal(recommendation.myr,35);
+  assert.equal(recommendation.count,2);
+  assert.match(recommendation.basis,/sold raw/);
+});
+
+test('price recommendation falls back to exact raw card-code inventory and ignores missing prices',()=>{
   const cards=[
     {card_code:'P-001',price_myr:500,availability:'Available',grading:[]},
     {card_code:'P-001',price_myr:700,availability:'Available',grading:[]},
@@ -83,12 +99,16 @@ test('price recommendation falls back to exact card-code inventory and ignores m
   assert.equal(buildInventoryPriceRecommendation(cards,{card_code:'P-999'}),null);
 });
 
+test('market searches use detected identity without inventing a price',()=>{
+  const searches=buildMarketSearches({card_code:'C410',name:'Laboon',year:'2001',game:'One Piece',language:'JP'});
+  assert.match(searches.query,/C410/);
+  assert.match(searches.query,/Laboon/i);
+  assert.match(searches.ebay,/ebay\.com\/sch/i);
+  assert.match(searches.mercari,/jp\.mercari\.com\/search/i);
+});
+
 test('scanner parses the uploaded PSA examples into safe Add Card fields',()=>{
-  const boa=`2024 ONE PIECE JP #004
-BOA HANCOCK GEM MT
-PB STORAGE BOX SET 10
-170896351
-ST17-004`;
+  const boa=`2024 ONE PIECE JP #004\nBOA HANCOCK GEM MT\nPB STORAGE BOX SET 10\n170896351\nST17-004`;
   const boaResult=buildCardScanResult(boa,[],[]);
   assert.equal(boaResult.name,'BOA HANCOCK');
   assert.equal(boaResult.year,'2024');
@@ -98,10 +118,7 @@ ST17-004`;
   assert.equal(boaResult.grade,'10');
   assert.equal(boaResult.cert,'170896351');
 
-  const luffy=`1999 ONE PIECE CHB #C01
-LUFFY NM
-FIRST STAGE 7
-149834964`;
+  const luffy=`1999 ONE PIECE CHB #C01\nLUFFY NM\nFIRST STAGE 7\n149834964`;
   const luffyResult=buildCardScanResult(luffy,[],[]);
   assert.equal(luffyResult.name,'LUFFY');
   assert.equal(luffyResult.year,'1999');
@@ -109,11 +126,7 @@ FIRST STAGE 7
   assert.equal(luffyResult.grade,'7');
   assert.equal(luffyResult.cert,'149834964');
 
-  const chineseBoa=`2025 ONE PIECE CS #066
-BOA HANCOCK GEM MT
-CHINESE NEW YEAR'S RED PACK 10
-108827378
-P-066`;
+  const chineseBoa=`2025 ONE PIECE CS #066\nBOA HANCOCK GEM MT\nCHINESE NEW YEAR'S RED PACK 10\n108827378\nP-066`;
   const cnResult=buildCardScanResult(chineseBoa,[],[]);
   assert.equal(cnResult.name,'BOA HANCOCK');
   assert.equal(cnResult.year,'2025');
