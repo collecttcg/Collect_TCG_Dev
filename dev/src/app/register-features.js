@@ -49,7 +49,7 @@ import * as module47 from '../app/startup.js?v=2026-09-29-v09';
 import * as module48 from '../features/owner/mobile-card-editor.js?v=2026-10-07-v03';
 import * as module49 from '../features/social/posts-hidden-ebay.js?v=2026-10-14-v01';
 import * as module50 from '../features/owner/card-owner-category.js?v=2026-10-16-v03';
-import * as module51 from '../features/owner/card-scanner.js?v=2026-10-24-v02';
+import * as module51 from '../features/owner/card-scanner.js?v=2026-10-24-v03';
 
 export function registerFeatures(appContext){
   module0.register(appContext);
