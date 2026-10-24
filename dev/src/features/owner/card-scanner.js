@@ -4,542 +4,60 @@ const TESSERACT_WORKER_URL="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist
 const TESSERACT_CORE_URL="https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0";
 const TESSERACT_LANG_URL="https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int/";
 
-export function normalizeScanText(value){
-  return String(value||"").replace(/[\u2010-\u2015]/g,"-").replace(/\s+/g," ").trim();
-}
-
+export function normalizeScanText(value){return String(value||"").replace(/[\u2010-\u2015]/g,"-").replace(/\s+/g," ").trim();}
 export function extractCardCode(value){
-  const text=normalizeScanText(value).toUpperCase();
+  const raw=String(value||""); const text=normalizeScanText(raw).toUpperCase();
   const standard=text.match(/(?:^|[^A-Z0-9])([O0][P]|[S58][T7]|[E3][B8]|PR[B8])\s*[- ]?\s*(\d{2})\s*[- ]\s*(\d{3})(?:[1I])?(?=\D|$)/);
-  if(standard){
-    const prefix=standard[1]
-      .replace(/^0P$/,"OP")
-      .replace(/^[58]7$/,"ST")
-      .replace(/^3[8B]$/,"EB")
-      .replace(/^E8$/,"EB")
-      .replace(/^PR8$/,"PRB");
-    return `${prefix}${standard[2]}-${standard[3]}`;
-  }
-  const promo=text.match(/\bP\s*[- ]\s*(\d{3})(?=\D|$)/);
-  if(promo) return `P-${promo[1]}`;
-  const lines=String(value||"").split(/\r?\n/).map(line=>normalizeScanText(line).toUpperCase()).filter(Boolean);
-  for(const line of lines){
-    const labelled=line.match(/#\s*([CSG])(\d{2,3})(?:\b|\D)/);
-    if(labelled) return `${labelled[1]}${labelled[2]}`;
-  }
-  if(/\bHYPER\s+BATTLE\b|\bBANDAI\s+(?:1999|2000|2001)\b/.test(text)){
-    for(const line of lines){
-      const vintage=line.match(/^([CSG])(\d{2,3})(?:\b|\D)/);
-      if(vintage) return `${vintage[1]}${vintage[2]}`;
-    }
-  }
+  if(standard){const prefix=standard[1].replace(/^0P$/,"OP").replace(/^[58]7$/,"ST").replace(/^3[8B]$/,"EB").replace(/^E8$/,"EB").replace(/^PR8$/,"PRB"); return `${prefix}${standard[2]}-${standard[3]}`;}
+  const promo=text.match(/\bP\s*[- ]\s*(\d{3})(?=\D|$)/); if(promo) return `P-${promo[1]}`;
+  const lines=raw.split(/\r?\n/).map(line=>normalizeScanText(line).toUpperCase()).filter(Boolean);
+  for(const line of lines){const labelled=line.match(/#\s*([CSG])\s*(\d{2,3})(?:\b|\D)/); if(labelled) return `${labelled[1]}${labelled[2]}`;}
+  if(/\bHYPER\s+BATTLE\b|\bBANDAI\s+(?:1999|2000|2001)\b/.test(text)) for(const line of lines){const vintage=line.match(/^([CSG])\s*(\d{2,3})(?:\b|\D)/); if(vintage) return `${vintage[1]}${vintage[2]}`;}
+  for(const line of lines){const isolated=line.match(/^(?:[#:]\s*)?([CSG])\s*[- ]?\s*(\d{2,3})\s*$/); if(isolated) return `${isolated[1]}${isolated[2]}`;}
   return "";
 }
-
-export function extractYear(value){
-  const text=normalizeScanText(value).toUpperCase();
-  const patterns=[
-    /\b(19\d{2}|20\d{2})\b(?=.{0,30}\bONE\s+PIECE\b)/,
-    /\bONE\s+PIECE\b.{0,30}?\b(19\d{2}|20\d{2})\b/,
-    /\bBANDAI\s+(19\d{2}|20\d{2})\s+MADE\s+IN\s+JAPAN\b/
-  ];
-  for(const pattern of patterns){
-    const match=text.match(pattern);
-    if(match) return match[1];
-  }
-  return "";
-}
-
-export function extractLanguage(value){
-  const text=normalizeScanText(value).toUpperCase();
-  if(/\bCHINESE\b|\bCHN\b|\bONE\s+PIECE\s+CN\b/.test(text)) return "CN";
-  if(/\bJAPANESE\b|\bJAPAN\b|\bONE\s+PIECE\s+JP\b/.test(text)) return "JP";
-  if(/\bKOREAN\b|\bKOREA\b|\bONE\s+PIECE\s+KR\b/.test(text)) return "KR";
-  if(/\bENGLISH\b|\bONE\s+PIECE\s+ENG\b/.test(text)) return "ENG";
-  if(/\bONE\s+PIECE\b/.test(text)){
-    const lines=String(value||"").split(/\r?\n/).map(line=>normalizeScanText(line).toUpperCase()).filter(Boolean);
-    if(lines.includes("JP")) return "JP";
-    if(lines.includes("CN")) return "CN";
-    if(lines.includes("KR")) return "KR";
-    if(lines.includes("ENG")) return "ENG";
-  }
-  return "";
-}
-
-export function extractGame(value){
-  return /\bONE\s+PIECE\b/i.test(normalizeScanText(value)) ? "One Piece" : "";
-}
-
-export function extractPsaLabelName(value){
-  if(extractGame(value)!=="One Piece") return "";
-  const lines=String(value||"").split(/\r?\n/).map(normalizeScanText).filter(Boolean);
-  const anchor=lines.findIndex(line=>/\b(?:19\d{2}|20\d{2})\b/.test(line) && /\bONE(?:\s+PIECE)?\b/i.test(line));
-  if(anchor<0) return "";
-  for(let index=anchor+1; index<Math.min(lines.length,anchor+13); index++){
-    if(/[a-z]/.test(lines[index])) continue;
-    let line=lines[index].toUpperCase();
-    if(/^(?:PSA|CERT|FIRST STAGE|PB STORAGE|CHINESE NEW YEAR|NEW YEAR|ONE PIECE|PIECE|CHB|JP|CN|KR|ENG|GEM|NM|MINT|EX|VG|GOOD|POOR|PR|#)/.test(line)) continue;
-    line=line
-      .replace(/\b(?:GEM\s*(?:MINT|MT)|NM(?:\s*[- ]?\s*MT)?|MINT|EX(?:\s*[- ]?\s*MT)?|VG(?:\s*[- ]?\s*EX)?|GOOD|PR|POOR)\b.*$/,'')
-      .replace(/\s+#?[A-Z]?\d{1,4}\s*$/,'')
-      .replace(/[^A-Z0-9 .&'’-]+/g,' ')
-      .replace(/\s+/g,' ')
-      .trim();
-    if(line.length>=3 && /[A-Z]/.test(line)) return line;
-  }
-  return "";
-}
-
-export function resolveCreateWorker(module){
-  const createWorker=module?.createWorker || module?.default?.createWorker;
-  return typeof createWorker==="function" ? createWorker : null;
-}
-
-export function extractPsaCert(value,barcodeValues=[]){
-  const candidates=[...(Array.isArray(barcodeValues)?barcodeValues:[]),String(value||"")];
-  for(const candidate of candidates){
-    const text=String(candidate||"");
-    const urlMatch=text.match(/psacard\.com\/(?:cert|certification)\/(\d{7,10})/i);
-    if(urlMatch) return urlMatch[1];
-    const labelled=text.match(/(?:CERT(?:IFICATION)?(?:\s*(?:NO\.?|NUMBER|#))?)[\s:#-]*(\d{7,10})\b/i);
-    if(labelled) return labelled[1];
-  }
-  const compact=normalizeScanText(value);
-  const standalone=compact.match(/(?:^|\s)(\d{7,10})(?=\s|$)/);
-  return standalone ? standalone[1] : "";
-}
-
-export function extractGradingCompany(value,barcodeValues=[]){
-  const text=`${normalizeScanText(value)} ${(Array.isArray(barcodeValues)?barcodeValues:[]).join(" ")}`.toUpperCase();
-  if(/PSACARD\.COM|\bPSA\b/.test(text)) return "PSA";
-  if(/\bBGS\b|\bBECKETT\b/.test(text)) return "BGS";
-  if(/\bCGC\b|CERTIFIED GUARANTY/.test(text)) return "CGC";
-  return "";
-}
-
-export function extractGrade(value){
-  const text=normalizeScanText(value).toUpperCase();
-  const patterns=[
-    /\b(?:GEM\s*(?:MINT|MT))\s*(10(?:\.0)?)\b/,
-    /\b(?:MINT)\s*(9(?:\.5|\.0)?)\b/,
-    /\b(?:NM\s*[- ]?\s*MT|NEAR\s*MINT\s*[- ]?\s*MINT)\s*(8(?:\.5|\.0)?)\b/,
-    /\b(?:NM|NEAR\s*MINT)\s*(7(?:\.5|\.0)?)\b/,
-    /\b(?:EX\s*[- ]?\s*MT|EXCELLENT\s*[- ]?\s*MINT)\s*(6(?:\.5|\.0)?)\b/,
-    /\b(?:EX|EXCELLENT)\s*(5(?:\.5|\.0)?)\b/,
-    /\b(?:VG\s*[- ]?\s*EX|VERY\s*GOOD\s*[- ]?\s*EXCELLENT)\s*(4(?:\.5|\.0)?)\b/,
-    /\b(?:VG|VERY\s*GOOD)\s*(3(?:\.5|\.0)?)\b/,
-    /\b(?:GOOD)\s*(2(?:\.5|\.0)?)\b/,
-    /\b(?:PR|POOR)\s*(1(?:\.5|\.0)?)\b/
-  ];
-  for(const pattern of patterns){
-    const match=text.match(pattern);
-    if(match) return match[1].replace(/\.0$/,'');
-  }
-  const relaxed=[
-    [/\bGEM\s*(?:MINT|MT)\b(?:\s+\S+){0,7}?\s+(10(?:\.0)?)\b/,"10"],
-    [/\bMINT\b(?:\s+\S+){0,5}?\s+(9(?:\.5|\.0)?)\b/,"9"],
-    [/\bNM\b(?:\s+\S+){0,5}?\s+(7(?:\.5|\.0)?)\b/,"7"]
-  ];
-  for(const [pattern] of relaxed){
-    const match=text.match(pattern);
-    if(match) return match[1].replace(/\.0$/,'');
-  }
-  const explicit=text.match(/\bGRADE\s*[:#-]?\s*(10|[1-9](?:\.5)?)\b/);
-  return explicit ? explicit[1] : "";
-}
-
-export function findExistingCardByCode(cards,code){
-  const target=String(code||"").trim().toUpperCase();
-  if(!target) return null;
-  return (Array.isArray(cards)?cards:[]).find(card=>String(card?.card_code||"").trim().toUpperCase()===target) || null;
-}
-
-export function buildCardScanResult(text,barcodeValues=[],cards=[]){
-  const cardCode=extractCardCode(text);
-  return {
-    company:extractGradingCompany(text,barcodeValues),
-    grade:extractGrade(text),
-    cert:extractPsaCert(text,barcodeValues),
-    card_code:cardCode,
-    name:extractPsaLabelName(text),
-    year:extractYear(text),
-    game:extractGame(text),
-    language:extractLanguage(text),
-    matched_card:findExistingCardByCode(cards,cardCode)
-  };
-}
-
-function gradingEntryMatches(card,company,grade){
-  const entries=Array.isArray(card?.grading) ? card.grading : [];
-  if(!company && !grade) return true;
-  return entries.some(entry=>{
-    const companyMatch=!company || String(entry?.company||"").trim().toUpperCase()===String(company).trim().toUpperCase();
-    const gradeMatch=!grade || String(entry?.grade??"").trim()===String(grade).trim();
-    return companyMatch && gradeMatch;
-  });
-}
-
-function median(values){
-  const sorted=values.slice().sort((a,b)=>a-b);
-  if(!sorted.length) return null;
-  const middle=Math.floor(sorted.length/2);
-  return sorted.length%2 ? sorted[middle] : (sorted[middle-1]+sorted[middle])/2;
-}
-
+export function extractYear(value){const text=normalizeScanText(value).toUpperCase(); for(const p of [/\b(19\d{2}|20\d{2})\b(?=.{0,30}\bONE\s+PIECE\b)/,/\bONE\s+PIECE\b.{0,30}?\b(19\d{2}|20\d{2})\b/,/\bBANDAI\s+(19\d{2}|20\d{2})\s+MADE\s+IN\s+JAPAN\b/]){const m=text.match(p); if(m)return m[1];} return "";}
+export function extractLanguage(value){const text=normalizeScanText(value).toUpperCase(); if(/\bCHINESE\b|\bCHN\b|\bONE\s+PIECE\s+CN\b/.test(text))return"CN"; if(/\bJAPANESE\b|\bJAPAN\b|\bONE\s+PIECE\s+JP\b/.test(text))return"JP"; if(/\bKOREAN\b|\bKOREA\b|\bONE\s+PIECE\s+KR\b/.test(text))return"KR"; if(/\bENGLISH\b|\bONE\s+PIECE\s+ENG\b/.test(text))return"ENG"; return"";}
+export function extractGame(value){return /\bONE\s+PIECE\b/i.test(normalizeScanText(value))?"One Piece":"";}
+export function extractPsaLabelName(value){if(extractGame(value)!=="One Piece")return""; const lines=String(value||"").split(/\r?\n/).map(normalizeScanText).filter(Boolean); const anchor=lines.findIndex(line=>/\b(?:19\d{2}|20\d{2})\b/.test(line)&&/\bONE(?:\s+PIECE)?\b/i.test(line)); if(anchor<0)return""; for(let i=anchor+1;i<Math.min(lines.length,anchor+13);i++){if(/[a-z]/.test(lines[i]))continue; let line=lines[i].toUpperCase(); if(/^(?:PSA|CERT|FIRST STAGE|PB STORAGE|CHINESE NEW YEAR|NEW YEAR|ONE PIECE|PIECE|CHB|JP|CN|KR|ENG|GEM|NM|MINT|EX|VG|GOOD|POOR|PR|#)/.test(line))continue; line=line.replace(/\b(?:GEM\s*(?:MINT|MT)|NM(?:\s*[- ]?\s*MT)?|MINT|EX(?:\s*[- ]?\s*MT)?|VG(?:\s*[- ]?\s*EX)?|GOOD|PR|POOR)\b.*$/,'').replace(/\s+#?[A-Z]?\d{1,4}\s*$/,'').replace(/[^A-Z0-9 .&'’-]+/g,' ').replace(/\s+/g,' ').trim(); if(line.length>=3&&/[A-Z]/.test(line))return line;} return"";}
+export function resolveCreateWorker(module){const fn=module?.createWorker||module?.default?.createWorker; return typeof fn==="function"?fn:null;}
+export function extractPsaCert(value,barcodeValues=[]){for(const candidate of [...(Array.isArray(barcodeValues)?barcodeValues:[]),String(value||"")]){const url=String(candidate).match(/psacard\.com\/(?:cert|certification)\/(\d{7,10})/i); if(url)return url[1]; const labelled=String(candidate).match(/(?:CERT(?:IFICATION)?(?:\s*(?:NO\.?|NUMBER|#))?)[\s:#-]*(\d{7,10})\b/i); if(labelled)return labelled[1];} const standalone=normalizeScanText(value).match(/(?:^|\s)(\d{7,10})(?=\s|$)/); return standalone?standalone[1]:"";}
+export function extractGradingCompany(value,barcodeValues=[]){const text=`${normalizeScanText(value)} ${(Array.isArray(barcodeValues)?barcodeValues:[]).join(" ")}`.toUpperCase(); if(/PSACARD\.COM|\bPSA\b/.test(text))return"PSA"; if(/\bBGS\b|\bBECKETT\b/.test(text))return"BGS"; if(/\bCGC\b|CERTIFIED GUARANTY/.test(text))return"CGC"; return"";}
+export function extractGrade(value){const text=normalizeScanText(value).toUpperCase(); const patterns=[/\b(?:GEM\s*(?:MINT|MT))\s*(10(?:\.0)?)\b/,/\b(?:MINT)\s*(9(?:\.5|\.0)?)\b/,/\b(?:NM\s*[- ]?\s*MT|NEAR\s*MINT\s*[- ]?\s*MINT)\s*(8(?:\.5|\.0)?)\b/,/\b(?:NM|NEAR\s*MINT)\s*(7(?:\.5|\.0)?)\b/,/\b(?:EX\s*[- ]?\s*MT|EXCELLENT\s*[- ]?\s*MINT)\s*(6(?:\.5|\.0)?)\b/,/\b(?:EX|EXCELLENT)\s*(5(?:\.5|\.0)?)\b/,/\b(?:VG\s*[- ]?\s*EX|VERY\s*GOOD\s*[- ]?\s*EXCELLENT)\s*(4(?:\.5|\.0)?)\b/,/\b(?:VG|VERY\s*GOOD)\s*(3(?:\.5|\.0)?)\b/,/\b(?:GOOD)\s*(2(?:\.5|\.0)?)\b/,/\b(?:PR|POOR)\s*(1(?:\.5|\.0)?)\b/]; for(const p of patterns){const m=text.match(p);if(m)return m[1].replace(/\.0$/,'');} for(const p of [/\bGEM\s*(?:MINT|MT)\b(?:\s+\S+){0,7}?\s+(10(?:\.0)?)\b/,/\bMINT\b(?:\s+\S+){0,5}?\s+(9(?:\.5|\.0)?)\b/,/\bNM\b(?:\s+\S+){0,5}?\s+(7(?:\.5|\.0)?)\b/]){const m=text.match(p);if(m)return m[1].replace(/\.0$/,'');} const explicit=text.match(/\bGRADE\s*[:#-]?\s*(10|[1-9](?:\.5)?)\b/); return explicit?explicit[1]:"";}
+export function findExistingCardByCode(cards,code){const target=String(code||"").trim().toUpperCase(); if(!target)return null; return (Array.isArray(cards)?cards:[]).find(card=>String(card?.card_code||"").trim().toUpperCase()===target)||null;}
+export function buildCardScanResult(text,barcodeValues=[],cards=[]){const cardCode=extractCardCode(text); return {company:extractGradingCompany(text,barcodeValues),grade:extractGrade(text),cert:extractPsaCert(text,barcodeValues),card_code:cardCode,name:extractPsaLabelName(text),year:extractYear(text),game:extractGame(text),language:extractLanguage(text),matched_card:findExistingCardByCode(cards,cardCode)};}
+function gradingEntryMatches(card,company,grade){const entries=Array.isArray(card?.grading)?card.grading:[]; return entries.some(entry=>(!company||String(entry?.company||"").trim().toUpperCase()===String(company).trim().toUpperCase())&&(!grade||String(entry?.grade??"").trim()===String(grade).trim()));}
+function isRawCard(card){const entries=Array.isArray(card?.grading)?card.grading:[]; return !entries.length && String(card?.format||"").trim().toLowerCase()!=="graded";}
+function median(values){const sorted=values.slice().sort((a,b)=>a-b); if(!sorted.length)return null; const middle=Math.floor(sorted.length/2); return sorted.length%2?sorted[middle]:(sorted[middle-1]+sorted[middle])/2;}
 export function buildInventoryPriceRecommendation(cards,result){
-  const code=String(result?.card_code||"").trim().toUpperCase();
-  if(!code) return null;
-  const exact=(Array.isArray(cards)?cards:[]).filter(card=>
-    String(card?.card_code||"").trim().toUpperCase()===code &&
-    Number.isFinite(Number(card?.price_myr)) &&
-    Number(card.price_myr)>0
-  );
-  if(!exact.length) return null;
-
-  const company=String(result?.company||"").trim();
-  const grade=String(result?.grade||"").trim();
-  const graded=company||grade ? exact.filter(card=>gradingEntryMatches(card,company,grade)) : [];
-  const sold=exact.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold");
-  const soldGraded=graded.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold");
-
-  let pool=soldGraded;
-  let basis="sold inventory comparables with the same card code and grade";
-  if(!pool.length){
-    pool=graded;
-    basis="inventory comparables with the same card code and grade";
-  }
-  if(!pool.length){
-    pool=sold;
-    basis="sold inventory comparables with the same card code";
-  }
-  if(!pool.length){
-    pool=exact;
-    basis="inventory comparables with the same card code";
-  }
-
-  const prices=pool.map(card=>Number(card.price_myr)).filter(value=>Number.isFinite(value)&&value>0);
-  if(!prices.length) return null;
-  return {
-    myr:median(prices),
-    min_myr:Math.min(...prices),
-    max_myr:Math.max(...prices),
-    count:prices.length,
-    basis
-  };
+  const code=String(result?.card_code||"").trim().toUpperCase(); if(!code)return null;
+  const exact=(Array.isArray(cards)?cards:[]).filter(card=>String(card?.card_code||"").trim().toUpperCase()===code&&Number.isFinite(Number(card?.price_myr))&&Number(card.price_myr)>0); if(!exact.length)return null;
+  const company=String(result?.company||"").trim(), grade=String(result?.grade||"").trim(); let pool=[],basis="";
+  if(company||grade){const graded=exact.filter(card=>gradingEntryMatches(card,company,grade)); const soldGraded=graded.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold"); if(soldGraded.length){pool=soldGraded;basis="sold inventory comparables with the same card code and grade";} else if(graded.length){pool=graded;basis="inventory comparables with the same card code and grade";}}
+  else {const raw=exact.filter(isRawCard); const soldRaw=raw.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold"); if(soldRaw.length){pool=soldRaw;basis="sold raw inventory comparables with the same card code";} else if(raw.length){pool=raw;basis="raw inventory comparables with the same card code";}}
+  if(!pool.length){const sold=exact.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold"); pool=sold.length?sold:exact; basis=sold.length?"sold inventory comparables with the same card code":"inventory comparables with the same card code";}
+  const prices=pool.map(card=>Number(card.price_myr)).filter(v=>Number.isFinite(v)&&v>0); if(!prices.length)return null; return {myr:median(prices),min_myr:Math.min(...prices),max_myr:Math.max(...prices),count:prices.length,basis};
 }
+export function buildMarketSearches(result){const matched=result?.matched_card||{}; const parts=[result?.year||matched.year,result?.game||matched.game||"One Piece",result?.name||matched.name,result?.card_code||matched.card_code,result?.language||matched.language].filter(Boolean); const query=parts.join(" ").trim(); if(!query)return {query:"",ebay:"",mercari:"",google:""}; const q=encodeURIComponent(query); return {query,ebay:`https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`,mercari:`https://jp.mercari.com/search?keyword=${q}`,google:`https://www.google.com/search?q=${q}`};}
 
 export function register(appContext){
-  let lastResult=null;
-  let lastPriceRecommendation=null;
-  let scannerBusy=false;
-
-  function setStatus(message,tone=""){
-    const status=appContext.$("addCardScanStatus");
-    if(!status) return;
-    status.textContent=message;
-    status.dataset.tone=tone;
-  }
-
-  function setProgress(message){
-    const progress=appContext.$("addCardScanProgress");
-    if(progress) progress.textContent=message;
-  }
-
-  function setPriceStatus(message,tone=""){
-    const status=appContext.$("addCardScanPrice");
-    if(!status) return;
-    status.textContent=message;
-    status.dataset.tone=tone;
-  }
-
-  function uploadedImageSources(){
-    return Array.from(appContext.$("addImageGalleryPreview")?.querySelectorAll?.("img")||[])
-      .map(image=>String(image.currentSrc||image.src||"").trim())
-      .filter(Boolean);
-  }
-
-  async function sourceToBlob(source){
-    if(typeof Blob!=="undefined" && source instanceof Blob) return source;
-    if(typeof source!=="string") return null;
-    try{
-      const response=await fetch(source);
-      if(!response.ok) return null;
-      return await response.blob();
-    }catch{
-      return null;
-    }
-  }
-
-  async function buildOcrRegions(source){
-    if(typeof document==="undefined" || typeof createImageBitmap!=="function") return [source];
-    let bitmap;
-    try{
-      const blob=await sourceToBlob(source);
-      if(!blob) return [source];
-      bitmap=await createImageBitmap(blob);
-      const width=bitmap.width;
-      const height=bitmap.height;
-      if(!width || !height) return [source];
-      const specs=height>=width
-        ? [[Math.round(width*0.10),Math.round(height*0.04),Math.round(width*0.80),Math.round(height*0.28)],[Math.round(width*0.08),Math.round(height*0.60),Math.round(width*0.84),Math.round(height*0.37)]]
-        : [[Math.round(width*0.04),Math.round(height*0.08),Math.round(width*0.38),Math.round(height*0.84)],[Math.round(width*0.58),Math.round(height*0.08),Math.round(width*0.38),Math.round(height*0.84)]];
-      const regions=[source];
-      for(const [sx,sy,sw,sh] of specs){
-        if(sw<40 || sh<40) continue;
-        const scale=Math.min(2,1600/Math.max(sw,sh));
-        const canvas=document.createElement("canvas");
-        canvas.width=Math.max(1,Math.round(sw*scale));
-        canvas.height=Math.max(1,Math.round(sh*scale));
-        const context=canvas.getContext("2d",{alpha:false});
-        if(!context) continue;
-        context.drawImage(bitmap,sx,sy,sw,sh,0,0,canvas.width,canvas.height);
-        regions.push(canvas.toDataURL("image/jpeg",0.92));
-      }
-      return regions;
-    }catch(error){
-      console.warn("Card scanner detail crops unavailable:",error);
-      return [source];
-    }finally{
-      try{ bitmap?.close?.(); }catch(_error){}
-    }
-  }
-
-  async function detectBarcodes(source){
-    if(typeof window==="undefined" || !("BarcodeDetector" in window) || typeof createImageBitmap!=="function") return [];
-    let bitmap;
-    try{
-      const blob=await sourceToBlob(source);
-      if(!blob) return [];
-      const supported=typeof window.BarcodeDetector.getSupportedFormats==="function"
-        ? await window.BarcodeDetector.getSupportedFormats()
-        : ["qr_code"];
-      const formats=["qr_code","code_128","data_matrix"].filter(format=>supported.includes(format));
-      if(!formats.length) return [];
-      bitmap=await createImageBitmap(blob);
-      const detector=new window.BarcodeDetector({formats});
-      const found=await detector.detect(bitmap);
-      return (found||[]).map(item=>String(item?.rawValue||"").trim()).filter(Boolean);
-    }catch(error){
-      console.warn("Card scanner barcode detection unavailable:",error);
-      return [];
-    }finally{
-      try{ bitmap?.close?.(); }catch(_error){}
-    }
-  }
-
-  async function createOcrWorker(){
-    const module=await import(TESSERACT_MODULE_URL);
-    const createWorker=resolveCreateWorker(module);
-    if(!createWorker) throw new Error("Tesseract OCR library loaded without createWorker");
-    const worker=await createWorker("eng",1,{
-      workerPath:TESSERACT_WORKER_URL,
-      corePath:TESSERACT_CORE_URL,
-      langPath:TESSERACT_LANG_URL,
-      logger:event=>{
-        if(!event?.status) return;
-        const percent=Number.isFinite(event.progress) ? ` ${Math.round(event.progress*100)}%` : "";
-        setProgress(`${event.status}${percent}`);
-      }
-    });
-    await worker.setParameters?.({tessedit_pageseg_mode:"11",preserve_interword_spaces:"1"});
-    return worker;
-  }
-
-  function scanSummary(result,confidence,imageCount){
-    const parts=[];
-    if(result.company) parts.push(result.company);
-    if(result.grade) parts.push(`Grade ${result.grade}`);
-    if(result.cert) parts.push(`Cert ${result.cert}`);
-    if(result.card_code) parts.push(result.card_code);
-    if(result.matched_card?.name) parts.push(String(result.matched_card.name));
-    else if(result.name) parts.push(result.name);
-    if(result.year) parts.push(result.year);
-    if(result.language) parts.push(result.language);
-    if(!parts.length) return `Scanned ${imageCount} uploaded photo${imageCount===1?"":"s"}, but no reliable card details were detected. Try a closer, sharper card/front-label photo.`;
-    const confidenceText=confidence>0 ? ` Average OCR confidence ${Math.round(confidence)}%.` : "";
-    return `Detected from ${imageCount} uploaded photo${imageCount===1?"":"s"}: ${parts.join(" · ")}.${confidenceText}`;
-  }
-
-  function priceSummary(recommendation){
-    if(!recommendation) return "No internal price comparable was found for this card code. Market pricing is not guessed automatically.";
-    const rounded=Math.round(recommendation.myr);
-    const range=recommendation.min_myr===recommendation.max_myr
-      ? ""
-      : ` · observed RM ${Math.round(recommendation.min_myr).toLocaleString()}–${Math.round(recommendation.max_myr).toLocaleString()}`;
-    return `Suggested starting price: RM ${rounded.toLocaleString()} · based on ${recommendation.count} ${recommendation.basis}${range}. This is an internal comparable, not a live market quote.`;
-  }
-
-  function setField(id,value){
-    if(value==null || value==="") return false;
-    const field=appContext.$(id);
-    if(!field) return false;
-    field.value=String(value);
-    field.dispatchEvent(new Event("change",{bubbles:true}));
-    field.dispatchEvent(new Event("input",{bubbles:true}));
-    return true;
-  }
-
-  function applyMatchedCard(card){
-    if(!card) return;
-    setField("addName",card.name);
-    setField("addCardCode",card.card_code);
-    setField("addYear",card.year);
-    setField("addGame",card.game);
-    setField("addLanguage",card.language);
-    setField("addLanguageDetails",card.language_details);
-    setField("addEra",card.era);
-    setField("addSet",card.set);
-    setField("addSeries",card.series);
-    setField("addFormat",card.format);
-    setField("addRarity",card.rarity);
-  }
-
-  function applyGrading(result){
-    if(!result.company && !result.grade && !result.cert) return;
-    setField("addFormat","Graded");
-    let row=appContext.$("addGradingRows")?.querySelector?.(".grading-row");
-    if(!row){
-      appContext.$("addAddGrade")?.click();
-      row=appContext.$("addGradingRows")?.querySelector?.(".grading-row");
-    }
-    if(!row) return;
-    const company=row.querySelector(".addGradeCompany");
-    const grade=row.querySelector(".addGradeValue");
-    const cert=row.querySelector(".addGradeCert");
-    if(company && result.company){ company.value=result.company; company.dispatchEvent(new Event("change",{bubbles:true})); }
-    if(grade && result.grade){ grade.value=result.grade; grade.dispatchEvent(new Event("change",{bubbles:true})); }
-    if(cert && result.cert){ cert.value=result.cert; cert.dispatchEvent(new Event("input",{bubbles:true})); }
-  }
-
-  function applyScanResult(){
-    if(!lastResult) return;
-    if(lastResult.matched_card) applyMatchedCard(lastResult.matched_card);
-    else{
-      setField("addName",lastResult.name);
-      setField("addCardCode",lastResult.card_code);
-      setField("addYear",lastResult.year);
-      setField("addGame",lastResult.game);
-      setField("addLanguage",lastResult.language);
-    }
-    applyGrading(lastResult);
-    appContext.showToast?.("Detected card details applied — please review before saving");
-    setStatus("Applied detected details to Add Card. Review every field before saving.","success");
-  }
-
-  function applyPriceRecommendation(){
-    if(!lastPriceRecommendation) return;
-    const rounded=Math.round(lastPriceRecommendation.myr);
-    setField("addPriceMYR",rounded);
-    appContext.showToast?.(`Suggested price RM ${rounded.toLocaleString()} applied`);
-    setPriceStatus(`${priceSummary(lastPriceRecommendation)} Applied to MYR price; review before saving.`,"success");
-  }
-
-  async function scanUploadedPhotos(){
-    if(scannerBusy) return;
-    const sources=uploadedImageSources();
-    if(!sources.length){
-      setStatus("Upload the card photos using the normal Choose Files control first, then press Scan Uploaded Photos.","warning");
-      setProgress("The scanner now uses the same photos that will be saved with the card.");
-      return;
-    }
-
-    scannerBusy=true;
-    lastResult=null;
-    lastPriceRecommendation=null;
-    const scanButton=appContext.$("addCardScanUploaded");
-    const applyButton=appContext.$("addCardScanApply");
-    const priceButton=appContext.$("addCardScanApplyPrice");
-    if(scanButton) scanButton.disabled=true;
-    if(applyButton) applyButton.disabled=true;
-    if(priceButton) priceButton.disabled=true;
-    setStatus(`Scanning ${sources.length} uploaded photo${sources.length===1?"":"s"}…`);
-    setPriceStatus("Price recommendation will appear after the card is identified.");
-    setProgress("Preparing OCR…");
-
-    let worker;
-    try{
-      worker=await createOcrWorker();
-      const texts=[];
-      const barcodes=[];
-      const confidences=[];
-      for(let index=0;index<sources.length;index++){
-        setProgress(`Scanning uploaded photo ${index+1} of ${sources.length}…`);
-        const [barcodeValues,regions]=await Promise.all([
-          detectBarcodes(sources[index]),
-          buildOcrRegions(sources[index])
-        ]);
-        barcodes.push(...barcodeValues);
-        for(let regionIndex=0;regionIndex<regions.length;regionIndex++){
-          if(regionIndex>0) setProgress(`Reading detail region ${regionIndex} of photo ${index+1}…`);
-          const ocr=await worker.recognize(regions[regionIndex],{rotateAuto:true});
-          texts.push(String(ocr?.data?.text||""));
-          const confidence=Number(ocr?.data?.confidence);
-          if(Number.isFinite(confidence)&&confidence>0) confidences.push(confidence);
-        }
-      }
-      lastResult=buildCardScanResult(texts.join("\n"),barcodes,appContext.cards||[]);
-      lastPriceRecommendation=buildInventoryPriceRecommendation(appContext.cards||[],lastResult);
-      const averageConfidence=confidences.length
-        ? confidences.reduce((sum,value)=>sum+value,0)/confidences.length
-        : 0;
-      setStatus(scanSummary(lastResult,averageConfidence,sources.length),lastResult.card_code||lastResult.cert?"success":"warning");
-      setPriceStatus(priceSummary(lastPriceRecommendation),lastPriceRecommendation?"success":"");
-      setProgress(lastResult.matched_card
-        ? "Existing inventory match found. Nothing changes until you apply the detected fields."
-        : "Nothing changes until you apply the detected fields.");
-      if(applyButton) applyButton.disabled=!(lastResult.card_code||lastResult.company||lastResult.grade||lastResult.cert||lastResult.name||lastResult.year||lastResult.game||lastResult.language||lastResult.matched_card);
-      if(priceButton) priceButton.disabled=!lastPriceRecommendation;
-    }catch(error){
-      console.error("Card scanner failed:",error);
-      const detail=String(error?.message||error||"").replace(/\s+/g," ").trim().slice(0,180);
-      setStatus(`Could not scan the uploaded photos.${detail ? ` Scanner error: ${detail}` : ""}`,"error");
-      setProgress("Your uploaded photos and the normal Add Card form are unchanged.");
-      setPriceStatus("No price recommendation was generated.");
-    }finally{
-      try{ await worker?.terminate?.(); }catch(_error){}
-      scannerBusy=false;
-      if(scanButton) scanButton.disabled=false;
-    }
-  }
-
-  function wireScanner(){
-    if(!appContext.isOwnerMode?.()) return;
-    const form=appContext.view?.querySelector?.(".form-card");
-    if(!form || appContext.$("addCardScanner")) return;
-    const scanner=document.createElement("div");
-    scanner.id="addCardScanner";
-    scanner.className="panel owner-only";
-    scanner.innerHTML=`
-      <div class="section-head">
-        <div><h3>Scan Uploaded Card Photos</h3><p class="hint">Upload photos normally above, then scan those same photos. The scanner only recommends fields; you confirm before anything is saved.</p></div>
-      </div>
-      <div class="actions">
-        <button type="button" class="btn-primary" id="addCardScanUploaded">Scan Uploaded Photos</button>
-        <button type="button" id="addCardScanApply" disabled>Apply detected fields</button>
-        <button type="button" id="addCardScanApplyPrice" disabled>Apply recommended price</button>
-      </div>
-      <div class="hint" id="addCardScanStatus">Upload one or more clear card/slab photos with the normal Choose Files control, then scan them here.</div>
-      <div class="hint" id="addCardScanProgress">For slabs, include a clear label photo. OCR runs in your browser; nothing is saved automatically.</div>
-      <div class="hint" id="addCardScanPrice">After a card code is identified, the scanner can suggest a MYR starting price from matching cards already in this inventory.</div>`;
-    const imageField=form.querySelector(".image-field");
-    if(imageField) imageField.insertAdjacentElement("afterend",scanner);
-    else form.prepend(scanner);
-
-    appContext.$("addCardScanUploaded")?.addEventListener("click",scanUploadedPhotos);
-    appContext.$("addCardScanApply")?.addEventListener("click",applyScanResult);
-    appContext.$("addCardScanApplyPrice")?.addEventListener("click",applyPriceRecommendation);
-  }
-
-  const originalRenderAddPage=appContext.renderAddPage;
-  appContext.renderAddPage=function(...args){
-    const result=originalRenderAddPage(...args);
-    wireScanner();
-    return result;
-  };
-
-  Object.assign(appContext,{
-    scanUploadedCardPhotos:scanUploadedPhotos,
-    buildCardScanResult:(text,barcodes=[])=>buildCardScanResult(text,barcodes,appContext.cards||[]),
-    buildInventoryPriceRecommendation:(result)=>buildInventoryPriceRecommendation(appContext.cards||[],result)
-  });
+  let lastResult=null,lastPriceRecommendation=null,scannerBusy=false;
+  const $=id=>appContext.$(id); const setStatus=(message,tone="")=>{const el=$("addCardScanStatus");if(el){el.textContent=message;el.dataset.tone=tone;}}; const setProgress=message=>{const el=$("addCardScanProgress");if(el)el.textContent=message;}; const setPriceStatus=(message,tone="")=>{const el=$("addCardScanPrice");if(el){el.textContent=message;el.dataset.tone=tone;}};
+  function uploadedImageSources(){return Array.from($("addImageGalleryPreview")?.querySelectorAll?.("img")||[]).map(image=>String(image.currentSrc||image.src||"").trim()).filter(Boolean);}
+  async function sourceToBlob(source){if(typeof Blob!=="undefined"&&source instanceof Blob)return source;if(typeof source!=="string")return null;try{const response=await fetch(source);return response.ok?response.blob():null;}catch{return null;}}
+  function canvasData(bitmap,angle=0,crop=null){const sx=crop?.[0]??0,sy=crop?.[1]??0,sw=crop?.[2]??bitmap.width,sh=crop?.[3]??bitmap.height; const rotate=Math.abs(angle)%180===90; const scale=Math.min(2,1600/Math.max(sw,sh)); const canvas=document.createElement("canvas"); canvas.width=Math.max(1,Math.round((rotate?sh:sw)*scale)); canvas.height=Math.max(1,Math.round((rotate?sw:sh)*scale)); const ctx=canvas.getContext("2d",{alpha:false}); if(!ctx)return null; ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.translate(canvas.width/2,canvas.height/2);ctx.rotate(angle*Math.PI/180);ctx.drawImage(bitmap,sx,sy,sw,sh,-sw*scale/2,-sh*scale/2,sw*scale,sh*scale); return canvas.toDataURL("image/jpeg",0.94);}
+  async function buildOcrRegions(source){if(typeof document==="undefined"||typeof createImageBitmap!=="function")return[source];let bitmap;try{const blob=await sourceToBlob(source);if(!blob)return[source];bitmap=await createImageBitmap(blob);const w=bitmap.width,h=bitmap.height;if(!w||!h)return[source];const regions=[source]; for(const angle of [90,180,270]){const data=canvasData(bitmap,angle);if(data)regions.push(data);} const edgeSpecs=[[0,0,w,Math.round(h*.22)],[0,Math.round(h*.78),w,Math.round(h*.22)],[0,0,Math.round(w*.22),h],[Math.round(w*.78),0,Math.round(w*.22),h]]; for(const crop of edgeSpecs){for(const angle of [0,90,270]){const data=canvasData(bitmap,angle,crop);if(data)regions.push(data);}} return regions;}catch(error){console.warn("Card scanner detail crops unavailable:",error);return[source];}finally{try{bitmap?.close?.();}catch{}}}
+  async function detectBarcodes(source){if(typeof window==="undefined"||!("BarcodeDetector" in window)||typeof createImageBitmap!=="function")return[];let bitmap;try{const blob=await sourceToBlob(source);if(!blob)return[];const supported=typeof window.BarcodeDetector.getSupportedFormats==="function"?await window.BarcodeDetector.getSupportedFormats():["qr_code"];const formats=["qr_code","code_128","data_matrix"].filter(f=>supported.includes(f));if(!formats.length)return[];bitmap=await createImageBitmap(blob);const found=await new window.BarcodeDetector({formats}).detect(bitmap);return(found||[]).map(item=>String(item?.rawValue||"").trim()).filter(Boolean);}catch(error){console.warn("Card scanner barcode detection unavailable:",error);return[];}finally{try{bitmap?.close?.();}catch{}}}
+  async function createOcrWorker(){const module=await import(TESSERACT_MODULE_URL);const createWorker=resolveCreateWorker(module);if(!createWorker)throw new Error("Tesseract OCR library loaded without createWorker");const worker=await createWorker("eng",1,{workerPath:TESSERACT_WORKER_URL,corePath:TESSERACT_CORE_URL,langPath:TESSERACT_LANG_URL,logger:event=>{if(event?.status)setProgress(`${event.status}${Number.isFinite(event.progress)?` ${Math.round(event.progress*100)}%`:""}`);}});await worker.setParameters?.({tessedit_pageseg_mode:"11",preserve_interword_spaces:"1"});return worker;}
+  function scanSummary(result,confidence,imageCount){const parts=[];if(result.company)parts.push(result.company);if(result.grade)parts.push(`Grade ${result.grade}`);if(result.cert)parts.push(`Cert ${result.cert}`);if(result.card_code)parts.push(result.card_code);if(result.matched_card?.name)parts.push(String(result.matched_card.name));else if(result.name)parts.push(result.name);if(result.year)parts.push(result.year);if(result.language)parts.push(result.language);if(!parts.length)return`Scanned ${imageCount} uploaded photo${imageCount===1?"":"s"}, but no reliable card details were detected. Try a closer, sharper card/front-label photo.`;return`Detected from ${imageCount} uploaded photo${imageCount===1?"":"s"}: ${parts.join(" · ")}.${confidence>0?` Average OCR confidence ${Math.round(confidence)}%.`:""}`;}
+  function priceSummary(r){if(!r)return"No internal price comparable was found for this card code. Use the market-search links below to check similar listings.";const range=r.min_myr===r.max_myr?"":` · observed RM ${Math.round(r.min_myr).toLocaleString()}–${Math.round(r.max_myr).toLocaleString()}`;return`Suggested starting price: RM ${Math.round(r.myr).toLocaleString()} · based on ${r.count} ${r.basis}${range}. Internal comparable only; confirm against market results.`;}
+  function setMarketLinks(result){const box=$("addCardScanMarket");if(!box)return;const searches=buildMarketSearches(result);if(!searches.query){box.innerHTML="";return;}const safe=searches.query.replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;"}[c]));box.innerHTML=`Market check for <strong>${safe}</strong>: <a href="${searches.ebay}" target="_blank" rel="noopener noreferrer">eBay sold/completed</a> · <a href="${searches.mercari}" target="_blank" rel="noopener noreferrer">Mercari JP</a> · <a href="${searches.google}" target="_blank" rel="noopener noreferrer">Google</a>. External asking prices are not automatically applied.`;}
+  function setField(id,value){if(value==null||value==="")return false;const field=$(id);if(!field)return false;field.value=String(value);field.dispatchEvent(new Event("change",{bubbles:true}));field.dispatchEvent(new Event("input",{bubbles:true}));return true;}
+  function applyMatchedCard(card){if(!card)return;for(const [id,key] of [["addName","name"],["addCardCode","card_code"],["addYear","year"],["addGame","game"],["addLanguage","language"],["addLanguageDetails","language_details"],["addEra","era"],["addSet","set"],["addSeries","series"],["addFormat","format"],["addRarity","rarity"]])setField(id,card[key]);}
+  function applyGrading(result){if(!result.company&&!result.grade&&!result.cert){setField("addFormat","Raw");return;}setField("addFormat","Graded");let row=$("addGradingRows")?.querySelector?.(".grading-row");if(!row){$("addAddGrade")?.click();row=$("addGradingRows")?.querySelector?.(".grading-row");}if(!row)return;const company=row.querySelector(".addGradeCompany"),grade=row.querySelector(".addGradeValue"),cert=row.querySelector(".addGradeCert");if(company&&result.company){company.value=result.company;company.dispatchEvent(new Event("change",{bubbles:true}));}if(grade&&result.grade){grade.value=result.grade;grade.dispatchEvent(new Event("change",{bubbles:true}));}if(cert&&result.cert){cert.value=result.cert;cert.dispatchEvent(new Event("input",{bubbles:true}));}}
+  function applyScanResult(){if(!lastResult)return;if(lastResult.matched_card)applyMatchedCard(lastResult.matched_card);else{setField("addName",lastResult.name);setField("addCardCode",lastResult.card_code);setField("addYear",lastResult.year);setField("addGame",lastResult.game);setField("addLanguage",lastResult.language);}applyGrading(lastResult);appContext.showToast?.("Detected card details applied — please review before saving");setStatus("Applied detected details to Add Card. Review every field before saving.","success");}
+  function applyPriceRecommendation(){if(!lastPriceRecommendation)return;const rounded=Math.round(lastPriceRecommendation.myr);setField("addPriceMYR",rounded);appContext.showToast?.(`Suggested price RM ${rounded.toLocaleString()} applied`);setPriceStatus(`${priceSummary(lastPriceRecommendation)} Applied to MYR price; review before saving.`,"success");}
+  async function scanUploadedPhotos(){if(scannerBusy)return;const sources=uploadedImageSources();if(!sources.length){setStatus("Upload the card photos using the normal Choose Files control first, then press Scan Uploaded Photos.","warning");setProgress("The scanner uses the same photos that will be saved with the card.");return;}scannerBusy=true;lastResult=null;lastPriceRecommendation=null;const scanButton=$("addCardScanUploaded"),applyButton=$("addCardScanApply"),priceButton=$("addCardScanApplyPrice");if(scanButton)scanButton.disabled=true;if(applyButton)applyButton.disabled=true;if(priceButton)priceButton.disabled=true;setStatus(`Scanning ${sources.length} uploaded photo${sources.length===1?"":"s"}…`);setPriceStatus("Price recommendation will appear after the card is identified.");setProgress("Preparing OCR and rotated edge scans…");let worker;try{worker=await createOcrWorker();const texts=[],barcodes=[],confidences=[];for(let index=0;index<sources.length;index++){setProgress(`Scanning uploaded photo ${index+1} of ${sources.length}…`);const [barcodeValues,regions]=await Promise.all([detectBarcodes(sources[index]),buildOcrRegions(sources[index])]);barcodes.push(...barcodeValues);for(let r=0;r<regions.length;r++){if(r>0)setProgress(`Reading rotated/detail region ${r} of photo ${index+1}…`);const ocr=await worker.recognize(regions[r],{rotateAuto:true});texts.push(String(ocr?.data?.text||""));const confidence=Number(ocr?.data?.confidence);if(Number.isFinite(confidence)&&confidence>0)confidences.push(confidence);}}lastResult=buildCardScanResult(texts.join("\n"),barcodes,appContext.cards||[]);lastPriceRecommendation=buildInventoryPriceRecommendation(appContext.cards||[],lastResult);const average=confidences.length?confidences.reduce((s,v)=>s+v,0)/confidences.length:0;setStatus(scanSummary(lastResult,average,sources.length),lastResult.card_code||lastResult.cert?"success":"warning");setPriceStatus(priceSummary(lastPriceRecommendation),lastPriceRecommendation?"success":"");setMarketLinks(lastResult);setProgress(lastResult.matched_card?"Existing inventory match found. Internal raw/graded comparables are separated. Nothing changes until you apply.":"Nothing changes until you apply the detected fields.");if(applyButton)applyButton.disabled=!(lastResult.card_code||lastResult.company||lastResult.grade||lastResult.cert||lastResult.name||lastResult.year||lastResult.game||lastResult.language||lastResult.matched_card);if(priceButton)priceButton.disabled=!lastPriceRecommendation;}catch(error){console.error("Card scanner failed:",error);const detail=String(error?.message||error||"").replace(/\s+/g," ").trim().slice(0,180);setStatus(`Could not scan the uploaded photos.${detail?` Scanner error: ${detail}`:""}`,"error");setProgress("Your uploaded photos and the normal Add Card form are unchanged.");setPriceStatus("No price recommendation was generated.");}finally{try{await worker?.terminate?.();}catch{}scannerBusy=false;if(scanButton)scanButton.disabled=false;}}
+  function wireScanner(){if(!appContext.isOwnerMode?.())return;const form=appContext.view?.querySelector?.(".form-card");if(!form||$("addCardScanner"))return;const scanner=document.createElement("div");scanner.id="addCardScanner";scanner.className="panel owner-only";scanner.innerHTML=`<div class="section-head"><div><h3>Scan Uploaded Card Photos</h3><p class="hint">Upload photos normally above, then scan those same photos. The scanner checks rotated/raw-card details and only recommends fields; you confirm before anything is saved.</p></div></div><div class="actions"><button type="button" class="btn-primary" id="addCardScanUploaded">Scan Uploaded Photos</button><button type="button" id="addCardScanApply" disabled>Apply detected fields</button><button type="button" id="addCardScanApplyPrice" disabled>Apply recommended price</button></div><div class="hint" id="addCardScanStatus">Upload one or more clear card/slab photos with the normal Choose Files control, then scan them here.</div><div class="hint" id="addCardScanProgress">Raw cards and slabs are supported. OCR runs in your browser; nothing is saved automatically.</div><div class="hint" id="addCardScanPrice">After a card code is identified, raw cards use raw inventory comparables and graded cards use matching grade comparables.</div><div class="hint" id="addCardScanMarket"></div>`;const imageField=form.querySelector(".image-field");if(imageField)imageField.insertAdjacentElement("afterend",scanner);else form.prepend(scanner);$("addCardScanUploaded")?.addEventListener("click",scanUploadedPhotos);$("addCardScanApply")?.addEventListener("click",applyScanResult);$("addCardScanApplyPrice")?.addEventListener("click",applyPriceRecommendation);}
+  const originalRenderAddPage=appContext.renderAddPage;appContext.renderAddPage=function(...args){const result=originalRenderAddPage(...args);wireScanner();return result;};Object.assign(appContext,{scanUploadedCardPhotos:scanUploadedPhotos,buildCardScanResult:(text,barcodes=[])=>buildCardScanResult(text,barcodes,appContext.cards||[]),buildInventoryPriceRecommendation:result=>buildInventoryPriceRecommendation(appContext.cards||[],result)});
 }
