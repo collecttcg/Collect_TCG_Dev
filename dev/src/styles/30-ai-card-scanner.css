@@ -1,29 +1,33 @@
-/* Owner-only AI Card Scanner. Compact two-row layout, isolated from Add/Edit panel rules. */
-.ai-card-scanner{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto auto!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;padding:16px 18px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:16px!important;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006))!important;box-shadow:0 12px 30px rgba(0,0,0,.12)!important;overflow:hidden!important;}
+/* Owner-only AI Card Scanner. Compact premium layout: intro, stacked actions, wide result rows. */
+.ai-card-scanner{display:grid!important;grid-template-columns:minmax(220px,.85fr) minmax(180px,.55fr) minmax(0,1.8fr)!important;grid-template-areas:"header actions results" "market market market"!important;gap:14px 18px!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;padding:16px 18px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:16px!important;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006))!important;box-shadow:0 12px 30px rgba(0,0,0,.12)!important;overflow:hidden!important;align-items:start!important;}
 .ai-card-scanner>*{position:static!important;float:none!important;transform:none!important;box-sizing:border-box!important;min-width:0!important;max-width:100%!important;}
-.ai-card-scanner__header{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:16px!important;width:100%!important;margin:0 0 12px!important;}
+.ai-card-scanner__header{grid-area:header!important;display:block!important;width:100%!important;margin:0!important;padding:2px 0!important;}
 .ai-card-scanner__header>div{min-width:0!important;}
-.ai-card-scanner__header h3{margin:1px 0 3px!important;font-family:"Barlow Condensed",sans-serif;font-size:22px!important;line-height:1!important;letter-spacing:.01em;}
-.ai-card-scanner__header .hint{margin:0!important;max-width:760px!important;font-size:12.5px!important;line-height:1.4!important;color:var(--text-muted)!important;}
+.ai-card-scanner__header h3{margin:2px 0 5px!important;font-family:"Barlow Condensed",sans-serif;font-size:22px!important;line-height:1!important;letter-spacing:.01em;}
+.ai-card-scanner__header .hint{margin:0!important;max-width:300px!important;font-size:12.5px!important;line-height:1.42!important;color:var(--text-muted)!important;}
 .ai-card-scanner__eyebrow,.ai-card-scanner__label{font-family:"JetBrains Mono",monospace;font-size:8.5px!important;font-weight:700;letter-spacing:.12em;color:var(--text-muted);text-transform:uppercase;}
-.ai-card-scanner__badge{display:inline-flex!important;align-items:center!important;width:auto!important;padding:5px 9px!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:999px!important;font-family:"JetBrains Mono",monospace;font-size:8.5px!important;font-weight:700;letter-spacing:.08em;color:#aaaeb7!important;background:rgba(255,255,255,.025)!important;white-space:nowrap!important;}
-.ai-card-scanner__actions{display:grid!important;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr)!important;width:100%!important;gap:8px!important;margin:0 0 10px!important;}
-.ai-card-scanner__actions button{position:static!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;height:38px!important;min-height:38px!important;max-height:38px!important;margin:0!important;padding:0 12px!important;border-radius:9px!important;line-height:1.1!important;white-space:nowrap!important;font-size:12px!important;font-weight:720!important;box-shadow:none!important;transform:none!important;}
+.ai-card-scanner__badge{display:inline-flex!important;align-items:center!important;width:auto!important;margin-top:10px!important;padding:5px 9px!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:999px!important;font-family:"JetBrains Mono",monospace;font-size:8.5px!important;font-weight:700;letter-spacing:.08em;color:#aaaeb7!important;background:rgba(255,255,255,.025)!important;white-space:nowrap!important;}
+.ai-card-scanner__actions{grid-area:actions!important;display:grid!important;grid-template-columns:1fr!important;gap:7px!important;width:100%!important;margin:0!important;align-self:start!important;}
+.ai-card-scanner__actions button{position:static!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;height:38px!important;min-height:38px!important;max-height:38px!important;margin:0!important;padding:0 12px!important;border-radius:9px!important;line-height:1.1!important;white-space:normal!important;font-size:11.5px!important;font-weight:720!important;box-shadow:none!important;transform:none!important;overflow:hidden!important;text-align:center!important;}
 .ai-card-scanner__actions button:disabled{opacity:.42!important;}
-.ai-card-scanner__results{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;gap:8px!important;margin:0!important;align-items:start!important;}
-.ai-card-scanner__result{position:static!important;display:block!important;width:100%!important;min-width:0!important;height:auto!important;min-height:76px!important;margin:0!important;padding:10px 12px!important;border:1px solid rgba(255,255,255,.065)!important;border-radius:10px!important;background:rgba(255,255,255,.018)!important;overflow:hidden!important;transform:none!important;}
-.ai-card-scanner__result .hint{display:block!important;width:100%!important;margin:5px 0 0!important;font-size:11.5px!important;line-height:1.38!important;color:#a9adb5!important;overflow-wrap:break-word!important;word-break:normal!important;white-space:normal!important;}
-.ai-card-scanner__market{position:static!important;display:block!important;width:100%!important;margin:9px 0 0!important;padding:9px 0 0!important;border-top:1px solid rgba(255,255,255,.06)!important;font-size:11px!important;line-height:1.45!important;overflow-wrap:anywhere!important;}
+.ai-card-scanner__results{grid-area:results!important;display:grid!important;grid-template-columns:1fr!important;width:100%!important;gap:0!important;margin:0!important;border:1px solid rgba(255,255,255,.065)!important;border-radius:11px!important;background:rgba(255,255,255,.014)!important;overflow:hidden!important;align-self:start!important;}
+.ai-card-scanner__result{position:static!important;display:grid!important;grid-template-columns:minmax(110px,.38fr) minmax(0,1fr)!important;column-gap:14px!important;align-items:start!important;width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;margin:0!important;padding:10px 12px!important;border:0!important;border-bottom:1px solid rgba(255,255,255,.055)!important;border-radius:0!important;background:transparent!important;overflow:hidden!important;transform:none!important;}
+.ai-card-scanner__result:last-child{border-bottom:0!important;}
+.ai-card-scanner__result .ai-card-scanner__label{padding-top:1px!important;}
+.ai-card-scanner__result .hint{display:block!important;width:100%!important;min-width:0!important;margin:0!important;font-size:11.5px!important;line-height:1.42!important;color:#a9adb5!important;overflow-wrap:anywhere!important;word-break:normal!important;white-space:normal!important;}
+.ai-card-scanner__market{grid-area:market!important;position:static!important;display:block!important;width:100%!important;margin:0!important;padding:10px 0 0!important;border-top:1px solid rgba(255,255,255,.06)!important;font-size:11px!important;line-height:1.45!important;overflow-wrap:anywhere!important;}
 .ai-card-scanner__market:empty{display:none!important;}
 .ai-card-scanner__market a{display:inline-block!important;margin:1px 5px 1px 0!important;}
 body.light-mode .ai-card-scanner{border-color:#ded9cf!important;background:#fff!important;box-shadow:0 10px 24px rgba(25,28,32,.06)!important;}
-body.light-mode .ai-card-scanner__badge,body.light-mode .ai-card-scanner__result{border-color:#e4dfd6!important;background:#faf9f7!important;}
-@media(max-width:900px){.ai-card-scanner__results{grid-template-columns:1fr 1fr!important;}.ai-card-scanner__result--price{grid-column:1/-1!important;}}
+body.light-mode .ai-card-scanner__badge,body.light-mode .ai-card-scanner__results{border-color:#e4dfd6!important;background:#faf9f7!important;}
+body.light-mode .ai-card-scanner__result{border-bottom-color:#e8e3da!important;}
+@media(max-width:980px){
+ .ai-card-scanner{grid-template-columns:minmax(210px,.8fr) minmax(0,1.4fr)!important;grid-template-areas:"header actions" "results results" "market market"!important;}
+}
 @media(max-width:640px){
- .ai-card-scanner{padding:14px!important;border-radius:13px!important;}
- .ai-card-scanner__header{grid-template-columns:1fr!important;gap:8px!important;margin-bottom:10px!important;}
- .ai-card-scanner__header h3{font-size:20px!important;}.ai-card-scanner__header .hint{font-size:12px!important;}.ai-card-scanner__badge{justify-self:start!important;}
- .ai-card-scanner__actions{grid-template-columns:1fr!important;gap:7px!important;}
- .ai-card-scanner__actions button{height:38px!important;min-height:38px!important;max-height:38px!important;white-space:normal!important;}
- .ai-card-scanner__results{grid-template-columns:1fr!important;gap:7px!important;}.ai-card-scanner__result,.ai-card-scanner__result--price{grid-column:auto!important;min-height:0!important;padding:9px 10px!important;}
+ .ai-card-scanner{grid-template-columns:1fr!important;grid-template-areas:"header" "actions" "results" "market"!important;gap:10px!important;padding:14px!important;border-radius:13px!important;}
+ .ai-card-scanner__header h3{font-size:20px!important;}.ai-card-scanner__header .hint{max-width:none!important;font-size:12px!important;}.ai-card-scanner__badge{margin-top:8px!important;}
+ .ai-card-scanner__actions{gap:7px!important;}
+ .ai-card-scanner__actions button{height:38px!important;min-height:38px!important;max-height:38px!important;}
+ .ai-card-scanner__result{grid-template-columns:1fr!important;row-gap:4px!important;padding:9px 10px!important;}
 }
