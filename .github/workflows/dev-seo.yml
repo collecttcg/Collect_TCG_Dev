@@ -112,9 +112,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-24-v07
-        PREVIOUS_VERSION: 2026-10-24-v06
-        PREVIOUS_COMMIT: d6f13685d95f788c7e2d2393d9bb45367556a5d9
+        RELEASE_VERSION: 2026-10-24-v08
+        PREVIOUS_VERSION: 2026-10-24-v07
+        PREVIOUS_COMMIT: 51db7c0c5aa838faaad5115b92f93764e4799101
       run: |
         set -euo pipefail
         mkdir -p release
@@ -134,10 +134,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-24-v07-packages
+        name: Collect-TCG-Dev-2026-10-24-v08-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-24-v07-full.zip
-          release/Collect-TCG-Dev-2026-10-24-v06-to-2026-10-24-v07-patch.zip
+          release/Collect-TCG-Dev-2026-10-24-v08-full.zip
+          release/Collect-TCG-Dev-2026-10-24-v07-to-2026-10-24-v08-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -168,13 +168,13 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-24-v07.txt"
+        MANIFEST="release-manifests/2026-10-24-v08.txt"
         {
-          echo "Version: 2026-10-24-v07"
-          echo "Previous version: 2026-10-24-v06"
+          echo "Version: 2026-10-24-v08"
+          echo "Previous version: 2026-10-24-v07"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v07-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v06-to-2026-10-24-v07-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-24-v08-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-24-v07-to-2026-10-24-v08-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
@@ -183,5 +183,5 @@ jobs:
           echo "Package validation manifest already current."
           exit 0
         fi
-        git commit -m "Development 2026-10-24-v07: record package validation"
+        git commit -m "Development 2026-10-24-v08: record package validation"
         git push
