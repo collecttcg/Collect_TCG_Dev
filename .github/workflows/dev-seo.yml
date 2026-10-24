@@ -1,4 +1,5 @@
 name: Refresh Development SEO card pages
+# 2026-10-24-v02 uses the final v01 release HEAD as its patch baseline.
 on:
   workflow_dispatch: null
   schedule:
