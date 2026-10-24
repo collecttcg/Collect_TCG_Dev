@@ -1,5 +1,7 @@
 name: Refresh Development SEO card pages
-# 2026-10-24-v05 uses the final v04 release HEAD as its patch baseline; historical v04 manifest stays byte-identical.
+# Development validation/packages. GitHub Pages itself deploys from main via the repository's dynamic Pages workflow.
+# IMPORTANT: wait for the source commit's Pages deployment to settle before pushing the release-manifest commit,
+# otherwise GitHub Pages rejects the second deployment as an overlapping in-progress deployment.
 on:
   workflow_dispatch: null
   schedule:
@@ -63,8 +65,7 @@ on:
     - tools/release-contracts.sh
 permissions:
   contents: write
-  pages: write
-  id-token: write
+  actions: read
 concurrency:
   group: dev-seo-refresh
   cancel-in-progress: false
@@ -97,12 +98,6 @@ jobs:
       run: |
         npm run check:css
         bash tools/release-contracts.sh
-    - name: Configure GitHub Pages
-      uses: actions/configure-pages@v5
-    - name: Upload Development site for GitHub Pages
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: dev
     - name: Commit refreshed SEO pages
       shell: bash
       run: |
@@ -146,6 +141,29 @@ jobs:
           release/Collect-TCG-Dev-2026-10-24-v04-to-2026-10-24-v05-patch.zip
         if-no-files-found: error
         retention-days: 30
+    - name: Wait for source Pages deployment to settle
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        SOURCE_SHA="$(git rev-parse HEAD)"
+        echo "Waiting for dynamic Pages deployment for ${SOURCE_SHA} before creating the manifest commit."
+        for attempt in $(seq 1 60); do
+          RUN_JSON="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/355986577/runs?head_sha=${SOURCE_SHA}&per_page=5")"
+          STATE="$(printf '%s' "$RUN_JSON" | jq -r '.workflow_runs[0] | if . == null then "missing" else (.status + ":" + (.conclusion // "")) end')"
+          echo "Pages state: ${STATE}"
+          case "$STATE" in
+            completed:success) exit 0 ;;
+            completed:failure|completed:cancelled|completed:timed_out|completed:action_required)
+              echo "Source Pages deployment did not succeed: ${STATE}" >&2
+              exit 1
+              ;;
+          esac
+          sleep 5
+        done
+        echo "Timed out waiting for source Pages deployment." >&2
+        exit 1
     - name: Record package validation manifest
       shell: bash
       run: |
@@ -162,15 +180,9 @@ jobs:
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
+        if git diff --cached --quiet; then
+          echo "Package validation manifest already current."
+          exit 0
+        fi
         git commit -m "Development 2026-10-24-v05: record package validation"
         git push
-  deploy:
-    needs: refresh
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-    - name: Deploy Development site to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
