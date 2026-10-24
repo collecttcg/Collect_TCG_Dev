@@ -5,6 +5,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+const IDENTIFY_MODEL = "gemini-3.5-flash-lite";
+const MARKET_MODEL = "gemini-3.5-flash-lite";
+const IDENTIFY_TIMEOUT_MS = 20_000;
+const MARKET_TIMEOUT_MS = 20_000;
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -51,8 +55,8 @@ async function getGroundedMarketPrice(geminiKey:string, card:any) {
   const identity=[card.year,card.game,card.name,card.card_code,card.language,card.series,card.format,card.grading_company,card.grade?`grade ${card.grade}`:""].filter(Boolean).join(" | ");
   const prompt=`Research the CURRENT market price for this exact trading card/product: ${identity}. Use Google Search. Prioritize recent sold/completed sales and reliable marketplace/price-guide evidence. Do not mix raw and graded copies. For graded cards, only use the same grading company and grade when possible. Match card code, language, set/series and variant exactly. Ignore unrelated listings and extreme outliers. Convert the recommendation to Malaysian Ringgit (MYR) using a current exchange rate if needed. Return ONLY JSON with keys suggested_myr, low_myr, high_myr, comparable_count, basis, confidence. If there is not enough reliable exact-market evidence, return suggested_myr 0 instead of guessing.`;
   let response:Response;
-  try { response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"x-goog-api-key":geminiKey,"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],tools:[{google_search:{}}]})}); }
-  catch(error){console.error("Gemini market search network failure",error instanceof Error?error.message:"unknown");return null;}
+  try { response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MARKET_MODEL}:generateContent`,{method:"POST",headers:{"x-goog-api-key":geminiKey,"Content-Type":"application/json"},signal:AbortSignal.timeout(MARKET_TIMEOUT_MS),body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],tools:[{google_search:{}}],generationConfig:{thinkingConfig:{thinkingLevel:"minimal"}}})}); }
+  catch(error){console.error("Gemini market search network/timeout failure",error instanceof Error?error.message:"unknown");return null;}
   let data:any={}; try{data=await response.json();}catch{return null;}
   if(!response.ok){console.error("Gemini market search failed",response.status,data?.error?.status||"unknown",data?.error?.message||"");return null;}
   const candidate=data?.candidates?.[0]; const outputText=String(candidate?.content?.parts?.map?.((part:any)=>part?.text||"")?.join?.("")||"").trim(); const parsed=parseJsonObject(outputText);
@@ -83,11 +87,11 @@ Deno.serve(async (req) => {
   const mimeType=match[1].toLowerCase()==="image/jpg"?"image/jpeg":match[1].toLowerCase(),imageData=match[2];
   const prompt=`Identify the trading card or sealed TCG product in this SINGLE front image. Work across ALL trading-card games and eras. Return ONLY one JSON object with exactly these keys: name, card_code, year, game, language, language_details, series, era, format, condition, grading_company, grade, cert, confidence, notes.\nRules:\n- Never invent uncertain values; use an empty string.\n- name: canonical card/product name without grading company or grade.\n- card_code: printed collector/card/product code, e.g. OP01-001, C410, M-001, 4/102.\n- year: release/card year only when reliable.\n- game: canonical game/franchise.\n- language: ENG, JP, CN, KR, Mixed / Multiple languages, or N/A when clear.\n- series: set/collection/product series.\n- era: Vintage or Modern only when clear.\n- format: Raw, Graded, or Sealed. Raw means no grading slab is visible.\n- condition: M, NM, LP, MP, HP, DMG, SEALED, or NA. Graded must use NA; Sealed must use SEALED.\n- grading_company, grade, cert: ONLY when format is Graded and a grading slab/label visibly supports them. Raw/Sealed MUST return empty strings for all three.\n- cert: never treat raw-card numbers or barcodes as certification numbers.\n- confidence: number from 0 to 1.\n- notes: short uncertainty explanation; no pricing.\nThe image may be sideways/upside down. Inspect small printed codes carefully.`;
   let response:Response;
-  try{response=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",{method:"POST",headers:{"x-goog-api-key":geminiKey,"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt},{inline_data:{mime_type:mimeType,data:imageData}}]}],generationConfig:{responseMimeType:"application/json",maxOutputTokens:700}})});}catch(error){console.error("Gemini request network failure",error instanceof Error?error.message:"unknown");return json({error:"ai_network_failed",message:"Gemini request could not be completed."},502);}
+  try{response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${IDENTIFY_MODEL}:generateContent`,{method:"POST",headers:{"x-goog-api-key":geminiKey,"Content-Type":"application/json"},signal:AbortSignal.timeout(IDENTIFY_TIMEOUT_MS),body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt},{inline_data:{mime_type:mimeType,data:imageData}}]}],generationConfig:{responseMimeType:"application/json",maxOutputTokens:700,thinkingConfig:{thinkingLevel:"minimal"}}})});}catch(error){const timeout=error instanceof DOMException&&error.name==="TimeoutError";console.error("Gemini request network/timeout failure",error instanceof Error?error.message:"unknown");return json(timeout?{error:"ai_timeout",message:"AI identification timed out. Please try the scan again."}:{error:"ai_network_failed",message:"Gemini request could not be completed."},timeout?504:502);}
   let data:any={}; try{data=await response.json();}catch{return json({error:"invalid_ai_transport",message:"Gemini returned an unreadable response."},502);}
   if(!response.ok){console.error("Gemini card scan failed",response.status,data?.error?.status||"unknown",data?.error?.message||"");return json({error:"ai_request_failed",message:data?.error?.message||"Gemini card scan failed."},502);}
   const outputText=String(data?.candidates?.[0]?.content?.parts?.map?.((part:any)=>part?.text||"")?.join?.("")||"").trim();
   if(!outputText)return json({error:"empty_ai_response",message:data?.promptFeedback?.blockReason?`Gemini blocked the scan: ${data.promptFeedback.blockReason}`:"Gemini returned no card data."},502);
   const parsed=parseJsonObject(outputText); if(!parsed)return json({error:"invalid_ai_response",message:"Gemini returned invalid card data."},502);
-  return json({ok:true,result:normalizeResult(parsed)});
+  return json({ok:true,result:normalizeResult(parsed)};
 });
