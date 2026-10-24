@@ -34,12 +34,13 @@ Latest previously packaged Development release: `2026-10-24-v09`
 - `c98bf95bb05f0687901356eddb1b406075317167` — previous v02 scanner layout/cache checkpoint.
 - `8cf3ab2167240f3d7b32db969c3709bccee1ecee` — AI scanner Series detection committed to GitHub.
 - `d043a614e0f86bdf38eb40ddf55ec1fa6ea872d9` — Development validation/package workflow corrected for v03 and scanner CSS/style validation coverage.
-- `23611e425301770e3eb14507f3f46e6d48950cbb` — restored the historical `2026-10-24-v09` manifest after the stale workflow had overwritten it.
+- `23611e425301770e3eb14507f3f46e6d48950cbb` — restored historical `2026-10-24-v09` manifest after stale workflow overwrite.
+- `957858b2d1d9357a67445650bd593863d31f474f` — repository baseline validation markers reconciled with current versions.
 
-Current v03 validation/package status at this reconciliation commit: in progress. Do not call v03 complete until the Development workflow, package integrity, manifest, Pages deployment, and committed-file inspection are confirmed.
+Current v03 validation/package status: in progress. Do not call v03 complete until workflow, package integrity, manifest, Pages deployment, and committed-file inspection are confirmed.
 
 Latest previously packaged Development release manifest: `release-manifests/2026-10-24-v09.txt`.
-Canonical v09 release record restored to:
+Canonical v09 release record:
 - Source commit: `39bec0768c863a3fa33365dad6ac35490e60a7a8`
 - Full ZIP: `Collect-TCG-Dev-2026-10-24-v09-full.zip`
 - Full SHA256: `c33ee749024f7981267bfc28bd8093e8e1ad3f2d8a8c36eb8ea111d26b05e1ed`
@@ -64,7 +65,7 @@ Production has not received the October 24/25 scanner work. Keep it untouched un
 
 ## Development-only Changes Since Production
 
-The Development repository contains later work that is not in Production, including the Owner Card/Slab Scanner and its subsequent scanner/UI/performance/market-pricing changes.
+The Development repository contains later work that is not in Production, including the Owner Card/Slab Scanner and subsequent scanner/UI/performance/market-pricing changes.
 
 Current scanner architecture:
 - Owner Mode only.
@@ -81,14 +82,17 @@ Current scanner architecture:
 
 ### Series detection — `2026-10-25-v03`
 
-The AI scanner now treats `series` as a first-class detected field and should identify the most useful collector release grouping when reliable. Examples include:
-- `OP01`, `OP02`, and other set codes when encoded reliably by the card/set marking.
-- `Promo` or a more specific promotional/campaign release.
-- Vintage stage/release groupings such as `First Stage` and `Second Stage` when reliable.
-- Anniversary releases such as `1st Anniversary` / `2nd Anniversary` when identifiable.
-- Championship, Tournament Pack, Starter Deck, Limited Edition, and other specific release groupings.
+The AI scanner treats `series` as a first-class detected field and should identify the most useful collector release grouping when reliable. Examples include `OP01`, `OP02`, `Promo`, `First Stage`, `Second Stage`, anniversary releases, Championship, Tournament Pack, Starter Deck, Limited Edition, and other specific release groupings.
 
 The scanner must not use the franchise/game name as Series and must leave Series blank when the release grouping cannot be identified reliably. Existing `Apply detected fields` behavior populates the editable Series field.
+
+## Canonical Retained History / Files
+
+- SQL history remains under `migrations/2026/` and `migrations/legacy/`; do not move SQL into active application folders.
+- Owner **Custom Order** behavior remains retained unless explicitly changed.
+- QR Generator remains retained.
+- Owner Insights styling remains in canonical `dev/src/styles/27-insights-dashboard.css`.
+- Canonical active modules must not be replaced by version-suffixed active filenames.
 
 ## Retained Product Behavior
 
