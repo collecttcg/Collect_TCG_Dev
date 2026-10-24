@@ -10,12 +10,12 @@ Last reconciled against GitHub: 2026-10-25
 - Development is the working environment.
 - Production is protected. Never modify, promote, deploy, prepare, or live-test Production unless explicitly requested.
 
-Reconciliation priority: current GitHub HEAD > latest release manifest > this baseline > recent Project conversations > older conversations.
+Reconciliation priority: current GitHub HEAD > latest valid release manifest > this baseline > recent Project conversations > older conversations.
 
 ## Versioning
 
 - `V210` is the final legacy `V###` release; historical releases are never renamed.
-- Current releases use `YYYY-MM-DD-vNN` with the actual build date; Development and Production counters are independent.
+- New releases use `YYYY-MM-DD-vNN` using the actual build date; Development and Production counters are independent.
 - Development full: `Collect-TCG-Dev-YYYY-MM-DD-vNN-full.zip`
 - Development patch: `Collect-TCG-Dev-OLD-to-NEW-patch.zip`
 - Production full: `Collect-TCG-Production-YYYY-MM-DD-vNN-full.zip`
@@ -26,68 +26,66 @@ Reconciliation priority: current GitHub HEAD > latest release manifest > this ba
 
 ### Development
 
-Current Development work: `2026-10-25-v04`
-Previous Development release: `2026-10-25-v03`
+Current Development work: `2026-10-25-v06`
 
-`2026-10-25-v03` release manifest: `release-manifests/2026-10-25-v03.txt`.
-- Source commit: `fa1e598381f2bc8087a0c798ceee4f5ca7b44974`
+Scanner change source commit: `512512f6fb78dcd2e90211eec59dc0bea824aa77`
+
+Repository HEAD immediately after the v06 validation workflow: `baa3ade08fdb50d0489a576c0ecd5d1f3b7064de` (workflow-generated manifest commit).
+
+Status: **Implemented; release-state reconciliation/packaging validation still required before v06 is called a completed Development release.**
+
+Important workflow issue: the Development validation workflow executed successfully for source commit `512512f6fb78dcd2e90211eec59dc0bea824aa77`, but its package-recording step still used the stale release label `2026-10-25-v03` and committed `Development 2026-10-25-v03: record package validation`. Therefore that workflow success must not be treated as a valid v06 release manifest/package record. Historical v03 records must not be silently redefined by later Development work.
+
+Last canonical packaged Development release retained in baseline: `2026-10-25-v03`.
+- Manifest: `release-manifests/2026-10-25-v03.txt`
+- Canonical source commit: `fa1e598381f2bc8087a0c798ceee4f5ca7b44974`
 - Full ZIP: `Collect-TCG-Dev-2026-10-25-v03-full.zip`
-- Full SHA256: `fdd300a1a064e46c01c18a13f7b37d08e37e79bc97270961ed6188d158ed63d9`
+- Canonical Full SHA256: `fdd300a1a064e46c01c18a13f7b37d08e37e79bc97270961ed6188d158ed63d9`
 - Patch ZIP: `Collect-TCG-Dev-2026-10-25-v02-to-2026-10-25-v03-patch.zip`
-- Patch SHA256: `3e45814e6a7fb560542dd9d9967882e7ba6d8cbd79163ca421b707a280bf93bc`
+- Canonical Patch SHA256: `3e45814e6a7fb560542dd9d9967882e7ba6d8cbd79163ca421b707a280bf93bc`
 
-Latest earlier packaged Development release manifest: `release-manifests/2026-10-24-v09.txt`.
-Canonical v09 release record:
-- Source commit: `39bec0768c863a3fa33365dad6ac35490e60a7a8`
-- Full ZIP: `Collect-TCG-Dev-2026-10-24-v09-full.zip`
-- Full SHA256: `c33ee749024f7981267bfc28bd8093e8e1ad3f2d8a8c36eb8ea111d26b05e1ed`
-- Patch ZIP: `Collect-TCG-Dev-2026-10-24-v08-to-2026-10-24-v09-patch.zip`
-- Patch SHA256: `00dbab23ac76287aa9bbbb2701e7af7be03b472d3e5d57cbe2d34cf69e4f1906`
+Production `2026-10-25-v01` records Development `2026-10-25-v05` as the Development state promoted to Production. A standalone `release-manifests/2026-10-25-v05.txt` was not present when checked; do not claim one exists unless GitHub later contains it.
 
 ### Production
 
-Latest Production: `2026-10-16-v02`
-Previous Production: `2026-10-16-v01`
-Development promoted from: `2026-10-16-v03`
-Production source commit recorded by manifest: `0ffb4ce7369406da05b81131e256d2c19a35a03b`
-Current Production repository HEAD at reconciliation: `65b295179f86718cea033ec1dff59797ce5c3098`
+Latest Production: `2026-10-25-v01`
+Previous Production: `2026-10-16-v02`
+Development promoted from: `2026-10-25-v05`
+Production release manifest: `release-manifests/2026-10-25-v01.txt`
+Production application source commit recorded by manifest: `e08599649dc87ed7a869b7e7b1ea4b389053dc94`
+Final validated release/manifest HEAD before Production baseline-only reconciliation: `7bd74334c08026921de0093212e1bcf096be2cc7`
+Production baseline reconciliation commit: `529f54e6702f966096d67d5d8ef05a70a62e4d1c`
+`production-last-known-good`: `7bd74334c08026921de0093212e1bcf096be2cc7`
 
 Production package record:
-- Full ZIP: `Collect-TCG-Production-2026-10-16-v02-full.zip`
-- Full SHA256: `3de78e671de035e62ef37b121eaafbc8fc105df2f1848a7945c56b9224f81a9e`
-- Patch ZIP: `Collect-TCG-Production-2026-10-16-v01-to-2026-10-16-v02-patch.zip`
-- Patch SHA256: `71bc5f7cc113eb8223c8cfb82e997707de6140d5b12780c9c01ef92ae2ff7d2b`
+- Full ZIP: `Collect-TCG-Production-2026-10-25-v01-full.zip`
+- Full SHA256: `231595e86b0bf296890e38a8c0f32ec36005b4731aa88e55b2c42c3a5e182372`
+- Patch ZIP: `Collect-TCG-Production-2026-10-16-v02-to-2026-10-25-v01-patch.zip`
+- Patch SHA256: `8bb782965ed33967610fa9683d7def0d47c33603ee2329be69bbfd0d6cb5e704`
 
-Production has not received the October 24/25 scanner work. Keep it untouched unless an explicit Production update is requested.
+Production already contains the approved v05 scanner/Hyper Battle work. The v06 Development error-reporting change is Development-only and must not be promoted unless explicitly requested.
 
-## Development-only Changes Since Production
+## Owner AI Card Scanner
 
-The Development repository contains later work that is not in Production, including the Owner Card/Slab Scanner and subsequent scanner/UI/performance/market-pricing changes.
-
-Current scanner architecture:
+Current architecture:
 - Owner Mode only.
-- Frontend uses the first uploaded image for AI analysis.
-- Image is resized before upload (current target max 1280 px, JPEG quality 0.8 where conversion applies).
-- Development Supabase Edge Function: `scan-card-ai-dev`.
+- Frontend analyzes only the first uploaded image.
+- Image is resized before upload (max 1280 px, JPEG quality 0.8 where conversion applies).
+- Development Edge Function: `scan-card-ai-dev`.
+- Production Edge Function: `scan-card-ai`.
 - JWT verification and `is_app_owner` authorization are required; public users must not gain scanner/owner capability.
-- Gemini API key remains server-side only.
-- AI output is a recommendation; detected values are not saved until the owner applies/saves them.
-- Raw/Sealed scans must not retain grading company, grade, or certification values.
-- Market pricing keeps raw and graded comparables separated; graded pricing should match grading company/grade where possible.
-- Identification is separated from slower market research so detected fields can return first.
-- No SQL is required for the current Series-detection changes.
+- Gemini API credentials remain server-side only.
+- AI output is a recommendation; detected values are not saved until the Owner applies/saves them.
+- Raw/Sealed scans clear grading company, grade and certification values.
+- Raw and graded market comparables remain separated; graded pricing should match grading company/grade where possible.
+- Identification is separated from slower market-price research.
+- No SQL is required for the current scanner changes.
 
-### Series detection — `2026-10-25-v03`
+### Hyper Battle canonical mapping — promoted v05 state
 
-The AI scanner treats `series` as a first-class detected field and should identify the most useful collector release grouping when reliable. Examples include `OP01`, `OP02`, `Promo`, anniversary releases, Championship, Tournament Pack, Starter Deck, Limited Edition, and other specific release groupings.
+One Piece Carddass Hyper Battle Series is deterministically corrected after identification for supported vintage codes instead of relying only on AI guesses.
 
-The scanner must not use the franchise/game name as Series and must leave Series blank when the release grouping cannot be identified reliably. Existing `Apply detected fields` behavior populates the editable Series field.
-
-### Hyper Battle canonical Series mapping — `2026-10-25-v04`
-
-For One Piece Carddass Hyper Battle, do not let the AI guess a Stage after it has correctly read a canonical `C###` card code. The Development Edge Function applies a deterministic Series correction based on the Hyper Battle set/card lists published by Grand Line Wiki (`grandlinewiki.net/tcg/carddasshyper.html`).
-
-Canonical C-card ranges currently enforced:
+Supported canonical families include normal `C`, `S`, `FP`, `H` ranges and recognized promotional code families. Examples:
 - `C001-C034` → `1st Stage`
 - `C035-C066` → `2nd Stage`
 - `C067-C110` → `Grand Box`
@@ -96,24 +94,57 @@ Canonical C-card ranges currently enforced:
 - `C178-C220` → `Grand Box 2`
 - `C221-C254` → `5th Stage`
 - `C255-C287` → `6th Stage`
-- `C288-C332` → `Grand Box 3`
-- `C333-C368` → `7th Stage`
-- `C369-C397` → `Grand Box 4`
+- `C288-C330` → `Grand Box 3`
+- `C331-C364` → `7th Stage`
+- `C365-C397` → `Grand Box 4`
 - `C398-C427` → `Grand Line Compilation 1`
 - `C428-C456` → `Grand Line Compilation 2`
 - `C457-C489` → `Grand Box 5`
 - `C490-C519` → `Grand Line Compilation 3`
 - `C520-C546` → `Grand Box DX`
 
-Example: `C222` is canonically `5th Stage`, not `1st Stage`. `C409`/`C410` are `Grand Line Compilation 1`.
+Example: `C222` is `5th Stage`; `C409`/`C410` are `Grand Line Compilation 1`.
 
-The deterministic override is limited to cards that look like vintage One Piece Hyper Battle/Carddass based on game identity/year, so unrelated modern `C###` codes are not remapped. Other Hyper Battle code families (such as Special/Hyper/Field Point/reprint codes) remain AI-detected unless/until an equally reliable canonical mapping is added.
+Recognized hyphenated vintage promotional families such as `C-J1`, `S-E1`, `C-E1`, `C-T1`, `C-W1`, `C-B1`, `C-JF01.1`, `C-A1`, `C-J09`, `H-P1`, `C-EC1`, `S-W1`, `H-VJ1`, `C-JF02.1`, and `H-T1` map to `Promo`.
 
-Development Edge Function `scan-card-ai-dev` version 13 contains this correction and retains `verify_jwt: true` plus the existing `is_app_owner` authorization check.
+The override is limited to vintage One Piece Hyper Battle/Carddass identity/year so unrelated modern codes are not remapped.
+
+Development Edge Function `scan-card-ai-dev` was ACTIVE version 14 with `verify_jwt: true` at the v05 promotion state.
+
+### Development v06 — scanner failure diagnostics
+
+Purpose: make intermittent scanner failures diagnosable without changing successful identification behavior.
+
+Change:
+- `dev/src/features/owner/card-scanner.js` now extracts the actual JSON error/message returned by the Supabase Edge Function when `functions.invoke()` receives a non-2xx response.
+- Identification failures can therefore surface the backend reason instead of only the generic `Edge Function returned a non-2xx status code` message.
+- Market-price research remains isolated from card identification; a pricing failure does not invalidate an already successful identification.
+- No timeout was blindly increased as part of this change.
+- No Production file/function was modified by v06.
+
+Observed failure distinction that motivated v06:
+- An identification request can fail independently with a backend timeout/504.
+- Separate market-price research can encounter Gemini `429 RESOURCE_EXHAUSTED` quota/rate-limit responses.
+- A later successful identification is consistent with those being separate/transient paths; do not label every scanner failure as quota exhaustion without the actual backend error.
+
+Validation executed for v06 source commit `512512f6fb78dcd2e90211eec59dc0bea824aa77` by Development workflow run `40111521841`:
+- feature regression tests: passed
+- scanner JavaScript syntax validation: passed
+- SEO generator syntax/self-test: passed
+- Development SEO generation: passed
+- JavaScript/repository reference validation: passed
+- CSS/retained release-contract validation: passed
+- package creation/upload steps: executed successfully
+- workflow conclusion: success
+
+Validation/release limitation:
+- The workflow's release version/package-manifest recording is stale (`2026-10-25-v03`), so v06 is not considered a correctly packaged/reconciled release yet.
+- Authenticated Owner scanner behavior was not interactively browser-tested as part of this baseline-only reconciliation.
 
 ## Canonical Retained History / Files
 
-- SQL history remains under `migrations/2026/` and `migrations/legacy/`; do not move SQL into active application folders.
+- Active Development app directory is `dev/`; legacy Beta naming/paths are not active application terminology.
+- SQL history remains under `migrations/2026/` and `migrations/legacy/` where present; do not move SQL into active application folders.
 - Owner **Custom Order** behavior remains retained unless explicitly changed.
 - QR Generator remains retained.
 - Owner Insights styling remains in canonical `dev/src/styles/27-insights-dashboard.css`.
@@ -122,48 +153,48 @@ Development Edge Function `scan-card-ai-dev` version 13 contains this correction
 ## Retained Product Behavior
 
 Unless a release explicitly changes an item below, preserve it:
-- Desktop, mobile, and Safari-sensitive behavior.
-- Navigation/routes, inventory, card details, filtering/ordering, and generators.
+- Desktop, mobile and Safari-sensitive behavior.
+- Navigation/routes, inventory, card details, filtering/ordering and generators.
 - Owner Mode security and owner Add/Edit/Delete/management tools.
 - Supabase/RLS and backward compatibility.
 - Analytics and Development analytics-test exclusion behavior.
 - Contact to Buy: Availability, Make an offer, More photos / video, COD / meetup, Malaysia & Singapore purchase messaging, and negotiable international shipping where supported.
-- Giveaways: social follows, Giveaway Code, entry form, optional bonus entries, Facebook Group bonus, giveaway generator, images, and winner functionality.
-- QR Generator and other currently retained tools.
+- Giveaways: social follows, Giveaway Code, entry form, optional bonus entries, Facebook Group bonus, giveaway generator, images and winner functionality.
+- QR Generator and other retained tools.
 - Existing visual design/spacing unless a redesign is explicitly requested.
 
 ## Intentionally Removed / Do Not Restore
 
 - Do not restore abandoned experiments or features removed by later accepted releases merely because they appear in older commits/chats.
-- Historical Beta naming/paths are not active application terminology. Active environment is Development/Dev and canonical app directory is `dev/`.
-- Do not reintroduce Production dependencies on the old Beta repository.
+- Do not reintroduce Production dependencies on old Beta paths/repositories.
+- Do not restore superseded scanner/layout experiments.
 
 ## Validation Contract
 
 A commit is not completion. Before a Development or Production release is called complete:
 1. Run syntax checks on every changed JavaScript file.
-2. Validate imports, exports/registration, renamed/removed references, and cache-busters.
-3. Validate changed local assets, markup, IDs/classes, and CSS/references.
+2. Validate imports, exports/registration, renamed/removed references and cache-busters.
+3. Validate changed local assets, markup, IDs/classes and CSS/references.
 4. Exercise requested success path and relevant empty/missing-data/output/control cases where tooling allows.
-5. Inspect surrounding regressions relevant to the change: routes/navigation, generators, inventory/card details, Owner Mode, Add/Edit/Delete, Contact to Buy, giveaways, Supabase/RLS, and analytics.
+5. Inspect surrounding regressions relevant to the change: routes/navigation, generators, inventory/card details, Owner Mode, Add/Edit/Delete, Contact to Buy, giveaways, Supabase/RLS and analytics.
 6. For UI work, check representative desktop/mobile/overflow/navigation/Safari-sensitive behavior where browser tooling is available. Static inspection is not browser testing.
 7. Confirm public users gain no owner functions when shared owner code/routes are affected.
-8. If DB behavior changes, identify affected objects, provide separate versioned rerunnable SQL where practical, preserve RLS/backward compatibility, and never claim SQL applied without confirmation.
+8. If DB behavior changes, identify affected objects, provide separate versioned rerunnable SQL where practical, preserve RLS/backward compatibility and never claim SQL applied without confirmation.
 9. Inspect release diff and exclude debug/temp/abandoned/unrelated files.
-10. After commit, inspect committed files, cache/version references, and final repository HEAD.
+10. After commit, inspect committed files, cache/version references and final repository HEAD.
 11. Create full and patch ZIPs and integrity-check them before claiming packaging complete.
-12. Record a release manifest and confirm Development Pages deployment.
+12. Record the correct release manifest and confirm Development Pages deployment.
 
 Use status wording precisely:
 - Tested = executed/exercised.
 - Statically verified = repository/code inspection.
 - Not tested = unavailable/not performed.
-- If code is committed but validation is incomplete: `Implemented, validation pending.`
+- If code is committed but validation/release reconciliation is incomplete: `Implemented, validation pending.`
 
 ## Deployment / Analytics Safety
 
 - Do not browse/open live Production for testing without explicit authorization because it may contaminate Insights.
-- Prefer repository inspection, static validation, Development, and screenshots.
+- Prefer repository inspection, static validation, Development and screenshots.
 - When Dev browser/UI testing is available, use the Development-only analytics exclusion URL.
 - GitHub Pages uses the repository's dynamic Pages deployment. The custom Development validation workflow must not create a competing Pages deployment.
 
@@ -175,8 +206,15 @@ Only when explicitly requested:
 3. Promote only approved Development changes; exclude abandoned/experimental and Development-only infrastructure.
 4. Preserve Production-specific behavior.
 5. Create a new date-based Production version and record previous Production + Development promoted from.
-6. Validate Production independently, package it, integrity-check packages, and confirm Pages/rollback protection where available.
+6. Validate Production independently, package it, integrity-check packages and confirm Pages/rollback protection where available.
 
 ## Baseline Maintenance
 
-After each accepted release, reconcile this file against current GitHub HEAD and the latest release manifest. Never leave the baseline pointing at an older release after accepting a newer one. If GitHub and this file disagree, GitHub/manifest wins and this file must be corrected.
+**Mandatory: update/reconcile `COLLECT_TCG_BASELINE.md` as part of every accepted Development or Production release/change. Do not leave baseline maintenance for a later turn.**
+
+After every change:
+- reconcile this file against current GitHub HEAD and the latest valid release manifest;
+- record the current work/release version, important source/HEAD commits, SQL status, validation status and limitations;
+- keep Production state accurate in the Development baseline and Development/promoted state accurate in the Production baseline where relevant;
+- never overwrite accepted historical manifest facts with a later workflow run;
+- if GitHub and this file disagree, GitHub/current valid manifest wins and this file must be corrected immediately.
