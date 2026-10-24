@@ -5,6 +5,11 @@ import {
   extractPsaCert,
   extractGradingCompany,
   extractGrade,
+  extractYear,
+  extractLanguage,
+  extractGame,
+  extractPsaLabelName,
+  resolveCreateWorker,
   findExistingCardByCode,
   buildCardScanResult,
   buildInventoryPriceRecommendation
@@ -14,6 +19,10 @@ test('card scanner extracts ONE PIECE card numbers from OCR variants',()=>{
   assert.equal(extractCardCode('ONE PIECE OP05-119 Monkey D. Luffy'),'OP05-119');
   assert.equal(extractCardCode('ST 01 - 001 Straw Hat Crew'),'ST01-001');
   assert.equal(extractCardCode('Promo P - 001'),'P-001');
+  assert.equal(extractCardCode('1999 ONE PIECE CHB #C01'),'C01');
+  assert.equal(extractCardCode(`HYPER BATTLE\nG415`),'G415');
+  assert.equal(extractCardCode('OCR noise S 48 near artwork'),'');
+  assert.equal(extractCardCode('OCR 8717-0041'),'ST17-004');
   assert.equal(extractCardCode('ordinary listing without a card code'),'');
 });
 
@@ -72,4 +81,61 @@ test('price recommendation falls back to exact card-code inventory and ignores m
   assert.equal(recommendation.myr,600);
   assert.equal(recommendation.count,2);
   assert.equal(buildInventoryPriceRecommendation(cards,{card_code:'P-999'}),null);
+});
+
+test('scanner parses the uploaded PSA examples into safe Add Card fields',()=>{
+  const boa=`2024 ONE PIECE JP #004
+BOA HANCOCK GEM MT
+PB STORAGE BOX SET 10
+170896351
+ST17-004`;
+  const boaResult=buildCardScanResult(boa,[],[]);
+  assert.equal(boaResult.name,'BOA HANCOCK');
+  assert.equal(boaResult.year,'2024');
+  assert.equal(boaResult.game,'One Piece');
+  assert.equal(boaResult.language,'JP');
+  assert.equal(boaResult.card_code,'ST17-004');
+  assert.equal(boaResult.grade,'10');
+  assert.equal(boaResult.cert,'170896351');
+
+  const luffy=`1999 ONE PIECE CHB #C01
+LUFFY NM
+FIRST STAGE 7
+149834964`;
+  const luffyResult=buildCardScanResult(luffy,[],[]);
+  assert.equal(luffyResult.name,'LUFFY');
+  assert.equal(luffyResult.year,'1999');
+  assert.equal(luffyResult.card_code,'C01');
+  assert.equal(luffyResult.grade,'7');
+  assert.equal(luffyResult.cert,'149834964');
+
+  const chineseBoa=`2025 ONE PIECE CS #066
+BOA HANCOCK GEM MT
+CHINESE NEW YEAR'S RED PACK 10
+108827378
+P-066`;
+  const cnResult=buildCardScanResult(chineseBoa,[],[]);
+  assert.equal(cnResult.name,'BOA HANCOCK');
+  assert.equal(cnResult.year,'2025');
+  assert.equal(cnResult.language,'CN');
+  assert.equal(cnResult.card_code,'P-066');
+  assert.equal(cnResult.grade,'10');
+  assert.equal(cnResult.cert,'108827378');
+});
+
+test('scanner metadata helpers stay conservative',()=>{
+  assert.equal(extractYear('2024 ONE PIECE JP'),'2024');
+  assert.equal(extractYear('OCR noise 2000 without a label context'),'');
+  assert.equal(extractLanguage('2025 ONE PIECE CHINESE NEW YEAR'), 'CN');
+  assert.equal(extractLanguage('2024 ONE PIECE JP'), 'JP');
+  assert.equal(extractGame('ONE PIECE CARD GAME'), 'One Piece');
+  assert.equal(extractPsaLabelName('random raw card text'), '');
+});
+
+test('Tesseract createWorker resolver supports named and default ESM exports',()=>{
+  const named=()=>{};
+  const fallback=()=>{};
+  assert.equal(resolveCreateWorker({createWorker:named}),named);
+  assert.equal(resolveCreateWorker({default:{createWorker:fallback}}),fallback);
+  assert.equal(resolveCreateWorker({default:{}}),null);
 });
