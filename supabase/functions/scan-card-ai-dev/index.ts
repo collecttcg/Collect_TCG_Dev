@@ -11,10 +11,7 @@ const IDENTIFY_TIMEOUT_MS = 20_000;
 const MARKET_TIMEOUT_MS = 20_000;
 
 function json(body: unknown, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
-  });
+  return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" } });
 }
 function text(value: unknown) { return typeof value === "string" ? value.trim() : ""; }
 function finitePositive(value: unknown) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
@@ -42,10 +39,8 @@ function parseJsonObject(value: string) {
   return null;
 }
 function normalizeMarketPrice(input: any, groundingMetadata: any) {
-  const suggested = finitePositive(input?.suggested_myr);
-  if (!suggested) return null;
-  const low = finitePositive(input?.low_myr) || suggested;
-  const high = finitePositive(input?.high_myr) || suggested;
+  const suggested = finitePositive(input?.suggested_myr); if (!suggested) return null;
+  const low = finitePositive(input?.low_myr) || suggested; const high = finitePositive(input?.high_myr) || suggested;
   const chunks = Array.isArray(groundingMetadata?.groundingChunks) ? groundingMetadata.groundingChunks : [];
   const sources = chunks.map((chunk: any) => ({ title: text(chunk?.web?.title), url: text(chunk?.web?.uri) })).filter((source: any) => source.url).slice(0, 5);
   return { myr:suggested, min_myr:Math.min(low,high,suggested), max_myr:Math.max(low,high,suggested), count:Math.max(0,Math.round(Number(input?.comparable_count)||0)), basis:text(input?.basis)||"AI web market research", confidence:Math.max(0,Math.min(1,Number(input?.confidence)||0)), sources, search_queries:Array.isArray(groundingMetadata?.webSearchQueries)?groundingMetadata.webSearchQueries.map(text).filter(Boolean).slice(0,5):[], source:"ai_web" };
@@ -74,18 +69,14 @@ Deno.serve(async (req) => {
   const {data:owner,error:ownerError}=await client.rpc("is_app_owner");
   if(ownerError||owner!==true)return json({error:"owner_required"},403);
   let body:any={}; try{body=await req.json();}catch{return json({error:"invalid_json"},400);}
-
   if(body?.action==="price"){
-    const card=normalizeResult(body.card||{});
-    if(!card.name&&!card.card_code)return json({error:"missing_card_identity"},400);
-    const market_price=await getGroundedMarketPrice(geminiKey,card);
-    return json({ok:true,market_price});
+    const card=normalizeResult(body.card||{}); if(!card.name&&!card.card_code)return json({error:"missing_card_identity"},400);
+    const market_price=await getGroundedMarketPrice(geminiKey,card); return json({ok:true,market_price});
   }
-
   const image=String(body.image||""); const match=image.match(/^data:(image\/(?:jpeg|jpg|png|webp));base64,(.+)$/i);
   if(!match)return json({error:"invalid_image"},400); if(image.length>8_000_000)return json({error:"image_too_large"},413);
   const mimeType=match[1].toLowerCase()==="image/jpg"?"image/jpeg":match[1].toLowerCase(),imageData=match[2];
-  const prompt=`Identify the trading card or sealed TCG product in this SINGLE front image. Work across ALL trading-card games and eras. Return ONLY one JSON object with exactly these keys: name, card_code, year, game, language, language_details, series, era, format, condition, grading_company, grade, cert, confidence, notes.\nRules:\n- Never invent uncertain values; use an empty string.\n- name: canonical card/product name without grading company or grade.\n- card_code: printed collector/card/product code, e.g. OP01-001, C410, M-001, 4/102.\n- year: release/card year only when reliable.\n- game: canonical game/franchise.\n- language: ENG, JP, CN, KR, Mixed / Multiple languages, or N/A when clear.\n- series: set/collection/product series.\n- era: Vintage or Modern only when clear.\n- format: Raw, Graded, or Sealed. Raw means no grading slab is visible.\n- condition: M, NM, LP, MP, HP, DMG, SEALED, or NA. Graded must use NA; Sealed must use SEALED.\n- grading_company, grade, cert: ONLY when format is Graded and a grading slab/label visibly supports them. Raw/Sealed MUST return empty strings for all three.\n- cert: never treat raw-card numbers or barcodes as certification numbers.\n- confidence: number from 0 to 1.\n- notes: short uncertainty explanation; no pricing.\nThe image may be sideways/upside down. Inspect small printed codes carefully.`;
+  const prompt=`Identify the trading card or sealed TCG product in this SINGLE front image. Work across ALL trading-card games and eras. Return ONLY one JSON object with exactly these keys: name, card_code, year, game, language, language_details, series, era, format, condition, grading_company, grade, cert, confidence, notes.\nRules:\n- Never invent uncertain values; use an empty string.\n- name: canonical card/product name without grading company or grade.\n- card_code: printed collector/card/product code, e.g. OP01-001, C410, M-001, 4/102.\n- year: release/card year only when reliable.\n- game: canonical game/franchise.\n- language: ENG, JP, CN, KR, Mixed / Multiple languages, or N/A when clear.\n- series: identify the card's most useful collection/release grouping, not a generic franchise name. Prefer the specific set/stage/campaign/release label a collector would use. Examples: OP01, OP02, Promo, First Stage, Second Stage, 1st Anniversary, 2nd Anniversary, Championship, Tournament Pack, Starter Deck, Limited Edition. If a printed card code reliably encodes the set (for example OP01-001), use that set code (OP01). For vintage cards, use visible/known stage or release grouping such as First Stage or Second Stage when reliable. For promotional/campaign/event cards, use Promo or the more specific campaign/event/anniversary name when reliably identifiable. Do not put the game/franchise name in series. Do not guess from artwork alone; use an empty string when the release grouping cannot be identified reliably.\n- era: Vintage or Modern only when clear.\n- format: Raw, Graded, or Sealed. Raw means no grading slab is visible.\n- condition: M, NM, LP, MP, HP, DMG, SEALED, or NA. Graded must use NA; Sealed must use SEALED.\n- grading_company, grade, cert: ONLY when format is Graded and a grading slab/label visibly supports them. Raw/Sealed MUST return empty strings for all three.\n- cert: never treat raw-card numbers or barcodes as certification numbers.\n- confidence: number from 0 to 1.\n- notes: short uncertainty explanation; no pricing.\nThe image may be sideways/upside down. Inspect small printed codes and set/stage/release markings carefully.`;
   let response:Response;
   try{response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${IDENTIFY_MODEL}:generateContent`,{method:"POST",headers:{"x-goog-api-key":geminiKey,"Content-Type":"application/json"},signal:AbortSignal.timeout(IDENTIFY_TIMEOUT_MS),body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt},{inline_data:{mime_type:mimeType,data:imageData}}]}],generationConfig:{responseMimeType:"application/json",maxOutputTokens:700,thinkingConfig:{thinkingLevel:"minimal"}}})});}catch(error){const timeout=error instanceof DOMException&&error.name==="TimeoutError";console.error("Gemini request network/timeout failure",error instanceof Error?error.message:"unknown");return json(timeout?{error:"ai_timeout",message:"AI identification timed out. Please try the scan again."}:{error:"ai_network_failed",message:"Gemini request could not be completed."},timeout?504:502);}
   let data:any={}; try{data=await response.json();}catch{return json({error:"invalid_ai_transport",message:"Gemini returned an unreadable response."},502);}
