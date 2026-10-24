@@ -118,7 +118,7 @@ jobs:
       env:
         RELEASE_VERSION: 2026-10-24-v02
         PREVIOUS_VERSION: 2026-10-24-v01
-        PREVIOUS_COMMIT: 384f0c686d9c3856574795071e19c21c3c0e8c07
+        PREVIOUS_COMMIT: 6ce2990b4f27064b9bc6d343ba682ace12cfa4df
       run: |
         set -euo pipefail
         mkdir -p release
