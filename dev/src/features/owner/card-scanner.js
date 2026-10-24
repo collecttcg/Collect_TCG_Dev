@@ -1,5 +1,8 @@
 /** Owner-only Add Card scanner. OCR runs in the browser and only recommends fields for confirmation. */
 const TESSERACT_MODULE_URL="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.esm.min.js";
+const TESSERACT_WORKER_URL="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js";
+const TESSERACT_CORE_URL="https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0";
+const TESSERACT_LANG_URL="https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int";
 
 export function normalizeScanText(value){
   return String(value||"").replace(/[\u2010-\u2015]/g,"-").replace(/\s+/g," ").trim();
@@ -74,8 +77,68 @@ export function buildCardScanResult(text,barcodeValues=[],cards=[]){
   };
 }
 
+function gradingEntryMatches(card,company,grade){
+  const entries=Array.isArray(card?.grading) ? card.grading : [];
+  if(!company && !grade) return true;
+  return entries.some(entry=>{
+    const companyMatch=!company || String(entry?.company||"").trim().toUpperCase()===String(company).trim().toUpperCase();
+    const gradeMatch=!grade || String(entry?.grade??"").trim()===String(grade).trim();
+    return companyMatch && gradeMatch;
+  });
+}
+
+function median(values){
+  const sorted=values.slice().sort((a,b)=>a-b);
+  if(!sorted.length) return null;
+  const middle=Math.floor(sorted.length/2);
+  return sorted.length%2 ? sorted[middle] : (sorted[middle-1]+sorted[middle])/2;
+}
+
+export function buildInventoryPriceRecommendation(cards,result){
+  const code=String(result?.card_code||"").trim().toUpperCase();
+  if(!code) return null;
+  const exact=(Array.isArray(cards)?cards:[]).filter(card=>
+    String(card?.card_code||"").trim().toUpperCase()===code &&
+    Number.isFinite(Number(card?.price_myr)) &&
+    Number(card.price_myr)>0
+  );
+  if(!exact.length) return null;
+
+  const company=String(result?.company||"").trim();
+  const grade=String(result?.grade||"").trim();
+  const graded=company||grade ? exact.filter(card=>gradingEntryMatches(card,company,grade)) : [];
+  const sold=exact.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold");
+  const soldGraded=graded.filter(card=>String(card?.availability||"").trim().toLowerCase()==="sold");
+
+  let pool=soldGraded;
+  let basis="sold inventory comparables with the same card code and grade";
+  if(!pool.length){
+    pool=graded;
+    basis="inventory comparables with the same card code and grade";
+  }
+  if(!pool.length){
+    pool=sold;
+    basis="sold inventory comparables with the same card code";
+  }
+  if(!pool.length){
+    pool=exact;
+    basis="inventory comparables with the same card code";
+  }
+
+  const prices=pool.map(card=>Number(card.price_myr)).filter(value=>Number.isFinite(value)&&value>0);
+  if(!prices.length) return null;
+  return {
+    myr:median(prices),
+    min_myr:Math.min(...prices),
+    max_myr:Math.max(...prices),
+    count:prices.length,
+    basis
+  };
+}
+
 export function register(appContext){
   let lastResult=null;
+  let lastPriceRecommendation=null;
   let scannerBusy=false;
 
   function setStatus(message,tone=""){
@@ -90,16 +153,43 @@ export function register(appContext){
     if(progress) progress.textContent=message;
   }
 
-  async function detectBarcodes(file){
+  function setPriceStatus(message,tone=""){
+    const status=appContext.$("addCardScanPrice");
+    if(!status) return;
+    status.textContent=message;
+    status.dataset.tone=tone;
+  }
+
+  function uploadedImageSources(){
+    return Array.from(appContext.$("addImageGalleryPreview")?.querySelectorAll?.("img")||[])
+      .map(image=>String(image.currentSrc||image.src||"").trim())
+      .filter(Boolean);
+  }
+
+  async function sourceToBlob(source){
+    if(typeof Blob!=="undefined" && source instanceof Blob) return source;
+    if(typeof source!=="string") return null;
+    try{
+      const response=await fetch(source);
+      if(!response.ok) return null;
+      return await response.blob();
+    }catch{
+      return null;
+    }
+  }
+
+  async function detectBarcodes(source){
     if(typeof window==="undefined" || !("BarcodeDetector" in window) || typeof createImageBitmap!=="function") return [];
     let bitmap;
     try{
+      const blob=await sourceToBlob(source);
+      if(!blob) return [];
       const supported=typeof window.BarcodeDetector.getSupportedFormats==="function"
         ? await window.BarcodeDetector.getSupportedFormats()
         : ["qr_code"];
       const formats=["qr_code","code_128","data_matrix"].filter(format=>supported.includes(format));
       if(!formats.length) return [];
-      bitmap=await createImageBitmap(file);
+      bitmap=await createImageBitmap(blob);
       const detector=new window.BarcodeDetector({formats});
       const found=await detector.detect(bitmap);
       return (found||[]).map(item=>String(item?.rawValue||"").trim()).filter(Boolean);
@@ -111,33 +201,39 @@ export function register(appContext){
     }
   }
 
-  async function recognizeText(file){
+  async function createOcrWorker(){
     const module=await import(TESSERACT_MODULE_URL);
-    const worker=await module.createWorker("eng",1,{
+    return module.createWorker("eng",1,{
+      workerPath:TESSERACT_WORKER_URL,
+      corePath:TESSERACT_CORE_URL,
+      langPath:TESSERACT_LANG_URL,
       logger:event=>{
         if(!event?.status) return;
         const percent=Number.isFinite(event.progress) ? ` ${Math.round(event.progress*100)}%` : "";
         setProgress(`${event.status}${percent}`);
       }
     });
-    try{
-      const result=await worker.recognize(file,{rotateAuto:true});
-      return {text:String(result?.data?.text||""),confidence:Number(result?.data?.confidence)||0};
-    }finally{
-      await worker.terminate();
-    }
   }
 
-  function scanSummary(result,confidence){
+  function scanSummary(result,confidence,imageCount){
     const parts=[];
     if(result.company) parts.push(result.company);
     if(result.grade) parts.push(`Grade ${result.grade}`);
     if(result.cert) parts.push(`Cert ${result.cert}`);
     if(result.card_code) parts.push(result.card_code);
     if(result.matched_card?.name) parts.push(String(result.matched_card.name));
-    if(!parts.length) return "No reliable card details detected. Try a closer, sharper photo with the card number or slab label visible.";
-    const confidenceText=confidence>0 ? ` OCR confidence ${Math.round(confidence)}%.` : "";
-    return `Detected: ${parts.join(" · ")}.${confidenceText}`;
+    if(!parts.length) return `Scanned ${imageCount} uploaded photo${imageCount===1?"":"s"}, but no reliable card details were detected. Try a closer, sharper card/front-label photo.`;
+    const confidenceText=confidence>0 ? ` Average OCR confidence ${Math.round(confidence)}%.` : "";
+    return `Detected from ${imageCount} uploaded photo${imageCount===1?"":"s"}: ${parts.join(" · ")}.${confidenceText}`;
+  }
+
+  function priceSummary(recommendation){
+    if(!recommendation) return "No internal price comparable was found for this card code. Market pricing is not guessed automatically.";
+    const rounded=Math.round(recommendation.myr);
+    const range=recommendation.min_myr===recommendation.max_myr
+      ? ""
+      : ` · observed RM ${Math.round(recommendation.min_myr).toLocaleString()}–${Math.round(recommendation.max_myr).toLocaleString()}`;
+    return `Suggested starting price: RM ${rounded.toLocaleString()} · based on ${recommendation.count} ${recommendation.basis}${range}. This is an internal comparable, not a live market quote.`;
   }
 
   function setField(id,value){
@@ -153,7 +249,7 @@ export function register(appContext){
   function applyMatchedCard(card){
     if(!card) return;
     setField("addName",card.name);
-    setField("addCode",card.card_code);
+    setField("addCardCode",card.card_code);
     setField("addYear",card.year);
     setField("addGame",card.game);
     setField("addLanguage",card.language);
@@ -167,61 +263,99 @@ export function register(appContext){
 
   function applyGrading(result){
     if(!result.company && !result.grade && !result.cert) return;
-    const graded=appContext.$("addGraded");
-    if(graded && !graded.checked){
-      graded.checked=true;
-      graded.dispatchEvent(new Event("change",{bubbles:true}));
-    }
-    let row=appContext.$("addGradingList")?.querySelector?.(".grade-row");
+    setField("addFormat","Graded");
+    let row=appContext.$("addGradingRows")?.querySelector?.(".grading-row");
     if(!row){
-      appContext.$("addGradeBtn")?.click();
-      row=appContext.$("addGradingList")?.querySelector?.(".grade-row");
+      appContext.$("addAddGrade")?.click();
+      row=appContext.$("addGradingRows")?.querySelector?.(".grading-row");
     }
     if(!row) return;
-    const company=row.querySelector('[data-g-field="company"]');
-    const grade=row.querySelector('[data-g-field="grade"]');
-    const cert=row.querySelector('[data-g-field="cert"]');
+    const company=row.querySelector(".addGradeCompany");
+    const grade=row.querySelector(".addGradeValue");
+    const cert=row.querySelector(".addGradeCert");
     if(company && result.company){ company.value=result.company; company.dispatchEvent(new Event("change",{bubbles:true})); }
-    if(grade && result.grade){ grade.value=result.grade; grade.dispatchEvent(new Event("input",{bubbles:true})); }
+    if(grade && result.grade){ grade.value=result.grade; grade.dispatchEvent(new Event("change",{bubbles:true})); }
     if(cert && result.cert){ cert.value=result.cert; cert.dispatchEvent(new Event("input",{bubbles:true})); }
   }
 
   function applyScanResult(){
     if(!lastResult) return;
     if(lastResult.matched_card) applyMatchedCard(lastResult.matched_card);
-    else if(lastResult.card_code) setField("addCode",lastResult.card_code);
+    else if(lastResult.card_code) setField("addCardCode",lastResult.card_code);
     applyGrading(lastResult);
     appContext.showToast?.("Detected card details applied — please review before saving");
-    setStatus("Applied to Add Card. Review every detected field before saving.","success");
+    setStatus("Applied detected details to Add Card. Review every field before saving.","success");
   }
 
-  async function scanFile(file){
-    if(scannerBusy || !file) return;
-    if(!String(file.type||"").startsWith("image/")){
-      setStatus("Please choose an image file.","error");
+  function applyPriceRecommendation(){
+    if(!lastPriceRecommendation) return;
+    const rounded=Math.round(lastPriceRecommendation.myr);
+    setField("addPriceMYR",rounded);
+    appContext.showToast?.(`Suggested price RM ${rounded.toLocaleString()} applied`);
+    setPriceStatus(`${priceSummary(lastPriceRecommendation)} Applied to MYR price; review before saving.`,"success");
+  }
+
+  async function scanUploadedPhotos(){
+    if(scannerBusy) return;
+    const sources=uploadedImageSources();
+    if(!sources.length){
+      setStatus("Upload the card photos using the normal Choose Files control first, then press Scan Uploaded Photos.","warning");
+      setProgress("The scanner now uses the same photos that will be saved with the card.");
       return;
     }
+
     scannerBusy=true;
     lastResult=null;
+    lastPriceRecommendation=null;
+    const scanButton=appContext.$("addCardScanUploaded");
     const applyButton=appContext.$("addCardScanApply");
+    const priceButton=appContext.$("addCardScanApplyPrice");
+    if(scanButton) scanButton.disabled=true;
     if(applyButton) applyButton.disabled=true;
-    setStatus("Scanning image…");
-    setProgress("Reading QR/barcode and preparing OCR…");
+    if(priceButton) priceButton.disabled=true;
+    setStatus(`Scanning ${sources.length} uploaded photo${sources.length===1?"":"s"}…`);
+    setPriceStatus("Price recommendation will appear after the card is identified.");
+    setProgress("Preparing OCR…");
+
+    let worker;
     try{
-      const barcodeValues=await detectBarcodes(file);
-      const ocr=await recognizeText(file);
-      lastResult=buildCardScanResult(ocr.text,barcodeValues,appContext.cards||[]);
-      setStatus(scanSummary(lastResult,ocr.confidence),lastResult.card_code||lastResult.cert?"success":"warning");
+      worker=await createOcrWorker();
+      const texts=[];
+      const barcodes=[];
+      const confidences=[];
+      for(let index=0;index<sources.length;index++){
+        setProgress(`Scanning uploaded photo ${index+1} of ${sources.length}…`);
+        const [barcodeValues,ocr]=await Promise.all([
+          detectBarcodes(sources[index]),
+          worker.recognize(sources[index],{rotateAuto:true})
+        ]);
+        barcodes.push(...barcodeValues);
+        texts.push(String(ocr?.data?.text||""));
+        const confidence=Number(ocr?.data?.confidence);
+        if(Number.isFinite(confidence)&&confidence>0) confidences.push(confidence);
+      }
+      lastResult=buildCardScanResult(texts.join("\n"),barcodes,appContext.cards||[]);
+      lastPriceRecommendation=buildInventoryPriceRecommendation(appContext.cards||[],lastResult);
+      const averageConfidence=confidences.length
+        ? confidences.reduce((sum,value)=>sum+value,0)/confidences.length
+        : 0;
+      setStatus(scanSummary(lastResult,averageConfidence,sources.length),lastResult.card_code||lastResult.cert?"success":"warning");
+      setPriceStatus(priceSummary(lastPriceRecommendation),lastPriceRecommendation?"success":"");
       setProgress(lastResult.matched_card
-        ? "Existing inventory match found. Nothing is changed until you press Apply detected fields."
-        : "Nothing is changed until you press Apply detected fields.");
+        ? "Existing inventory match found. Nothing changes until you apply the detected fields."
+        : "Nothing changes until you apply the detected fields.");
       if(applyButton) applyButton.disabled=!(lastResult.card_code||lastResult.company||lastResult.grade||lastResult.cert||lastResult.matched_card);
+      if(priceButton) priceButton.disabled=!lastPriceRecommendation;
     }catch(error){
       console.error("Card scanner failed:",error);
-      setStatus("Could not scan this image. Check your connection and try a clearer photo.","error");
-      setProgress("The normal Add Card form is unchanged and can still be used manually.");
+      const detail=String(error?.message||error||"").replace(/\s+/g," ").trim().slice(0,180);
+      setStatus(`Could not scan the uploaded photos.${detail ? ` Scanner error: ${detail}` : ""}`,"error");
+      setProgress("Your uploaded photos and the normal Add Card form are unchanged.");
+      setPriceStatus("No price recommendation was generated.");
     }finally{
+      try{ await worker?.terminate?.(); }catch(_error){}
       scannerBusy=false;
+      if(scanButton) scanButton.disabled=false;
     }
   }
 
@@ -234,27 +368,23 @@ export function register(appContext){
     scanner.className="panel owner-only";
     scanner.innerHTML=`
       <div class="section-head">
-        <div><h3>Scan Card / Graded Slab</h3><p class="hint">Owner-only assistant. It recommends fields from the photo; you confirm before anything is saved.</p></div>
+        <div><h3>Scan Uploaded Card Photos</h3><p class="hint">Upload photos normally above, then scan those same photos. The scanner only recommends fields; you confirm before anything is saved.</p></div>
       </div>
       <div class="actions">
-        <button type="button" class="btn-primary" id="addCardScanChoose">Scan Card / Slab</button>
+        <button type="button" class="btn-primary" id="addCardScanUploaded">Scan Uploaded Photos</button>
         <button type="button" id="addCardScanApply" disabled>Apply detected fields</button>
-        <input type="file" id="addCardScanInput" accept="image/*" capture="environment" hidden>
+        <button type="button" id="addCardScanApplyPrice" disabled>Apply recommended price</button>
       </div>
-      <div class="hint" id="addCardScanStatus">Take or upload a clear photo. For graded cards, keep the full label and certification number visible.</div>
-      <div class="hint" id="addCardScanProgress">OCR runs in your browser. PSA QR/cert, grade and ONE PIECE card numbers are detected when readable.</div>`;
-    const heading=form.querySelector("h2");
-    if(heading) heading.insertAdjacentElement("afterend",scanner);
+      <div class="hint" id="addCardScanStatus">Upload one or more clear card/slab photos with the normal Choose Files control, then scan them here.</div>
+      <div class="hint" id="addCardScanProgress">For slabs, include a clear label photo. OCR runs in your browser; nothing is saved automatically.</div>
+      <div class="hint" id="addCardScanPrice">After a card code is identified, the scanner can suggest a MYR starting price from matching cards already in this inventory.</div>`;
+    const imageField=form.querySelector(".image-field");
+    if(imageField) imageField.insertAdjacentElement("afterend",scanner);
     else form.prepend(scanner);
 
-    const input=appContext.$("addCardScanInput");
-    appContext.$("addCardScanChoose")?.addEventListener("click",()=>input?.click());
-    input?.addEventListener("change",()=>{
-      const file=input.files?.[0];
-      if(file) scanFile(file);
-      input.value="";
-    });
+    appContext.$("addCardScanUploaded")?.addEventListener("click",scanUploadedPhotos);
     appContext.$("addCardScanApply")?.addEventListener("click",applyScanResult);
+    appContext.$("addCardScanApplyPrice")?.addEventListener("click",applyPriceRecommendation);
   }
 
   const originalRenderAddPage=appContext.renderAddPage;
@@ -265,7 +395,8 @@ export function register(appContext){
   };
 
   Object.assign(appContext,{
-    scanCardImage:scanFile,
-    buildCardScanResult:(text,barcodes=[])=>buildCardScanResult(text,barcodes,appContext.cards||[])
+    scanUploadedCardPhotos:scanUploadedPhotos,
+    buildCardScanResult:(text,barcodes=[])=>buildCardScanResult(text,barcodes,appContext.cards||[]),
+    buildInventoryPriceRecommendation:(result)=>buildInventoryPriceRecommendation(appContext.cards||[],result)
   });
 }
