@@ -3,6 +3,6 @@ export function register(){
   const link=document.createElement("link");
   link.id="aiCardScannerStyles";
   link.rel="stylesheet";
-  link.href="./src/styles/30-ai-card-scanner.css?v=2026-10-24-v11";
+  link.href="./src/styles/30-ai-card-scanner.css?v=2026-10-24-v12";
   document.head.appendChild(link);
 }
