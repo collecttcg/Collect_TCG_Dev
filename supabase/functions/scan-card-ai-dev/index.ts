@@ -93,5 +93,5 @@ Deno.serve(async (req) => {
   const outputText=String(data?.candidates?.[0]?.content?.parts?.map?.((part:any)=>part?.text||"")?.join?.("")||"").trim();
   if(!outputText)return json({error:"empty_ai_response",message:data?.promptFeedback?.blockReason?`Gemini blocked the scan: ${data.promptFeedback.blockReason}`:"Gemini returned no card data."},502);
   const parsed=parseJsonObject(outputText); if(!parsed)return json({error:"invalid_ai_response",message:"Gemini returned invalid card data."},502);
-  return json({ok:true,result:normalizeResult(parsed)};
+  return json({ok:true,result:normalizeResult(parsed)});
 });
