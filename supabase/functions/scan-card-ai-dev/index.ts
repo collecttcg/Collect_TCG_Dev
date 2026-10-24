@@ -14,6 +14,7 @@ function json(body: unknown, status = 200) {
 }
 
 function text(value: unknown) { return typeof value === "string" ? value.trim() : ""; }
+function finitePositive(value: unknown) { const n = Number(value); return Number.isFinite(n) && n > 0 ? n : 0; }
 function normalizeResult(input: any) {
   const format = ["Raw", "Graded", "Sealed"].includes(text(input?.format)) ? text(input.format) : "";
   const allowedConditions = new Set(["M", "NM", "LP", "MP", "HP", "DMG", "SEALED", "NA"]);
@@ -28,6 +29,62 @@ function normalizeResult(input: any) {
   if (result.format === "Graded") result.condition = "NA";
   if (result.format === "Sealed") result.condition = "SEALED";
   return result;
+}
+
+function parseJsonObject(value: string) {
+  const clean = value.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  try { return JSON.parse(clean); } catch {
+    const start = clean.indexOf("{"); const end = clean.lastIndexOf("}");
+    if (start >= 0 && end > start) try { return JSON.parse(clean.slice(start, end + 1)); } catch { /* ignore */ }
+  }
+  return null;
+}
+
+function normalizeMarketPrice(input: any, groundingMetadata: any) {
+  const suggested = finitePositive(input?.suggested_myr);
+  if (!suggested) return null;
+  const low = finitePositive(input?.low_myr) || suggested;
+  const high = finitePositive(input?.high_myr) || suggested;
+  const chunks = Array.isArray(groundingMetadata?.groundingChunks) ? groundingMetadata.groundingChunks : [];
+  const sources = chunks.map((chunk: any) => ({ title: text(chunk?.web?.title), url: text(chunk?.web?.uri) })).filter((source: any) => source.url).slice(0, 5);
+  return {
+    myr: suggested,
+    min_myr: Math.min(low, high, suggested),
+    max_myr: Math.max(low, high, suggested),
+    count: Math.max(0, Math.round(Number(input?.comparable_count) || 0)),
+    basis: text(input?.basis) || "AI web market research",
+    confidence: Math.max(0, Math.min(1, Number(input?.confidence) || 0)),
+    sources,
+    search_queries: Array.isArray(groundingMetadata?.webSearchQueries) ? groundingMetadata.webSearchQueries.map(text).filter(Boolean).slice(0, 5) : [],
+    source: "ai_web",
+  };
+}
+
+async function getGroundedMarketPrice(geminiKey: string, card: any) {
+  if (!card?.name && !card?.card_code) return null;
+  const identity = [card.year, card.game, card.name, card.card_code, card.language, card.series, card.format, card.grading_company, card.grade ? `grade ${card.grade}` : ""].filter(Boolean).join(" | ");
+  const prompt = `Research the CURRENT market price for this exact trading card/product: ${identity}. Use Google Search. Prioritize recent sold/completed sales and reliable marketplace/price-guide evidence. Do not mix raw and graded copies. For graded cards, only use the same grading company and grade when possible. Match card code, language, set/series and variant exactly. Ignore obvious unrelated listings and extreme outliers. Convert the recommendation to Malaysian Ringgit (MYR) using a current exchange rate if source prices use another currency. Return ONLY JSON with keys suggested_myr, low_myr, high_myr, comparable_count, basis, confidence. If there is not enough reliable exact-market evidence, return suggested_myr 0 instead of guessing. basis must briefly describe the evidence used.`;
+  let response: Response;
+  try {
+    response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {
+      method: "POST",
+      headers: { "x-goog-api-key": geminiKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], tools: [{ google_search: {} }] }),
+    });
+  } catch (error) {
+    console.error("Gemini market search network failure", error instanceof Error ? error.message : "unknown");
+    return null;
+  }
+  let data: any = {};
+  try { data = await response.json(); } catch { return null; }
+  if (!response.ok) {
+    console.error("Gemini market search failed", response.status, data?.error?.status || "unknown", data?.error?.message || "");
+    return null;
+  }
+  const candidate = data?.candidates?.[0];
+  const outputText = String(candidate?.content?.parts?.map?.((part: any) => part?.text || "")?.join?.("") || "").trim();
+  const parsed = parseJsonObject(outputText);
+  return parsed ? normalizeMarketPrice(parsed, candidate?.groundingMetadata) : null;
 }
 
 Deno.serve(async (req) => {
@@ -80,10 +137,12 @@ Deno.serve(async (req) => {
 
   const outputText = String(data?.candidates?.[0]?.content?.parts?.map?.((part: any) => part?.text || "")?.join?.("") || "").trim();
   if (!outputText) return json({ error: "empty_ai_response", message: data?.promptFeedback?.blockReason ? `Gemini blocked the scan: ${data.promptFeedback.blockReason}` : "Gemini returned no card data." }, 502);
-  let parsed: any;
-  try { parsed = JSON.parse(outputText); } catch {
+  const parsed = parseJsonObject(outputText);
+  if (!parsed) {
     console.error("Gemini returned invalid JSON");
     return json({ error: "invalid_ai_response", message: "Gemini returned invalid card data." }, 502);
   }
-  return json({ ok: true, result: normalizeResult(parsed) });
+  const result = normalizeResult(parsed);
+  const market_price = await getGroundedMarketPrice(geminiKey, result);
+  return json({ ok: true, result, market_price });
 });
