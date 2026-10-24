@@ -2,7 +2,7 @@
 const TESSERACT_MODULE_URL="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/tesseract.esm.min.js";
 const TESSERACT_WORKER_URL="https://cdn.jsdelivr.net/npm/tesseract.js@6.0.1/dist/worker.min.js";
 const TESSERACT_CORE_URL="https://cdn.jsdelivr.net/npm/tesseract.js-core@6.0.0";
-const TESSERACT_LANG_URL="https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int";
+const TESSERACT_LANG_URL="https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int/";
 
 export function normalizeScanText(value){
   return String(value||"").replace(/[\u2010-\u2015]/g,"-").replace(/\s+/g," ").trim();
@@ -10,10 +10,89 @@ export function normalizeScanText(value){
 
 export function extractCardCode(value){
   const text=normalizeScanText(value).toUpperCase();
-  const standard=text.match(/\b(OP|ST|EB|PRB)\s*[- ]?\s*(\d{2})\s*[- ]\s*(\d{3})\b/);
-  if(standard) return `${standard[1]}${standard[2]}-${standard[3]}`;
-  const promo=text.match(/\bP\s*[- ]\s*(\d{3})\b/);
-  return promo ? `P-${promo[1]}` : "";
+  const standard=text.match(/(?:^|[^A-Z0-9])([O0][P]|[S58][T7]|[E3][B8]|PR[B8])\s*[- ]?\s*(\d{2})\s*[- ]\s*(\d{3})(?:[1I])?(?=\D|$)/);
+  if(standard){
+    const prefix=standard[1]
+      .replace(/^0P$/,"OP")
+      .replace(/^[58]7$/,"ST")
+      .replace(/^3[8B]$/,"EB")
+      .replace(/^E8$/,"EB")
+      .replace(/^PR8$/,"PRB");
+    return `${prefix}${standard[2]}-${standard[3]}`;
+  }
+  const promo=text.match(/\bP\s*[- ]\s*(\d{3})(?=\D|$)/);
+  if(promo) return `P-${promo[1]}`;
+  const lines=String(value||"").split(/\r?\n/).map(line=>normalizeScanText(line).toUpperCase()).filter(Boolean);
+  for(const line of lines){
+    const labelled=line.match(/#\s*([CSG])(\d{2,3})(?:\b|\D)/);
+    if(labelled) return `${labelled[1]}${labelled[2]}`;
+  }
+  if(/\bHYPER\s+BATTLE\b|\bBANDAI\s+(?:1999|2000|2001)\b/.test(text)){
+    for(const line of lines){
+      const vintage=line.match(/^([CSG])(\d{2,3})(?:\b|\D)/);
+      if(vintage) return `${vintage[1]}${vintage[2]}`;
+    }
+  }
+  return "";
+}
+
+export function extractYear(value){
+  const text=normalizeScanText(value).toUpperCase();
+  const patterns=[
+    /\b(19\d{2}|20\d{2})\b(?=.{0,30}\bONE\s+PIECE\b)/,
+    /\bONE\s+PIECE\b.{0,30}?\b(19\d{2}|20\d{2})\b/,
+    /\bBANDAI\s+(19\d{2}|20\d{2})\s+MADE\s+IN\s+JAPAN\b/
+  ];
+  for(const pattern of patterns){
+    const match=text.match(pattern);
+    if(match) return match[1];
+  }
+  return "";
+}
+
+export function extractLanguage(value){
+  const text=normalizeScanText(value).toUpperCase();
+  if(/\bCHINESE\b|\bCHN\b|\bONE\s+PIECE\s+CN\b/.test(text)) return "CN";
+  if(/\bJAPANESE\b|\bJAPAN\b|\bONE\s+PIECE\s+JP\b/.test(text)) return "JP";
+  if(/\bKOREAN\b|\bKOREA\b|\bONE\s+PIECE\s+KR\b/.test(text)) return "KR";
+  if(/\bENGLISH\b|\bONE\s+PIECE\s+ENG\b/.test(text)) return "ENG";
+  if(/\bONE\s+PIECE\b/.test(text)){
+    const lines=String(value||"").split(/\r?\n/).map(line=>normalizeScanText(line).toUpperCase()).filter(Boolean);
+    if(lines.includes("JP")) return "JP";
+    if(lines.includes("CN")) return "CN";
+    if(lines.includes("KR")) return "KR";
+    if(lines.includes("ENG")) return "ENG";
+  }
+  return "";
+}
+
+export function extractGame(value){
+  return /\bONE\s+PIECE\b/i.test(normalizeScanText(value)) ? "One Piece" : "";
+}
+
+export function extractPsaLabelName(value){
+  if(extractGame(value)!=="One Piece") return "";
+  const lines=String(value||"").split(/\r?\n/).map(normalizeScanText).filter(Boolean);
+  const anchor=lines.findIndex(line=>/\b(?:19\d{2}|20\d{2})\b/.test(line) && /\bONE(?:\s+PIECE)?\b/i.test(line));
+  if(anchor<0) return "";
+  for(let index=anchor+1; index<Math.min(lines.length,anchor+13); index++){
+    if(/[a-z]/.test(lines[index])) continue;
+    let line=lines[index].toUpperCase();
+    if(/^(?:PSA|CERT|FIRST STAGE|PB STORAGE|CHINESE NEW YEAR|NEW YEAR|ONE PIECE|PIECE|CHB|JP|CN|KR|ENG|GEM|NM|MINT|EX|VG|GOOD|POOR|PR|#)/.test(line)) continue;
+    line=line
+      .replace(/\b(?:GEM\s*(?:MINT|MT)|NM(?:\s*[- ]?\s*MT)?|MINT|EX(?:\s*[- ]?\s*MT)?|VG(?:\s*[- ]?\s*EX)?|GOOD|PR|POOR)\b.*$/,'')
+      .replace(/\s+#?[A-Z]?\d{1,4}\s*$/,'')
+      .replace(/[^A-Z0-9 .&'’-]+/g,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+    if(line.length>=3 && /[A-Z]/.test(line)) return line;
+  }
+  return "";
+}
+
+export function resolveCreateWorker(module){
+  const createWorker=module?.createWorker || module?.default?.createWorker;
+  return typeof createWorker==="function" ? createWorker : null;
 }
 
 export function extractPsaCert(value,barcodeValues=[]){
@@ -26,7 +105,7 @@ export function extractPsaCert(value,barcodeValues=[]){
     if(labelled) return labelled[1];
   }
   const compact=normalizeScanText(value);
-  const standalone=compact.match(/(?:^|\s)(\d{8})(?=\s|$)/);
+  const standalone=compact.match(/(?:^|\s)(\d{7,10})(?=\s|$)/);
   return standalone ? standalone[1] : "";
 }
 
@@ -56,6 +135,15 @@ export function extractGrade(value){
     const match=text.match(pattern);
     if(match) return match[1].replace(/\.0$/,'');
   }
+  const relaxed=[
+    [/\bGEM\s*(?:MINT|MT)\b(?:\s+\S+){0,7}?\s+(10(?:\.0)?)\b/,"10"],
+    [/\bMINT\b(?:\s+\S+){0,5}?\s+(9(?:\.5|\.0)?)\b/,"9"],
+    [/\bNM\b(?:\s+\S+){0,5}?\s+(7(?:\.5|\.0)?)\b/,"7"]
+  ];
+  for(const [pattern] of relaxed){
+    const match=text.match(pattern);
+    if(match) return match[1].replace(/\.0$/,'');
+  }
   const explicit=text.match(/\bGRADE\s*[:#-]?\s*(10|[1-9](?:\.5)?)\b/);
   return explicit ? explicit[1] : "";
 }
@@ -73,6 +161,10 @@ export function buildCardScanResult(text,barcodeValues=[],cards=[]){
     grade:extractGrade(text),
     cert:extractPsaCert(text,barcodeValues),
     card_code:cardCode,
+    name:extractPsaLabelName(text),
+    year:extractYear(text),
+    game:extractGame(text),
+    language:extractLanguage(text),
     matched_card:findExistingCardByCode(cards,cardCode)
   };
 }
@@ -178,6 +270,40 @@ export function register(appContext){
     }
   }
 
+  async function buildOcrRegions(source){
+    if(typeof document==="undefined" || typeof createImageBitmap!=="function") return [source];
+    let bitmap;
+    try{
+      const blob=await sourceToBlob(source);
+      if(!blob) return [source];
+      bitmap=await createImageBitmap(blob);
+      const width=bitmap.width;
+      const height=bitmap.height;
+      if(!width || !height) return [source];
+      const specs=height>=width
+        ? [[Math.round(width*0.10),Math.round(height*0.04),Math.round(width*0.80),Math.round(height*0.28)],[Math.round(width*0.08),Math.round(height*0.60),Math.round(width*0.84),Math.round(height*0.37)]]
+        : [[Math.round(width*0.04),Math.round(height*0.08),Math.round(width*0.38),Math.round(height*0.84)],[Math.round(width*0.58),Math.round(height*0.08),Math.round(width*0.38),Math.round(height*0.84)]];
+      const regions=[source];
+      for(const [sx,sy,sw,sh] of specs){
+        if(sw<40 || sh<40) continue;
+        const scale=Math.min(2,1600/Math.max(sw,sh));
+        const canvas=document.createElement("canvas");
+        canvas.width=Math.max(1,Math.round(sw*scale));
+        canvas.height=Math.max(1,Math.round(sh*scale));
+        const context=canvas.getContext("2d",{alpha:false});
+        if(!context) continue;
+        context.drawImage(bitmap,sx,sy,sw,sh,0,0,canvas.width,canvas.height);
+        regions.push(canvas.toDataURL("image/jpeg",0.92));
+      }
+      return regions;
+    }catch(error){
+      console.warn("Card scanner detail crops unavailable:",error);
+      return [source];
+    }finally{
+      try{ bitmap?.close?.(); }catch(_error){}
+    }
+  }
+
   async function detectBarcodes(source){
     if(typeof window==="undefined" || !("BarcodeDetector" in window) || typeof createImageBitmap!=="function") return [];
     let bitmap;
@@ -203,7 +329,9 @@ export function register(appContext){
 
   async function createOcrWorker(){
     const module=await import(TESSERACT_MODULE_URL);
-    return module.createWorker("eng",1,{
+    const createWorker=resolveCreateWorker(module);
+    if(!createWorker) throw new Error("Tesseract OCR library loaded without createWorker");
+    const worker=await createWorker("eng",1,{
       workerPath:TESSERACT_WORKER_URL,
       corePath:TESSERACT_CORE_URL,
       langPath:TESSERACT_LANG_URL,
@@ -213,6 +341,8 @@ export function register(appContext){
         setProgress(`${event.status}${percent}`);
       }
     });
+    await worker.setParameters?.({tessedit_pageseg_mode:"11",preserve_interword_spaces:"1"});
+    return worker;
   }
 
   function scanSummary(result,confidence,imageCount){
@@ -222,6 +352,9 @@ export function register(appContext){
     if(result.cert) parts.push(`Cert ${result.cert}`);
     if(result.card_code) parts.push(result.card_code);
     if(result.matched_card?.name) parts.push(String(result.matched_card.name));
+    else if(result.name) parts.push(result.name);
+    if(result.year) parts.push(result.year);
+    if(result.language) parts.push(result.language);
     if(!parts.length) return `Scanned ${imageCount} uploaded photo${imageCount===1?"":"s"}, but no reliable card details were detected. Try a closer, sharper card/front-label photo.`;
     const confidenceText=confidence>0 ? ` Average OCR confidence ${Math.round(confidence)}%.` : "";
     return `Detected from ${imageCount} uploaded photo${imageCount===1?"":"s"}: ${parts.join(" · ")}.${confidenceText}`;
@@ -281,7 +414,13 @@ export function register(appContext){
   function applyScanResult(){
     if(!lastResult) return;
     if(lastResult.matched_card) applyMatchedCard(lastResult.matched_card);
-    else if(lastResult.card_code) setField("addCardCode",lastResult.card_code);
+    else{
+      setField("addName",lastResult.name);
+      setField("addCardCode",lastResult.card_code);
+      setField("addYear",lastResult.year);
+      setField("addGame",lastResult.game);
+      setField("addLanguage",lastResult.language);
+    }
     applyGrading(lastResult);
     appContext.showToast?.("Detected card details applied — please review before saving");
     setStatus("Applied detected details to Add Card. Review every field before saving.","success");
@@ -325,14 +464,18 @@ export function register(appContext){
       const confidences=[];
       for(let index=0;index<sources.length;index++){
         setProgress(`Scanning uploaded photo ${index+1} of ${sources.length}…`);
-        const [barcodeValues,ocr]=await Promise.all([
+        const [barcodeValues,regions]=await Promise.all([
           detectBarcodes(sources[index]),
-          worker.recognize(sources[index],{rotateAuto:true})
+          buildOcrRegions(sources[index])
         ]);
         barcodes.push(...barcodeValues);
-        texts.push(String(ocr?.data?.text||""));
-        const confidence=Number(ocr?.data?.confidence);
-        if(Number.isFinite(confidence)&&confidence>0) confidences.push(confidence);
+        for(let regionIndex=0;regionIndex<regions.length;regionIndex++){
+          if(regionIndex>0) setProgress(`Reading detail region ${regionIndex} of photo ${index+1}…`);
+          const ocr=await worker.recognize(regions[regionIndex],{rotateAuto:true});
+          texts.push(String(ocr?.data?.text||""));
+          const confidence=Number(ocr?.data?.confidence);
+          if(Number.isFinite(confidence)&&confidence>0) confidences.push(confidence);
+        }
       }
       lastResult=buildCardScanResult(texts.join("\n"),barcodes,appContext.cards||[]);
       lastPriceRecommendation=buildInventoryPriceRecommendation(appContext.cards||[],lastResult);
@@ -344,7 +487,7 @@ export function register(appContext){
       setProgress(lastResult.matched_card
         ? "Existing inventory match found. Nothing changes until you apply the detected fields."
         : "Nothing changes until you apply the detected fields.");
-      if(applyButton) applyButton.disabled=!(lastResult.card_code||lastResult.company||lastResult.grade||lastResult.cert||lastResult.matched_card);
+      if(applyButton) applyButton.disabled=!(lastResult.card_code||lastResult.company||lastResult.grade||lastResult.cert||lastResult.name||lastResult.year||lastResult.game||lastResult.language||lastResult.matched_card);
       if(priceButton) priceButton.disabled=!lastPriceRecommendation;
     }catch(error){
       console.error("Card scanner failed:",error);
