@@ -93,6 +93,32 @@ jobs:
         node --check dev/src/features/owner/ebay-banlist.js
         node --check dev/src/app/register-features.js
         node --check dev/src/main.js
+    - name: Validate eBay Ban List navigation insertion regression
+      shell: bash
+      run: |
+        node --input-type=module <<'NODE'
+        class FakeNode {
+          constructor(){ this.parentNode=null; this.children=[]; }
+          appendChild(node){ node.parentNode=this; this.children.push(node); return node; }
+          insertBefore(node,before){
+            if(before.parentNode!==this) throw new Error("insertBefore reference is not a child");
+            node.parentNode=this;
+            this.children.splice(this.children.indexOf(before),0,node);
+            return node;
+          }
+        }
+        const container=new FakeNode();
+        const nestedParent=new FakeNode();
+        const before=new FakeNode();
+        container.appendChild(nestedParent);
+        nestedParent.appendChild(before);
+        const link=new FakeNode();
+        if(before?.parentNode) before.parentNode.insertBefore(link,before); else container.appendChild(link);
+        if(link.parentNode!==nestedParent || nestedParent.children[0]!==link || nestedParent.children[1]!==before){
+          throw new Error("eBay Ban List navigation insertion regression");
+        }
+        console.log("Nested navigation insertion passed.");
+        NODE
     - name: Validate SEO generator syntax and self-test
       run: |
         node --check tools/generate-seo.mjs
@@ -121,9 +147,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-25-v07
-        PREVIOUS_VERSION: 2026-10-25-v06
-        PREVIOUS_COMMIT: 099846a71f5aa46908e50cbd6d73fe6ed6379a7d
+        RELEASE_VERSION: 2026-10-25-v08
+        PREVIOUS_VERSION: 2026-10-25-v07
+        PREVIOUS_COMMIT: af0d1a7e14b95dee10033d36a012f593e82ed1ed
       run: |
         set -euo pipefail
         mkdir -p release
@@ -143,10 +169,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-25-v07-packages
+        name: Collect-TCG-Dev-2026-10-25-v08-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-25-v07-full.zip
-          release/Collect-TCG-Dev-2026-10-25-v06-to-2026-10-25-v07-patch.zip
+          release/Collect-TCG-Dev-2026-10-25-v08-full.zip
+          release/Collect-TCG-Dev-2026-10-25-v07-to-2026-10-25-v08-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -177,20 +203,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-25-v07.txt"
+        MANIFEST="release-manifests/2026-10-25-v08.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-25-v07"
-          echo "Previous version: 2026-10-25-v06"
+          echo "Version: 2026-10-25-v08"
+          echo "Previous version: 2026-10-25-v07"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v07-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v06-to-2026-10-25-v07-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v08-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v07-to-2026-10-25-v08-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-25-v07: record package validation"
+        git commit -m "Development 2026-10-25-v08: record package validation"
         git push
