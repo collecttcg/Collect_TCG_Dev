@@ -24,53 +24,68 @@ Reconciliation priority: current GitHub HEAD > latest valid release manifest > t
 
 ## Current Development
 
-Latest Development: `2026-10-25-v08`
-Previous Development: `2026-10-25-v07`
-Release manifest: `release-manifests/2026-10-25-v08.txt`
-Package source commit: `06caa4ae097a50dcbef1974773fcf85b99acc318`
+Latest Development: `2026-10-25-v09`
+Previous Development: `2026-10-25-v08`
+Release manifest: `release-manifests/2026-10-25-v09.txt`
+Package source commit: `ce875d0722014881bd577a06953730c7be25c2b9`
 
 ### Development package record
 
-- Full ZIP: `Collect-TCG-Dev-2026-10-25-v08-full.zip`
-- Full SHA256: `4dcc494e48616d29459228dd13631fafc0060bbbbe7e2930542509ebf6a8a0f2`
-- Patch ZIP: `Collect-TCG-Dev-2026-10-25-v07-to-2026-10-25-v08-patch.zip`
-- Patch SHA256: `50f15aa9113be4bc0c0a86db4ebdbee8255c6c27dd2f556cba98bfb9c4af22f0`
+- Full ZIP: `Collect-TCG-Dev-2026-10-25-v09-full.zip`
+- Full SHA256: `e859da6552e4b4d4831ad1653eb1747b57ee48b8d0d39831d06a2d4bbccab20f`
+- Patch ZIP: `Collect-TCG-Dev-2026-10-25-v08-to-2026-10-25-v09-patch.zip`
+- Patch SHA256: `51296346925c8c1c2c9bc4490da3c62c8adb6a3bfac81911e2a626b47adcf195`
 
-## Development 2026-10-25-v08
+## Development 2026-10-25-v09
 
-Purpose: complete and validate the Owner eBay Ban List work after correcting the Development v07 navigation startup regression.
+Purpose: consolidate Owner inventory operations into a practical Inventory Manager while preserving specialist tools and public behavior.
 
-Changes retained in v08:
-- Owner-only `#/ebay-banlist` shared master blocked-buyer list.
-- Add, edit, remove and search entries.
-- Copy individual usernames and the full comma-separated list.
-- Four shortcuts to eBay Blocked Buyers; the active eBay login determines the seller account being edited.
-- Website remains the master list; eBay account lists are updated manually through the shortcuts.
-- No eBay passwords, sessions, tokens or credentials are stored.
-- Corrected Owner navigation insertion so feature registration uses the reference element's actual DOM parent and does not throw `insertBefore` when Export is nested differently.
-- Dedicated regression coverage protects the nested-navigation startup case.
-- Owner AI Card Scanner retains improved backend JSON error/message reporting for non-2xx Development scanner responses.
+Changes retained in v09:
+- Existing `#/inventory-tools` landing page is now the Owner Inventory Manager / command center.
+- Dashboard summarizes total records, Available/Reserved/Sold/Collection counts, Draft/Archived counts, data-quality issues, stale records and stored MYR/USD/SGD listing value.
+- Search spans card name, code, series/set, game, language, year, grading/certification and notes.
+- Filters cover lifecycle/status, game, data-quality issues, missing stored cost and stale records.
+- Inventory table provides direct View and Edit actions and displays status, game, stored price, stored cost and last update date.
+- Specialist Bulk Metadata, Bulk Status, Data Quality, Hidden Listings, Edit History, Image Health, Storage Health, eBay Ban List and Export/Backup remain available from the command center.
+- Redundant top-level Owner navigation entries for Data Quality, Hidden Listings and Export are consolidated into Inventory Manager without deleting their retained routes or capabilities.
+- The existing specialist `inventory-tools?mode=...&sub=...` flows remain backward compatible.
+- Release tooling was repaired so repository checks reflect the accepted v08/v03 baseline instead of stale v07/v02 markers.
+- Canonical startup compatibility contracts were retained after validation identified them as required behavior.
 
-SQL required: Yes.
-Migration: `migrations/2026/2026-10-25-v07-EBAY-BANLIST.sql`.
-SQL status: Applied to the shared Collect TCG Supabase project with explicit approval. `public.ebay_banlist` has RLS enabled, anon SELECT denied, authenticated table privileges subject to four Owner-only policies using `public.is_app_owner()`.
+SQL required: No.
+Database status: No schema, RLS, Edge Function or shared Supabase change was applied for v09.
 
 ### Development validation status
 
-Completed for v08:
-- Feature regression tests executed successfully.
-- Changed Owner JavaScript syntax checks executed successfully.
-- Dedicated nested-navigation `insertBefore` regression test executed successfully.
-- SEO generator syntax/self-test and generation checks executed successfully.
-- Repository/reference validation executed successfully.
-- CSS and retained release-contract validation executed successfully.
-- Full and patch ZIPs created, integrity checked and uploaded.
-- Immutable v08 package manifest recorded.
-- Development Pages deployment completed successfully.
+Completed for v09:
+- 80 feature regression tests executed successfully.
+- Changed Owner JavaScript syntax checks executed successfully, including the new dashboard module.
+- eBay nested-navigation regression test executed successfully.
+- SEO generator syntax/self-test and Development SEO generation executed successfully.
+- Repository/reference validation executed successfully across 69 JavaScript files.
+- CSS validation and retained release-contract validation executed successfully.
+- Full and patch ZIPs created and integrity checked.
+- Full and patch packages uploaded as the `Collect-TCG-Dev-2026-10-25-v09-packages` workflow artifact.
+- Immutable v09 release manifest recorded with SHA256 checksums.
+- Development Pages deployment for package source commit `ce875d0722014881bd577a06953730c7be25c2b9` completed successfully.
 
 Validation limitations:
-- Authenticated Owner CRUD was not interactively exercised in a browser session.
+- Authenticated Owner Inventory Manager interactions were not manually exercised in a browser session.
 - Interactive desktop/mobile/Safari browser testing was not performed.
+
+Refactoring review:
+- Reviewed the changed Owner registration/navigation/startup surface and immediate release-tooling dependencies.
+- Performed localized consolidation by making Inventory Manager the Owner operations entry point while retaining specialist routes for compatibility.
+- Attempted removal of the startup compatibility facade was reverted because regression validation confirmed it remains a canonical contract.
+- Broader Owner route registration, DOM helpers and Supabase access-layer refactors remain deferred to avoid expanding regression scope.
+
+### Previous Development release — 2026-10-25-v08
+
+Manifest: `release-manifests/2026-10-25-v08.txt`.
+Package source commit: `06caa4ae097a50dcbef1974773fcf85b99acc318`.
+Full ZIP SHA256: `4dcc494e48616d29459228dd13631fafc0060bbbbe7e2930542509ebf6a8a0f2`.
+Patch ZIP SHA256: `50f15aa9113be4bc0c0a86db4ebdbee8255c6c27dd2f556cba98bfb9c4af22f0`.
+v08 completed and validated the Owner eBay Ban List after correcting the v07 Owner-navigation startup regression.
 
 ## Current Production
 
@@ -164,6 +179,7 @@ Recognized vintage promotional code families map to `Promo`; the override is lim
 - Owner Custom Order behavior remains retained unless explicitly changed.
 - QR Generator remains retained.
 - Owner Insights styling remains in canonical `dev/src/styles/27-insights-dashboard.css`.
+- Owner Inventory Manager is the consolidated entry point for inventory administration; specialist retained routes remain available where they provide distinct functionality.
 
 Preserve unless explicitly changed:
 - desktop, mobile and Safari-sensitive behavior;
@@ -196,15 +212,16 @@ Do not restore unless explicitly requested:
 
 ## Historical release integrity
 
+- `2026-10-25-v09` is the current Development inventory-management consolidation release and remains Development-only until explicitly promoted.
 - `2026-10-25-v07` introduced the eBay Ban List but had a runtime Owner-navigation `insertBefore` regression; v08 is the corrected validated successor.
 - `2026-10-25-v06` introduced Development scanner error reporting and was not promoted until Production v03 via validated v08.
-- Production `2026-10-25-v02` remains the previous Production release.
+- Production `2026-10-25-v03` remains the current Production release and does not contain Development v09 inventory-manager changes.
 - `release-manifests/2026-10-16-v02.txt` is an older accepted historical record and must remain immutable.
 - Accepted historical manifests must never be rewritten by later workflows.
 
 ## Refactoring candidates — not approved changes
 
-Potential future Dev-only, behavior-preserving refactors identified after v08/v03:
+Potential future Dev-only, behavior-preserving refactors after v09:
 - centralize Owner navigation/route registration so individual features do not manipulate navigation DOM independently;
 - provide shared safe DOM insertion/element/clipboard/notification helpers;
 - isolate Supabase table operations behind small service/repository modules;
