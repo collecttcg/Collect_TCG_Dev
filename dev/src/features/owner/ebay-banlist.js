@@ -122,7 +122,7 @@ export function initialize(appContext){
     link.hidden=true;
     link.innerHTML='<span class="ic">⊘</span><span>eBay Ban List</span>';
     const before=beforeSelector?container.querySelector(beforeSelector):null;
-    if(before) container.insertBefore(link,before); else container.appendChild(link);
+    if(before?.parentNode) before.parentNode.insertBefore(link,before); else container.appendChild(link);
   };
 
   addNavLink(document.getElementById("premiumDesktopMoreMenu"),'[data-route="export"]');
