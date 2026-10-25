@@ -1,7 +1,7 @@
 import { createProductionRuntime } from './app/production-runtime.js?v=2026-09-29-v09';
 import { registerFeatures } from './app/register-features.js?v=2026-10-25-v09';
 import { register as registerScannerStyle } from './features/owner/card-scanner-style.js?v=2026-10-24-v10';
-import { initializeApp } from './app/initialize.js?v=2026-10-25-v09';
+import { initializeApp } from './app/initialize.js?v=2026-10-05-v01';
 import { setup as setup1 } from './ui/enhancement-1.js';
 import { setup as setup2 } from './ui/enhancement-2.js';
 import { setup as setup3 } from './ui/enhancement-3.js';
