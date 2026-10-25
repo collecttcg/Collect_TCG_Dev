@@ -34,6 +34,7 @@ on:
     - dev/src/styles/27-insights-dashboard.css
     - dev/src/styles/29-home-brand-spotlight.css
     - dev/src/styles/30-ai-card-scanner.css
+    - dev/src/styles/31-ebay-banlist.css
     - dev/src/features/inventory/filtering.js
     - dev/src/features/inventory/ordering.js
     - dev/src/features/owner/lifecycle.js
@@ -43,6 +44,7 @@ on:
     - dev/src/features/owner/card-owner-category.js
     - dev/src/features/owner/card-scanner.js
     - dev/src/features/owner/card-scanner-style.js
+    - dev/src/features/owner/ebay-banlist.js
     - dev/src/features/owner/image-maintenance.js
     - dev/src/app/navigation.js
     - dev/src/features/cards/repository.js
@@ -84,10 +86,13 @@ jobs:
         node-version: '22'
     - name: Run feature regression tests
       run: npm test
-    - name: Validate scanner JavaScript
+    - name: Validate changed Owner JavaScript
       run: |
         node --check dev/src/features/owner/card-scanner.js
         node --check dev/src/features/owner/card-scanner-style.js
+        node --check dev/src/features/owner/ebay-banlist.js
+        node --check dev/src/app/register-features.js
+        node --check dev/src/main.js
     - name: Validate SEO generator syntax and self-test
       run: |
         node --check tools/generate-seo.mjs
@@ -116,9 +121,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-25-v06
-        PREVIOUS_VERSION: 2026-10-25-v05
-        PREVIOUS_COMMIT: 4e6d784f966b07076657b21b3ad0361a8b1bb171
+        RELEASE_VERSION: 2026-10-25-v07
+        PREVIOUS_VERSION: 2026-10-25-v06
+        PREVIOUS_COMMIT: 099846a71f5aa46908e50cbd6d73fe6ed6379a7d
       run: |
         set -euo pipefail
         mkdir -p release
@@ -138,10 +143,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-25-v06-packages
+        name: Collect-TCG-Dev-2026-10-25-v07-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-25-v06-full.zip
-          release/Collect-TCG-Dev-2026-10-25-v05-to-2026-10-25-v06-patch.zip
+          release/Collect-TCG-Dev-2026-10-25-v07-full.zip
+          release/Collect-TCG-Dev-2026-10-25-v06-to-2026-10-25-v07-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -172,20 +177,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-25-v06.txt"
+        MANIFEST="release-manifests/2026-10-25-v07.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-25-v06"
-          echo "Previous version: 2026-10-25-v05"
+          echo "Version: 2026-10-25-v07"
+          echo "Previous version: 2026-10-25-v06"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v06-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v05-to-2026-10-25-v06-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v07-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v06-to-2026-10-25-v07-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-25-v06: record package validation"
+        git commit -m "Development 2026-10-25-v07: record package validation"
         git push
