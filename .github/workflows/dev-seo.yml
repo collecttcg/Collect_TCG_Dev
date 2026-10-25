@@ -45,13 +45,13 @@ on:
     - dev/src/features/owner/card-scanner.js
     - dev/src/features/owner/card-scanner-style.js
     - dev/src/features/owner/ebay-banlist.js
+    - dev/src/features/owner/dashboard.js
     - dev/src/features/owner/image-maintenance.js
     - dev/src/app/navigation.js
     - dev/src/features/cards/repository.js
     - dev/src/features/cards/related.js
     - dev/index.html
     - dev/src/app/register-features.js
-    - dev/src/app/initialize.js
     - dev/src/app/startup.js
     - dev/src/features/cards/tiles.js
     - dev/src/services/catalogue.js
@@ -88,6 +88,7 @@ jobs:
       run: npm test
     - name: Validate changed Owner JavaScript
       run: |
+        node --check dev/src/features/owner/dashboard.js
         node --check dev/src/features/owner/card-scanner.js
         node --check dev/src/features/owner/card-scanner-style.js
         node --check dev/src/features/owner/ebay-banlist.js
@@ -147,9 +148,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-25-v08
-        PREVIOUS_VERSION: 2026-10-25-v07
-        PREVIOUS_COMMIT: af0d1a7e14b95dee10033d36a012f593e82ed1ed
+        RELEASE_VERSION: 2026-10-25-v09
+        PREVIOUS_VERSION: 2026-10-25-v08
+        PREVIOUS_COMMIT: 06caa4ae097a50dcbef1974773fcf85b99acc318
       run: |
         set -euo pipefail
         mkdir -p release
@@ -169,10 +170,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-25-v08-packages
+        name: Collect-TCG-Dev-2026-10-25-v09-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-25-v08-full.zip
-          release/Collect-TCG-Dev-2026-10-25-v07-to-2026-10-25-v08-patch.zip
+          release/Collect-TCG-Dev-2026-10-25-v09-full.zip
+          release/Collect-TCG-Dev-2026-10-25-v08-to-2026-10-25-v09-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -203,20 +204,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-25-v08.txt"
+        MANIFEST="release-manifests/2026-10-25-v09.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-25-v08"
-          echo "Previous version: 2026-10-25-v07"
+          echo "Version: 2026-10-25-v09"
+          echo "Previous version: 2026-10-25-v08"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v08-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v07-to-2026-10-25-v08-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v09-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v08-to-2026-10-25-v09-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-25-v08: record package validation"
+        git commit -m "Development 2026-10-25-v09: record package validation"
         git push
