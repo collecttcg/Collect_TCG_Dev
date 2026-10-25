@@ -17,6 +17,7 @@ walk(devRoot);
 const requiredMigrations=[
   'migrations/2026/2026-09-28-v02-PUBLIC-SOLD-ORDER.sql',
   'migrations/2026/2026-09-28-v04-PRIVATE-CARD-ROUTES.sql',
+  'migrations/2026/2026-10-25-v07-EBAY-BANLIST.sql',
   'migrations/legacy/V208-GIVEAWAY-FACEBOOK-GROUP-BONUS.sql'
 ];
 for(const rel of requiredMigrations){
@@ -27,7 +28,7 @@ const baselinePath=path.join(repoRoot,'COLLECT_TCG_BASELINE.md');
 if(!fs.existsSync(baselinePath)) throw new Error('Missing COLLECT_TCG_BASELINE.md');
 const baseline=fs.readFileSync(baselinePath,'utf8');
 for(const required of [
-  'Current Development work: `2026-10-25-v06`',
+  'Current Development work: `2026-10-25-v07`',
   'Latest Production: `2026-10-25-v02`',
   'Development promoted from: `2026-10-25-v05`',
   'migrations/2026/',
