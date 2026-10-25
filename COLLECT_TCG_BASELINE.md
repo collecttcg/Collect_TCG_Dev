@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-10-25
+Last reconciled against GitHub: 2026-10-26
 
 ## Repositories
 
@@ -24,10 +24,24 @@ Reconciliation priority: current GitHub HEAD > latest valid release manifest > t
 
 ## Current Development
 
-Latest Development: `2026-10-25-v09`
+Latest validated Development release: `2026-10-25-v09`
 Previous Development: `2026-10-25-v08`
 Release manifest: `release-manifests/2026-10-25-v09.txt`
 Package source commit: `ce875d0722014881bd577a06953730c7be25c2b9`
+Current Development code HEAD before this baseline-only reconciliation: `f84143a88e8def41f66b22d3efd3a6ea08439de4`
+Current post-v09 state: corrective Owner Inventory Tools restoration is implemented and committed; full release validation/package gate is pending.
+
+### Post-v09 corrective state — validation pending
+
+- Commit `70eec314ead2c49788bbce55507f36b42dbc5e08` attempted to improve the v09 Inventory Manager UI and restore specialist access after Owner feedback.
+- Commit `f84143a88e8def41f66b22d3efd3a6ea08439de4` removes the redundant custom Inventory Manager/dashboard renderer and routes the Owner inventory entry back to the established Inventory Tools workspace.
+- The established compact Inventory Tools interface is again the canonical Owner inventory workspace.
+- PSA POP, Missing Certs, Bulk Prices, Bulk Metadata, Bulk Status and the existing category/subtool navigation remain retained through the established Inventory Tools implementation.
+- The correction avoids maintaining two competing Owner inventory interfaces and removes the inconsistent transition from the new dashboard into the established specialist-tool screen.
+- Owner authorization remains required before the Inventory Tools workspace is opened.
+- No SQL, schema, RLS, Edge Function or shared Supabase change is required or applied for this corrective work.
+- Production is unchanged and remains on `2026-10-25-v03`.
+- Status: **Implemented, validation pending.** This corrective state is not yet a new validated/package Development release.
 
 ### Development package record
 
@@ -38,18 +52,18 @@ Package source commit: `ce875d0722014881bd577a06953730c7be25c2b9`
 
 ## Development 2026-10-25-v09
 
-Purpose: consolidate Owner inventory operations into a practical Inventory Manager while preserving specialist tools and public behavior.
+Purpose: consolidate Owner inventory operations into a practical Inventory Manager while preserving specialist tools and public behavior. This section records the immutable validated v09 release state; the post-v09 corrective state above supersedes its dashboard UI in current Development code but does not rewrite v09 history.
 
-Changes retained in v09:
-- Existing `#/inventory-tools` landing page is now the Owner Inventory Manager / command center.
-- Dashboard summarizes total records, Available/Reserved/Sold/Collection counts, Draft/Archived counts, data-quality issues, stale records and stored MYR/USD/SGD listing value.
-- Search spans card name, code, series/set, game, language, year, grading/certification and notes.
-- Filters cover lifecycle/status, game, data-quality issues, missing stored cost and stale records.
-- Inventory table provides direct View and Edit actions and displays status, game, stored price, stored cost and last update date.
-- Specialist Bulk Metadata, Bulk Status, Data Quality, Hidden Listings, Edit History, Image Health, Storage Health, eBay Ban List and Export/Backup remain available from the command center.
-- Redundant top-level Owner navigation entries for Data Quality, Hidden Listings and Export are consolidated into Inventory Manager without deleting their retained routes or capabilities.
-- The existing specialist `inventory-tools?mode=...&sub=...` flows remain backward compatible.
-- Release tooling was repaired so repository checks reflect the accepted v08/v03 baseline instead of stale v07/v02 markers.
+Changes retained in validated v09:
+- Existing `#/inventory-tools` landing page was changed to the Owner Inventory Manager / command center.
+- Dashboard summarized total records, Available/Reserved/Sold/Collection counts, Draft/Archived counts, data-quality issues, stale records and stored MYR/USD/SGD listing value.
+- Search spanned card name, code, series/set, game, language, year, grading/certification and notes.
+- Filters covered lifecycle/status, game, data-quality issues, missing stored cost and stale records.
+- Inventory table provided direct View and Edit actions and displayed status, game, stored price, stored cost and last update date.
+- Specialist Bulk Metadata, Bulk Status, Data Quality, Hidden Listings, Edit History, Image Health, Storage Health, eBay Ban List and Export/Backup remained available from the command center.
+- Redundant top-level Owner navigation entries for Data Quality, Hidden Listings and Export were consolidated into Inventory Manager without deleting their retained routes or capabilities.
+- Existing specialist `inventory-tools?mode=...&sub=...` flows remained backward compatible.
+- Release tooling was repaired so repository checks reflected the accepted v08/v03 baseline instead of stale v07/v02 markers.
 - Canonical startup compatibility contracts were retained after validation identified them as required behavior.
 
 SQL required: No.
@@ -57,9 +71,9 @@ Database status: No schema, RLS, Edge Function or shared Supabase change was app
 
 ### Development validation status
 
-Completed for v09:
+Completed for validated v09:
 - 80 feature regression tests executed successfully.
-- Changed Owner JavaScript syntax checks executed successfully, including the new dashboard module.
+- Changed Owner JavaScript syntax checks executed successfully, including the dashboard module as released in v09.
 - eBay nested-navigation regression test executed successfully.
 - SEO generator syntax/self-test and Development SEO generation executed successfully.
 - Repository/reference validation executed successfully across 69 JavaScript files.
@@ -72,11 +86,11 @@ Completed for v09:
 Validation limitations:
 - Authenticated Owner Inventory Manager interactions were not manually exercised in a browser session.
 - Interactive desktop/mobile/Safari browser testing was not performed.
+- The post-v09 corrective commits are not covered by the v09 validation/package record and require their own validation before a new Development release can be accepted.
 
 Refactoring review:
-- Reviewed the changed Owner registration/navigation/startup surface and immediate release-tooling dependencies.
-- Performed localized consolidation by making Inventory Manager the Owner operations entry point while retaining specialist routes for compatibility.
-- Attempted removal of the startup compatibility facade was reverted because regression validation confirmed it remains a canonical contract.
+- v09 reviewed the changed Owner registration/navigation/startup surface and immediate release-tooling dependencies.
+- Post-v09 corrective work performed a localized cleanup by removing the duplicate dashboard implementation and restoring one canonical Inventory Tools workspace.
 - Broader Owner route registration, DOM helpers and Supabase access-layer refactors remain deferred to avoid expanding regression scope.
 
 ### Previous Development release — 2026-10-25-v08
@@ -179,7 +193,9 @@ Recognized vintage promotional code families map to `Promo`; the override is lim
 - Owner Custom Order behavior remains retained unless explicitly changed.
 - QR Generator remains retained.
 - Owner Insights styling remains in canonical `dev/src/styles/27-insights-dashboard.css`.
-- Owner Inventory Manager is the consolidated entry point for inventory administration; specialist retained routes remain available where they provide distinct functionality.
+- The established compact Owner Inventory Tools workspace is the current canonical Development inventory-administration interface after the post-v09 correction.
+- PSA POP, Missing Certs and the retained specialist category/subtool workflows remain available through Inventory Tools.
+- Do not reintroduce a second competing Inventory Manager/dashboard interface unless explicitly requested and validated as a replacement.
 
 Preserve unless explicitly changed:
 - desktop, mobile and Safari-sensitive behavior;
@@ -208,20 +224,22 @@ Do not restore unless explicitly requested:
 - V203/V204 compact-layout experiments;
 - abandoned/superseded scanner/layout experiments;
 - old Beta runtime dependencies;
-- Development-only analytics-test behavior in Production.
+- Development-only analytics-test behavior in Production;
+- the post-v09 duplicate custom Inventory Manager/dashboard renderer superseded by the established Inventory Tools workspace.
 
 ## Historical release integrity
 
-- `2026-10-25-v09` is the current Development inventory-management consolidation release and remains Development-only until explicitly promoted.
+- `2026-10-25-v09` remains the latest validated/package Development release and remains Development-only until explicitly promoted.
+- Current Development code contains post-v09 corrective work restoring the established Inventory Tools workspace; that work is implemented but not yet a validated/package release.
 - `2026-10-25-v07` introduced the eBay Ban List but had a runtime Owner-navigation `insertBefore` regression; v08 is the corrected validated successor.
 - `2026-10-25-v06` introduced Development scanner error reporting and was not promoted until Production v03 via validated v08.
-- Production `2026-10-25-v03` remains the current Production release and does not contain Development v09 inventory-manager changes.
+- Production `2026-10-25-v03` remains the current Production release and does not contain Development v09 or post-v09 inventory-interface changes.
 - `release-manifests/2026-10-16-v02.txt` is an older accepted historical record and must remain immutable.
 - Accepted historical manifests must never be rewritten by later workflows.
 
 ## Refactoring candidates — not approved changes
 
-Potential future Dev-only, behavior-preserving refactors after v09:
+Potential future Dev-only, behavior-preserving refactors:
 - centralize Owner navigation/route registration so individual features do not manipulate navigation DOM independently;
 - provide shared safe DOM insertion/element/clipboard/notification helpers;
 - isolate Supabase table operations behind small service/repository modules;
