@@ -26,47 +26,47 @@ Reconciliation priority: current GitHub HEAD > latest valid release manifest > t
 
 ### Development
 
-Current Development work: `2026-10-25-v06`
-Previous Development version: `2026-10-25-v05`
+Current Development work: `2026-10-25-v07`
+Previous Development version: `2026-10-25-v06`
+Planned release manifest: `release-manifests/2026-10-25-v07.txt`
+
+Status: **Implemented, validation pending.**
+
+Development v07 change:
+- Adds an Owner-only `#/ebay-banlist` page as the shared master blocked-buyer list for four eBay seller accounts.
+- Owners can add an eBay username with an optional reason/note, search the list, copy one username or the full comma-separated list, edit entries, and remove entries.
+- Four account shortcuts open eBay's Blocked Buyers management page; the active eBay login determines which seller account is edited.
+- The website remains the master list; eBay account lists are updated manually through the shortcuts.
+- Public visitors fail closed: the route redirects to Home unless verified Owner Mode is active, and database access is designed for Owner-only RLS.
+- No eBay passwords, sessions, tokens, or credentials are stored.
+
+SQL required: **Yes.**
+- Migration: `migrations/2026/2026-10-25-v07-EBAY-BANLIST.sql`
+- Creates `public.ebay_banlist`, explicit authenticated Data API grants, RLS, and separate SELECT/INSERT/UPDATE/DELETE policies using the existing `public.is_app_owner()` authorization helper.
+- The migration has **not** been applied because Development currently shares the Production Supabase project and Production database changes require explicit Production approval.
+
+Validation pending for v07:
+- changed JavaScript syntax and imports/registration/cache-busters
+- CSS/repository checks and retained release contracts
+- feature regression tests
+- Owner/public route boundary static verification
+- SQL/RLS review; live CRUD cannot be tested until the migration is explicitly approved/applied
+- Development Pages deployment
+- full/patch package creation and integrity
+
+### Previous Development release — v06
+
 Release manifest: `release-manifests/2026-10-25-v06.txt`
 Canonical package source commit: `a9bdd0c65b7ae2fa5ea96f75732958bcc3f3ad05`
-Initial v06 manifest commit: `c915aa853d73fe90f3459f41552d6b434278b46e`
+Final reconciled v06 repository HEAD before v07 work: `099846a71f5aa46908e50cbd6d73fe6ed6379a7d`
 
-Status: **Completed and validated.**
-
-Development v06 change:
-- `dev/src/features/owner/card-scanner.js` surfaces the backend JSON error/message returned by the Supabase Edge Function for non-2xx responses instead of only the generic invoke error.
-- Successful identification behavior is unchanged.
-- Market-price research remains isolated from identification.
-- No timeout was blindly increased.
-- No SQL was required.
-
-Release-state repair completed on 2026-10-25:
-- stale v04/v01 validation markers were reconciled to the current Development/Production state;
-- the v06 workflow/package label is correct;
-- the v06 manifest exists and is treated as immutable;
-- the Development workflow now refuses to overwrite an existing accepted release manifest.
-
-Development package record:
+Development v06 package record:
 - Full ZIP: `Collect-TCG-Dev-2026-10-25-v06-full.zip`
 - Full SHA256: `79c18c9973402e567136201a4e5d51dfc51258ffc91a9e365382b0a881cd3d76`
 - Patch ZIP: `Collect-TCG-Dev-2026-10-25-v05-to-2026-10-25-v06-patch.zip`
 - Patch SHA256: `14371132ec9480ad9063d6f29348c22a8e6b92f6e30841cbef7aa19bd18356a1`
 
-Validation executed for v06:
-- feature regression tests: passed
-- scanner JavaScript syntax: passed
-- SEO generator syntax/self-test: passed
-- Development SEO generation: passed
-- JavaScript/repository references: passed
-- CSS/retained release contracts: passed
-- package creation and ZIP integrity checks: passed
-- package artifact upload: passed
-- Development Pages deployment for the manifest commit: passed
-
-Validation limitations:
-- Authenticated Owner scanner behavior was not interactively browser-tested.
-- Interactive desktop/mobile/Safari testing was not performed for this release-state repair.
+v06 was completed and validated. It improved Owner AI Card Scanner error reporting without changing successful identification behavior.
 
 ### Production
 
@@ -76,7 +76,7 @@ Development promoted from: `2026-10-25-v05`
 Production release manifest: `release-manifests/2026-10-25-v02.txt`
 Production v02 package source commit: `5c6eee211b51e405a6d957e1ad13c29877f0ce27`
 
-Production v02 contains the already-deployed Owner AI Card Scanner stylesheet/loader work and repaired release workflow/bookkeeping. Development v06 scanner error-reporting remains Development-only and was not promoted.
+Production v02 contains the already-deployed Owner AI Card Scanner stylesheet/loader work and repaired release workflow/bookkeeping. Development v06 scanner error-reporting and Development v07 eBay Ban List remain Development-only and are not promoted.
 
 Production package record:
 - Full ZIP: `Collect-TCG-Production-2026-10-25-v02-full.zip`
