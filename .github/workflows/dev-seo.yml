@@ -173,6 +173,10 @@ jobs:
         set -euo pipefail
         mkdir -p release-manifests
         MANIFEST="release-manifests/2026-10-25-v06.txt"
+        if [[ -e "$MANIFEST" ]]; then
+          echo "Release manifest already exists and is immutable: $MANIFEST"
+          exit 0
+        fi
         {
           echo "Version: 2026-10-25-v06"
           echo "Previous version: 2026-10-25-v05"
@@ -183,9 +187,5 @@ jobs:
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        if git diff --cached --quiet; then
-          echo "Package validation manifest already current."
-          exit 0
-        fi
         git commit -m "Development 2026-10-25-v06: record package validation"
         git push
