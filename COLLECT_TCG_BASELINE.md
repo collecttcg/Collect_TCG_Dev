@@ -28,8 +28,8 @@ Latest validated Development release: `2026-10-25-v09`
 Previous Development: `2026-10-25-v08`
 Release manifest: `release-manifests/2026-10-25-v09.txt`
 Package source commit: `ce875d0722014881bd577a06953730c7be25c2b9`
-Current Development code HEAD before this baseline-only reconciliation: `f84143a88e8def41f66b22d3efd3a6ea08439de4`
-Current post-v09 state: corrective Owner Inventory Tools restoration is implemented and committed; full release validation/package gate is pending.
+Current Development code HEAD before this baseline-only reconciliation: `e2e9caa83a8f2e891e04fe08cb8128f8badfd998`
+Current post-v09 state: corrective Owner Inventory Tools restoration plus Available-inventory value overview are implemented and committed; full release validation/package gate is pending.
 
 ### Post-v09 corrective state — validation pending
 
@@ -39,6 +39,9 @@ Current post-v09 state: corrective Owner Inventory Tools restoration is implemen
 - PSA POP, Missing Certs, Bulk Prices, Bulk Metadata, Bulk Status and the existing category/subtool navigation remain retained through the established Inventory Tools implementation.
 - The correction avoids maintaining two competing Owner inventory interfaces and removes the inconsistent transition from the new dashboard into the established specialist-tool screen.
 - Owner authorization remains required before the Inventory Tools workspace is opened.
+- Commits `835c6a1cd816172f3e599a3e27d7d6edb95589d9`, `ff1ccdf20dca55d3ed60b73de77be01c8a265c86` and `e2e9caa83a8f2e891e04fe08cb8128f8badfd998` add and refine an Owner-only Available inventory value overview in the established Inventory Tools overview.
+- Available inventory value uses the stored MYR listing price multiplied by quantity and includes only live listings whose availability is `Available`; Reserved, Sold, Collection (NFS), Draft and Archived records are excluded.
+- The overview also reports Available listing count, unit count and how many Available listings are missing a MYR price. It does not represent acquisition/purchase cost basis because no purchase-cost field is introduced by this change.
 - No SQL, schema, RLS, Edge Function or shared Supabase change is required or applied for this corrective work.
 - Production is unchanged and remains on `2026-10-25-v03`.
 - Status: **Implemented, validation pending.** This corrective state is not yet a new validated/package Development release.
@@ -86,11 +89,12 @@ Completed for validated v09:
 Validation limitations:
 - Authenticated Owner Inventory Manager interactions were not manually exercised in a browser session.
 - Interactive desktop/mobile/Safari browser testing was not performed.
-- The post-v09 corrective commits are not covered by the v09 validation/package record and require their own validation before a new Development release can be accepted.
+- The post-v09 corrective commits, including the Available-inventory value overview, are not covered by the v09 validation/package record and require their own validation before a new Development release can be accepted.
 
 Refactoring review:
 - v09 reviewed the changed Owner registration/navigation/startup surface and immediate release-tooling dependencies.
 - Post-v09 corrective work performed a localized cleanup by removing the duplicate dashboard implementation and restoring one canonical Inventory Tools workspace.
+- The Available-inventory value change is isolated in `dev/src/features/owner/inventory-value-overview.js` and registered after the established Inventory Tools module to avoid broad changes to the retained tools implementation.
 - Broader Owner route registration, DOM helpers and Supabase access-layer refactors remain deferred to avoid expanding regression scope.
 
 ### Previous Development release — 2026-10-25-v08
@@ -195,6 +199,7 @@ Recognized vintage promotional code families map to `Promo`; the override is lim
 - Owner Insights styling remains in canonical `dev/src/styles/27-insights-dashboard.css`.
 - The established compact Owner Inventory Tools workspace is the current canonical Development inventory-administration interface after the post-v09 correction.
 - PSA POP, Missing Certs and the retained specialist category/subtool workflows remain available through Inventory Tools.
+- Inventory Tools includes an Owner-only Available inventory value overview based on MYR listing price × quantity for live Available records only; it excludes Reserved, Sold, Collection (NFS), Draft and Archived records.
 - Do not reintroduce a second competing Inventory Manager/dashboard interface unless explicitly requested and validated as a replacement.
 
 Preserve unless explicitly changed:
@@ -230,7 +235,7 @@ Do not restore unless explicitly requested:
 ## Historical release integrity
 
 - `2026-10-25-v09` remains the latest validated/package Development release and remains Development-only until explicitly promoted.
-- Current Development code contains post-v09 corrective work restoring the established Inventory Tools workspace; that work is implemented but not yet a validated/package release.
+- Current Development code contains post-v09 corrective work restoring the established Inventory Tools workspace and adding the Available-inventory value overview; that work is implemented but not yet a validated/package release.
 - `2026-10-25-v07` introduced the eBay Ban List but had a runtime Owner-navigation `insertBefore` regression; v08 is the corrected validated successor.
 - `2026-10-25-v06` introduced Development scanner error reporting and was not promoted until Production v03 via validated v08.
 - Production `2026-10-25-v03` remains the current Production release and does not contain Development v09 or post-v09 inventory-interface changes.
