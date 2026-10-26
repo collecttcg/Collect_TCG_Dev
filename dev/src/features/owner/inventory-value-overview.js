@@ -17,10 +17,9 @@ export function register(appContext){
     cards.forEach(card=>{
       const rawQuantity=Number(card.quantity);
       const quantity=Number.isFinite(rawQuantity) && rawQuantity>0 ? rawQuantity : 1;
-      const price=Number(card.price_myr);
       units+=quantity;
-      if(Number.isFinite(price) && price>=0){
-        valueMYR+=price*quantity;
+      if(appContext.hasListedPrice(card.price_myr)){
+        valueMYR+=Number(card.price_myr)*quantity;
       }else{
         missingPrice+=1;
       }
@@ -51,17 +50,14 @@ export function register(appContext){
         summary.missingPrice ? `${summary.missingPrice} without MYR price` : "MYR prices complete"
       ].join(" · ");
       const overview=`
-        <div class="owner-inventory-value-overview" aria-label="Available inventory value">
-          <div>
-            <span>Available inventory value</span>
-            <strong>${appContext.escapeHtml(formatMYR(summary.valueMYR))}</strong>
-            <small>${appContext.escapeHtml(note)}</small>
-          </div>
-          <small>Available inventory only · excludes Reserved, Sold, Collection, Draft and Archived · quantity included</small>
-        </div>
+        <a href="#/inventory" class="owner-inventory-value-card">
+          <strong>${appContext.escapeHtml(formatMYR(summary.valueMYR))}</strong>
+          <span>Available inventory value</span>
+          <small>${appContext.escapeHtml(note)}</small>
+        </a>
       `;
       const marker='<div class="owner-alerts-grid">';
-      return html.includes(marker) ? html.replace(marker,`${overview}${marker}`) : `${html}${overview}`;
+      return html.includes(marker) ? html.replace(marker,`${marker}${overview}`) : html;
     };
   }
 
