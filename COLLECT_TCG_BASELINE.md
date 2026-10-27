@@ -29,7 +29,7 @@ Latest validated Development release: `2026-10-27-v01`
 Previous Development: `2026-10-25-v09`
 Development release manifest: `release-manifests/2026-10-27-v01.txt`
 Development v01 package source commit: `8600fef997885b7a29c1dd342fc1fefcf65b1e5d`
-Development code HEAD before this baseline reconciliation: `3e9b24f9a2df06fba1d3b19e151e13176d8aa63e`
+Development code HEAD before this baseline reconciliation: `8c943b181ac6c661f26d8fed065978bbc5bc5350`
 
 ### Development package record — 2026-10-27-v01
 
@@ -44,9 +44,12 @@ Development code HEAD before this baseline reconciliation: `3e9b24f9a2df06fba1d3
 - Owner Overview includes Available inventory value calculated from stored MYR listing price × quantity for live `Available` records only; Reserved, Sold, Collection (NFS), Draft and Archived records are excluded.
 - The eBay Post Generator includes `[IMPORT DUTIES & TAXES]` with buyer-responsibility wording for import duties, tariffs, taxes, customs-clearance fees and other import-related charges.
 - Commit `3e9b24f9a2df06fba1d3b19e151e13176d8aa63e` changes the separator before the import-duty notice from two line breaks to one.
-- The Development SEO/validation workflow for that commit completed successfully on 2026-10-27, including regression tests, changed-JavaScript checks, SEO generation/validation, repository/reference validation, CSS/release-contract checks and Pages deployment.
-- No SQL, schema, RLS or Edge Function change is required for the eBay-generator wording/spacing work.
-- There is no `release-manifests/2026-10-27-v02.txt` in Development as of this reconciliation. Therefore the spacing commit is validated current Development code, but `2026-10-27-v01` remains the latest immutable packaged Development release.
+- Owner Inventory Tools Activity now includes an Owner-only `Buyer Messages` utility with an eBay `Thank You After Purchase` copyable template. Initial implementation commits: `8bd6bee3fedf07bd8d81676605fff84b55579d1c` and cache refresh `d5b555ae45e783089f81e707709d7119fc1fa2ff`.
+- Commit `8c943b181ac6c661f26d8fed065978bbc5bc5350` updates that eBay buyer template to the approved full wording: thanks the buyer for purchasing from Collect TCG, confirms careful packing and eBay tracking updates, states applicable import duties/tariffs/taxes/customs-clearance and other import charges are excluded from item/shipping price and are the buyer's responsibility, recommends checking local import requirements, and closes with Collect TCG MY & SG.
+- Buyer Messages remains Owner-only through the existing `requireOwner` boundary and requires no SQL/schema/RLS/Edge Function change.
+- The Development SEO/validation workflow for the earlier import-duty spacing commit completed successfully on 2026-10-27, including regression tests, changed-JavaScript checks, SEO generation/validation, repository/reference validation, CSS/release-contract checks and Pages deployment.
+- The current Buyer Messages wording update is committed Development code; validation/release packaging status must be confirmed separately before treating it as a completed Development release.
+- There is no `release-manifests/2026-10-27-v02.txt` in Development as of this reconciliation. Therefore `2026-10-27-v01` remains the latest immutable packaged Development release.
 
 ## Current Production
 
@@ -75,6 +78,7 @@ Retained/current behavior:
 - Production cache reference for `posts-hidden-ebay.js` is `2026-10-27-v02`.
 - Production-specific scanner endpoint remains `scan-card-ai`; Development-only `scan-card-ai-dev` must not appear in Production runtime code.
 - Owner-only eBay Ban List, QR Generator, SEO, analytics/privacy boundaries, Contact to Buy, giveaways, generators and Owner tools remain retained.
+- The Development-only Owner Buyer Messages utility has not been promoted to Production as of this reconciliation.
 - Existing eBay Ban List RLS/database state from Production `2026-10-25-v03` remains unchanged.
 
 SQL required: No for Production v01/v02 eBay-generator changes.
@@ -155,7 +159,7 @@ Do not restore unless explicitly requested:
 
 - Latest relevant Production migration remains `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`.
 - Shared `public.ebay_banlist` remains Owner-only through RLS.
-- No SQL/database change was required for Development/Production 2026-10-27 eBay Post Generator changes.
+- No SQL/database change was required for Development/Production 2026-10-27 eBay Post Generator changes or the Development Owner Buyer Messages utility.
 - Never claim SQL, policies, Edge Functions or backend changes were applied unless confirmed.
 
 ## Refactoring candidates — not approved changes
