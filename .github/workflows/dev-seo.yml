@@ -92,6 +92,7 @@ jobs:
         node --check dev/src/features/owner/card-scanner.js
         node --check dev/src/features/owner/card-scanner-style.js
         node --check dev/src/features/owner/ebay-banlist.js
+        node --check dev/src/features/social/posts-hidden-ebay.js
         node --check dev/src/app/register-features.js
         node --check dev/src/main.js
     - name: Validate eBay Ban List navigation insertion regression
@@ -148,9 +149,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-25-v09
-        PREVIOUS_VERSION: 2026-10-25-v08
-        PREVIOUS_COMMIT: 06caa4ae097a50dcbef1974773fcf85b99acc318
+        RELEASE_VERSION: 2026-10-27-v01
+        PREVIOUS_VERSION: 2026-10-25-v09
+        PREVIOUS_COMMIT: ce875d0722014881bd577a06953730c7be25c2b9
       run: |
         set -euo pipefail
         mkdir -p release
@@ -170,10 +171,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-25-v09-packages
+        name: Collect-TCG-Dev-2026-10-27-v01-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-25-v09-full.zip
-          release/Collect-TCG-Dev-2026-10-25-v08-to-2026-10-25-v09-patch.zip
+          release/Collect-TCG-Dev-2026-10-27-v01-full.zip
+          release/Collect-TCG-Dev-2026-10-25-v09-to-2026-10-27-v01-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -204,20 +205,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-25-v09.txt"
+        MANIFEST="release-manifests/2026-10-27-v01.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-25-v09"
-          echo "Previous version: 2026-10-25-v08"
+          echo "Version: 2026-10-27-v01"
+          echo "Previous version: 2026-10-25-v09"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-25-v09-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v08-to-2026-10-25-v09-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-27-v01-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v09-to-2026-10-27-v01-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-25-v09: record package validation"
+        git commit -m "Development 2026-10-27-v01: record package validation"
         git push
