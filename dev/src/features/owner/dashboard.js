@@ -5,11 +5,17 @@ export function register(appContext){
     : null;
 
   const EBAY_PURCHASE_MESSAGE=`Hi! Thank you very much for your purchase from Collect TCG!
+
 We really appreciate your support. Your item will be carefully packed to ensure it is well protected during shipping.
+
 Once the package has been shipped, the tracking information will be updated on eBay.
+
 Please note that any applicable import duties, tariffs, taxes, customs clearance fees, or other import-related charges are not included in the item price or shipping cost and are the buyer’s responsibility. We recommend checking your local import requirements and applicable charges.
+
 If you have any questions about your order, please feel free to message us anytime.
+
 Thank you again for your purchase, and we hope you enjoy your new card!
+
 Collect TCG MY & SG`;
 
   function addBuyerMessagesLink(){
@@ -36,14 +42,16 @@ Collect TCG MY & SG`;
           <a href="#/inventory-tools?mode=activity&sub=qr">QR Generator</a>
           <a class="active" data-owner-buyer-messages="true" href="#/inventory-tools?mode=activity&sub=buyer-messages">Buyer Messages</a>
         </div>
-        <section class="card" style="max-width:760px;margin-top:18px;padding:18px;">
-          <div class="eyebrow">eBay</div>
-          <h3 style="margin:6px 0 8px;">Thank You After Purchase</h3>
-          <p class="muted" style="margin-top:0;">Send after a buyer completes a purchase.</p>
-          <textarea id="ownerBuyerMessageText" readonly style="box-sizing:border-box;width:100%;min-height:250px;resize:vertical;padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text);font:inherit;line-height:1.55;">${message}</textarea>
-          <div style="display:flex;justify-content:flex-end;margin-top:12px;">
-            <button class="btn-primary" id="ownerCopyBuyerMessage" type="button">Copy Message</button>
+        <section class="card" style="box-sizing:border-box;width:min(100%,920px);margin-top:22px;padding:24px;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:18px;">
+            <div style="min-width:0;flex:1 1 420px;">
+              <div class="eyebrow">eBay</div>
+              <h3 style="margin:6px 0 6px;">Thank You After Purchase</h3>
+              <p class="muted" style="margin:0;">Send after a buyer completes a purchase.</p>
+            </div>
+            <button class="btn-primary" id="ownerCopyBuyerMessage" type="button" style="flex:0 0 auto;min-width:140px;">Copy Message</button>
           </div>
+          <textarea id="ownerBuyerMessageText" readonly style="box-sizing:border-box;display:block;width:100%;min-height:390px;resize:vertical;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;">${message}</textarea>
         </section>
       </div>`;
     const button=appContext.$("ownerCopyBuyerMessage");
