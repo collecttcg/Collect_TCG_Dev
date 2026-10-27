@@ -26,8 +26,8 @@ export function register(appContext){
       ].join("\n");
       const marker="\n[COLLECT TCG MY & SG]";
       return description.includes(marker)
-        ? description.replace(marker,`\n\n${notice}\n${marker}`)
-        : `${description}\n\n${notice}`;
+        ? description.replace(marker,`\n${notice}\n${marker}`)
+        : `${description}\n${notice}`;
     };
   }
 
