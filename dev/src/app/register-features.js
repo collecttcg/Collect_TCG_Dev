@@ -51,7 +51,7 @@ import * as module49 from '../features/social/posts-hidden-ebay.js?v=2026-10-14-
 import * as module50 from '../features/owner/card-owner-category.js?v=2026-10-16-v03';
 import * as module51 from '../features/owner/card-scanner.js?v=2026-10-24-v13';
 import * as module52 from '../features/owner/ebay-banlist.js?v=2026-10-25-v07';
-import * as module53 from '../features/owner/dashboard.js?v=2026-10-25-v09';
+import * as module53 from '../features/owner/dashboard.js?v=2026-10-27-v01';
 import * as module54 from '../features/owner/inventory-value-overview.js?v=2026-10-26-v01';
 
 export function registerFeatures(appContext){
