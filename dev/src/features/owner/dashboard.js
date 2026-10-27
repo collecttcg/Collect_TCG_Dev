@@ -4,14 +4,12 @@ export function register(appContext){
     ? appContext.renderInventoryToolsPage.bind(appContext)
     : null;
 
-  const EBAY_PURCHASE_MESSAGE=`Hi! Thank you so much for your purchase! We really appreciate your support.
-
-We’ll pack your card carefully and update the tracking on eBay once it’s shipped.
-
-Just a quick note: any import duties, taxes, or customs fees (if applicable) are the buyer’s responsibility.
-
-If you have any questions, feel free to message us anytime. Thanks again and hope you enjoy the card!
-
+  const EBAY_PURCHASE_MESSAGE=`Hi! Thank you very much for your purchase from Collect TCG!
+We really appreciate your support. Your item will be carefully packed to ensure it is well protected during shipping.
+Once the package has been shipped, the tracking information will be updated on eBay.
+Please note that any applicable import duties, tariffs, taxes, customs clearance fees, or other import-related charges are not included in the item price or shipping cost and are the buyer’s responsibility. We recommend checking your local import requirements and applicable charges.
+If you have any questions about your order, please feel free to message us anytime.
+Thank you again for your purchase, and we hope you enjoy your new card!
 Collect TCG MY & SG`;
 
   function addBuyerMessagesLink(){
