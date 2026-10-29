@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-10-27
+Last reconciled against GitHub: 2026-10-29
 
 ## Repositories
 
@@ -25,99 +25,79 @@ Reconciliation priority: current GitHub HEAD > latest valid release manifest > t
 
 ## Current Development
 
-Latest validated Development release: `2026-10-27-v01`
-Previous Development: `2026-10-25-v09`
-Development release manifest: `release-manifests/2026-10-27-v01.txt`
-Development v01 package source commit: `8600fef997885b7a29c1dd342fc1fefcf65b1e5d`
-Development code HEAD before this baseline reconciliation: `8c943b181ac6c661f26d8fed065978bbc5bc5350`
+Latest validated Development release: `2026-10-29-v01`
+Previous Development: `2026-10-27-v01`
+Development release manifest: `release-manifests/2026-10-29-v01.txt`
+Development v01 package source commit: `02abe40038d0a3e22537dbe42c7391d62e003a29`
 
-### Development package record — 2026-10-27-v01
+### Development package record — 2026-10-29-v01
 
-- Full ZIP: `Collect-TCG-Dev-2026-10-27-v01-full.zip`
-- Full SHA256: `8f897fb9107089355ae0bc58b94d7081d8c6b6aca98c582603f63bb6202703ab`
-- Patch ZIP: `Collect-TCG-Dev-2026-10-25-v09-to-2026-10-27-v01-patch.zip`
-- Patch SHA256: `46c1ef7afbe678a319df5e6fcb894d8f15a0e8d111c6723996189fb7ec6c5da5`
+- Full ZIP: `Collect-TCG-Dev-2026-10-29-v01-full.zip`
+- Full SHA256: `f0ce2a15be5d38fc9c519fc030ec32f0dffdb313f379559bdc282e3191eff57b`
+- Patch ZIP: `Collect-TCG-Dev-2026-10-27-v01-to-2026-10-29-v01-patch.zip`
+- Patch SHA256: `7fb5dce273973240a0035ddef013b3fcb71abf635ca60761bccbc3d81ea15a0d`
 
-### Current Development state after v01
+### Development 2026-10-29-v01 retained/current state
 
 - Owner Inventory Tools uses the established compact workspace; the duplicate post-v09 Inventory Manager/dashboard renderer remains removed.
 - Owner Overview includes Available inventory value calculated from stored MYR listing price × quantity for live `Available` records only; Reserved, Sold, Collection (NFS), Draft and Archived records are excluded.
-- The eBay Post Generator includes `[IMPORT DUTIES & TAXES]` with buyer-responsibility wording for import duties, tariffs, taxes, customs-clearance fees and other import-related charges.
-- Commit `3e9b24f9a2df06fba1d3b19e151e13176d8aa63e` changes the separator before the import-duty notice from two line breaks to one.
-- Owner Inventory Tools Activity now includes an Owner-only `Buyer Messages` utility with an eBay `Thank You After Purchase` copyable template. Initial implementation commits: `8bd6bee3fedf07bd8d81676605fff84b55579d1c` and cache refresh `d5b555ae45e783089f81e707709d7119fc1fa2ff`.
-- Commit `8c943b181ac6c661f26d8fed065978bbc5bc5350` updates that eBay buyer template to the approved full wording: thanks the buyer for purchasing from Collect TCG, confirms careful packing and eBay tracking updates, states applicable import duties/tariffs/taxes/customs-clearance and other import charges are excluded from item/shipping price and are the buyer's responsibility, recommends checking local import requirements, and closes with Collect TCG MY & SG.
+- Owner Inventory Tools Activity includes the Owner-only `Buyer Messages` utility with the approved eBay `Thank You After Purchase` copyable template.
 - Buyer Messages remains Owner-only through the existing `requireOwner` boundary and requires no SQL/schema/RLS/Edge Function change.
-- The Development SEO/validation workflow for the earlier import-duty spacing commit completed successfully on 2026-10-27, including regression tests, changed-JavaScript checks, SEO generation/validation, repository/reference validation, CSS/release-contract checks and Pages deployment.
-- The current Buyer Messages wording update is committed Development code; validation/release packaging status must be confirmed separately before treating it as a completed Development release.
-- There is no `release-manifests/2026-10-27-v02.txt` in Development as of this reconciliation. Therefore `2026-10-27-v01` remains the latest immutable packaged Development release.
+- eBay Post Generator retains `[IMPORT DUTIES & TAXES]` with buyer-responsibility wording and the corrected single-line-break spacing.
 
 ## Current Production
 
-Latest Production: `2026-10-27-v02`
-Previous Production: `2026-10-27-v01`
-Development promoted from: `2026-10-27-v02`
-Production release manifest: `release-manifests/2026-10-27-v02.txt`
-Production v02 package source commit: `64db0b3c4779c6f2036e5c7eb900eace09112c2b`
-Production release/manifest HEAD before this baseline reconciliation: `a192b9390a2da229f0476bafe388bbcf751fa716`
+Latest Production: `2026-10-29-v01`
+Previous Production: `2026-10-27-v02`
+Development promoted from: `2026-10-29-v01`
+Production release manifest: `release-manifests/2026-10-29-v01.txt`
+Production v01 package source commit: `7e543586e1ca8b0f0b57d17fe2f36edbf2638b52`
+Production last-known-good / release manifest commit: `66b4d1e462ef298afb47f08b35fe3153d746bab4`
 
-### Production package record — 2026-10-27-v02
+### Production package record — 2026-10-29-v01
 
-- Full ZIP: `Collect-TCG-Production-2026-10-27-v02-full.zip`
-- Full SHA256: `6c2936dbf31b26131c7781f1034d268a93e001ce413d5769080b3d49a2166c32`
-- Patch ZIP: `Collect-TCG-Production-2026-10-27-v01-to-2026-10-27-v02-patch.zip`
-- Patch SHA256: `d2bd12aefc573471c1865925dfaa2e0ddbdc22e9bb49192c858f1e71d6957817`
+- Full ZIP: `Collect-TCG-Production-2026-10-29-v01-full.zip`
+- Full SHA256: `a6f6fba18dff59439f4f11d845feb0dd48159f86d27a5f426be7725d72ce7dcb`
+- Patch ZIP: `Collect-TCG-Production-2026-10-27-v02-to-2026-10-29-v01-patch.zip`
+- Patch SHA256: `4719ab0ad8bfd344d64ac535f700e1439f734f0bc92c0425690b719ac2ee077b`
 
-### Production 2026-10-27-v02
+### Production 2026-10-29-v01
 
-Purpose: promote the eBay Post Generator spacing correction while retaining the import-duty notice introduced in Production v01.
+Purpose: promote validated Development `2026-10-29-v01`, including Owner inventory value visibility and Owner Buyer Messages, while preserving Production-specific behavior.
 
 Retained/current behavior:
-- eBay Post Generator includes `[IMPORT DUTIES & TAXES]` after Shipping and before the Collect TCG section.
-- Only one line break separates Shipping from the import-duty heading.
-- The import-duty notice states that import duties, tariffs, taxes, customs-clearance fees and other import-related charges are not included in item price/shipping and are the buyer's responsibility.
-- Production cache reference for `posts-hidden-ebay.js` is `2026-10-27-v02`.
+- Owner Inventory Tools includes Available inventory value calculated from stored MYR listing price × quantity for live `Available` records only; Reserved, Sold, Collection (NFS), Draft and Archived records are excluded.
+- Owner Inventory Tools Activity includes the Owner-only Buyer Messages utility and approved eBay Thank You After Purchase template.
+- eBay Post Generator retains the import-duty/tax notice and corrected spacing.
 - Production-specific scanner endpoint remains `scan-card-ai`; Development-only `scan-card-ai-dev` must not appear in Production runtime code.
-- Owner-only eBay Ban List, QR Generator, SEO, analytics/privacy boundaries, Contact to Buy, giveaways, generators and Owner tools remain retained.
-- The Development-only Owner Buyer Messages utility has not been promoted to Production as of this reconciliation.
+- Owner-only eBay Ban List, QR Generator, SEO, analytics/privacy boundaries, Contact to Buy, giveaways, generators and established Owner tools remain retained.
 - Existing eBay Ban List RLS/database state from Production `2026-10-25-v03` remains unchanged.
 
-SQL required: No for Production v01/v02 eBay-generator changes.
+SQL required: No.
 
-### Production v02 validation status
+### Production v01 validation status
 
 Completed:
-- Production repository/JavaScript validation.
-- Changed eBay generator JavaScript syntax checks.
-- Consolidated CSS validation.
-- Retained Post Generator checks.
-- SEO generator syntax/self-test and Production SEO generation.
-- Generated Production SEO file validation.
-- Full and patch ZIP creation and integrity checks.
-- Package artifact upload.
-- Immutable v02 manifest/checksum recording.
-- GitHub Pages deployment confirmation.
+- rollback-anchor validation;
+- all Production JavaScript syntax validation;
+- Production repository validation;
+- CSS and Post Generator validation;
+- SEO validation;
+- full and patch ZIP creation and integrity checks;
+- package artifact upload;
+- immutable Production manifest/checksum recording;
+- GitHub Pages build and deployment confirmation;
 - `production-last-known-good` advancement after successful Pages deployment.
 
 Validation limitations:
 - Live Production was not manually opened to avoid contaminating Insights.
-- Interactive desktop/mobile/Safari browser testing was not performed for this spacing-only change.
-
-### Release-integrity note
-
-The immutable Production v02 manifest records `Development promoted from: 2026-10-27-v02`, but Development currently has no immutable `2026-10-27-v02` release manifest; its latest packaged release is v01 and the spacing correction exists as subsequently validated Development code at commit `3e9b24f9a2df06fba1d3b19e151e13176d8aa63e`. Do not rewrite the accepted Production v02 manifest. Future release work should resolve this metadata mismatch by ensuring the exact Development release is packaged/manifested before promotion.
-
-## Previous Production — 2026-10-27-v01
-
-Production v01 introduced the eBay Post Generator import-duty notice and was promoted from Development `2026-10-27-v01`.
-
-- Full ZIP: `Collect-TCG-Production-2026-10-27-v01-full.zip`
-- Full SHA256: `1b892ddea31c5da9e0d9f708b9e12e8c500ba376f474a30bd47019effa993bfe`
-- Patch ZIP: `Collect-TCG-Production-2026-10-25-v03-to-2026-10-27-v01-patch.zip`
-- Patch SHA256: `fa1c71980b0702b2efce4a44f680c2e07ffa8f2262ba67a2fa1e90dfcb483dbc`
+- Interactive desktop/mobile/Safari browser testing was not performed during this promotion.
 
 ## Earlier validated state retained
 
-- Development `2026-10-25-v09` remains an immutable historical release. Its custom Inventory Manager/dashboard UI was superseded in later Development code by restoration of the established compact Inventory Tools workspace.
+- Production `2026-10-27-v02` remains an immutable historical release. Its manifest records `Development promoted from: 2026-10-27-v02` despite no matching immutable Development v02 manifest; do not rewrite that historical manifest.
+- Production `2026-10-27-v01` introduced the eBay Post Generator import-duty notice.
+- Development `2026-10-25-v09` remains immutable; its custom Inventory Manager/dashboard UI was superseded by restoration of the established compact Inventory Tools workspace.
 - Development `2026-10-25-v08` corrected the v07 Owner-navigation `insertBefore` regression and was promoted to Production `2026-10-25-v03`.
 - Production `2026-10-25-v03` added/promoted the Owner eBay Ban List and its RLS migration `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`; that migration was applied and verified on Supabase project `cbzytysxtdcqxuckspye`.
 - Production `2026-10-25-v02` and older accepted manifests remain historical immutable records.
@@ -131,6 +111,8 @@ Preserve unless explicitly changed:
 - Inventory/Collection/Sold/Reserved/Favorites flows;
 - Owner Mode and owner-only Add/Edit/Delete/bulk/lifecycle/export tools;
 - established compact Owner Inventory Tools and its specialist subtools;
+- Available inventory value in Owner Overview;
+- Owner-only Buyer Messages;
 - Owner private analytics and Buyer Preview privacy;
 - Owner-only AI Card Scanner;
 - Owner-only shared eBay Ban List;
@@ -159,7 +141,7 @@ Do not restore unless explicitly requested:
 
 - Latest relevant Production migration remains `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`.
 - Shared `public.ebay_banlist` remains Owner-only through RLS.
-- No SQL/database change was required for Development/Production 2026-10-27 eBay Post Generator changes or the Development Owner Buyer Messages utility.
+- No SQL/database change was required for Development/Production `2026-10-29-v01`.
 - Never claim SQL, policies, Edge Functions or backend changes were applied unless confirmed.
 
 ## Refactoring candidates — not approved changes
@@ -187,4 +169,4 @@ Do not live-open Production for testing unless explicitly authorized because it 
 
 ## Baseline maintenance
 
-Reconcile `COLLECT_TCG_BASELINE.md` in both Development and Production repositories after every accepted release or meaningful environment-state change. Preserve historical release facts and retained/removed behavior; never rewrite immutable release manifests from assumptions.
+Reconcile `COLLECT_TCG_BASELINE.md` in both Development and Production repositories after every accepted release or meaningful environment-state change. This is part of release completion, not an optional follow-up. Preserve historical release facts and retained/removed behavior; never rewrite immutable release manifests from assumptions.
