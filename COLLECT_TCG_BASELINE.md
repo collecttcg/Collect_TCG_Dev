@@ -25,75 +25,89 @@ Reconciliation priority: current GitHub HEAD > latest valid release manifest > t
 
 ## Current Development
 
-Latest validated Development release: `2026-10-30-v01`
-Previous Development: `2026-10-29-v01`
-Development release manifest: `release-manifests/2026-10-30-v01.txt`
-Development v01 package source commit: `31782df103c258bbfcec3d3abb20ab316b731c1a`
+Latest validated Development release: `2026-10-30-v03`
+Previous Development: `2026-10-30-v02`
+Development release manifest: `release-manifests/2026-10-30-v03.txt`
+Development v03 package source commit: `3da4d58198fc582180cffc80261bc4f2f6d6f1ac`
+Development v03 manifest commit: `f0a52420d800ecc576c25eb2582da25fe020371c`
 
-### Development package record — 2026-10-30-v01
+### Development package record — 2026-10-30-v03
 
-- Full ZIP: `Collect-TCG-Dev-2026-10-30-v01-full.zip`
-- Full SHA256: `cf362e09db7b9c204e6c25f5e545a53c9b62dcf57b7baff1a88582853919bd44`
-- Patch ZIP: `Collect-TCG-Dev-2026-10-29-v01-to-2026-10-30-v01-patch.zip`
-- Patch SHA256: `5985534c3cfd3d3ef314212434e9678c8fa5add6320f410a6b1409a53d24634d`
+- Full ZIP: `Collect-TCG-Dev-2026-10-30-v03-full.zip`
+- Full SHA256: `8a29a645e54d1498295e811a7cd19d53984e5bd1c4250d4584ca4b4f00c13575`
+- Patch ZIP: `Collect-TCG-Dev-2026-10-30-v02-to-2026-10-30-v03-patch.zip`
+- Patch SHA256: `64a70ffc9d8e68ff98645aca8d6a6c28740a0f871854204a472651d03b881c09`
 
-### Development 2026-10-30-v01 retained/current state
+### Development 2026-10-30-v03 retained/current state
 
-- Contact → Official eBay Accounts keeps Account 1 on eBay US and points Accounts 2/3/4 to their approved eBay UK store/profile URLs.
-- Owner eBay Ban List account shortcuts open the corresponding Collect TCG eBay account/profile while the website remains the shared master ban list.
-- Owner/public boundaries and existing `public.ebay_banlist` RLS behavior are unchanged.
-- Owner Inventory Tools, Available inventory value, Buyer Messages, eBay Post Generator import-duty notice, QR Generator, scanner and other retained behavior remain unchanged.
+- Owner Inventory Tools → Bulk Edit includes `Unassigned Owners`, showing active non-sold inventory without an assigned private Card Owner.
+- Owner can select one, multiple, or all unassigned listings and assign Zakwan, Yen, Daniel, Jack, or Shue directly from Inventory Tools.
+- Assignment reuses existing private `card_owner_private` metadata and existing Owner/RLS authorization; no new public card field is exposed.
+- Bulk assignment reads and writes in chunks of up to 100 listings.
+- The assignment runtime regression `originalPrivateFrom is not a function` was corrected by using the currently initialized Supabase client for the upsert path.
+- Cache/version references for `card-owner-category.js` and `dashboard.js` were refreshed in Development v03 so browsers load the corrected modules.
+- Contact → Official eBay Accounts and eBay Ban List account shortcuts from Development `2026-10-30-v01` remain retained.
 - No SQL/schema/RLS/Edge Function change was required.
 
 ## Current Production
 
-Latest Production: `2026-10-30-v01`
-Previous Production: `2026-10-29-v01`
-Development promoted from: `2026-10-30-v01`
-Production release manifest: `release-manifests/2026-10-30-v01.txt`
-Production v01 package source commit: `91b322acb86dad4a8d9a63ac2da4a2f30882aeba`
-Production last-known-good / release manifest commit: `ae54404bae7cb4fb06eb9d56ba50a3ae092461e3`
+Latest Production: `2026-10-30-v02`
+Previous Production: `2026-10-30-v01`
+Development promoted from: `2026-10-30-v03`
+Production release manifest: `release-manifests/2026-10-30-v02.txt`
+Production v02 package source commit: `4760776ef14c33261d498ebf2c8aca3abf0e4fb1`
+Production last-known-good / release manifest commit: `3eacd0091ed0ccf8fea42bbc50b678d6793f2c17`
 
-### Production package record — 2026-10-30-v01
+### Production package record — 2026-10-30-v02
 
-- Full ZIP: `Collect-TCG-Production-2026-10-30-v01-full.zip`
-- Full SHA256: `381896bf0a349ccf0a1b64371d0327fdbda51d01c1db512587c9105eac137c40`
-- Patch ZIP: `Collect-TCG-Production-2026-10-29-v01-to-2026-10-30-v01-patch.zip`
-- Patch SHA256: `adada6f84dccf08b28092951e757a738590ba862600ca03540dd402ac9c0a366`
+- Full ZIP: `Collect-TCG-Production-2026-10-30-v02-full.zip`
+- Full SHA256: `1c066aa9a4468ed752a38c4836a07d861b0096ae6dfb04c968d4fbfce207b610`
+- Patch ZIP: `Collect-TCG-Production-2026-10-30-v01-to-2026-10-30-v02-patch.zip`
+- Patch SHA256: `565ac4a7c4125d047736c0048ab070fd1a08b27f1d40fc9f78fe0b412d8ebd7c`
 
-### Production 2026-10-30-v01
+### Production 2026-10-30-v02
 
-Purpose: promote the approved eBay account-link changes from validated Development `2026-10-30-v01` while preserving Production-specific behavior.
+Purpose: promote the approved Owner Inventory Tools unassigned-owner assignment flow and its runtime correction from validated Development `2026-10-30-v03`, while preserving Production-specific behavior.
 
 Retained/current behavior:
-- Contact → Official eBay Accounts: Account 1 remains eBay US; Account 2 uses `ebay.co.uk/str/collecttcg2`; Accounts 3 and 4 use their approved eBay UK user profiles.
-- Owner eBay Ban List account shortcuts open the corresponding account/profile; ban-list CRUD, Owner-only route protection and RLS remain unchanged.
+- Owner Inventory Tools → Bulk Edit exposes `Unassigned Owners` only within Owner-protected tooling.
+- Active non-sold listings with no Card Owner can be selected and assigned to Zakwan, Yen, Daniel, Jack, or Shue.
+- Existing `card_owner_private` storage and Owner/RLS authorization are reused; public card data remains unchanged.
+- Bulk owner assignment supports larger selections through 100-row read/write chunks.
+- The `originalPrivateFrom is not a function` failure is corrected by using the current Supabase client for assignment upserts.
+- Production cache references for the changed Card Owner and dashboard modules are refreshed to `2026-10-30-v02`.
 - Production-specific scanner endpoint remains `scan-card-ai`; Development-only `scan-card-ai-dev` must not appear in Production runtime code.
-- QR Generator, SEO, analytics/privacy boundaries, Contact to Buy, giveaways, generators, Inventory Tools, Buyer Messages and established Owner tools remain retained.
+- QR Generator, eBay account links, eBay Ban List, SEO, analytics/privacy boundaries, Contact to Buy, giveaways, generators, Buyer Messages and established Owner tools remain retained.
 - Existing eBay Ban List database/RLS state from Production `2026-10-25-v03` remains unchanged.
 
 SQL required: No.
 
-### Production v01 validation status
+### Production v02 validation status
 
 Completed:
 - rollback-anchor validation;
 - all Production JavaScript syntax validation;
-- Production repository validation;
+- Production repository/reference validation;
+- changed module cache/version reference validation;
+- Owner unassigned-owner route/marker validation;
+- current Supabase assignment upsert-path validation by repository contract;
 - CSS and Post Generator validation;
-- SEO validation including the promoted eBay UK link markers;
+- SEO validation and retained Production endpoint checks;
 - full and patch ZIP creation and integrity checks;
 - package artifact upload;
 - immutable Production manifest/checksum recording;
-- GitHub Pages build and deployment confirmation;
-- `production-last-known-good` advancement after successful Pages deployment.
+- GitHub Pages deployment confirmation;
+- `production-last-known-good` advanced to `3eacd0091ed0ccf8fea42bbc50b678d6793f2c17` after successful deployment.
 
 Validation limitations:
 - Live Production was not manually opened to avoid contaminating Insights.
+- Authenticated Owner assignment was not interactively re-exercised in Production after promotion.
 - Interactive desktop/mobile/Safari browser testing was not performed during this promotion.
 
 ## Earlier validated state retained
 
+- Development `2026-10-30-v02` is immutable; it first packaged the Unassigned Owners feature/runtime correction. Development v03 followed to add explicit cache-buster coverage before Production promotion.
+- Development and Production `2026-10-30-v01` remain immutable; Production v01 promoted approved eBay account-link changes.
 - Development and Production `2026-10-29-v01` remain immutable historical releases; Production v01 promoted Owner inventory value visibility and Owner Buyer Messages.
 - Production `2026-10-27-v02` remains immutable. Its manifest records `Development promoted from: 2026-10-27-v02` despite no matching immutable Development v02 manifest; do not rewrite it.
 - Production `2026-10-27-v01` introduced the eBay Post Generator import-duty notice.
@@ -110,6 +124,7 @@ Preserve unless explicitly changed:
 - Inventory/Collection/Sold/Reserved/Favorites flows;
 - Owner Mode and owner-only Add/Edit/Delete/bulk/lifecycle/export tools;
 - established compact Owner Inventory Tools and specialist subtools;
+- Owner-only Card Owner categories and Unassigned Owners assignment workflow;
 - Available inventory value in Owner Overview;
 - Owner-only Buyer Messages;
 - Owner private analytics and Buyer Preview privacy;
@@ -140,7 +155,7 @@ Do not restore unless explicitly requested:
 
 - Latest relevant Production migration remains `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`.
 - Shared `public.ebay_banlist` remains Owner-only through RLS.
-- No SQL/database change was required for Development/Production `2026-10-30-v01`.
+- Card Owner assignment continues to use existing private `card_owner_private` metadata and existing authorization; no SQL/database change was required for Development `2026-10-30-v03` or Production `2026-10-30-v02`.
 - Never claim SQL, policies, Edge Functions or backend changes were applied unless confirmed.
 
 ## Refactoring candidates — not approved changes
