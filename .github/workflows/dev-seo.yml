@@ -17,51 +17,7 @@ on:
     - docs/**
     - migrations/**
     - supabase/functions/**
-    - dev/src/features/owner/insights-dashboard.js
-    - dev/src/features/owner/insights-extension-host.js
-    - dev/src/features/owner/insights-intent-rates.js
-    - dev/src/features/social/posts.js
-    - dev/src/features/social/posts-*.js
-    - dev/src/features/inventory/page.js
-    - dev/src/features/inventory/page-shell.js
-    - dev/src/features/inventory/pagination.js
-    - dev/src/features/cards/modal-keyboard.js
-    - dev/src/features/content/home.js
-    - dev/src/features/content/information.js
-    - dev/src/features/media/collage.js
-    - dev/src/styles/01-foundation.css
-    - dev/src/styles/02-components.css
-    - dev/src/styles/27-insights-dashboard.css
-    - dev/src/styles/29-home-brand-spotlight.css
-    - dev/src/styles/30-ai-card-scanner.css
-    - dev/src/styles/31-ebay-banlist.css
-    - dev/src/features/inventory/filtering.js
-    - dev/src/features/inventory/ordering.js
-    - dev/src/features/owner/lifecycle.js
-    - dev/src/features/owner/tools.js
-    - dev/src/features/owner/bulk-status.js
-    - dev/src/features/owner/bulk-metadata.js
-    - dev/src/features/owner/card-owner-category.js
-    - dev/src/features/owner/card-scanner.js
-    - dev/src/features/owner/card-scanner-style.js
-    - dev/src/features/owner/ebay-banlist.js
-    - dev/src/features/owner/dashboard.js
-    - dev/src/features/owner/image-maintenance.js
-    - dev/src/app/navigation.js
-    - dev/src/features/cards/repository.js
-    - dev/src/features/cards/related.js
-    - dev/index.html
-    - dev/src/app/register-features.js
-    - dev/src/app/startup.js
-    - dev/src/features/cards/tiles.js
-    - dev/src/services/catalogue.js
-    - dev/src/app/routing.js
-    - dev/src/ui/notifications.js
-    - dev/src/services/analytics.js
-    - dev/src/features/core/utilities.js
-    - dev/src/features/cards/details.js
-    - dev/src/features/cards/compare.js
-    - dev/src/main.js
+    - dev/src/**
     - tests/**
     - tools/check.mjs
     - tools/check-css.mjs
@@ -86,41 +42,25 @@ jobs:
         node-version: '22'
     - name: Run feature regression tests
       run: npm test
-    - name: Validate changed Owner JavaScript
+    - name: Validate changed JavaScript
       run: |
-        node --check dev/src/features/owner/dashboard.js
-        node --check dev/src/features/owner/card-scanner.js
-        node --check dev/src/features/owner/card-scanner-style.js
-        node --check dev/src/features/owner/ebay-banlist.js
-        node --check dev/src/features/social/posts-hidden-ebay.js
+        node --check dev/src/features/media/heic-support.js
         node --check dev/src/app/register-features.js
+        node --check dev/src/features/owner/forms.js
+        node --check dev/src/features/owner/add.js
+        node --check dev/src/features/owner/editor.js
         node --check dev/src/main.js
-    - name: Validate eBay Ban List navigation insertion regression
+    - name: Validate HEIC Add/Edit integration contract
       shell: bash
       run: |
-        node --input-type=module <<'NODE'
-        class FakeNode {
-          constructor(){ this.parentNode=null; this.children=[]; }
-          appendChild(node){ node.parentNode=this; this.children.push(node); return node; }
-          insertBefore(node,before){
-            if(before.parentNode!==this) throw new Error("insertBefore reference is not a child");
-            node.parentNode=this;
-            this.children.splice(this.children.indexOf(before),0,node);
-            return node;
-          }
-        }
-        const container=new FakeNode();
-        const nestedParent=new FakeNode();
-        const before=new FakeNode();
-        container.appendChild(nestedParent);
-        nestedParent.appendChild(before);
-        const link=new FakeNode();
-        if(before?.parentNode) before.parentNode.insertBefore(link,before); else container.appendChild(link);
-        if(link.parentNode!==nestedParent || nestedParent.children[0]!==link || nestedParent.children[1]!==before){
-          throw new Error("eBay Ban List navigation insertion regression");
-        }
-        console.log("Nested navigation insertion passed.");
-        NODE
+        set -euo pipefail
+        grep -Fq 'image/heic,image/heif,.heic,.heif' dev/src/features/media/heic-support.js
+        grep -Fq 'heic2any@0.0.4' dev/src/features/media/heic-support.js
+        grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
+        grep -Fq "features/media/heic-support.js?v=2026-10-30-v04" dev/src/app/register-features.js
+        grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
+        grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
+        grep -Fq 'accept="image/jpeg,image/png,image/webp"' dev/src/features/owner/forms.js
     - name: Validate SEO generator syntax and self-test
       run: |
         node --check tools/generate-seo.mjs
@@ -149,9 +89,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-27-v01
-        PREVIOUS_VERSION: 2026-10-25-v09
-        PREVIOUS_COMMIT: ce875d0722014881bd577a06953730c7be25c2b9
+        RELEASE_VERSION: 2026-10-30-v04
+        PREVIOUS_VERSION: 2026-10-30-v03
+        PREVIOUS_COMMIT: 3da4d58198fc582180cffc80261bc4f2f6d6f1ac
       run: |
         set -euo pipefail
         mkdir -p release
@@ -171,10 +111,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-27-v01-packages
+        name: Collect-TCG-Dev-2026-10-30-v04-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-27-v01-full.zip
-          release/Collect-TCG-Dev-2026-10-25-v09-to-2026-10-27-v01-patch.zip
+          release/Collect-TCG-Dev-2026-10-30-v04-full.zip
+          release/Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -205,20 +145,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-27-v01.txt"
+        MANIFEST="release-manifests/2026-10-30-v04.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-27-v01"
-          echo "Previous version: 2026-10-25-v09"
+          echo "Version: 2026-10-30-v04"
+          echo "Previous version: 2026-10-30-v03"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-27-v01-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-25-v09-to-2026-10-27-v01-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-30-v04-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-27-v01: record package validation"
+        git commit -m "Development 2026-10-30-v04: record package validation"
         git push
