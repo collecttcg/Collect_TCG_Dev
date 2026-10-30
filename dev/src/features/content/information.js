@@ -93,6 +93,7 @@ function renderContactPage(){
             <a class="contact-link" href="https://www.ebay.co.uk/str/collecttcg2" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_2</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
             <a class="contact-link" href="https://www.ebay.co.uk/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_3</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
             <a class="contact-link" href="https://www.ebay.co.uk/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_4</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.co.uk/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_5</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
           </div>
           <p class="official-ebay-note">Only the eBay accounts listed here should be considered official Collect TCG eBay accounts.</p>
         </section>
