@@ -4,7 +4,8 @@ const EBAY_ACCOUNT_URLS=[
   "https://www.ebay.com/usr/COLLECT_TCG_1",
   "https://www.ebay.co.uk/str/collecttcg2",
   "https://www.ebay.co.uk/usr/collect_tcg_3",
-  "https://www.ebay.co.uk/usr/collect_tcg_4"
+  "https://www.ebay.co.uk/usr/collect_tcg_4",
+  "https://www.ebay.co.uk/usr/collect_tcg_5"
 ];
 
 function escapeHtml(value){
@@ -62,7 +63,7 @@ export function register(appContext){
     appContext.view.innerHTML=`
       <section class="ebay-banlist-page">
         <header class="ebay-banlist-header">
-          <div><p class="eyebrow">OWNER ONLY</p><h2>eBay Ban List</h2><p>One shared master list for all four Collect TCG eBay accounts.</p></div>
+          <div><p class="eyebrow">OWNER ONLY</p><h2>eBay Ban List</h2><p>One shared master list for all five Collect TCG eBay accounts.</p></div>
           <div class="ebay-banlist-count"><strong>${rows.length}</strong><span>blocked ${rows.length===1?"buyer":"buyers"}</span></div>
         </header>
 
