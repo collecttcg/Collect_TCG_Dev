@@ -27,6 +27,16 @@ jobs:
           set -euo pipefail
           for file in $(find dev/src -name '*.js' -type f); do node --check "$file"; done
           node --check tools/generate-seo.mjs
+      - name: HEIC Add/Edit integration contract
+        run: |
+          set -euo pipefail
+          grep -Fq 'image/heic,image/heif,.heic,.heif' dev/src/features/media/heic-support.js
+          grep -Fq 'heic2any@0.0.4' dev/src/features/media/heic-support.js
+          grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
+          grep -Fq "features/media/heic-support.js?v=2026-10-30-v04" dev/src/app/register-features.js
+          grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
+          grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
+          grep -Fq 'accept="image/jpeg,image/png,image/webp"' dev/src/features/owner/forms.js
       - name: SEO self-test and generation
         run: |
           node tools/generate-seo.mjs --self-test
@@ -37,16 +47,15 @@ jobs:
           npm run check
           npm run check:css
           bash tools/release-contracts.sh
-          grep -Fq 'card-owner-category.js?v=2026-10-30-v03' dev/src/app/register-features.js
-          grep -Fq 'dashboard.js?v=2026-10-30-v03' dev/src/app/register-features.js
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-10-30-v03
-          PREVIOUS_VERSION: 2026-10-30-v02
-          PREVIOUS_COMMIT: 2c06ffb8b8c8962ecd3e66f52e240240579b10b1
+          RELEASE_VERSION: 2026-10-30-v04
+          PREVIOUS_VERSION: 2026-10-30-v03
+          PREVIOUS_COMMIT: 3da4d58198fc582180cffc80261bc4f2f6d6f1ac
         run: |
           set -euo pipefail
+          rm -rf .release-patch
           mkdir -p release .release-patch
           FULL="release/Collect-TCG-Dev-${RELEASE_VERSION}-full.zip"
           PATCH="release/Collect-TCG-Dev-${PREVIOUS_VERSION}-to-${RELEASE_VERSION}-patch.zip"
@@ -60,29 +69,29 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-10-30-v03-packages
+          name: Collect-TCG-Dev-2026-10-30-v04-packages
           path: |
-            release/Collect-TCG-Dev-2026-10-30-v03-full.zip
-            release/Collect-TCG-Dev-2026-10-30-v02-to-2026-10-30-v03-patch.zip
+            release/Collect-TCG-Dev-2026-10-30-v04-full.zip
+            release/Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-10-30-v03.txt'
+          MANIFEST='release-manifests/2026-10-30-v04.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-10-30-v03'
-            echo 'Previous version: 2026-10-30-v02'
+            echo 'Version: 2026-10-30-v04'
+            echo 'Previous version: 2026-10-30-v03'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Full ZIP: Collect-TCG-Dev-2026-10-30-v03-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-30-v02-to-2026-10-30-v03-patch.zip'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-10-30-v04-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-10-30-v03: record package validation'
+          git commit -m 'Development 2026-10-30-v04: record package validation'
           git push
