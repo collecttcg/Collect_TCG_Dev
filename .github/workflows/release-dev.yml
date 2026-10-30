@@ -39,9 +39,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-10-29-v01
-          PREVIOUS_VERSION: 2026-10-27-v01
-          PREVIOUS_COMMIT: 8600fef997885b7a29c1dd342fc1fefcf65b1e5d
+          RELEASE_VERSION: 2026-10-30-v01
+          PREVIOUS_VERSION: 2026-10-29-v01
+          PREVIOUS_COMMIT: 02abe40038d0a3e22537dbe42c7391d62e003a29
         run: |
           set -euo pipefail
           mkdir -p release .release-patch
@@ -57,29 +57,29 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-10-29-v01-packages
+          name: Collect-TCG-Dev-2026-10-30-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-10-29-v01-full.zip
-            release/Collect-TCG-Dev-2026-10-27-v01-to-2026-10-29-v01-patch.zip
+            release/Collect-TCG-Dev-2026-10-30-v01-full.zip
+            release/Collect-TCG-Dev-2026-10-29-v01-to-2026-10-30-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-10-29-v01.txt'
+          MANIFEST='release-manifests/2026-10-30-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-10-29-v01'
-            echo 'Previous version: 2026-10-27-v01'
+            echo 'Version: 2026-10-30-v01'
+            echo 'Previous version: 2026-10-29-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Full ZIP: Collect-TCG-Dev-2026-10-29-v01-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-27-v01-to-2026-10-29-v01-patch.zip'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-10-30-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-29-v01-to-2026-10-30-v01-patch.zip'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-10-29-v01: record package validation'
+          git commit -m 'Development 2026-10-30-v01: record package validation'
           git push
