@@ -25,88 +25,85 @@ Reconciliation priority: current GitHub HEAD > latest valid release manifest > t
 
 ## Current Development
 
-Latest validated Development release: `2026-10-30-v03`
-Previous Development: `2026-10-30-v02`
-Development release manifest: `release-manifests/2026-10-30-v03.txt`
-Development v03 package source commit: `3da4d58198fc582180cffc80261bc4f2f6d6f1ac`
-Development v03 manifest commit: `f0a52420d800ecc576c25eb2582da25fe020371c`
+Latest validated Development release: `2026-10-30-v04`
+Previous Development: `2026-10-30-v03`
+Development release manifest: `release-manifests/2026-10-30-v04.txt`
+Development v04 package source commit: `27e258feba7aa135013330f6e870b8b5bb4fd89d`
+Development v04 manifest commit: `6a1ec3e2a2a6c3b51af2ba5f7ad041722d7a41af`
 
-### Development package record — 2026-10-30-v03
+### Development package record — 2026-10-30-v04
 
-- Full ZIP: `Collect-TCG-Dev-2026-10-30-v03-full.zip`
-- Full SHA256: `8a29a645e54d1498295e811a7cd19d53984e5bd1c4250d4584ca4b4f00c13575`
-- Patch ZIP: `Collect-TCG-Dev-2026-10-30-v02-to-2026-10-30-v03-patch.zip`
-- Patch SHA256: `64a70ffc9d8e68ff98645aca8d6a6c28740a0f871854204a472651d03b881c09`
+- Full ZIP: `Collect-TCG-Dev-2026-10-30-v04-full.zip`
+- Full SHA256: `f818c8df4e39856a3249425252397600d66a627849ef5ca3b57a5c718180f62b`
+- Patch ZIP: `Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip`
+- Patch SHA256: `cabaca9a16d284c1e3e1164469483ca67b71fae2ddcc0e0e41a3fbc9b9519fa2`
 
-### Development 2026-10-30-v03 retained/current state
+### Development 2026-10-30-v04 retained/current state
 
-- Owner Inventory Tools → Bulk Edit includes `Unassigned Owners`, showing active non-sold inventory without an assigned private Card Owner.
-- Owner can select one, multiple, or all unassigned listings and assign Zakwan, Yen, Daniel, Jack, or Shue directly from Inventory Tools.
-- Assignment reuses existing private `card_owner_private` metadata and existing Owner/RLS authorization; no new public card field is exposed.
-- Bulk assignment reads and writes in chunks of up to 100 listings.
-- The assignment runtime regression `originalPrivateFrom is not a function` was corrected by using the currently initialized Supabase client for the upsert path.
-- Cache/version references for `card-owner-category.js` and `dashboard.js` were refreshed in Development v03 so browsers load the corrected modules.
-- Contact → Official eBay Accounts and eBay Ban List account shortcuts from Development `2026-10-30-v01` remain retained.
+- Owner Add Listing and Edit Listing image pickers accept JPEG, PNG, WebP, HEIC and HEIF.
+- HEIC/HEIF owner uploads are converted client-side to JPEG before entering the established resize/validation/upload pipeline; stored listing images therefore remain compatible with existing image handling.
+- HEIC conversion is Owner-protected, preserves the established image-size limit, and loads `heic2any` 0.0.4 on demand only when a HEIC/HEIF file is selected.
+- Existing JPEG/PNG/WebP behavior remains unchanged.
+- Owner Inventory Tools → Bulk Edit retains `Unassigned Owners`, private Card Owner assignment and 100-row chunking from Development `2026-10-30-v03`.
+- Contact → Official eBay Accounts and eBay Ban List account shortcuts remain retained.
 - No SQL/schema/RLS/Edge Function change was required.
 
 ## Current Production
 
-Latest Production: `2026-10-30-v02`
-Previous Production: `2026-10-30-v01`
-Development promoted from: `2026-10-30-v03`
-Production release manifest: `release-manifests/2026-10-30-v02.txt`
-Production v02 package source commit: `4760776ef14c33261d498ebf2c8aca3abf0e4fb1`
-Production last-known-good / release manifest commit: `3eacd0091ed0ccf8fea42bbc50b678d6793f2c17`
+Latest Production: `2026-10-30-v03`
+Previous Production: `2026-10-30-v02`
+Development promoted from: `2026-10-30-v04`
+Production release manifest: `release-manifests/2026-10-30-v03.txt`
+Production v03 package source commit: `5bb6310420349d4e1bc5b294ef35d5e2a625ae4c`
+Production last-known-good / release manifest commit: `4ffb6b3caf0ca29626bde56afd7fcaaa2bb9004c`
 
-### Production package record — 2026-10-30-v02
+### Production package record — 2026-10-30-v03
 
-- Full ZIP: `Collect-TCG-Production-2026-10-30-v02-full.zip`
-- Full SHA256: `1c066aa9a4468ed752a38c4836a07d861b0096ae6dfb04c968d4fbfce207b610`
-- Patch ZIP: `Collect-TCG-Production-2026-10-30-v01-to-2026-10-30-v02-patch.zip`
-- Patch SHA256: `565ac4a7c4125d047736c0048ab070fd1a08b27f1d40fc9f78fe0b412d8ebd7c`
+- Full ZIP: `Collect-TCG-Production-2026-10-30-v03-full.zip`
+- Full SHA256: `f5f7e4fc9375bf2600497b36066fa3e1e085c82788faf520d3c51ef7fa365b79`
+- Patch ZIP: `Collect-TCG-Production-2026-10-30-v02-to-2026-10-30-v03-patch.zip`
+- Patch SHA256: `1a3c41b64c9c98fc05dfc91d1ea6ceed42911e5b87889f4c565f1dfa572578dc`
 
-### Production 2026-10-30-v02
+### Production 2026-10-30-v03
 
-Purpose: promote the approved Owner Inventory Tools unassigned-owner assignment flow and its runtime correction from validated Development `2026-10-30-v03`, while preserving Production-specific behavior.
+Purpose: promote validated HEIC/HEIF listing-photo support from Development `2026-10-30-v04` while preserving Production-specific behavior.
 
 Retained/current behavior:
-- Owner Inventory Tools → Bulk Edit exposes `Unassigned Owners` only within Owner-protected tooling.
-- Active non-sold listings with no Card Owner can be selected and assigned to Zakwan, Yen, Daniel, Jack, or Shue.
-- Existing `card_owner_private` storage and Owner/RLS authorization are reused; public card data remains unchanged.
-- Bulk owner assignment supports larger selections through 100-row read/write chunks.
-- The `originalPrivateFrom is not a function` failure is corrected by using the current Supabase client for assignment upserts.
-- Production cache references for the changed Card Owner and dashboard modules are refreshed to `2026-10-30-v02`.
+- Owner Add Listing and Edit Listing accept HEIC/HEIF in addition to JPEG/PNG/WebP.
+- HEIC/HEIF files are converted client-side to JPEG before the existing image resize/validation/upload flow.
+- Existing image size limits and Owner authorization remain in force; no public upload surface was added.
+- Existing JPEG/PNG/WebP upload behavior remains unchanged.
+- Owner Inventory Tools → Bulk Edit retains Unassigned Owners assignment and private `card_owner_private` storage.
 - Production-specific scanner endpoint remains `scan-card-ai`; Development-only `scan-card-ai-dev` must not appear in Production runtime code.
 - QR Generator, eBay account links, eBay Ban List, SEO, analytics/privacy boundaries, Contact to Buy, giveaways, generators, Buyer Messages and established Owner tools remain retained.
 - Existing eBay Ban List database/RLS state from Production `2026-10-25-v03` remains unchanged.
 
 SQL required: No.
 
-### Production v02 validation status
+### Production v03 validation status
 
 Completed:
 - rollback-anchor validation;
 - all Production JavaScript syntax validation;
 - Production repository/reference validation;
-- changed module cache/version reference validation;
-- Owner unassigned-owner route/marker validation;
-- current Supabase assignment upsert-path validation by repository contract;
+- HEIC Add/Edit registration and integration contract validation;
 - CSS and Post Generator validation;
 - SEO validation and retained Production endpoint checks;
 - full and patch ZIP creation and integrity checks;
 - package artifact upload;
 - immutable Production manifest/checksum recording;
 - GitHub Pages deployment confirmation;
-- `production-last-known-good` advanced to `3eacd0091ed0ccf8fea42bbc50b678d6793f2c17` after successful deployment.
+- `production-last-known-good` advanced to `4ffb6b3caf0ca29626bde56afd7fcaaa2bb9004c` after successful deployment.
 
 Validation limitations:
 - Live Production was not manually opened to avoid contaminating Insights.
-- Authenticated Owner assignment was not interactively re-exercised in Production after promotion.
+- A physical HEIC/HEIF file was not interactively uploaded in a browser during release validation; HEIC Add/Edit support was validated by syntax, wiring and integration contracts.
 - Interactive desktop/mobile/Safari browser testing was not performed during this promotion.
 
 ## Earlier validated state retained
 
-- Development `2026-10-30-v02` is immutable; it first packaged the Unassigned Owners feature/runtime correction. Development v03 followed to add explicit cache-buster coverage before Production promotion.
+- Development `2026-10-30-v03` and Production `2026-10-30-v02` remain immutable; they introduced/promoted the corrected Unassigned Owners assignment workflow.
+- Development `2026-10-30-v02` is immutable; it first packaged the Unassigned Owners feature/runtime correction.
 - Development and Production `2026-10-30-v01` remain immutable; Production v01 promoted approved eBay account-link changes.
 - Development and Production `2026-10-29-v01` remain immutable historical releases; Production v01 promoted Owner inventory value visibility and Owner Buyer Messages.
 - Production `2026-10-27-v02` remains immutable. Its manifest records `Development promoted from: 2026-10-27-v02` despite no matching immutable Development v02 manifest; do not rewrite it.
@@ -123,6 +120,7 @@ Preserve unless explicitly changed:
 - Related Cards, Trending and discovery attribution;
 - Inventory/Collection/Sold/Reserved/Favorites flows;
 - Owner Mode and owner-only Add/Edit/Delete/bulk/lifecycle/export tools;
+- Owner listing photo support for JPEG, PNG, WebP, HEIC and HEIF;
 - established compact Owner Inventory Tools and specialist subtools;
 - Owner-only Card Owner categories and Unassigned Owners assignment workflow;
 - Available inventory value in Owner Overview;
@@ -155,7 +153,8 @@ Do not restore unless explicitly requested:
 
 - Latest relevant Production migration remains `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`.
 - Shared `public.ebay_banlist` remains Owner-only through RLS.
-- Card Owner assignment continues to use existing private `card_owner_private` metadata and existing authorization; no SQL/database change was required for Development `2026-10-30-v03` or Production `2026-10-30-v02`.
+- Card Owner assignment continues to use existing private `card_owner_private` metadata and existing authorization.
+- HEIC/HEIF listing-photo support is client-side and required no SQL/database/RLS/Edge Function change for Development `2026-10-30-v04` or Production `2026-10-30-v03`.
 - Never claim SQL, policies, Edge Functions or backend changes were applied unless confirmed.
 
 ## Refactoring candidates — not approved changes
