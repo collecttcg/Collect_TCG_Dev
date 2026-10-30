@@ -57,12 +57,16 @@ jobs:
         grep -Fq 'image/heic-sequence' dev/src/features/media/heic-support.js
         grep -Fq 'image/heif-sequence' dev/src/features/media/heic-support.js
         grep -Fq 'nativeHeicToJpegBlob' dev/src/features/media/heic-support.js
-        grep -Fq 'heic2any@0.0.4' dev/src/features/media/heic-support.js
+        grep -Fq 'heic-to@1.6.7/dist/iife/heic-to.js' dev/src/features/media/heic-support.js
+        grep -Fq 'const converted=await heicTo({blob:file,type:"image/jpeg",quality:0.94})' dev/src/features/media/heic-support.js
         grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
-        grep -Fq "features/media/heic-support.js?v=2026-10-30-v05" dev/src/app/register-features.js
+        grep -Fq "features/media/heic-support.js?v=2026-10-30-v06" dev/src/app/register-features.js
         grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
         grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
         grep -Fq 'accept="image/jpeg,image/png,image/webp"' dev/src/features/owner/forms.js
+        curl --fail --silent --show-error --location --max-time 30 -o /tmp/heic-to.js https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js
+        test -s /tmp/heic-to.js
+        grep -Fq 'HeicTo' /tmp/heic-to.js
     - name: Validate SEO generator syntax and self-test
       run: |
         node --check tools/generate-seo.mjs
@@ -91,9 +95,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-30-v05
-        PREVIOUS_VERSION: 2026-10-30-v04
-        PREVIOUS_COMMIT: 27e258feba7aa135013330f6e870b8b5bb4fd89d
+        RELEASE_VERSION: 2026-10-30-v06
+        PREVIOUS_VERSION: 2026-10-30-v05
+        PREVIOUS_COMMIT: 754fea7a54ba3554f234947b252b0ae96b32aad9
       run: |
         set -euo pipefail
         mkdir -p release
@@ -113,10 +117,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-30-v05-packages
+        name: Collect-TCG-Dev-2026-10-30-v06-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-30-v05-full.zip
-          release/Collect-TCG-Dev-2026-10-30-v04-to-2026-10-30-v05-patch.zip
+          release/Collect-TCG-Dev-2026-10-30-v06-full.zip
+          release/Collect-TCG-Dev-2026-10-30-v05-to-2026-10-30-v06-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -147,20 +151,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-30-v05.txt"
+        MANIFEST="release-manifests/2026-10-30-v06.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-30-v05"
-          echo "Previous version: 2026-10-30-v04"
+          echo "Version: 2026-10-30-v06"
+          echo "Previous version: 2026-10-30-v05"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-30-v05-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-30-v04-to-2026-10-30-v05-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-30-v06-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-30-v05-to-2026-10-30-v06-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-30-v05: record package validation"
+        git commit -m "Development 2026-10-30-v06: record package validation"
         git push
