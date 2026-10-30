@@ -1,5 +1,11 @@
 /** Owner-only shared eBay ban list. Data access is additionally protected by Supabase RLS. */
 const EBAY_BLOCKED_BUYERS_URL="https://www.ebay.com/bmgt/BuyerBlock";
+const EBAY_ACCOUNT_URLS=[
+  "https://www.ebay.com/usr/COLLECT_TCG_1",
+  "https://www.ebay.co.uk/str/collecttcg2",
+  "https://www.ebay.co.uk/usr/collect_tcg_3",
+  "https://www.ebay.co.uk/usr/collect_tcg_4"
+];
 
 function escapeHtml(value){
   return String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
@@ -36,9 +42,9 @@ export function register(appContext){
 
     if(appContext.currentRoute()!=="ebay-banlist") return;
 
-    const accountLinks=[1,2,3,4].map(number=>`
-      <a class="ebay-banlist-account" href="${EBAY_BLOCKED_BUYERS_URL}" target="_blank" rel="noopener noreferrer">
-        <strong>eBay Account ${number}</strong><span>Open Blocked Buyers ↗</span>
+    const accountLinks=EBAY_ACCOUNT_URLS.map((url,index)=>`
+      <a class="ebay-banlist-account" href="${url}" target="_blank" rel="noopener noreferrer">
+        <strong>eBay Account ${index+1}</strong><span>Open eBay Account ↗</span>
       </a>`).join("");
 
     const tableRows=rows.map(row=>`
@@ -61,7 +67,7 @@ export function register(appContext){
         </header>
 
         <div class="ebay-banlist-account-grid">${accountLinks}</div>
-        <p class="ebay-banlist-hint">Open the link while signed in to the eBay account you want to update. The website is the master list; eBay still needs to be updated on each account.</p>
+        <p class="ebay-banlist-hint">Open the eBay account you want to update, then manage its blocked buyers while signed in to that account. The website remains the master list.</p>
 
         ${loadError?`<div class="ebay-banlist-error" role="alert"><strong>Ban list database is not available yet.</strong><span>Apply the Development v07 SQL migration, then reload this page.</span></div>`:""}
 
