@@ -4,7 +4,10 @@ export function register(appContext){
   const originalFieldsTemplate=appContext.fieldsTemplate?.bind(appContext);
   const HEIC_MIMES=new Set(["image/heic","image/heif","image/heic-sequence","image/heif-sequence"]);
   const HEIC_EXTENSIONS=new Set(["heic","heif"]);
-  const HEIC_DECODER_URL="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js";
+  // heic2any 0.0.4 embeds an old libheif build that cannot decode a number of
+  // modern iPhone/iOS 18+ HEIC variants. heic-to tracks current libheif and
+  // provides a browser IIFE build suitable for this static GitHub Pages app.
+  const HEIC_DECODER_URL="https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js";
   let decoderPromise=null;
 
   function ownerImageExtension(file){
@@ -15,23 +18,31 @@ export function register(appContext){
     if(!file) return false;
     const mime=String(file.type||"").trim().toLowerCase();
     const ext=ownerImageExtension(file);
-    // Apple/browser file pickers are inconsistent here: some report an empty
-    // MIME, application/octet-stream, or a *-sequence MIME. A .heic/.heif
-    // extension is sufficient because the decoder still validates the bytes.
     return HEIC_EXTENSIONS.has(ext) || HEIC_MIMES.has(mime);
   }
 
+  function currentHeicDecoder(){
+    const candidate=globalThis.HeicTo;
+    if(typeof candidate==="function") return candidate;
+    if(candidate && typeof candidate.heicTo==="function") return candidate.heicTo.bind(candidate);
+    return null;
+  }
+
   function ensureHeicDecoder(){
-    if(typeof globalThis.heic2any==="function") return Promise.resolve(globalThis.heic2any);
+    const ready=currentHeicDecoder();
+    if(ready) return Promise.resolve(ready);
     if(decoderPromise) return decoderPromise;
     decoderPromise=new Promise((resolve,reject)=>{
       const existing=document.querySelector('script[data-collect-heic-decoder="1"]');
       const script=existing||document.createElement("script");
-      const finish=()=>typeof globalThis.heic2any==="function"
-        ? resolve(globalThis.heic2any)
-        : reject(new Error("HEIC decoder loaded without becoming available."));
+      const finish=()=>{
+        const decoder=currentHeicDecoder();
+        if(decoder) resolve(decoder);
+        else reject(new Error("HEIC decoder loaded without becoming available."));
+      };
       if(existing){
-        if(typeof globalThis.heic2any==="function") finish();
+        const decoder=currentHeicDecoder();
+        if(decoder) resolve(decoder);
         else{
           existing.addEventListener("load",finish,{once:true});
           existing.addEventListener("error",()=>reject(new Error("HEIC decoder could not be loaded.")),{once:true});
@@ -94,20 +105,26 @@ export function register(appContext){
     if(!isHeicOwnerImage(file)) throw new Error("Unsupported HEIC/HEIF image");
 
     let jpegBlob=null;
+    let nativeError=null;
     try{
       jpegBlob=await nativeHeicToJpegBlob(file);
-    }catch(nativeError){
+    }catch(error){
+      nativeError=error;
+    }
+
+    if(!jpegBlob){
       try{
-        const heic2any=await ensureHeicDecoder();
-        const converted=await heic2any({blob:file,toType:"image/jpeg",quality:0.94});
+        const heicTo=await ensureHeicDecoder();
+        const converted=await heicTo({blob:file,type:"image/jpeg",quality:0.94});
         jpegBlob=Array.isArray(converted) ? converted[0] : converted;
       }catch(decoderError){
         console.warn("HEIC conversion failed:",{nativeError,decoderError});
-        throw new Error("Could not decode this HEIC/HEIF photo. Please try the original iPhone photo again.");
+        const detail=String(decoderError?.message||decoderError||"").trim();
+        throw new Error(detail ? `HEIC decoder failed: ${detail}` : "HEIC decoder failed");
       }
     }
 
-    if(!(jpegBlob instanceof Blob) || !jpegBlob.size) throw new Error("Could not convert HEIC/HEIF image");
+    if(!(jpegBlob instanceof Blob) || !jpegBlob.size) throw new Error("HEIC decoder returned no image");
     const baseName=String(file.name||"card-photo").replace(/\.(heic|heif)$/i,"")||"card-photo";
     return new File([jpegBlob],`${baseName}.jpg`,{type:"image/jpeg",lastModified:file.lastModified||Date.now()});
   }
