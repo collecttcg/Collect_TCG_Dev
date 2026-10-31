@@ -37,7 +37,7 @@ grep -q 'history.back()' dev/src/features/cards/details.js
 grep -q 'meta\[name="collect-tcg-card-id"\]' dev/src/app/routing.js
 grep -q 'routing.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'notifications.js?v=2026-09-29-v09' dev/src/app/register-features.js
-grep -q 'information.js?v=2026-09-29-v09' dev/src/app/register-features.js
+grep -q 'information.js?v=2026-10-31-v01' dev/src/app/register-features.js
 grep -q 'collage.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'posts.js?v=2026-09-30-v02' dev/src/app/register-features.js
 test "$(grep -o 'appContext.isLiveLifecycle(card)' dev/src/features/social/posts*.js | wc -l | tr -d ' ')" -ge "2"
