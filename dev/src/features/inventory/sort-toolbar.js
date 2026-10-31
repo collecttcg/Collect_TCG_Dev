@@ -42,11 +42,26 @@ export function register(appContext){
     document.head.appendChild(style);
   }
 
+  function preparePopularitySort(sortWrap){
+    const sortInput=sortWrap?.querySelector?.("#sortBy");
+    if(!sortInput || sortInput.dataset.popularitySortReady==="true") return;
+    sortInput.dataset.popularitySortReady="true";
+    sortInput.addEventListener("change",()=>{
+      if(sortInput.value!=="popular" || typeof appContext.refreshTrending7dPerformance!=="function") return;
+      if(appContext.trending7dBackendState==="available") return;
+      appContext.refreshTrending7dPerformance().then(()=>{
+        if(sortInput.value!=="popular") return;
+        sortInput.dispatchEvent(new Event("change",{bubbles:true}));
+      }).catch(()=>{});
+    });
+  }
+
   function moveDesktopSortOutsideFilters(){
     const sortWrap=appContext.$("sortByWrap");
     const actions=document.querySelector(".desktop-filter-toggle-actions");
     const filterButton=appContext.$("desktopFilterToggleBtn");
     if(!sortWrap || !actions || !filterButton) return false;
+    preparePopularitySort(sortWrap);
     if(sortWrap.parentElement===actions) return true;
     sortWrap.classList.add("inventory-sort-toolbar");
     actions.insertBefore(sortWrap,filterButton);
