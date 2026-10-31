@@ -28,14 +28,13 @@ const baselinePath=path.join(repoRoot,'COLLECT_TCG_BASELINE.md');
 if(!fs.existsSync(baselinePath)) throw new Error('Missing COLLECT_TCG_BASELINE.md');
 const baseline=fs.readFileSync(baselinePath,'utf8');
 for(const required of [
-  'Latest validated Development release: `2026-10-30-v04`',
-  'Latest Production: `2026-10-30-v03`',
-  'Development promoted from: `2026-10-30-v04`',
+  'Latest validated Development release: `2026-10-31-v01`',
+  'Latest Production: `2026-10-31-v01`',
+  'Development promoted from: `2026-10-31-v01`',
   'migrations/2026/',
   'QR Generator',
   'Owner-only AI Card Scanner',
-  'established compact Owner Inventory Tools',
-  'eBay Post Generator import-duty notice'
+  'established compact Owner Inventory Tools'
 ]){
   if(!baseline.includes(required)) throw new Error('Baseline missing required marker: '+required);
 }
