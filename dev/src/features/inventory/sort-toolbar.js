@@ -48,7 +48,8 @@ export function register(appContext){
     sortInput.dataset.popularitySortReady="true";
     sortInput.addEventListener("change",()=>{
       if(sortInput.value!=="popular" || typeof appContext.refreshTrending7dPerformance!=="function") return;
-      if(appContext.trending7dBackendState==="available") return;
+      if(appContext.trending7dBackendState==="available" || sortInput.dataset.popularityLoadAttempted==="true") return;
+      sortInput.dataset.popularityLoadAttempted="true";
       appContext.refreshTrending7dPerformance().then(()=>{
         if(sortInput.value!=="popular") return;
         sortInput.dispatchEvent(new Event("change",{bubbles:true}));
