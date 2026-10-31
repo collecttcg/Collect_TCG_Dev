@@ -27,6 +27,14 @@ jobs:
           set -euo pipefail
           for file in $(find dev/src -name '*.js' -type f); do node --check "$file"; done
           node --check tools/generate-seo.mjs
+      - name: Inventory sort integration contract
+        run: |
+          set -euo pipefail
+          grep -Fq 'Most Popular' dev/src/features/inventory/sort-toolbar.js
+          grep -Fq 'price-low' dev/src/features/inventory/sort-toolbar.js
+          grep -Fq 'mobileInlineSortBtn' dev/src/features/inventory/sort-toolbar.js
+          grep -Fq 'grid-template-columns:minmax(0,1fr) auto auto auto' dev/src/features/inventory/sort-toolbar.js
+          grep -Fq 'inventory/sort-toolbar.js?v=2026-10-31-v06' dev/src/main.js
       - name: HEIC Add/Edit integration contract
         run: |
           set -euo pipefail
@@ -50,9 +58,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-10-30-v04
-          PREVIOUS_VERSION: 2026-10-30-v03
-          PREVIOUS_COMMIT: 3da4d58198fc582180cffc80261bc4f2f6d6f1ac
+          RELEASE_VERSION: 2026-10-31-v02
+          PREVIOUS_VERSION: 2026-10-31-v01
+          PREVIOUS_COMMIT: c2636c086462e59729b297ebd49083464d9031ec
         run: |
           set -euo pipefail
           rm -rf .release-patch
@@ -69,29 +77,29 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-10-30-v04-packages
+          name: Collect-TCG-Dev-2026-10-31-v02-packages
           path: |
-            release/Collect-TCG-Dev-2026-10-30-v04-full.zip
-            release/Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip
+            release/Collect-TCG-Dev-2026-10-31-v02-full.zip
+            release/Collect-TCG-Dev-2026-10-31-v01-to-2026-10-31-v02-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-10-30-v04.txt'
+          MANIFEST='release-manifests/2026-10-31-v02.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-10-30-v04'
-            echo 'Previous version: 2026-10-30-v03'
+            echo 'Version: 2026-10-31-v02'
+            echo 'Previous version: 2026-10-31-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Full ZIP: Collect-TCG-Dev-2026-10-30-v04-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-30-v03-to-2026-10-30-v04-patch.zip'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-10-31-v02-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-31-v01-to-2026-10-31-v02-patch.zip'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-10-30-v04: record package validation'
+          git commit -m 'Development 2026-10-31-v02: record package validation'
           git push
