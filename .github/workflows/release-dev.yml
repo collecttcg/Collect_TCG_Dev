@@ -41,7 +41,7 @@ jobs:
           grep -Fq 'image/heic,image/heif,.heic,.heif' dev/src/features/media/heic-support.js
           grep -Fq 'heic2any@0.0.4' dev/src/features/media/heic-support.js
           grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
-          grep -Fq "features/media/heic-support.js?v=2026-10-30-v04" dev/src/app/register-features.js
+          grep -Fq "features/media/heic-support.js?v=2026-10-30-v06" dev/src/app/register-features.js
           grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
           grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
           grep -Fq 'accept="image/jpeg,image/png,image/webp"' dev/src/features/owner/forms.js
