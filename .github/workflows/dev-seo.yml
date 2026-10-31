@@ -45,11 +45,21 @@ jobs:
     - name: Validate changed JavaScript
       run: |
         node --check dev/src/features/media/heic-support.js
+        node --check dev/src/features/owner/psa-never-synced.js
         node --check dev/src/app/register-features.js
         node --check dev/src/features/owner/forms.js
         node --check dev/src/features/owner/add.js
         node --check dev/src/features/owner/editor.js
         node --check dev/src/main.js
+    - name: Validate PSA first-sync integration contract
+      shell: bash
+      run: |
+        set -euo pipefail
+        grep -Fq 'Get Never-Synced PSA POPs' dev/src/features/owner/psa-never-synced.js
+        grep -Fq 'entry?.pop==null || entry.pop===""' dev/src/features/owner/psa-never-synced.js
+        grep -Fq 'startBulkPsaPopSync(never,"Never-synced PSA POP")' dev/src/features/owner/psa-never-synced.js
+        grep -Fq "features/owner/psa-never-synced.js?v=2026-10-31-v01" dev/src/app/register-features.js
+        grep -Fq 'module58.register(appContext)' dev/src/app/register-features.js
     - name: Validate HEIC Add/Edit integration contract
       shell: bash
       run: |
@@ -95,9 +105,9 @@ jobs:
     - name: Create Development release packages
       shell: bash
       env:
-        RELEASE_VERSION: 2026-10-30-v06
-        PREVIOUS_VERSION: 2026-10-30-v05
-        PREVIOUS_COMMIT: 754fea7a54ba3554f234947b252b0ae96b32aad9
+        RELEASE_VERSION: 2026-10-31-v01
+        PREVIOUS_VERSION: 2026-10-30-v06
+        PREVIOUS_COMMIT: 6e32e6221ea041a09e601b82819a914577cc0383
       run: |
         set -euo pipefail
         mkdir -p release
@@ -117,10 +127,10 @@ jobs:
     - name: Upload Development release packages
       uses: actions/upload-artifact@v4
       with:
-        name: Collect-TCG-Dev-2026-10-30-v06-packages
+        name: Collect-TCG-Dev-2026-10-31-v01-packages
         path: |
-          release/Collect-TCG-Dev-2026-10-30-v06-full.zip
-          release/Collect-TCG-Dev-2026-10-30-v05-to-2026-10-30-v06-patch.zip
+          release/Collect-TCG-Dev-2026-10-31-v01-full.zip
+          release/Collect-TCG-Dev-2026-10-30-v06-to-2026-10-31-v01-patch.zip
         if-no-files-found: error
         retention-days: 30
     - name: Wait for source Pages deployment to settle
@@ -151,20 +161,20 @@ jobs:
       run: |
         set -euo pipefail
         mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-30-v06.txt"
+        MANIFEST="release-manifests/2026-10-31-v01.txt"
         if [[ -e "$MANIFEST" ]]; then
           echo "Release manifest already exists and is immutable: $MANIFEST"
           exit 0
         fi
         {
-          echo "Version: 2026-10-30-v06"
-          echo "Previous version: 2026-10-30-v05"
+          echo "Version: 2026-10-31-v01"
+          echo "Previous version: 2026-10-30-v06"
           echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-30-v06-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-30-v05-to-2026-10-30-v06-patch.zip"
+          echo "Full ZIP: Collect-TCG-Dev-2026-10-31-v01-full.zip"
+          echo "Patch ZIP: Collect-TCG-Dev-2026-10-30-v06-to-2026-10-31-v01-patch.zip"
           echo
           sha256sum release/*.zip
         } > "$MANIFEST"
         git add "$MANIFEST"
-        git commit -m "Development 2026-10-30-v06: record package validation"
+        git commit -m "Development 2026-10-31-v01: record package validation"
         git push
