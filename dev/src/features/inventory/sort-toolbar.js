@@ -34,19 +34,26 @@ export function register(appContext){
     style.id="inventory-sort-toolbar-style";
     style.textContent=`
       @media (min-width:801px){
+        .desktop-filter-toggle-row{
+          display:flex!important;
+          align-items:stretch!important;
+          flex-wrap:nowrap!important;
+          gap:8px!important;
+        }
         .desktop-filter-toggle-actions{
           display:grid!important;
-          grid-template-columns:minmax(280px,1fr) 220px auto auto;
+          grid-template-columns:minmax(240px,1fr) minmax(180px,220px) auto auto;
           align-items:stretch;
           gap:8px;
-          width:100%;
-          flex:1 1 100%;
+          min-width:0;
+          width:auto!important;
+          flex:1 1 auto!important;
         }
-        .desktop-filter-toggle-actions>.desktop-inline-search{min-width:0;width:100%;}
+        .desktop-filter-toggle-actions>.desktop-inline-search{min-width:0!important;width:100%!important;}
         .desktop-filter-toggle-actions>.inventory-sort-toolbar{
           position:relative!important;
-          min-width:0;
-          width:220px;
+          min-width:0!important;
+          width:100%!important;
           align-self:stretch;
         }
         .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-btn{
@@ -68,16 +75,30 @@ export function register(appContext){
           overflow-y:auto!important;
           z-index:1000!important;
         }
-        .desktop-filter-toggle-actions>.desktop-filter-toggle-btn{height:100%;white-space:nowrap;}
-        .desktop-filter-toggle-actions>.desktop-listing-currency-control{height:100%;white-space:nowrap;}
+        .desktop-filter-toggle-actions>.desktop-filter-toggle-btn,
+        .desktop-filter-toggle-actions>.desktop-listing-currency-control{
+          height:100%;
+          white-space:nowrap;
+          flex:none!important;
+          width:auto!important;
+          min-width:0!important;
+        }
+        .desktop-filter-toggle-row>.desktop-filter-add-card{
+          flex:0 0 auto!important;
+          align-self:stretch;
+          display:flex;
+          align-items:center;
+          white-space:nowrap;
+        }
         .filter-drawer-shell .inventory-sort-toolbar{display:none!important;}
       }
       @media (min-width:801px) and (max-width:1100px){
         .desktop-filter-toggle-actions{
-          grid-template-columns:minmax(220px,1fr) 190px auto auto;
+          grid-template-columns:minmax(180px,1fr) minmax(160px,185px) auto auto;
+          gap:6px;
         }
-        .desktop-filter-toggle-actions>.inventory-sort-toolbar{width:190px;}
-        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-menu{min-width:190px!important;}
+        .desktop-filter-toggle-row{gap:6px!important;}
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-menu{min-width:185px!important;}
       }
     `;
     document.head.appendChild(style);
