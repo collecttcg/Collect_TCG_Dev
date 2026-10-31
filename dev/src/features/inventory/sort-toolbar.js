@@ -2,6 +2,7 @@
 export function register(appContext){
   const originalSortOptions=appContext.inventorySortOptions;
   const originalGetFiltered=appContext.getFiltered;
+  const originalInventoryPageHTML=appContext.inventoryPageHTML;
 
   if(typeof originalSortOptions==="function"){
     appContext.inventorySortOptions=function inventorySortOptionsWithPopularity(scope){
@@ -28,6 +29,19 @@ export function register(appContext){
     };
   }
 
+  // Render the mobile Sort control as part of the toolbar markup itself. This
+  // avoids relying on a later MutationObserver insertion, which could miss the
+  // first inventory render on mobile Safari.
+  if(typeof originalInventoryPageHTML==="function"){
+    appContext.inventoryPageHTML=function inventoryPageHTMLWithInlineSort(...args){
+      const html=originalInventoryPageHTML(...args);
+      if(html.includes('id="mobileInlineSortBtn"')) return html;
+      const filterMarker='<button type="button"\n                class="mobile-filter-open-btn mobile-search-filter-btn"\n                id="mobileFilterOpenBtn"';
+      const inlineSort=`<button type="button"\n                class="mobile-inline-sort"\n                id="mobileInlineSortBtn"\n                aria-expanded="false"\n                aria-controls="mobileSortSheet">\n          Sort\n        </button>\n\n        `;
+      return html.replace(filterMarker,inlineSort+filterMarker);
+    };
+  }
+
   function ensureStyle(){
     if(document.getElementById("inventory-sort-toolbar-style")) return;
     const style=document.createElement("style");
@@ -50,17 +64,18 @@ export function register(appContext){
         .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-menu{min-width:180px!important;}
       }
       @media (max-width:800px){
-        .mobile-search-filter-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto auto!important;gap:8px!important;align-items:stretch!important;}
+        .mobile-search-filter-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto auto!important;gap:6px!important;align-items:stretch!important;}
         .mobile-search-filter-row>.mobile-inventory-search{min-width:0!important;width:auto!important;}
         .mobile-search-filter-row>.mobile-inline-sort,.mobile-search-filter-row>.mobile-filter-open-btn,.mobile-search-filter-row>.mobile-inline-currency{min-width:0!important;width:auto!important;white-space:nowrap!important;}
-        .mobile-inline-sort{display:flex!important;align-items:center!important;justify-content:center!important;padding:0 14px!important;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(20,22,28,.92);color:inherit;font:inherit;font-weight:700;text-transform:uppercase;}
+        .mobile-inline-sort{display:flex!important;align-items:center!important;justify-content:center!important;padding:0 10px!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:12px!important;background:rgba(20,22,28,.92)!important;color:inherit!important;font:inherit!important;font-weight:700!important;text-transform:uppercase!important;}
         .sticky-mobile-results-bar{display:none!important;}
       }
       @media (max-width:560px){
-        .mobile-search-filter-row{grid-template-columns:minmax(118px,1fr) auto auto auto!important;gap:6px!important;}
-        .mobile-inline-sort{padding:0 10px!important;}
-        .mobile-search-filter-row>.mobile-filter-open-btn{padding-left:10px!important;padding-right:10px!important;}
-        .mobile-search-filter-row>.mobile-inline-currency{padding-left:8px!important;padding-right:8px!important;}
+        .mobile-search-filter-row{grid-template-columns:minmax(82px,1fr) auto auto auto!important;gap:5px!important;}
+        .mobile-inventory-search input{min-width:0!important;padding-left:34px!important;padding-right:24px!important;}
+        .mobile-inline-sort{padding:0 8px!important;}
+        .mobile-search-filter-row>.mobile-filter-open-btn{padding-left:8px!important;padding-right:8px!important;}
+        .mobile-search-filter-row>.mobile-inline-currency{padding-left:6px!important;padding-right:6px!important;}
       }
     `;
     document.head.appendChild(style);
@@ -97,7 +112,7 @@ export function register(appContext){
     const row=document.querySelector(".mobile-search-filter-row");
     const filterButton=appContext.$("mobileFilterOpenBtn");
     const stickySort=appContext.$("stickyMobileSortBtn");
-    if(!row || !filterButton || !stickySort) return false;
+    if(!row || !filterButton) return false;
     let button=appContext.$("mobileInlineSortBtn");
     if(!button){
       button=document.createElement("button");
@@ -107,8 +122,19 @@ export function register(appContext){
       button.textContent="Sort";
       button.setAttribute("aria-expanded","false");
       button.setAttribute("aria-controls","mobileSortSheet");
-      button.addEventListener("click",()=>stickySort.click());
       row.insertBefore(button,filterButton);
+    }
+    if(button.dataset.sortClickReady!=="true"){
+      button.dataset.sortClickReady="true";
+      button.addEventListener("click",()=>{
+        if(stickySort){ stickySort.click(); return; }
+        const sheet=appContext.$("mobileSortSheet");
+        const backdrop=appContext.$("mobileSortBackdrop");
+        if(sheet) sheet.hidden=false;
+        if(backdrop) backdrop.hidden=false;
+        button.setAttribute("aria-expanded","true");
+        document.body.classList.add("mobile-sort-open");
+      });
     }
     return true;
   }
