@@ -34,9 +34,50 @@ export function register(appContext){
     style.id="inventory-sort-toolbar-style";
     style.textContent=`
       @media (min-width:801px){
-        .desktop-filter-toggle-actions>.inventory-sort-toolbar{flex:0 0 auto;min-width:210px;}
-        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-btn{min-height:48px;white-space:nowrap;}
+        .desktop-filter-toggle-actions{
+          display:grid!important;
+          grid-template-columns:minmax(280px,1fr) 220px auto auto;
+          align-items:stretch;
+          gap:8px;
+          width:100%;
+          flex:1 1 100%;
+        }
+        .desktop-filter-toggle-actions>.desktop-inline-search{min-width:0;width:100%;}
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar{
+          position:relative!important;
+          min-width:0;
+          width:220px;
+          align-self:stretch;
+        }
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-btn{
+          width:100%;
+          min-height:48px;
+          height:100%;
+          white-space:nowrap;
+        }
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-menu{
+          position:absolute!important;
+          top:calc(100% + 6px)!important;
+          right:0!important;
+          bottom:auto!important;
+          left:0!important;
+          width:100%!important;
+          min-width:220px!important;
+          max-width:none!important;
+          max-height:min(420px,60vh)!important;
+          overflow-y:auto!important;
+          z-index:1000!important;
+        }
+        .desktop-filter-toggle-actions>.desktop-filter-toggle-btn{height:100%;white-space:nowrap;}
+        .desktop-filter-toggle-actions>.desktop-listing-currency-control{height:100%;white-space:nowrap;}
         .filter-drawer-shell .inventory-sort-toolbar{display:none!important;}
+      }
+      @media (min-width:801px) and (max-width:1100px){
+        .desktop-filter-toggle-actions{
+          grid-template-columns:minmax(220px,1fr) 190px auto auto;
+        }
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar{width:190px;}
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-menu{min-width:190px!important;}
       }
     `;
     document.head.appendChild(style);
