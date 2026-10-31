@@ -38,8 +38,11 @@ jobs:
       - name: HEIC Add/Edit integration contract
         run: |
           set -euo pipefail
-          grep -Fq 'image/heic,image/heif,.heic,.heif' dev/src/features/media/heic-support.js
-          grep -Fq 'heic2any@0.0.4' dev/src/features/media/heic-support.js
+          grep -Fq 'image/heic-sequence' dev/src/features/media/heic-support.js
+          grep -Fq 'image/heif-sequence' dev/src/features/media/heic-support.js
+          grep -Fq 'nativeHeicToJpegBlob' dev/src/features/media/heic-support.js
+          grep -Fq 'heic-to@1.6.7/dist/iife/heic-to.js' dev/src/features/media/heic-support.js
+          grep -Fq 'const converted=await heicTo({blob:file,type:"image/jpeg",quality:0.94})' dev/src/features/media/heic-support.js
           grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
           grep -Fq "features/media/heic-support.js?v=2026-10-30-v06" dev/src/app/register-features.js
           grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
