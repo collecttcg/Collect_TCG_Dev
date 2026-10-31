@@ -37,11 +37,11 @@ export function register(appContext){
         .desktop-filter-toggle-row{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(160px,220px) auto auto auto!important;align-items:stretch!important;gap:8px!important;width:100%!important;}
         .desktop-filter-toggle-actions{display:contents!important;}
         .desktop-filter-toggle-actions>.desktop-inline-search{grid-column:1;min-width:0!important;width:100%!important;}
-        .desktop-filter-toggle-actions>.inventory-sort-toolbar{grid-column:2;position:relative!important;min-width:0!important;width:100%!important;align-self:stretch;}
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar{grid-column:2;position:relative!important;min-width:0!important;width:100%!important;align-self:stretch;display:flex!important;}
         .desktop-filter-toggle-actions>.desktop-filter-toggle-btn{grid-column:3;height:100%;white-space:nowrap;min-width:0!important;width:auto!important;}
         .desktop-filter-toggle-actions>.desktop-listing-currency-control{grid-column:4;height:100%;white-space:nowrap;min-width:0!important;width:auto!important;}
         .desktop-filter-toggle-row>.desktop-filter-add-card{grid-column:5;align-self:stretch;display:flex;align-items:center;white-space:nowrap;min-width:0!important;}
-        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-btn{width:100%;min-height:48px;height:100%;white-space:nowrap;}
+        .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-btn{box-sizing:border-box!important;width:100%!important;min-height:0!important;height:100%!important;margin:0!important;padding:0 16px!important;border-radius:12px!important;white-space:nowrap;align-self:stretch!important;}
         .desktop-filter-toggle-actions>.inventory-sort-toolbar .overview-select-menu{position:absolute!important;top:calc(100% + 6px)!important;right:0!important;bottom:auto!important;left:0!important;width:100%!important;min-width:220px!important;max-width:none!important;max-height:min(420px,60vh)!important;overflow-y:auto!important;z-index:1000!important;}
         .filter-drawer-shell .inventory-sort-toolbar{display:none!important;}
       }
