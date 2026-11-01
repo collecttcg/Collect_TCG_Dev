@@ -115,16 +115,24 @@ export function register(appContext){
     };
   }
 
-  const originalCardTileHTML=appContext.cardTileHTML;
-  if(typeof originalCardTileHTML==="function"){
-    appContext.cardTileHTML=function cardTileHTMLWithEbay(card,...args){
-      const html=originalCardTileHTML(card,...args);
-      if(card?.on_ebay!==true) return html;
-      const url=normalizeEbayListingUrl(card.ebay_url||"");
-      const badge=url
-        ? `<a class="ebay-listing-badge" href="${appContext.escapeHtml(url)}" target="_blank" rel="noopener noreferrer" title="Open this listing on eBay">On eBay ↗</a>`
-        : `<span class="ebay-listing-badge" title="This card is also listed on eBay">On eBay</span>`;
-      return html.replace('<div class="card-title-actions">',`${badge}<div class="card-title-actions">`);
+  function ebayImageBadgeHTML(card){
+    if(card?.on_ebay!==true) return "";
+    const url=normalizeEbayListingUrl(card.ebay_url||"");
+    return url
+      ? `<a class="ebay-listing-badge ebay-listing-image-badge" href="${appContext.escapeHtml(url)}" target="_blank" rel="noopener noreferrer" title="Open this listing on eBay" aria-label="Open this listing on eBay">On eBay ↗</a>`
+      : `<span class="ebay-listing-badge ebay-listing-image-badge" title="This card is also listed on eBay">On eBay</span>`;
+  }
+
+  const originalCardThumbHTML=appContext.cardThumbHTML;
+  if(typeof originalCardThumbHTML==="function"){
+    appContext.cardThumbHTML=function cardThumbHTMLWithEbay(card,...args){
+      const html=originalCardThumbHTML(card,...args);
+      const badge=ebayImageBadgeHTML(card);
+      if(!badge) return html;
+      if(html.includes('class="image-count-badge"')){
+        return html.replace('<span class="image-count-badge"',`${badge}<span class="image-count-badge"`);
+      }
+      return html.replace(/<\/div>\s*$/,`${badge}</div>`);
     };
   }
 
@@ -144,10 +152,11 @@ export function register(appContext){
     style.id="ebay-listing-status-style";
     style.textContent=`
       .ebay-editor-block{display:grid;gap:12px;padding-bottom:96px}.ebay-listing-heading{margin-bottom:0}.ebay-listing-field,.ebay-listing-url-field{margin:0}.ebay-listing-toggle{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:8px 0}.ebay-listing-toggle input{margin-top:3px}.ebay-listing-toggle span{display:grid;gap:3px}.ebay-listing-toggle small{color:var(--muted,#9ca3af);font-weight:500}
-      .ebay-listing-badge{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center;padding:4px 8px;border:1px solid rgba(255,205,55,.55);border-radius:999px;background:rgba(255,205,55,.10);color:#f4c84a;font-size:10px;font-weight:800;line-height:1;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
-      a.ebay-listing-badge:hover{background:rgba(255,205,55,.18)}
+      .ebay-listing-badge{display:inline-flex;align-items:center;justify-content:center;padding:5px 9px;border:1px solid rgba(255,205,55,.72);border-radius:999px;background:rgba(12,13,16,.88);color:#f4c84a;font-size:10px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.05em;text-decoration:none;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.32);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+      .ebay-listing-image-badge{position:absolute;left:10px;bottom:10px;z-index:8;max-width:calc(100% - 76px)}
+      a.ebay-listing-badge:hover{background:rgba(28,29,32,.94);border-color:#f4c84a}
       .ebay-only-filter{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.025);font-weight:700}.ebay-only-filter input{accent-color:#f4c84a}
-      @media(max-width:560px){.ebay-editor-block{padding-bottom:112px}.ebay-listing-badge{padding:3px 6px;font-size:9px}.ebay-only-filter{min-height:42px}}
+      @media(max-width:560px){.ebay-editor-block{padding-bottom:112px}.ebay-listing-image-badge{left:8px;bottom:8px;padding:4px 7px;font-size:9px}.ebay-only-filter{min-height:42px}}
     `;
     document.head.appendChild(style);
   }
