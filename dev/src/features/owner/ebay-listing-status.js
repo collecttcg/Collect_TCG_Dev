@@ -65,7 +65,7 @@ export function register(appContext){
   if(typeof originalFieldsTemplate==="function"){
     appContext.fieldsTemplate=function fieldsTemplateWithEbay(p){
       const html=originalFieldsTemplate(p);
-      return `${html}\n<div class="owner-editor-section-heading ebay-listing-heading"><span>eBay</span><small>Cross-listing status</small></div>\n<div class="field ebay-listing-field">\n  <label class="ebay-listing-toggle" for="${p}OnEbay">\n    <input type="checkbox" id="${p}OnEbay">\n    <span><strong>Listed on eBay</strong><small>Show an On eBay badge on this listing.</small></span>\n  </label>\n</div>\n<div class="field ebay-listing-url-field" id="${p}EbayUrlField" hidden>\n  <label for="${p}EbayUrl">eBay listing URL <span class="field-optional">(optional)</span></label>\n  <input type="url" id="${p}EbayUrl" inputmode="url" autocomplete="url" placeholder="https://www.ebay.com/itm/…">\n  <div class="hint">Optional. When supplied, the On eBay badge opens the eBay listing in a new tab.</div>\n</div>`;
+      return `${html}\n<div class="ebay-editor-block">\n<div class="owner-editor-section-heading ebay-listing-heading"><span>eBay</span><small>Cross-listing status</small></div>\n<div class="field ebay-listing-field">\n  <label class="ebay-listing-toggle" for="${p}OnEbay">\n    <input type="checkbox" id="${p}OnEbay">\n    <span><strong>Listed on eBay</strong><small>Show an On eBay badge on this listing.</small></span>\n  </label>\n</div>\n<div class="field ebay-listing-url-field" id="${p}EbayUrlField" hidden>\n  <label for="${p}EbayUrl">eBay listing URL <span class="field-optional">(optional)</span></label>\n  <input type="url" id="${p}EbayUrl" inputmode="url" autocomplete="url" placeholder="https://www.ebay.com/itm/…">\n  <div class="hint">Optional. When supplied, the On eBay badge opens the eBay listing in a new tab.</div>\n</div>\n</div>`;
     };
   }
 
@@ -143,11 +143,11 @@ export function register(appContext){
     const style=document.createElement("style");
     style.id="ebay-listing-status-style";
     style.textContent=`
-      .ebay-listing-toggle{display:flex;align-items:flex-start;gap:10px;cursor:pointer}.ebay-listing-toggle input{margin-top:3px}.ebay-listing-toggle span{display:grid;gap:3px}.ebay-listing-toggle small{color:var(--muted,#9ca3af);font-weight:500}
+      .ebay-editor-block{display:grid;gap:12px;padding-bottom:96px}.ebay-listing-heading{margin-bottom:0}.ebay-listing-field,.ebay-listing-url-field{margin:0}.ebay-listing-toggle{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:8px 0}.ebay-listing-toggle input{margin-top:3px}.ebay-listing-toggle span{display:grid;gap:3px}.ebay-listing-toggle small{color:var(--muted,#9ca3af);font-weight:500}
       .ebay-listing-badge{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center;padding:4px 8px;border:1px solid rgba(255,205,55,.55);border-radius:999px;background:rgba(255,205,55,.10);color:#f4c84a;font-size:10px;font-weight:800;line-height:1;text-transform:uppercase;letter-spacing:.04em;text-decoration:none;white-space:nowrap}
       a.ebay-listing-badge:hover{background:rgba(255,205,55,.18)}
       .ebay-only-filter{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(255,255,255,.025);font-weight:700}.ebay-only-filter input{accent-color:#f4c84a}
-      @media(max-width:560px){.ebay-listing-badge{padding:3px 6px;font-size:9px}.ebay-only-filter{min-height:42px}}
+      @media(max-width:560px){.ebay-editor-block{padding-bottom:112px}.ebay-listing-badge{padding:3px 6px;font-size:9px}.ebay-only-filter{min-height:42px}}
     `;
     document.head.appendChild(style);
   }
