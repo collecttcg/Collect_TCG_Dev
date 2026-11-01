@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-10-31
+Last reconciled against GitHub: 2026-11-01
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -15,28 +15,45 @@ Last reconciled against GitHub: 2026-10-31
 - Historical release manifests are immutable.
 
 ## Current Development
-Latest validated Development release: `2026-10-31-v02`
-Previous Development: `2026-10-31-v01`
-Development release manifest: `release-manifests/2026-10-31-v02.txt`
-Development v02 package source commit: `81321726a563869da9f5030baaa697a3c9d62f16`
-Development v02 manifest commit: `4d644a127f19fdbcb9c90b810d97452a10602fd5`
+Latest validated Development release: `2026-11-01-v01`
+Previous Development: `2026-10-31-v02`
+Development release manifest: `release-manifests/2026-11-01-v01.txt`
+Development v01 package source commit: `64f67120c371b13b77fa38fa8c72fd773fe941c2`
+Development v01 manifest commit: `43741587717b1d56ef5f9ef09347a78079e64235`
 
-### Development package record — 2026-10-31-v02
-- Full ZIP: `Collect-TCG-Dev-2026-10-31-v02-full.zip`
-- Full SHA256: `9013298a670da6677f8180cb69324aae3131bc5cea56d32b10d3c1bc5ac37a99`
-- Patch ZIP: `Collect-TCG-Dev-2026-10-31-v01-to-2026-10-31-v02-patch.zip`
-- Patch SHA256: `9ed59c5c4eff967075d19f150935fcda32a46ca957e92fed8349e4ccd27f0977`
+### Development package record — 2026-11-01-v01
+- Full ZIP: `Collect-TCG-Dev-2026-11-01-v01-full.zip`
+- Full SHA256: `e8efb6d063e5aed4f0bb2fa03465b1a6ef5358b8e3c5e920b1900b4da1286d98`
+- Patch ZIP: `Collect-TCG-Dev-2026-10-31-v02-to-2026-11-01-v01-patch.zip`
+- Patch SHA256: `2672666a0aaa85c1c6e688b9f9fcb163305b96e08f72a08a4abdd040d3fe49e4`
 
-Current Development behavior:
-- Inventory Sort is separate from Filters. Desktop keeps Search, Sort, Filters, Currency and Add Card on one toolbar row; Sort is sized consistently with adjacent controls.
-- Portrait mobile keeps Search, Sort, Filters and Currency on one row, with Search allowed to shrink; Sort opens the retained mobile sort sheet.
-- Existing sort methods remain, including both price directions; `Most Popular` uses the existing Trending/7-day interest data.
-- Owner Add/Edit retains JPEG, PNG, WebP, HEIC and HEIF support with native decode first and pinned `heic-to` 1.6.7 fallback.
-- Owner Add/Edit listing photos retain file drop and drag-reorder edge auto-scroll.
-- Owner Inventory Tools → PSA POP retains `Get Never-Synced PSA POPs (N)`; existing Update Due / Update All behavior remains unchanged.
-- Owner-only AI Card Scanner, QR Generator, eBay account links/Ban List, Buyer Messages, generators, private analytics and established compact Owner Inventory Tools remain retained.
-- Development SEO generation and validation passed for v02.
+### Development 2026-11-01-v01
+Purpose: add a lightweight manual eBay cross-listing status without changing the database schema.
+
+Changes retained:
+- Owner Add/Edit has a `Listed on eBay` toggle and optional eBay listing URL.
+- eBay listing state is stored compatibly inside the existing public `notes` field using an internal marker; the marker is stripped from normal displayed notes.
+- Public Inventory cards marked for eBay show a compact `On eBay` badge.
+- When an eBay URL is supplied, the badge opens that listing in a new tab; only HTTPS eBay domains are accepted.
+- Inventory Filters include `On eBay only` for quickly finding cross-listed cards.
+- Existing Inventory Sort, desktop/mobile toolbar behavior, Owner/public boundaries, HEIC/HEIF image handling, PSA POP actions, scanner, QR Generator, eBay Ban List and other retained behavior are unchanged.
 - No SQL/schema/RLS/Edge Function change was required.
+
+Validation completed:
+- feature regression tests;
+- all Development JavaScript syntax checks;
+- dedicated eBay listing integration contract;
+- local executed marker parse/write, badge, filter and eBay-domain validation test;
+- retained Inventory Sort and HEIC integration contracts;
+- SEO generator self-test and Development generation;
+- repository/reference, CSS and retained release-contract validation;
+- full/patch ZIP creation and integrity checks;
+- package artifact upload;
+- immutable `2026-11-01-v01` manifest recording.
+
+Validation limitations:
+- authenticated Owner Add/Edit save was not interactively exercised in a browser;
+- interactive desktop/mobile/Safari browser testing was not performed.
 
 ## Current Production
 Latest Production: `2026-10-31-v02`
@@ -73,6 +90,7 @@ Validation limitations:
 - Interactive desktop/mobile/Safari browser testing was not performed during Production promotion; Development behavior was user-observed through supplied screenshots during iteration.
 
 ## Historical immutable state retained
+- Development `2026-10-31-v02` is the previous Development release and the source of current Production `2026-10-31-v02`.
 - Production `2026-10-31-v01` / Development `2026-10-31-v01` remain immutable prior releases containing Owner image workflow and PSA POP improvements.
 - Historical v01 baseline snapshot retained for validator/history continuity:
   - Latest validated Development release: `2026-10-31-v01`
@@ -95,10 +113,11 @@ Do not restore Download Share Preview; V200 inquiry basket; V201 custom Share me
 - Latest relevant Production migration remains `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`.
 - `public.ebay_banlist` remains Owner-only through RLS.
 - Card Owner assignment uses existing private `card_owner_private` metadata and authorization.
-- `2026-10-31-v02` changes are client-side and required no SQL/database/RLS/Edge Function change.
+- Development `2026-11-01-v01` stores eBay cross-listing status compatibly in the existing `cards.notes` field and requires no migration.
+- Production remains `2026-10-31-v02`; the Development eBay listing-status feature has not been promoted.
 
 ## Release contract
 A release is complete only after applicable implementation, validation, regression review, committed-file inspection, package integrity checks, immutable manifest, Pages deployment and rollback protection are confirmed. **Tested** means executed; **Statically verified** means repository/code inspection only; **Not tested** means unavailable/not performed. Do not live-open Production for routine testing without explicit authorization.
 
 ## Baseline maintenance
-Reconcile this file in both Development and Production repositories after every accepted release or meaningful state change. Preserve historical release facts and retained/removed behavior; never rewrite immutable manifests from assumptions.
+Reconcile this file after accepted releases or meaningful state changes while respecting Production protection. Preserve historical release facts and retained/removed behavior; never rewrite immutable manifests from assumptions.
