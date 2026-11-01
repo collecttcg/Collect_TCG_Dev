@@ -3,56 +3,89 @@ export function register(appContext){
   if(typeof window==="undefined" || typeof appContext.router!=="function") return;
 
   let preserveNextRouterScroll=false;
-  let preservedScroll=null;
-  const captureScroll=()=>{
+  let pendingEbayCardId="";
+  const baseRouter=appContext.router;
+
+  function scrollState(){
     const shell=document.querySelector(".shell");
     return {
-      windowX:Math.max(0,Number(window.scrollX||0)),
-      windowY:Math.max(0,Number(window.scrollY||0)),
-      shellX:shell ? Math.max(0,Number(shell.scrollLeft||0)) : 0,
-      shellY:shell ? Math.max(0,Number(shell.scrollTop||0)) : 0
+      x:window.scrollX,
+      y:window.scrollY,
+      shell,
+      shellX:shell?.scrollLeft||0,
+      shellY:shell?.scrollTop||0
     };
-  };
-  const restoreScroll=state=>{
-    if(!state) return;
-    const shell=document.querySelector(".shell");
-    if(shell){
-      shell.scrollTo({top:state.shellY,left:state.shellX,behavior:"auto"});
-    }
-    window.scrollTo({top:state.windowY,left:state.windowX,behavior:"auto"});
-  };
+  }
 
-  const baseRouter=appContext.router;
+  function restoreScroll(state){
+    if(!state) return;
+    if(state.shell?.isConnected){
+      state.shell.scrollTo({left:state.shellX,top:state.shellY,behavior:"auto"});
+    }else{
+      const shell=document.querySelector(".shell");
+      shell?.scrollTo({left:state.shellX,top:state.shellY,behavior:"auto"});
+    }
+    window.scrollTo({left:state.x,top:state.y,behavior:"auto"});
+  }
+
+  function refreshEbayCardInPlace(cardId){
+    const id=String(cardId||"");
+    if(!id || typeof appContext.cardTileHTML!=="function") return false;
+    const card=appContext.getCardById?.(id);
+    const current=appContext.view?.querySelector?.(`.card[data-card-id="${CSS.escape(id)}"]`);
+    if(!card || !current) return false;
+
+    const holder=document.createElement("div");
+    holder.innerHTML=appContext.cardTileHTML(card).trim();
+    const replacement=holder.firstElementChild;
+    if(!replacement) return false;
+    current.replaceWith(replacement);
+    return true;
+  }
+
   appContext.router=function(...args){
+    if(pendingEbayCardId){
+      const cardId=pendingEbayCardId;
+      pendingEbayCardId="";
+      preserveNextRouterScroll=false;
+      const state=scrollState();
+      if(refreshEbayCardInPlace(cardId)){
+        restoreScroll(state);
+        return;
+      }
+      // Fall through to the normal router only if the tile cannot be patched.
+      preserveNextRouterScroll=true;
+    }
+
     if(!preserveNextRouterScroll) return baseRouter.apply(this,args);
 
     preserveNextRouterScroll=false;
-    const state=preservedScroll || captureScroll();
-    preservedScroll=null;
+    const state=scrollState();
     const result=baseRouter.apply(this,args);
-    // Inventory uses .shell as the scroll container on mobile and window on
-    // desktop. Restore both after the rerender has painted so quick actions do
-    // not jump to the top on either layout.
+    const restore=()=>restoreScroll(state);
+    restore();
     requestAnimationFrame(()=>{
-      restoreScroll(state);
-      requestAnimationFrame(()=>restoreScroll(state));
+      restore();
+      requestAnimationFrame(restore);
     });
+    setTimeout(restore,0);
+    setTimeout(restore,50);
     return result;
   };
 
-  const wrapQuickAction=fn=>async function(...args){
-    preservedScroll=captureScroll();
+  const wrapQuickAction=(fn,{ebay=false}={})=>async function(...args){
     preserveNextRouterScroll=true;
+    if(ebay) pendingEbayCardId=String(args[0]?.id||"");
     try{
       const result=await fn.apply(this,args);
       if(!result){
         preserveNextRouterScroll=false;
-        preservedScroll=null;
+        pendingEbayCardId="";
       }
       return result;
     }catch(error){
       preserveNextRouterScroll=false;
-      preservedScroll=null;
+      pendingEbayCardId="";
       throw error;
     }
   };
@@ -61,7 +94,7 @@ export function register(appContext){
     appContext.quickSetCardAvailability=wrapQuickAction(appContext.quickSetCardAvailability);
   }
   if(typeof appContext.quickSetEbayStatus==="function"){
-    appContext.quickSetEbayStatus=wrapQuickAction(appContext.quickSetEbayStatus);
+    appContext.quickSetEbayStatus=wrapQuickAction(appContext.quickSetEbayStatus,{ebay:true});
   }
   if(typeof appContext.setCardLifecycle==="function"){
     appContext.setCardLifecycle=wrapQuickAction(appContext.setCardLifecycle);
