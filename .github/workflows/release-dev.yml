@@ -35,6 +35,15 @@ jobs:
           grep -Fq 'mobileInlineSortBtn' dev/src/features/inventory/sort-toolbar.js
           grep -Fq 'grid-template-columns:minmax(0,1fr) auto auto auto' dev/src/features/inventory/sort-toolbar.js
           grep -Fq 'inventory/sort-toolbar.js?v=2026-10-31-v06' dev/src/main.js
+      - name: eBay listing status integration contract
+        run: |
+          set -euo pipefail
+          grep -Fq 'Listed on eBay' dev/src/features/owner/ebay-listing-status.js
+          grep -Fq 'On eBay only' dev/src/features/owner/ebay-listing-status.js
+          grep -Fq 'ebay-listing-badge' dev/src/features/owner/ebay-listing-status.js
+          grep -Fq 'notesWithEbayListing' dev/src/features/owner/ebay-listing-status.js
+          grep -Fq "features/owner/ebay-listing-status.js?v=2026-11-01-v01" dev/src/app/register-features.js
+          grep -Fq 'module59.register(appContext)' dev/src/app/register-features.js
       - name: HEIC Add/Edit integration contract
         run: |
           set -euo pipefail
@@ -61,9 +70,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-10-31-v02
-          PREVIOUS_VERSION: 2026-10-31-v01
-          PREVIOUS_COMMIT: c2636c086462e59729b297ebd49083464d9031ec
+          RELEASE_VERSION: 2026-11-01-v01
+          PREVIOUS_VERSION: 2026-10-31-v02
+          PREVIOUS_COMMIT: 81321726a563869da9f5030baaa697a3c9d62f16
         run: |
           set -euo pipefail
           rm -rf .release-patch
@@ -80,29 +89,29 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-10-31-v02-packages
+          name: Collect-TCG-Dev-2026-11-01-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-10-31-v02-full.zip
-            release/Collect-TCG-Dev-2026-10-31-v01-to-2026-10-31-v02-patch.zip
+            release/Collect-TCG-Dev-2026-11-01-v01-full.zip
+            release/Collect-TCG-Dev-2026-10-31-v02-to-2026-11-01-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-10-31-v02.txt'
+          MANIFEST='release-manifests/2026-11-01-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-10-31-v02'
-            echo 'Previous version: 2026-10-31-v01'
+            echo 'Version: 2026-11-01-v01'
+            echo 'Previous version: 2026-10-31-v02'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Full ZIP: Collect-TCG-Dev-2026-10-31-v02-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-31-v01-to-2026-10-31-v02-patch.zip'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-01-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-10-31-v02-to-2026-11-01-v01-patch.zip'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-10-31-v02: record package validation'
+          git commit -m 'Development 2026-11-01-v01: record package validation'
           git push
