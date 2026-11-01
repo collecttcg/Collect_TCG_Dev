@@ -8,6 +8,8 @@ export function register(appContext){
 
 We really appreciate your support. Your item will be carefully packed to ensure it is well protected during shipping.
 
+For additional security and documentation, the entire packaging process will also be video recorded before the parcel is handed over to the shipping carrier.
+
 Once the package has been shipped, the tracking information will be updated on eBay.
 
 Please note that any applicable import duties, tariffs, taxes, customs clearance fees, or other import-related charges are not included in the item price or shipping cost and are the buyer’s responsibility. We recommend checking your local import requirements and applicable charges.
