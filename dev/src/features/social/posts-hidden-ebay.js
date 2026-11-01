@@ -17,8 +17,22 @@ export function register(appContext){
   const originalEbayListingDescription=appContext.ebayListingDescription;
   if(typeof originalEbayListingDescription==="function"){
     appContext.ebayListingDescription=function(card){
-      const description=originalEbayListingDescription(card);
+      let description=originalEbayListingDescription(card);
       if(!description) return description;
+
+      const specifics=typeof appContext.ebayItemSpecifics==="function"
+        ? String(appContext.ebayItemSpecifics(card)||"").trim()
+        : "";
+      if(specifics){
+        description=description.replace(`\n${specifics}\n`,`\n`);
+      }
+
+      const shippingLine="The packing process and sealed package will be video recorded before dispatch to document the condition and packaging and help prevent any problems or disputes during shipping.";
+      const trackingLine="Tracking will be provided after dispatch.";
+      if(description.includes(trackingLine) && !description.includes(shippingLine)){
+        description=description.replace(trackingLine,`${shippingLine}\n${trackingLine}`);
+      }
+
       const notice=[
         "[IMPORT DUTIES & TAXES]",
         "Import duties, tariffs, taxes, customs clearance fees, and other import-related charges are not included in the item price or shipping cost and are the buyer's responsibility.",
@@ -37,7 +51,18 @@ export function register(appContext){
       const originalIsLiveLifecycle=appContext.isLiveLifecycle;
       try{
         appContext.isLiveLifecycle=card=>appContext.cardLifecycle(card)==="draft" || originalIsLiveLifecycle(card);
-        return originalRenderEbayListingGeneratorPage(...args);
+        const result=originalRenderEbayListingGeneratorPage(...args);
+
+        const specificsOutput=document.getElementById("ebaySpecificsOutput");
+        const specificsField=specificsOutput?.closest(".field");
+        const specificsActions=specificsField?.nextElementSibling;
+        specificsField?.remove();
+        if(specificsActions?.querySelector?.("#ebayCopySpecifics")) specificsActions.remove();
+
+        const pageDescription=appContext.view?.querySelector?.(".page-head p");
+        if(pageDescription) pageDescription.textContent="Select an inventory card and copy an eBay-ready title and description.";
+
+        return result;
       }finally{
         appContext.isLiveLifecycle=originalIsLiveLifecycle;
       }
