@@ -58,6 +58,7 @@ function cardTileHTML(c, renderIndex=999){
               <button type="button" data-action="fb-post" data-id="${appContext.escapeHtml(c.id)}">Generate FB Post</button>
               ${appContext.cardLifecycle(c)!=="archived" ? `<button type="button" data-action="carousell-post" data-id="${appContext.escapeHtml(c.id)}">Generate Carousell Post</button>` : ""}
               ${appContext.isLiveLifecycle(c) ? `<button type="button" data-action="ebay-post" data-id="${appContext.escapeHtml(c.id)}">Generate eBay Post</button>` : ""}
+              ${typeof appContext.notesWithEbayListing==="function" ? `<button type="button" data-action="ebay-status" data-id="${appContext.escapeHtml(c.id)}">${c.on_ebay===true ? "Remove On eBay" : "Mark On eBay"}</button>` : ""}
               <div class="quick-card-menu-separator"></div>
               ${appContext.normalizeFilterValue(c.availability)!=="available" ? `<button type="button" data-action="availability" data-status="Available" data-id="${appContext.escapeHtml(c.id)}">Mark Available</button>` : ""}
               ${appContext.normalizeFilterValue(c.availability)!=="reserved" ? `<button type="button" data-action="availability" data-status="Reserved" data-id="${appContext.escapeHtml(c.id)}">Mark Reserved</button>` : ""}
@@ -164,17 +165,10 @@ async function quickSetCardAvailability(card,status){
     if(status==="Sold"){
       const ok=confirm(`Mark "${card.name}" as Sold?`);
       if(!ok) return false;
-
-      // Preserve the card's buyer-interest state at the moment of sale.
-      // This is best-effort and never blocks the inventory update.
       await appContext.captureSaleConversionSnapshot(card);
     }
 
     const candidate={...card,availability:status};
-
-    // Stamp the exact Mark Sold click moment in the application so the Sold
-    // archive date is deterministic. The existing database trigger remains a
-    // backward-compatible fallback. Moving out of Sold clears the local value.
     if(status==="Sold") candidate.sold_at=new Date().toISOString();
     else candidate.sold_at=null;
 
@@ -185,6 +179,22 @@ async function quickSetCardAvailability(card,status){
     if(index>-1) appContext.cards[index]=saved;
     appContext.invalidateOwnerReservedAgeCache();
     appContext.showToast(status==="Collection (NFS)" ? "Marked NFS" : `Marked ${status}`);
+    appContext.router();
+    return true;
+  }
+
+async function quickSetEbayStatus(card,onEbay){
+    if(!card || !appContext.requireOwner("change eBay listing status")) return false;
+    if(typeof appContext.notesWithEbayListing!=="function") return false;
+
+    const candidate={...card,on_ebay:Boolean(onEbay)};
+    if(!candidate.on_ebay) candidate.ebay_url="";
+    const saved=await appContext.updateCardStorage(candidate);
+    if(!saved) return false;
+
+    const index=appContext.getCardIndexById(card.id);
+    if(index>-1) appContext.cards[index]=saved;
+    appContext.showToast(candidate.on_ebay ? "Marked On eBay" : "Removed On eBay");
     appContext.router();
     return true;
   }
@@ -245,9 +255,6 @@ async function stepListingGallery(wrap,card,step){
     const preload=new Image();
     preload.decoding="async";
     preload.src=images[(index+(step>=0?1:-1)+images.length)%images.length];
-
-    // Deliberate overview interest: count once per card per browser session,
-    // regardless of how many times the visitor continues switching images.
     appContext.recordOverviewPhotoInteraction(card.id).catch(()=>{});
     return true;
   }
@@ -265,27 +272,21 @@ function wireCardActions(container){
       preloadFromTarget(e.target);
     },{passive:true});
 
-    container.addEventListener("focusin",e=>{
-      preloadFromTarget(e.target);
-    });
+    container.addEventListener("focusin",e=>{ preloadFromTarget(e.target); });
 
     container.addEventListener("click", async (e)=>{
       const galleryBtn=e.target.closest("[data-listing-gallery-step][data-id]");
       if(galleryBtn){
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
         const card=appContext.getCardById(galleryBtn.dataset.id||"");
         const wrap=galleryBtn.closest("[data-listing-gallery]");
-        if(card&&wrap){
-          await appContext.stepListingGallery(wrap,card,Number(galleryBtn.dataset.listingGalleryStep||1));
-        }
+        if(card&&wrap) await appContext.stepListingGallery(wrap,card,Number(galleryBtn.dataset.listingGalleryStep||1));
         return;
       }
 
       const pillToggle=e.target.closest("[data-card-pill-toggle]");
       if(pillToggle){
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
         const cardTile=pillToggle.closest(".card[data-card-id]");
         const pillRow=cardTile?.querySelector(".card-overview-collapsible-pills");
         if(pillRow){
@@ -320,9 +321,7 @@ function wireCardActions(container){
         favoriteBtn.textContent = active ? "♥" : "♡";
         favoriteBtn.title = active ? "Remove from favorites" : "Add to favorites";
         favoriteBtn.setAttribute("aria-label", favoriteBtn.title);
-        if(appContext.currentRoute() === "favorites" && !active){
-          appContext.renderFavoritesPage();
-        }
+        if(appContext.currentRoute() === "favorites" && !active) appContext.renderFavoritesPage();
         return;
       }
 
@@ -332,28 +331,18 @@ function wireCardActions(container){
         const type = filterPill.dataset.pillFilter;
         const value = filterPill.dataset.pillValue;
         const bucket = appContext.pillFilterState[type];
-
-        if(bucket && value){
-          if(bucket.has(value)) bucket.delete(value);
-          else bucket.add(value);
-        }
-
+        if(bucket && value){ if(bucket.has(value)) bucket.delete(value); else bucket.add(value); }
         appContext.activeQuickFilter = "all";
         appContext.updateListingUrlFromControls();
-
         const route = appContext.currentRoute();
-        if(appContext.isInventoryRoute(route)){
-          appContext.renderInventoryPage(route);
-        }else{
-          location.hash = "#/inventory";
-        }
+        if(appContext.isInventoryRoute(route)) appContext.renderInventoryPage(route);
+        else location.hash = "#/inventory";
         return;
       }
 
       const highValueContact=e.target.closest("[data-high-value-contact]");
       if(highValueContact){
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault(); e.stopPropagation();
         const cardTile=highValueContact.closest(".card[data-card-id]");
         const cardId=appContext.safeCardId(cardTile?.dataset?.cardId||"");
         if(cardId) appContext.recordCardEngagement(cardId,"contact_open","High Value CTA").catch(()=>{});
@@ -364,7 +353,6 @@ function wireCardActions(container){
       const btn = e.target.closest("button[data-action]");
       if(btn){
         e.stopPropagation();
-
         const id=String(btn.dataset.id||"");
         const action=String(btn.dataset.action||"");
 
@@ -381,7 +369,6 @@ function wireCardActions(container){
 
         const card=appContext.getCardById(id);
         if(!card) return;
-
         appContext.closeQuickCardMenus(container);
 
         if(action==="edit"){
@@ -399,30 +386,24 @@ function wireCardActions(container){
         }else if(action==="ebay-post"){
           if(!appContext.requireOwner("generate eBay post")) return;
           appContext.openOwnerPostGenerator("ebay",card.id);
+        }else if(action==="ebay-status"){
+          await appContext.quickSetEbayStatus(card,card.on_ebay!==true);
         }else if(action==="availability"){
           if(!appContext.requireOwner("change card availability")) return;
-          const status=String(btn.dataset.status||"");
-          await appContext.quickSetCardAvailability(card,status);
+          await appContext.quickSetCardAvailability(card,String(btn.dataset.status||""));
         }else if(action==="lifecycle"){
           if(!appContext.requireOwner("change listing lifecycle")) return;
           const status=String(btn.dataset.status||"");
           if(!["live","draft","archived"].includes(status)) return;
-
           const prompt=status==="archived"
             ? `Archive "${card.name}"?\n\nArchived listings remain recoverable in Owner tools and are hidden from visitors.`
             : (status==="draft"
                 ? `Hide "${card.name}" from normal visitors?\n\nIt will remain visible to you in Owner Mode and can be edited or published later.`
                 : `Unhide "${card.name}"?\n\nIt will become visible to normal visitors immediately.`);
-
           if(!appContext.confirmOwnerAction(prompt)) return;
-
           const ok=await appContext.setCardLifecycle(card,status);
           if(ok){
-            appContext.showToast(
-              status==="archived"
-                ? "Listing archived"
-                : (status==="draft" ? "Listing hidden from visitors" : "Listing published")
-            );
+            appContext.showToast(status==="archived" ? "Listing archived" : (status==="draft" ? "Listing hidden from visitors" : "Listing published"));
             appContext.router();
           }
         }else if(action==="delete-listing"){
@@ -439,7 +420,7 @@ function wireCardActions(container){
     });
   }
 
-  Object.assign(appContext,{relatedCardHTML,cardTileHTML,wireShimmer,quickSetCardAvailability,closeQuickCardMenus,stepListingGallery,wireCardActions});
+  Object.assign(appContext,{relatedCardHTML,cardTileHTML,wireShimmer,quickSetCardAvailability,quickSetEbayStatus,closeQuickCardMenus,stepListingGallery,wireCardActions});
 }
 
 /** State and event initialization; called in preserved startup order. */
@@ -452,7 +433,6 @@ appContext.view.addEventListener("touchstart",e=>{
       const card=appContext.getCardById(cardTile.dataset.cardId||"");
       if(card) appContext.preloadCardDetailsMedia?.(card);
     }
-
     const wrap=e.target.closest?.("[data-listing-gallery]");
     if(!wrap || e.touches.length!==1) return;
     const touch=e.touches[0];
@@ -463,25 +443,17 @@ appContext.view.addEventListener("touchend",async e=>{
     const state=appContext.listingGalleryTouchState;
     appContext.listingGalleryTouchState=null;
     if(!state || !e.changedTouches.length) return;
-
     const touch=e.changedTouches[0];
     const dx=touch.clientX-state.x;
     const dy=touch.clientY-state.y;
-
-    // Only intercept a real horizontal swipe. Normal taps are intentionally
-    // left untouched so Safari can emit the standard click event, which is
-    // handled by the delegated card click listener above.
     if(Math.abs(dx)>=44 && Math.abs(dx)>Math.abs(dy)){
       const card=appContext.getCardById(state.wrap.dataset.listingGallery||"");
       if(!card) return;
-
       if(e.cancelable) e.preventDefault();
       e.stopPropagation();
       await appContext.stepListingGallery(state.wrap,card,dx<0?1:-1);
     }
   },{passive:false});
 
-appContext.view.addEventListener("touchcancel",()=>{
-    appContext.listingGalleryTouchState=null;
-  },{passive:true});
+appContext.view.addEventListener("touchcancel",()=>{ appContext.listingGalleryTouchState=null; },{passive:true});
 }
