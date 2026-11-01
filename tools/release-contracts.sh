@@ -67,7 +67,7 @@ grep -q 'const directCardEntry=' dev/src/app/startup.js
 grep -q 'Promise.allSettled' dev/src/app/startup.js
 grep -q 'analytics.js?v=2026-10-05-v01' dev/src/app/register-features.js
 grep -q 'catalogue.js?v=2026-09-29-v09' dev/src/app/register-features.js
-grep -q 'tiles.js?v=2026-09-29-v13' dev/src/app/register-features.js
+grep -q 'tiles.js?v=2026-11-01-v01' dev/src/app/register-features.js
 grep -q 'insights-dashboard.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'details.js?v=2026-09-30-v03' dev/src/app/register-features.js
 grep -q 'startup.js?v=2026-09-29-v09' dev/src/app/register-features.js
@@ -198,7 +198,7 @@ grep -q 'auth.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -Fq 'appContext.isOwnerMode() ? `<div class="detail-item owner-only owner-private-analytics">' dev/src/features/cards/details.js
 grep -Fq 'appContext.isOwnerMode() ? `<div class="owner-only owner-private-analytics clean-owner-views"' dev/src/features/cards/tiles.js
 grep -q 'home.js?v=2026-09-29-v09' dev/src/app/register-features.js
-grep -q 'tiles.js?v=2026-09-29-v13' dev/src/app/register-features.js
+grep -q 'tiles.js?v=2026-11-01-v01' dev/src/app/register-features.js
 grep -q 'details.js?v=2026-09-30-v03' dev/src/app/register-features.js
 grep -q 'register-features.js?v=2026-10-07-v02' dev/src/main.js
 grep -q 'src/main.js?v=2026-10-05-v01' dev/index.html
