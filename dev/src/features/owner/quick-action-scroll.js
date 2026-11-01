@@ -35,11 +35,26 @@ export function register(appContext){
     const current=appContext.view?.querySelector?.(`.card[data-card-id="${CSS.escape(id)}"]`);
     if(!card || !current) return false;
 
+    // Build the latest tile only as a source for the eBay-specific DOM pieces.
+    // Keep the existing card node in place so its delegated/interactions remain intact.
     const holder=document.createElement("div");
     holder.innerHTML=appContext.cardTileHTML(card).trim();
-    const replacement=holder.firstElementChild;
-    if(!replacement) return false;
-    current.replaceWith(replacement);
+    const fresh=holder.firstElementChild;
+    if(!fresh) return false;
+
+    const currentThumb=current.firstElementChild;
+    const freshBadge=fresh.querySelector(".ebay-listing-image-badge");
+    current.querySelector(".ebay-listing-image-badge")?.remove();
+    if(freshBadge && currentThumb){
+      currentThumb.appendChild(freshBadge.cloneNode(true));
+    }
+
+    const currentAction=current.querySelector('[data-action="ebay-status"]');
+    const freshAction=fresh.querySelector('[data-action="ebay-status"]');
+    if(currentAction && freshAction){
+      currentAction.textContent=freshAction.textContent;
+    }
+
     return true;
   }
 
