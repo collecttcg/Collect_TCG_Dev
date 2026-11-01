@@ -1,180 +1,89 @@
 name: Refresh Development SEO card pages
-# Development validation/packages. GitHub Pages itself deploys from main via the repository's dynamic Pages workflow.
-# Wait for the source commit's Pages deployment before pushing the manifest commit to avoid overlapping deployments.
+
+# SEO refresh is deliberately release-agnostic. Release packaging and immutable
+# manifests belong to release-dev.yml and must never be coupled to scheduled SEO.
 on:
-  workflow_dispatch: null
+  workflow_dispatch:
   schedule:
-  - cron: 17 3 * * *
+    - cron: '17 3 * * *'
   push:
-    branches:
-    - main
+    branches: [main]
     paths:
-    - .github/workflows/dev-seo.yml
-    - tools/generate-seo.mjs
-    - COLLECT_TCG_BASELINE.md
-    - README.md
-    - package.json
-    - docs/**
-    - migrations/**
-    - supabase/functions/**
-    - dev/src/**
-    - tests/**
-    - tools/check.mjs
-    - tools/check-css.mjs
-    - tools/release-contracts.sh
+      - '.github/workflows/dev-seo.yml'
+      - 'tools/generate-seo.mjs'
+      - 'tools/check.mjs'
+      - 'tools/check-css.mjs'
+      - 'COLLECT_TCG_BASELINE.md'
+      - 'README.md'
+      - 'package.json'
+      - 'docs/**'
+      - 'migrations/**'
+      - 'supabase/functions/**'
+      - 'dev/src/**'
+      - 'tests/**'
+
 permissions:
   contents: write
-  actions: read
+
 concurrency:
   group: dev-seo-refresh
   cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-    - name: Run feature regression tests
-      run: npm test
-    - name: Validate changed JavaScript
-      run: |
-        node --check dev/src/features/media/heic-support.js
-        node --check dev/src/features/owner/psa-never-synced.js
-        node --check dev/src/app/register-features.js
-        node --check dev/src/features/owner/forms.js
-        node --check dev/src/features/owner/add.js
-        node --check dev/src/features/owner/editor.js
-        node --check dev/src/main.js
-    - name: Validate PSA first-sync integration contract
-      shell: bash
-      run: |
-        set -euo pipefail
-        grep -Fq 'Get Never-Synced PSA POPs' dev/src/features/owner/psa-never-synced.js
-        grep -Fq 'entry?.pop==null || entry.pop===""' dev/src/features/owner/psa-never-synced.js
-        grep -Fq 'startBulkPsaPopSync(never,"Never-synced PSA POP")' dev/src/features/owner/psa-never-synced.js
-        grep -Fq "features/owner/psa-never-synced.js?v=2026-10-31-v01" dev/src/app/register-features.js
-        grep -Fq 'module58.register(appContext)' dev/src/app/register-features.js
-    - name: Validate HEIC Add/Edit integration contract
-      shell: bash
-      run: |
-        set -euo pipefail
-        grep -Fq 'image/heic-sequence' dev/src/features/media/heic-support.js
-        grep -Fq 'image/heif-sequence' dev/src/features/media/heic-support.js
-        grep -Fq 'nativeHeicToJpegBlob' dev/src/features/media/heic-support.js
-        grep -Fq 'heic-to@1.6.7/dist/iife/heic-to.js' dev/src/features/media/heic-support.js
-        grep -Fq 'const converted=await heicTo({blob:file,type:"image/jpeg",quality:0.94})' dev/src/features/media/heic-support.js
-        grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
-        grep -Fq "features/media/heic-support.js?v=2026-10-30-v06" dev/src/app/register-features.js
-        grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
-        grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
-        grep -Fq 'accept="image/jpeg,image/png,image/webp"' dev/src/features/owner/forms.js
-        curl --fail --silent --show-error --location --max-time 30 -o /tmp/heic-to.js https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js
-        test -s /tmp/heic-to.js
-        grep -Fq 'HeicTo' /tmp/heic-to.js
-    - name: Validate SEO generator syntax and self-test
-      run: |
-        node --check tools/generate-seo.mjs
-        node tools/generate-seo.mjs --self-test
-    - name: Generate Development SEO card pages
-      run: node tools/generate-seo.mjs --dev
-    - name: Validate JavaScript and repository references
-      run: npm run check
-    - name: Validate CSS and retained release contracts
-      shell: bash
-      run: |
-        npm run check:css
-        bash tools/release-contracts.sh
-    - name: Commit refreshed SEO pages
-      shell: bash
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add dev/cards dev/sitemap.xml dev/robots.txt dev/seo-slugs.json dev/owner-card-routes.json
-        if git diff --cached --quiet; then
-          echo "SEO output already current."
-          exit 0
-        fi
-        git commit -m "chore: refresh Development SEO card pages [skip ci]"
-        git push
-    - name: Create Development release packages
-      shell: bash
-      env:
-        RELEASE_VERSION: 2026-10-31-v01
-        PREVIOUS_VERSION: 2026-10-30-v06
-        PREVIOUS_COMMIT: 6e32e6221ea041a09e601b82819a914577cc0383
-      run: |
-        set -euo pipefail
-        mkdir -p release
-        FULL="release/Collect-TCG-Dev-${RELEASE_VERSION}-full.zip"
-        PATCH="release/Collect-TCG-Dev-${PREVIOUS_VERSION}-to-${RELEASE_VERSION}-patch.zip"
-        git archive --format=zip --output="${FULL}" HEAD
-        rm -rf .release-patch
-        mkdir -p .release-patch
-        while IFS= read -r -d '' path; do
-          mkdir -p ".release-patch/$(dirname "$path")"
-          cp -a "$path" ".release-patch/$path"
-        done < <(git diff --name-only --diff-filter=ACMRT -z "${PREVIOUS_COMMIT}" HEAD)
-        git diff --name-only --diff-filter=D "${PREVIOUS_COMMIT}" HEAD > .release-patch/PATCH-DELETIONS.txt
-        (cd .release-patch && zip -qr "../${PATCH}" .)
-        unzip -tq "${FULL}"
-        unzip -tq "${PATCH}"
-    - name: Upload Development release packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: Collect-TCG-Dev-2026-10-31-v01-packages
-        path: |
-          release/Collect-TCG-Dev-2026-10-31-v01-full.zip
-          release/Collect-TCG-Dev-2026-10-30-v06-to-2026-10-31-v01-patch.zip
-        if-no-files-found: error
-        retention-days: 30
-    - name: Wait for source Pages deployment to settle
-      shell: bash
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        set -euo pipefail
-        SOURCE_SHA="$(git rev-parse HEAD)"
-        echo "Waiting for dynamic Pages deployment for ${SOURCE_SHA} before creating the manifest commit."
-        for attempt in $(seq 1 60); do
-          RUN_JSON="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/355986577/runs?head_sha=${SOURCE_SHA}&per_page=5")"
-          STATE="$(printf '%s' "$RUN_JSON" | jq -r '.workflow_runs[0] | if . == null then "missing" else (.status + ":" + (.conclusion // "")) end')"
-          echo "Pages state: ${STATE}"
-          case "$STATE" in
-            completed:success) exit 0 ;;
-            completed:failure|completed:cancelled|completed:timed_out|completed:action_required)
-              echo "Source Pages deployment did not succeed: ${STATE}" >&2
-              exit 1
-              ;;
-          esac
-          sleep 5
-        done
-        echo "Timed out waiting for source Pages deployment." >&2
-        exit 1
-    - name: Record package validation manifest
-      shell: bash
-      run: |
-        set -euo pipefail
-        mkdir -p release-manifests
-        MANIFEST="release-manifests/2026-10-31-v01.txt"
-        if [[ -e "$MANIFEST" ]]; then
-          echo "Release manifest already exists and is immutable: $MANIFEST"
-          exit 0
-        fi
-        {
-          echo "Version: 2026-10-31-v01"
-          echo "Previous version: 2026-10-30-v06"
-          echo "Source commit: $(git rev-parse HEAD)"
-          echo "Full ZIP: Collect-TCG-Dev-2026-10-31-v01-full.zip"
-          echo "Patch ZIP: Collect-TCG-Dev-2026-10-30-v06-to-2026-10-31-v01-patch.zip"
-          echo
-          sha256sum release/*.zip
-        } > "$MANIFEST"
-        git add "$MANIFEST"
-        git commit -m "Development 2026-10-31-v01: record package validation"
-        git push
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run feature regression tests
+        run: npm test
+      - name: Validate repository and CSS
+        run: |
+          npm run check
+          npm run check:css
+      - name: Validate SEO generator syntax and self-test
+        run: |
+          node --check tools/generate-seo.mjs
+          node tools/generate-seo.mjs --self-test
+      - name: Generate Development SEO card pages
+        run: node tools/generate-seo.mjs --dev
+      - name: Validate generated SEO files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s dev/sitemap.xml
+          test -s dev/robots.txt
+          test -s dev/seo-slugs.json
+          test -s dev/owner-card-routes.json
+          grep -q '<urlset' dev/sitemap.xml
+          grep -q 'index,follow,max-image-preview:large' dev/cards/*/index.html
+          if grep -Eq '/cards/[^<]*/?--[0-9a-fA-F-]{20,40}/' dev/sitemap.xml; then
+            echo 'UUID found in public Development card URL' >&2
+            exit 1
+          fi
+          git diff --check
+      - name: Guard SEO workflow against release coupling
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -Eq 'RELEASE_VERSION|PREVIOUS_VERSION|release-manifests|Create Development release packages|Upload Development release packages|release-contracts\.sh' .github/workflows/dev-seo.yml
+          ! grep -Eq 'grep .*\\?v=20[0-9]{2}-' .github/workflows/dev-seo.yml
+      - name: Commit refreshed SEO pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dev/cards dev/sitemap.xml dev/robots.txt dev/seo-slugs.json dev/owner-card-routes.json
+          if git diff --cached --quiet; then
+            echo 'SEO output already current.'
+          else
+            git commit -m 'chore: refresh Development SEO card pages [skip ci]'
+            git push
+          fi
