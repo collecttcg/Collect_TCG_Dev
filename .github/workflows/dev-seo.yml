@@ -65,7 +65,8 @@ jobs:
           test -s dev/seo-slugs.json
           test -s dev/owner-card-routes.json
           grep -q '<urlset' dev/sitemap.xml
-          grep -q 'index,follow,max-image-preview:large' dev/cards/*/index.html
+          grep -q 'Disallow: /' dev/robots.txt
+          grep -q 'noindex,nofollow,noarchive' dev/cards/*/index.html
           if grep -Eq '/cards/[^<]*/?--[0-9a-fA-F-]{20,40}/' dev/sitemap.xml; then
             echo 'UUID found in public Development card URL' >&2
             exit 1
