@@ -36,7 +36,8 @@ export function register(appContext){
       const notice=[
         "[IMPORT DUTIES & TAXES]",
         "Import duties, tariffs, taxes, customs clearance fees, and other import-related charges are not included in the item price or shipping cost and are the buyer's responsibility.",
-        "Please check applicable import charges before purchasing."
+        "Please check applicable import charges before purchasing.",
+        "If delivery cannot be completed because the buyer refuses or fails to pay applicable import duties, taxes, customs fees, or other required import charges, the transaction will be handled in accordance with eBay's applicable policies. Such circumstances may not be covered by eBay Money Back Guarantee."
       ].join("\n");
       const marker="\n[COLLECT TCG MY & SG]";
       return description.includes(marker)
