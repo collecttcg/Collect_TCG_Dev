@@ -20,13 +20,6 @@ export function register(appContext){
       let description=originalEbayListingDescription(card);
       if(!description) return description;
 
-      const specifics=typeof appContext.ebayItemSpecifics==="function"
-        ? String(appContext.ebayItemSpecifics(card)||"").trim()
-        : "";
-      if(specifics){
-        description=description.replace(`\n${specifics}\n`,`\n`);
-      }
-
       const shippingLine="The packing process and sealed package will be video recorded before dispatch to document the condition and packaging and help prevent any problems or disputes during shipping.";
       const trackingLine="Tracking will be provided after dispatch.";
       if(description.includes(trackingLine) && !description.includes(shippingLine)){
