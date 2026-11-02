@@ -9,9 +9,9 @@ export function register(appContext){
 
     const raw=myr*fx;
     if(myr<appContext.FX_NORMAL_CONVERSION_BELOW_MYR){
-      // Normal conversion for lower-priced cards: preserve cents instead of
-      // applying the higher-value $50/SGD50 price-step rounding policy.
-      return String(Math.round((raw+Number.EPSILON)*100)/100);
+      // Normal conversion for lower-priced cards: round the current FX result
+      // to the nearest whole USD/SGD amount without applying the 50-unit step.
+      return String(Math.round(raw));
     }
 
     return roundedConvertedPriceValue(amount,rate);
@@ -25,7 +25,7 @@ export function register(appContext){
     if(!text) return;
     text.textContent=text.textContent.replace(
       "auto prices never round down; round up to 50, or up to the next 100",
-      `below RM ${appContext.FX_NORMAL_CONVERSION_BELOW_MYR}: normal conversion; RM ${appContext.FX_NORMAL_CONVERSION_BELOW_MYR}+: never round down, round up to 50, or up to the next 100`
+      `below RM ${appContext.FX_NORMAL_CONVERSION_BELOW_MYR}: normal conversion rounded to whole number; RM ${appContext.FX_NORMAL_CONVERSION_BELOW_MYR}+: never round down, round up to 50, or up to the next 100`
     );
   }
 
