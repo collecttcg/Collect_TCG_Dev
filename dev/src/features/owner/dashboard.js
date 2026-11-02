@@ -18,7 +18,7 @@ If you have any questions about your order, please feel free to message us anyti
 
 Thank you again for your purchase, and we hope you enjoy your new card!
 
-Collect TCG MY & SG`;
+Collect TCG`;
 
   function unassignedOwnerCards(){
     if(!appContext.isOwnerMode()) return [];
