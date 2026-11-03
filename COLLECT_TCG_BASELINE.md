@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-11-02
+Last reconciled against GitHub: 2026-11-03
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -15,83 +15,85 @@ Last reconciled against GitHub: 2026-11-02
 - Historical release manifests are immutable.
 
 ## Current Development
-Latest validated Development release: `2026-11-02-v03`
-Previous Development: `2026-11-02-v02`
-Development release manifest: `release-manifests/2026-11-02-v03.txt`
-Development v03 package source commit: `a5159ca3eb342605aae9b98791e185e8b23eafd5`
-Development v03 manifest commit: `de3c622a988d9d6c6291a548dd0eb0cba2389836`
+Latest validated Development release: `2026-11-03-v01`
+Previous Development: `2026-11-02-v03`
+Development release manifest: `release-manifests/2026-11-03-v01.txt`
+Development v01 package source commit: `8d7a606445ce485a484235136902efdc4a0d7147`
+Development v01 manifest commit: `e1eb3109a8eab4fade3293214c375649adb38d1b`
 
-### Development package record — 2026-11-02-v03
-- Full ZIP: `Collect-TCG-Dev-2026-11-02-v03-full.zip`
-- Full SHA256: `6c3e6dd6254c178d16efc694262d40f2c9d87f16b1b872dcd11d20e99e79db56`
-- Patch ZIP: `Collect-TCG-Dev-2026-11-02-v02-to-2026-11-02-v03-patch.zip`
-- Patch SHA256: `90f492ce836dba880ad9cdcf5fbb30c9859facfc1873fe36b46ed187d19bbd87`
+### Development package record — 2026-11-03-v01
+- Full ZIP: `Collect-TCG-Dev-2026-11-03-v01-full.zip`
+- Full SHA256: `f9fcde33367e3183e7abf1e8515e1050a9a14a1ad19eb28a49f5a5b9cd659867`
+- Patch ZIP: `Collect-TCG-Dev-2026-11-02-v03-to-2026-11-03-v01-patch.zip`
+- Patch SHA256: `728a8e4fb80cdfdadc702e0fb64ee8d187cd959e0e76c7e1b69a8382e6024e2e`
 
 Current Development behavior:
-- MYR is the primary owner-entered price. For MYR prices below RM400, automatic USD and SGD conversion uses the current FX rate and rounds to the nearest whole USD/SGD amount. At RM400 and above, the established upward pricing rule remains: round up to the next 50, with the clean-hundred rule allowed only upward when within the configured tolerance.
-- The expanded desktop Inventory filter panel has the newer compact typography/control sizing; mobile filter behavior was not intentionally changed by that styling update.
-- eBay Listing Generator keeps the standalone Item Specifics UI removed, but relevant Item Specifics are included inside the generated Description. Import duties/taxes and packing/tracking language remain retained.
-- Buyer Messages end with `Collect TCG` and retain the packing/video-recording and import-charge notice.
-- Inventory Sort remains separate from Filters with retained desktop/mobile responsive toolbar behavior and Most Popular sorting.
-- Owner cards retain `On eBay` status, optional validated eBay URL, Owner-only filter, image badge and quick-menu Mark/Remove actions.
-- Owner quick actions preserve viewport position after availability, eBay-status and lifecycle changes.
-- Development SEO refresh is release-agnostic and retains the intended `noindex,nofollow,noarchive` policy.
-- Owner-only AI Card Scanner, QR Generator, eBay Ban List, generators, private analytics and established Owner Inventory Tools remain retained.
-- SQL/schema/RLS/Edge Function change required by `2026-11-02-v03`: No.
+- Owner Inventory Tools has a dedicated `eBay` category consolidating `eBay Messages`, `eBay Ban List`, and `eBay Listing Status`.
+- eBay Messages contains separate `After Purchase` and `After Shipped` templates. The After Shipped template asks a satisfied buyer to leave positive feedback for the store.
+- The legacy Buyer Messages Activity link is removed from the rendered Inventory Tools navigation by the consolidated eBay tools module.
+- The existing eBay Ban List remains Owner-only and Supabase/RLS protected; its old route redirects into `Inventory Tools > eBay > eBay Ban List`.
+- Existing Listed on eBay status, optional eBay URL, public On eBay badge and Owner `On eBay only` inventory filter remain retained.
+- MYR below RM400 continues current-rate USD/SGD conversion rounded to the nearest whole amount; RM400+ retains the established upward pricing rule.
+- Development SEO refresh remains release-agnostic, was regenerated/validated for this release, and retains `noindex,nofollow,noarchive`.
+- Owner-only AI Card Scanner, QR Generator, generators, private analytics and established Owner Inventory Tools remain retained.
+- SQL/schema/RLS/Edge Function change required by `2026-11-03-v01`: No.
 
-Development v03 validation completed:
+Development v01 validation completed:
 - feature regression tests passed;
 - all Development JavaScript syntax checks passed;
-- low-price FX threshold/whole-number/registration/cache contract passed;
+- eBay tools/messages/ban-list/listing-status contracts passed;
+- retained FX and HEIC contracts passed;
 - repository/CSS/release contracts passed;
-- SEO self-test/generation passed;
+- SEO self-test, generation and output validation passed;
 - full/patch ZIPs created and integrity-checked;
 - immutable manifest/checksums recorded.
 
 Development validation limitations:
-- Interactive desktop/mobile/Safari browser testing was not performed for v03.
+- Interactive desktop/mobile/Safari browser testing was not performed for v01.
 
 ## Current Production
-Latest Production: `2026-11-02-v03`
-Previous Production: `2026-11-02-v02`
-Development promoted from: `2026-11-02-v03` source `a5159ca3eb342605aae9b98791e185e8b23eafd5`
-Production release manifest: `release-manifests/2026-11-02-v03.txt`
-Production v03 package source commit: `b5ac1f8efd14e47f0e91dd9d20f9e93a8d27e419`
-Production v03 manifest commit: `04fb91fbc9dfd38c7834f1c2cf268608e35cabe3`
+Latest Production: `2026-11-03-v01`
+Previous Production: `2026-11-02-v03`
+Development promoted from: `2026-11-03-v01` source `8d7a606445ce485a484235136902efdc4a0d7147`
+Production release manifest: `release-manifests/2026-11-03-v01.txt`
+Production v01 package source commit: `d5b23f2448bf4b8af35d8bff9d58099fe9531b9a`
+Production v01 manifest commit / validated rollback anchor: `c907d0c685ef0e0b6f3b36d82dc997855c44c0ba`
 
-### Production package record — 2026-11-02-v03
-- Full ZIP: `Collect-TCG-Production-2026-11-02-v03-full.zip`
-- Full SHA256: `3b7e6b536437d02c2c6dea0e3f1ff7dd9114691bcf9b653d2f5c7f62188ee2b4`
-- Patch ZIP: `Collect-TCG-Production-2026-11-02-v02-to-2026-11-02-v03-patch.zip`
-- Patch SHA256: `63c92bf164338542f81e64d173bf25456c080e34097ac68378741ba3870da7d9`
+### Production package record — 2026-11-03-v01
+- Full ZIP: `Collect-TCG-Production-2026-11-03-v01-full.zip`
+- Full SHA256: `97f2c93f24aad47f67943fb85f6ad7069bbb4f03c1804a506aa9214b29ad9636`
+- Patch ZIP: `Collect-TCG-Production-2026-11-02-v03-to-2026-11-03-v01-patch.zip`
+- Patch SHA256: `272ffed4f7800cc198028d902a954c0dd3def361e8878a20c6a863eb391bcf08`
 
-### Production 2026-11-02-v03
-Purpose: round normal current-rate USD/SGD conversion for MYR prices below RM400 to the nearest whole amount while retaining the established rounded pricing policy at RM400 and above.
+### Production 2026-11-03-v01
+Purpose: consolidate Owner eBay tools under Inventory Tools > eBay, add a separate After Shipped feedback message, and refresh Production SEO output.
 
 Current Production behavior:
-- Below RM400, automatic USD/SGD conversion uses the current FX rate and rounds to the nearest whole USD/SGD amount instead of applying the 50-unit pricing step.
-- At RM400 and above, converted prices never round down; they retain the upward 50-unit step and upward clean-hundred tolerance rule.
-- eBay Listing Generator retains Item Specifics inside the generated Description while the separate Item Specifics UI remains removed.
-- eBay import duties/taxes refusal wording, Buyer Message `Collect TCG` signature, packing/tracking language, On eBay status/quick actions, HEIC/HEIF, scanner, QR Generator, eBay Ban List, SEO/stable URLs and Owner/public boundaries remain retained.
-- Production SEO remains release-agnostic and validates sitemap/robots/card metadata, stable public URLs, UUID exclusion and Production-only privacy/runtime boundaries.
-- SQL/database/RLS/Edge Function change required by v03: No.
+- Owner Inventory Tools now exposes a dedicated `eBay` category with `eBay Messages`, `eBay Ban List`, and `eBay Listing Status`.
+- eBay Messages contains separate After Purchase and After Shipped copyable templates; After Shipped asks satisfied buyers for positive store feedback.
+- eBay Ban List remains Owner-only and protected by existing Supabase RLS; the former standalone route redirects into the consolidated eBay tools area.
+- Existing eBay listing-status controls and public On eBay behavior are retained.
+- Production-specific QR Generator, scanner endpoint, analytics/privacy boundaries, generators, Contact to Buy, giveaways and stable public URLs remain retained.
+- Production SEO was regenerated and validated with index/follow card metadata, sitemap/robots checks and UUID exclusion.
+- Below RM400 FX whole-number conversion and RM400+ upward pricing behavior remain unchanged.
+- SQL/database/RLS/Edge Function change required by v01: No.
 
-Production v03 validation completed:
+Production v01 validation completed:
 - rollback anchor validated;
 - all Production JavaScript syntax checks passed;
-- Production repository/retained contracts passed;
-- low-price FX threshold/whole-number/registration/cache contract passed;
-- SEO workflow guard and SEO self-test/regeneration passed;
+- Production/retained and consolidated eBay tools contracts passed;
+- SEO workflow guard, SEO self-test, regeneration and output validation passed;
 - full/patch ZIPs created and integrity-checked;
-- immutable `2026-11-02-v03` manifest/checksums recorded;
-- GitHub Pages deployment for the v03 manifest commit completed successfully;
-- release workflow advanced `production-last-known-good` to `04fb91fbc9dfd38c7834f1c2cf268608e35cabe3` after Pages success.
+- immutable `2026-11-03-v01` manifest/checksums recorded;
+- GitHub Pages deployment for the release manifest commit completed successfully;
+- `production-last-known-good` advanced to `c907d0c685ef0e0b6f3b36d82dc997855c44c0ba` after Pages success.
 
 Production validation limitations:
 - Live Production was not manually opened to avoid contaminating Insights.
 - Interactive desktop/mobile/Safari browser testing was not performed.
 
 ## Historical immutable state retained
+- Production `2026-11-02-v03` / Development `2026-11-02-v03` remain immutable and introduced whole-number current-rate FX conversion below RM400.
 - Production `2026-11-02-v02` / Development `2026-11-02-v02` remain immutable and introduced normal current-rate FX conversion below RM400 with two-decimal output before v03 changed that low-price output to whole numbers.
 - Production `2026-11-02-v01` remains immutable and contains the validated eBay import-duty refusal notice and Buyer Message `Collect TCG` signature promotion.
 - Development `2026-11-02-v01` remains immutable as an earlier Development release.
@@ -104,7 +106,7 @@ Production validation limitations:
 - Production `2026-10-25-v03` added the Owner eBay Ban List and `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`, applied and verified on Supabase project `cbzytysxtdcqxuckspye`.
 
 ## Canonical retained behavior
-Preserve public card pages/SEO/stable URLs/SPA history; Related Cards/Trending/discovery attribution; Inventory/Collection/Sold/Reserved/Favorites; Inventory sorting and custom ordering; Owner Mode and Owner-only tools; JPEG/PNG/WebP/HEIC/HEIF listing photos; compact Owner Inventory Tools; Owner categories/Unassigned Owners; inventory value; Buyer Messages; private analytics/Buyer Preview; Owner-only AI Card Scanner; eBay Ban List and listing status; QR Generator; Post Generators/giveaways; Contact to Buy; Malaysia/Singapore messaging; Supabase/RLS and analytics boundaries; Safari-safe layout; Development analytics-test exclusion in Development only.
+Preserve public card pages/SEO/stable URLs/SPA history; Related Cards/Trending/discovery attribution; Inventory/Collection/Sold/Reserved/Favorites; Inventory sorting and custom ordering; Owner Mode and Owner-only tools; JPEG/PNG/WebP/HEIC/HEIF listing photos; compact Owner Inventory Tools; Owner categories/Unassigned Owners; inventory value; eBay Messages; private analytics/Buyer Preview; Owner-only AI Card Scanner; eBay Ban List and listing status; QR Generator; Post Generators/giveaways; Contact to Buy; Malaysia/Singapore messaging; Supabase/RLS and analytics boundaries; Safari-safe layout; Development analytics-test exclusion in Development only.
 
 ## Intentionally removed / excluded
 Do not restore Download Share Preview; V200 inquiry basket; V201 custom Share menu/grid; V202 share-menu experiment; V203/V204 compact-layout experiments; abandoned/superseded scanner/layout experiments; old Beta runtime dependencies; Development-only analytics-test behavior in Production; post-v09 duplicate Inventory Manager/dashboard renderer.
@@ -113,7 +115,7 @@ Do not restore Download Share Preview; V200 inquiry basket; V201 custom Share me
 - Latest relevant Production migration remains `migrations/2026/2026-10-25-v03-EBAY-BANLIST.sql`.
 - `public.ebay_banlist` remains Owner-only through RLS.
 - Card Owner assignment uses existing private `card_owner_private` metadata and authorization.
-- Production `2026-11-02-v03` required no SQL/database/RLS/Edge Function change.
+- Production `2026-11-03-v01` required no SQL/database/RLS/Edge Function change.
 
 ## Release contract
 A release is complete only after applicable implementation, validation, regression review, committed-file inspection, package integrity checks, immutable manifest, Pages deployment and rollback protection are confirmed. **Tested** means executed; **Statically verified** means repository/code inspection only; **Not tested** means unavailable/not performed. Do not live-open Production for routine testing without explicit authorization.
