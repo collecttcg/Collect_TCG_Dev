@@ -27,47 +27,34 @@ jobs:
           set -euo pipefail
           for file in $(find dev/src -name '*.js' -type f); do node --check "$file"; done
           node --check tools/generate-seo.mjs
-      - name: eBay owner tools integration contract
+      - name: eBay navigation cleanup contract
         run: |
           set -euo pipefail
-          grep -Fq "Messages · ban list · listing status" dev/src/features/owner/ebay-messages.js
-          grep -Fq "['messages','eBay Messages']" dev/src/features/owner/ebay-messages.js
+          grep -Fq "#/inventory-tools?mode=ebay&sub=banlist" dev/src/features/owner/ebay-banlist.js
+          ! grep -Fq 'addNavLink(document.getElementById("premiumDesktopMoreMenu")' dev/src/features/owner/ebay-banlist.js
+          ! grep -Fq 'addNavLink(document.getElementById("mainnav")' dev/src/features/owner/ebay-banlist.js
           grep -Fq "['banlist','eBay Ban List']" dev/src/features/owner/ebay-messages.js
+          grep -Fq 'ebay-banlist.js?v=2026-11-03-v01' dev/src/app/register-features.js
+      - name: Retained eBay tools contracts
+        run: |
+          set -euo pipefail
+          grep -Fq "['messages','eBay Messages']" dev/src/features/owner/ebay-messages.js
           grep -Fq "['listing-status','eBay Listing Status']" dev/src/features/owner/ebay-messages.js
           grep -Fq 'positive feedback for our store' dev/src/features/owner/ebay-messages.js
-          grep -Fq "#/inventory-tools?mode=ebay&sub=banlist" dev/src/features/owner/ebay-banlist.js
-          grep -Fq 'ebay-messages.js?v=2026-11-03-v02' dev/src/app/register-features.js
-          grep -Fq 'ebay-banlist.js?v=2026-11-03-v01' dev/src/app/register-features.js
-          grep -Fq 'module62.register(appContext)' dev/src/app/register-features.js
-      - name: eBay listing status integration contract
-        run: |
-          set -euo pipefail
           grep -Fq 'Listed on eBay' dev/src/features/owner/ebay-listing-status.js
           grep -Fq 'On eBay only' dev/src/features/owner/ebay-listing-status.js
-          grep -Fq 'ebay-listing-badge' dev/src/features/owner/ebay-listing-status.js
           grep -Fq 'notesWithEbayListing' dev/src/features/owner/ebay-listing-status.js
-          grep -Fq 'module59.register(appContext)' dev/src/app/register-features.js
-      - name: Low-price FX conversion contract
+      - name: Retained FX and HEIC contracts
         run: |
           set -euo pipefail
           grep -Fq 'FX_NORMAL_CONVERSION_BELOW_MYR=400' dev/src/features/owner/fx-low-price.js
           grep -Fq 'Math.round(raw)' dev/src/features/owner/fx-low-price.js
-          grep -Fq 'fx-low-price.js?v=2026-11-02-v03' dev/src/app/register-features.js
-          grep -Fq 'module61.register(appContext)' dev/src/app/register-features.js
-          grep -Fq 'module61.initialize(appContext,runtime)' dev/src/app/register-features.js
-      - name: HEIC Add/Edit integration contract
-        run: |
-          set -euo pipefail
           grep -Fq 'image/heic-sequence' dev/src/features/media/heic-support.js
           grep -Fq 'image/heif-sequence' dev/src/features/media/heic-support.js
-          grep -Fq 'nativeHeicToJpegBlob' dev/src/features/media/heic-support.js
-          grep -Fq 'heic-to@1.6.7/dist/iife/heic-to.js' dev/src/features/media/heic-support.js
-          grep -Fq 'const converted=await heicTo({blob:file,type:"image/jpeg",quality:0.94})' dev/src/features/media/heic-support.js
           grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
-          grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
-          grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
       - name: SEO self-test and generation
         run: |
+          set -euo pipefail
           node tools/generate-seo.mjs --self-test
           node tools/generate-seo.mjs --dev
           test -s dev/sitemap.xml
@@ -86,9 +73,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-03-v01
-          PREVIOUS_VERSION: 2026-11-02-v03
-          PREVIOUS_COMMIT: a5159ca3eb342605aae9b98791e185e8b23eafd5
+          RELEASE_VERSION: 2026-11-03-v02
+          PREVIOUS_VERSION: 2026-11-03-v01
+          PREVIOUS_COMMIT: 8d7a606445ce485a484235136902efdc4a0d7147
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -105,27 +92,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-03-v01-packages
+          name: Collect-TCG-Dev-2026-11-03-v02-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-03-v01-full.zip
-            release/Collect-TCG-Dev-2026-11-02-v03-to-2026-11-03-v01-patch.zip
+            release/Collect-TCG-Dev-2026-11-03-v02-full.zip
+            release/Collect-TCG-Dev-2026-11-03-v01-to-2026-11-03-v02-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-03-v01.txt'
+          MANIFEST='release-manifests/2026-11-03-v02.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-03-v01'
-            echo 'Previous version: 2026-11-02-v03'
+            echo 'Version: 2026-11-03-v02'
+            echo 'Previous version: 2026-11-03-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: consolidate Owner eBay tools under Inventory Tools > eBay, add separate After Shipped feedback message, and refresh Development SEO output.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-03-v01-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-02-v03-to-2026-11-03-v01-patch.zip'
+            echo 'Purpose: remove the duplicate eBay Ban List entry from More/main navigation while retaining Inventory Tools > eBay access.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-03-v02-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-03-v01-to-2026-11-03-v02-patch.zip'
             echo 'SQL required: No'
-            echo 'Validation: feature tests; all Development JavaScript syntax; eBay tools/messages/ban-list/listing-status contracts; retained FX and HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
+            echo 'Validation: feature tests; all Development JavaScript syntax; eBay navigation cleanup and retained eBay tools contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
             cat release/checksums.txt
@@ -133,5 +120,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-03-v01: record package validation'
+          git commit -m 'Development 2026-11-03-v02: record package validation'
           git push
