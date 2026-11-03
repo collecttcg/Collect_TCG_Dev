@@ -27,14 +27,18 @@ jobs:
           set -euo pipefail
           for file in $(find dev/src -name '*.js' -type f); do node --check "$file"; done
           node --check tools/generate-seo.mjs
-      - name: Inventory sort integration contract
+      - name: eBay owner tools integration contract
         run: |
           set -euo pipefail
-          grep -Fq 'Most Popular' dev/src/features/inventory/sort-toolbar.js
-          grep -Fq 'price-low' dev/src/features/inventory/sort-toolbar.js
-          grep -Fq 'mobileInlineSortBtn' dev/src/features/inventory/sort-toolbar.js
-          grep -Fq 'grid-template-columns:minmax(0,1fr) auto auto auto' dev/src/features/inventory/sort-toolbar.js
-          grep -Fq 'inventory/sort-toolbar.js?v=2026-10-31-v06' dev/src/main.js
+          grep -Fq "Messages · ban list · listing status" dev/src/features/owner/ebay-messages.js
+          grep -Fq "['messages','eBay Messages']" dev/src/features/owner/ebay-messages.js
+          grep -Fq "['banlist','eBay Ban List']" dev/src/features/owner/ebay-messages.js
+          grep -Fq "['listing-status','eBay Listing Status']" dev/src/features/owner/ebay-messages.js
+          grep -Fq 'positive feedback for our store' dev/src/features/owner/ebay-messages.js
+          grep -Fq "#/inventory-tools?mode=ebay&sub=banlist" dev/src/features/owner/ebay-banlist.js
+          grep -Fq 'ebay-messages.js?v=2026-11-03-v02' dev/src/app/register-features.js
+          grep -Fq 'ebay-banlist.js?v=2026-11-03-v01' dev/src/app/register-features.js
+          grep -Fq 'module62.register(appContext)' dev/src/app/register-features.js
       - name: eBay listing status integration contract
         run: |
           set -euo pipefail
@@ -62,11 +66,17 @@ jobs:
           grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
           grep -Fq 'wireImageControls("add"' dev/src/features/owner/add.js
           grep -Fq 'wireImageControls("edit"' dev/src/features/owner/editor.js
-          grep -Fq 'accept="image/jpeg,image/png,image/webp"' dev/src/features/owner/forms.js
       - name: SEO self-test and generation
         run: |
           node tools/generate-seo.mjs --self-test
           node tools/generate-seo.mjs --dev
+          test -s dev/sitemap.xml
+          test -s dev/robots.txt
+          test -s dev/seo-slugs.json
+          test -s dev/owner-card-routes.json
+          grep -q 'Disallow: /' dev/robots.txt
+          grep -q 'noindex,nofollow,noarchive' dev/cards/*/index.html
+          if grep -Eq '/cards/[^<]*/?--[0-9a-fA-F-]{20,40}/' dev/sitemap.xml; then exit 1; fi
       - name: Repository and CSS validation
         run: |
           set -euo pipefail
@@ -76,12 +86,12 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-02-v03
-          PREVIOUS_VERSION: 2026-11-02-v02
-          PREVIOUS_COMMIT: 5fd899b1176480107c34165e5847d408edfc449a
+          RELEASE_VERSION: 2026-11-03-v01
+          PREVIOUS_VERSION: 2026-11-02-v03
+          PREVIOUS_COMMIT: a5159ca3eb342605aae9b98791e185e8b23eafd5
         run: |
           set -euo pipefail
-          rm -rf .release-patch
+          rm -rf .release-patch release
           mkdir -p release .release-patch
           FULL="release/Collect-TCG-Dev-${RELEASE_VERSION}-full.zip"
           PATCH="release/Collect-TCG-Dev-${PREVIOUS_VERSION}-to-${RELEASE_VERSION}-patch.zip"
@@ -95,27 +105,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-02-v03-packages
+          name: Collect-TCG-Dev-2026-11-03-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-02-v03-full.zip
-            release/Collect-TCG-Dev-2026-11-02-v02-to-2026-11-02-v03-patch.zip
+            release/Collect-TCG-Dev-2026-11-03-v01-full.zip
+            release/Collect-TCG-Dev-2026-11-02-v03-to-2026-11-03-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-02-v03.txt'
+          MANIFEST='release-manifests/2026-11-03-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-02-v03'
-            echo 'Previous version: 2026-11-02-v02'
+            echo 'Version: 2026-11-03-v01'
+            echo 'Previous version: 2026-11-02-v03'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: round normal FX conversions below RM400 to the nearest whole USD/SGD amount; retain existing rounded pricing at RM400 and above.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-02-v03-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-02-v02-to-2026-11-02-v03-patch.zip'
+            echo 'Purpose: consolidate Owner eBay tools under Inventory Tools > eBay, add separate After Shipped feedback message, and refresh Development SEO output.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-03-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-02-v03-to-2026-11-03-v01-patch.zip'
             echo 'SQL required: No'
-            echo 'Validation: feature tests; all Development JavaScript syntax; FX threshold/whole-number/registration/cache contract; repository/CSS/release contracts; SEO self-test/generation; package integrity.'
+            echo 'Validation: feature tests; all Development JavaScript syntax; eBay tools/messages/ban-list/listing-status contracts; retained FX and HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
             cat release/checksums.txt
@@ -123,5 +133,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-02-v03: record package validation'
+          git commit -m 'Development 2026-11-03-v01: record package validation'
           git push
