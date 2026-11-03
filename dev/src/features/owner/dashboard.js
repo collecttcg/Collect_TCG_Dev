@@ -20,6 +20,18 @@ Thank you again for your purchase, and we hope you enjoy your new card!
 
 Collect TCG`;
 
+  const EBAY_AFTER_SHIPPED_MESSAGE=`Hello,
+
+Your order has been shipped and the tracking information has been uploaded to eBay.
+
+Thank you again for purchasing from Collect TCG. We hope your order arrives safely and that you enjoy your new addition to the collection!
+
+Once your order arrives, if you're happy with your purchase, we would really appreciate it if you could leave positive feedback for our store. Your feedback really helps support us.
+
+Thank you for your support!
+
+Collect TCG`;
+
   function unassignedOwnerCards(){
     if(!appContext.isOwnerMode()) return [];
     return (appContext.cards||[]).filter(card=>
@@ -181,7 +193,8 @@ Collect TCG`;
 
   function renderBuyerMessages(){
     if(!appContext.requireOwner("open Owner buyer messages")) return;
-    const message=appContext.escapeHtml(EBAY_PURCHASE_MESSAGE);
+    const purchaseMessage=appContext.escapeHtml(EBAY_PURCHASE_MESSAGE);
+    const afterShippedMessage=appContext.escapeHtml(EBAY_AFTER_SHIPPED_MESSAGE);
     appContext.view.innerHTML=`
       <div class="inventory-tools-page">
         <div class="eyebrow">Owner Tools</div>
@@ -202,29 +215,46 @@ Collect TCG`;
             </div>
             <button class="btn-primary" id="ownerCopyBuyerMessage" type="button" style="flex:0 0 auto;min-width:140px;">Copy Message</button>
           </div>
-          <textarea id="ownerBuyerMessageText" readonly style="box-sizing:border-box;display:block;width:100%;min-height:390px;resize:vertical;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;">${message}</textarea>
+          <textarea id="ownerBuyerMessageText" readonly style="box-sizing:border-box;display:block;width:100%;min-height:390px;resize:vertical;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;">${purchaseMessage}</textarea>
+        </section>
+        <section class="card" style="box-sizing:border-box;width:min(100%,920px);margin-top:22px;padding:24px;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:18px;">
+            <div style="min-width:0;flex:1 1 420px;">
+              <div class="eyebrow">eBay</div>
+              <h3 style="margin:6px 0 6px;">After Shipped</h3>
+              <p class="muted" style="margin:0;">Send after the order has shipped and tracking has been uploaded.</p>
+            </div>
+            <button class="btn-primary" id="ownerCopyAfterShippedMessage" type="button" style="flex:0 0 auto;min-width:140px;">Copy Message</button>
+          </div>
+          <textarea id="ownerAfterShippedMessageText" readonly style="box-sizing:border-box;display:block;width:100%;min-height:330px;resize:vertical;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:inherit;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;">${afterShippedMessage}</textarea>
         </section>
       </div>`;
-    const button=appContext.$("ownerCopyBuyerMessage");
-    const textarea=appContext.$("ownerBuyerMessageText");
-    if(button && textarea) button.onclick=async()=>{
-      try{
-        if(navigator.clipboard?.writeText){
-          await navigator.clipboard.writeText(EBAY_PURCHASE_MESSAGE);
-        }else{
+
+    function wireCopyButton(buttonId,textareaId,message){
+      const button=appContext.$(buttonId);
+      const textarea=appContext.$(textareaId);
+      if(!button || !textarea) return;
+      button.onclick=async()=>{
+        try{
+          if(navigator.clipboard?.writeText){
+            await navigator.clipboard.writeText(message);
+          }else{
+            textarea.focus();
+            textarea.select();
+            if(!document.execCommand('copy')) throw new Error('Copy command failed');
+          }
+          button.textContent='Copied!';
+          setTimeout(()=>{if(button) button.textContent='Copy Message';},1600);
+        }catch(error){
+          console.error('Buyer message copy failed:',error);
           textarea.focus();
           textarea.select();
-          if(!document.execCommand('copy')) throw new Error('Copy command failed');
+          button.textContent='Select & Copy';
         }
-        button.textContent='Copied!';
-        setTimeout(()=>{if(button) button.textContent='Copy Message';},1600);
-      }catch(error){
-        console.error('Buyer message copy failed:',error);
-        textarea.focus();
-        textarea.select();
-        button.textContent='Select & Copy';
-      }
-    };
+      };
+    }
+    wireCopyButton('ownerCopyBuyerMessage','ownerBuyerMessageText',EBAY_PURCHASE_MESSAGE);
+    wireCopyButton('ownerCopyAfterShippedMessage','ownerAfterShippedMessageText',EBAY_AFTER_SHIPPED_MESSAGE);
   }
 
   function renderOwnerInventoryTools(){
