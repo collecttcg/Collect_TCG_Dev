@@ -941,11 +941,21 @@ async function captureSaleConversionSnapshot(card){
     if(!card || !appContext.isOwnerMode()) return false;
 
     try{
-      const createdAt=new Date(card.created_at||"");
-      const start=Number.isNaN(createdAt.getTime())
-        ? new Date("2000-01-01T00:00:00")
-        : createdAt;
       const end=new Date();
+      // Card objects may omit created_at even when the database row has it.
+      // Resolve it before capturing a sale; never invent a January 2000 date.
+      let createdAt=new Date(card.created_at||"");
+      if(!Number.isFinite(createdAt.getTime()) || createdAt>end){
+        const {data,error}=await appContext.supabaseClient
+          .from("cards")
+          .select("created_at")
+          .eq("id",card.id)
+          .maybeSingle();
+        if(error) console.warn("Could not retrieve card creation date for sale snapshot:",error);
+        createdAt=new Date(data?.created_at||"");
+      }
+      const validCreatedAt=Number.isFinite(createdAt.getTime()) && createdAt<=end;
+      const start=validCreatedAt ? createdAt : end;
 
       const [viewRows,engagementResult]=await Promise.all([
         appContext.fetchInsights(start,end,{silent:true}),
