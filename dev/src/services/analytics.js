@@ -971,8 +971,8 @@ async function captureSaleConversionSnapshot(card){
       ) || {};
 
       const createdMs=start.getTime();
-      const daysListed=Number.isFinite(createdMs)
-        ? Math.max(0,Math.floor((Date.now()-createdMs)/(24*60*60*1000)))
+      const daysListed=validCreatedAt
+        ? Math.max(0,Math.floor((end.getTime()-createdMs)/(24*60*60*1000)))
         : null;
 
       const contactIntent=appContext.insightContactMetrics(engagement);
