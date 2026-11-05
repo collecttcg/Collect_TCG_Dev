@@ -65,7 +65,7 @@ grep -q 'preloadCardDetailsMedia' dev/src/features/cards/tiles.js
 grep -q 'Saved without contact' dev/src/features/owner/insights-dashboard.js
 grep -q 'const directCardEntry=' dev/src/app/startup.js
 grep -q 'Promise.allSettled' dev/src/app/startup.js
-grep -q 'analytics.js?v=2026-10-05-v01' dev/src/app/register-features.js
+grep -q 'analytics.js?v=2026-11-04-v01' dev/src/app/register-features.js
 grep -q 'catalogue.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'tiles.js?v=2026-11-01-v01' dev/src/app/register-features.js
 grep -q 'insights-dashboard.js?v=2026-09-29-v09' dev/src/app/register-features.js
@@ -182,7 +182,7 @@ grep -Fq 'get("analytics_test")' dev/src/services/analytics.js
 grep -Fq 'new Set(["chatgpt","github","openai","automation"])' dev/src/services/analytics.js
 grep -Fq 'appContext.isDevelopmentAnalyticsTestSession()' dev/src/services/analytics.js
 grep -Fq '!appContext.isDevelopmentAnalyticsTestSession()' dev/src/app/startup.js
-grep -q 'analytics.js?v=2026-10-05-v01' dev/src/app/register-features.js
+grep -q 'analytics.js?v=2026-11-04-v01' dev/src/app/register-features.js
 grep -q 'startup.js?v=2026-09-29-v09' dev/src/app/register-features.js
 
 echo "== Validate buyer privacy guards =="
