@@ -61,6 +61,20 @@ jobs:
           grep -Fq 'image/heic-sequence' dev/src/features/media/heic-support.js
           grep -Fq 'image/heif-sequence' dev/src/features/media/heic-support.js
           grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
+      - name: Card-list official eBay footer regression contract
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const source=fs.readFileSync('dev/src/features/social/posts-card-list.js','utf8');
+          const full=source.split('function buildFbCardListPost(')[1].split('function buildFbCardDropPost(')[0];
+          const drop=source.split('function buildFbCardDropPost(')[1].split('function balancedCardDropCards(')[0];
+          for(const section of [full,drop]) assert.equal((section.match(/\.\.\.officialEbayAccountLines\(\)/g)||[]).length,1);
+          assert.equal((source.match(/View our seller history and feedback/g)||[]).length,0);
+          for(let i=1;i<=5;i++) assert.match(source,new RegExp('COLLECT_TCG_'+i+': https://www\\.ebay\\.'));
+          assert.match(fs.readFileSync('dev/src/features/social/posts.js','utf8'),/posts-card-list\.js\?v=2026-11-05-v04/);
+          NODE
       - name: SEO self-test and generation
         run: |
           set -euo pipefail
@@ -82,9 +96,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-05-v01
-          PREVIOUS_VERSION: 2026-11-03-v02
-          PREVIOUS_COMMIT: df39a93b2138732c22aa9f674f870df6fd75f76e
+          RELEASE_VERSION: 2026-11-05-v02
+          PREVIOUS_VERSION: 2026-11-05-v01
+          PREVIOUS_COMMIT: 26f3ce630237a2cecc04c840f212b7e7370163b4
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -101,25 +115,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-05-v01-packages
+          name: Collect-TCG-Dev-2026-11-05-v02-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-05-v01-full.zip
-            release/Collect-TCG-Dev-2026-11-03-v02-to-2026-11-05-v01-patch.zip
+            release/Collect-TCG-Dev-2026-11-05-v02-full.zip
+            release/Collect-TCG-Dev-2026-11-05-v01-to-2026-11-05-v02-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-05-v01.txt'
+          MANIFEST='release-manifests/2026-11-05-v02.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-05-v01'
-            echo 'Previous version: 2026-11-03-v02'
+            echo 'Version: 2026-11-05-v02'
+            echo 'Previous version: 2026-11-05-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: add optional eBay listing URL to Facebook single-card posts and correct sale snapshot listing-date fallback.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-05-v01-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-03-v02-to-2026-11-05-v01-patch.zip'
+            echo 'Purpose: include five official Contact-page eBay accounts once in both Facebook Full Card List and Short Drop posts.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-05-v02-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-05-v01-to-2026-11-05-v02-patch.zip'
             echo 'SQL required: No'
             echo 'Validation: feature tests; all Development JavaScript syntax; eBay navigation cleanup and retained eBay tools contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
@@ -129,5 +143,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-05-v01: record package validation'
+          git commit -m 'Development 2026-11-05-v02: record package validation'
           git push
