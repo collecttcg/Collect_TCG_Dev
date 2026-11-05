@@ -135,7 +135,7 @@ function productJsonLd(card,url){
 }
 
 function metadataBlock(card,url){
-  const titleParts=[card?.year,card?.name,card?.card_code,gradeLabel(card)]
+  const titleParts=[card?.year,card?.game,card?.series,card?.name,card?.card_code,gradeLabel(card)]
     .map(v=>String(v||'').trim()).filter(Boolean);
   const title=`${titleParts.join(' · ')||'Trading Card'} | Collect TCG MY & SG`.slice(0,180);
   const description=descriptionFor(card);
@@ -413,6 +413,7 @@ function runSelfTest(){
   };
   const slug=cardSlug(card);
   if(!slug.includes('luffy-and-nami')||!slug.includes('psa-8')) throw new Error('Slug self-test failed');
+  if(!metadataBlock(card,'https://example.com/card/').title.includes('Hyper Battle')) throw new Error('SEO title must distinguish card series');
   const rendered=renderCardPage(
     '<!doctype html><html><head><title>X</title></head><body><div id="app"></div></body></html>',
     card,slug
