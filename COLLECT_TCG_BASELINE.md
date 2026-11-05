@@ -17,19 +17,23 @@ Last reconciled against GitHub: 2026-11-05
 ## Current reconciled state — 2026-11-05
 
 ### Latest validated releases
-- Development: `2026-11-03-v02`; previous `2026-11-03-v01`; manifest `release-manifests/2026-11-03-v02.txt`; package source `df39a93b2138732c22aa9f674f870df6fd75f76e`.
-- Development v02 full ZIP: `Collect-TCG-Dev-2026-11-03-v02-full.zip` (SHA256 `950a31875a30d8d0d373cc171ef730dc37d6e57fca84c5a28847eb83f9d9c5d3`).
-- Development v02 patch ZIP: `Collect-TCG-Dev-2026-11-03-v01-to-2026-11-03-v02-patch.zip` (SHA256 `38ad762832ef2a5504a7e8b12c26de719d300b6d8f349d3a588a672c962a3d4c`).
-- Production: `2026-11-03-v02`; previous `2026-11-03-v01`; manifest `release-manifests/2026-11-03-v02.txt`; source `5004b407617369d4dcfef88a2d0890ac9661f16f`; manifest/rollback commit `2bdbfee616938d65b35303d38402feff2d05b377`.
-- Production v02 full ZIP: `Collect-TCG-Production-2026-11-03-v02-full.zip` (SHA256 `872dc22886389b20a28c45fbaf566dfd31768bba2aa74e385caab0e8d55da07d`).
-- Production v02 patch ZIP: `Collect-TCG-Production-2026-11-03-v01-to-2026-11-03-v02-patch.zip` (SHA256 `afae239c9e3b943fd28bb0837f7d0ca5d27abd97e77ec003b182a001137f33de`).
-- v02 removed the duplicate eBay Ban List link from More/main navigation while retaining Inventory Tools > eBay > eBay Ban List. No SQL. Both v02 release workflows and Production Pages deployment succeeded; interactive desktop/mobile/Safari testing was not performed.
+- Development: `2026-11-05-v01`; previous `2026-11-03-v02`; manifest `release-manifests/2026-11-05-v01.txt`; package source `9f8312141068c2e7f33b85b8b341863255ff71ae`.
+- Development full ZIP: `Collect-TCG-Dev-2026-11-05-v01-full.zip` (SHA256 `6d00cb3c09bf04efea15d45a705b807ed07f6a8c75e7b2de4c2ecc3971dafe24`).
+- Development patch ZIP: `Collect-TCG-Dev-2026-11-03-v02-to-2026-11-05-v01-patch.zip` (SHA256 `f1c31d9090c662e3e1b5f60742c4e912a0ceaba025b71cc238662a413b694eec`).
+- Production: `2026-11-05-v01`; previous `2026-11-03-v02`; manifest `release-manifests/2026-11-05-v01.txt`; package source `838e0fcdba04101c2dca4558d21de722c6a6b4e6`; manifest/rollback commit `d7696ef2988ffd41bc6a20e1345ff46736fc7aeb`.
+- Production full ZIP: `Collect-TCG-Production-2026-11-05-v01-full.zip` (SHA256 `37849152060388021a885d2530225edc316cc6a2ae8f83c6855f8540cc1b65ad`).
+- Production patch ZIP: `Collect-TCG-Production-2026-11-03-v02-to-2026-11-05-v01-patch.zip` (SHA256 `20e1b0d970ad47a9b67b958f22cc18cd8914bdcc4668a2cf51bec17f02b4b878`).
+- Development v01 release validation, packages, immutable manifest and GitHub Pages deployment succeeded. Development SEO refresh also succeeded after updating the baseline checker and legacy analytics cache-version assertions.
+- Production v01 independently passed the Production release workflow; packages and immutable manifest were recorded; GitHub Pages deployment succeeded; `production-last-known-good` advanced to `d7696ef2988ffd41bc6a20e1345ff46736fc7aeb`.
+- No new SQL/Edge Function/RLS migration was required. Interactive desktop/mobile/Safari browser testing and live Production opening were not performed.
 
-### Unreleased Development changes / promotion gate
-- Development commit `0cae8e53a079fb9ffa777ef8a110fd63f51da4d5`: optional saved eBay listing URL appears below the Collect TCG card URL in single-card Facebook sales posts; registered in `dev/src/app/register-features.js` by commit `b39b883168554add605bb3192bcef6ee4d1d410b`.
-- Development commits `3acfcee3e07c316ece793544b0cdf5022b116c08`, `4444acf5930533bd36fbd847e03011a6be25b430`, `3213988c40426db5ea279715f86b196667219aff`: resolve actual card creation timestamp for sale snapshots, record unknown instead of fabricated 2000 date, and update analytics cache reference.
-- Development release workflow updated in commit `35ca402a33e321cf2af77fc3961b1f6a7660a221` to attempt validation/packaging of `2026-11-05-v01`; **not a confirmed release** until successful workflow, packages, manifest, and deployment are verified. Do not promote this work to Production without passing the release gate.
-- No new schema/RLS migration required by these frontend changes. No interactive browser/Safari testing has been confirmed.
+### Promoted Development changes
+- Facebook single-card posts include an optional saved eBay listing URL after the Collect TCG card URL.
+- Sale conversion snapshots resolve the actual card creation date from the database when omitted from the local card object. Unknown dates are recorded as unknown rather than inventing a January 2000 listing date.
+- SEO card titles now include game and series to distinguish similarly named cards.
+- Preserve Production-specific QR Generator, scanner endpoint, analytics/privacy boundaries and stable SEO URLs. Keep Development analytics-test exclusions out of Production.
+- Development's `tools/check.mjs` and `tools/release-contracts.sh` were corrected to match the current baseline format and analytics cache version; Production's `tools/check-production.mjs` baseline validation was updated accordingly.
+- All prior `2026-11-03-v02` release history remains immutable.
 
 ### Shared Supabase data correction
 - On 2026-11-04, the existing sale snapshot `card_sale_snapshots.id=43` for LUFFY (`card_id=c21edd25-757c-4f5c-aa5f-0e909c3e0ca4`) was explicitly approved and updated from `days_listed=9803` to `34` in the shared database; readback confirmed 47 snapshots, average 10 days, and no snapshots over 1000 days. This data fix affects both environments and does not imply a Production frontend deployment.
