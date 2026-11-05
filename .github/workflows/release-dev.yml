@@ -35,6 +35,15 @@ jobs:
           ! grep -Fq 'addNavLink(document.getElementById("mainnav")' dev/src/features/owner/ebay-banlist.js
           grep -Fq "['banlist','eBay Ban List']" dev/src/features/owner/ebay-messages.js
           grep -Fq 'ebay-banlist.js?v=2026-11-03-v01' dev/src/app/register-features.js
+      - name: Facebook link and snapshot date contracts
+        run: |
+          set -euo pipefail
+          grep -Fq 'posts-ebay-link.js?v=2026-11-03-v01' dev/src/app/register-features.js
+          grep -Fq 'analytics.js?v=2026-11-04-v01' dev/src/app/register-features.js
+          grep -Fq '🛒 eBay Listing:' dev/src/features/social/posts-ebay-link.js
+          grep -Fq '.select("created_at")' dev/src/services/analytics.js
+          grep -Fq 'const daysListed=validCreatedAt' dev/src/services/analytics.js
+          ! sed -n '/async function captureSaleConversionSnapshot(card)/,/function getAnalyticsSessionId()/p' dev/src/services/analytics.js | grep -Fq '2000-01-01'
       - name: Retained eBay tools contracts
         run: |
           set -euo pipefail
@@ -73,9 +82,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-03-v02
-          PREVIOUS_VERSION: 2026-11-03-v01
-          PREVIOUS_COMMIT: 8d7a606445ce485a484235136902efdc4a0d7147
+          RELEASE_VERSION: 2026-11-05-v01
+          PREVIOUS_VERSION: 2026-11-03-v02
+          PREVIOUS_COMMIT: df39a93b2138732c22aa9f674f870df6fd75f76e
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -92,25 +101,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-03-v02-packages
+          name: Collect-TCG-Dev-2026-11-05-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-03-v02-full.zip
-            release/Collect-TCG-Dev-2026-11-03-v01-to-2026-11-03-v02-patch.zip
+            release/Collect-TCG-Dev-2026-11-05-v01-full.zip
+            release/Collect-TCG-Dev-2026-11-03-v02-to-2026-11-05-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-03-v02.txt'
+          MANIFEST='release-manifests/2026-11-05-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-03-v02'
+            echo 'Version: 2026-11-05-v01'
             echo 'Previous version: 2026-11-03-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: remove the duplicate eBay Ban List entry from More/main navigation while retaining Inventory Tools > eBay access.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-03-v02-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-03-v01-to-2026-11-03-v02-patch.zip'
+            echo 'Purpose: add optional eBay listing URL to Facebook single-card posts and correct sale snapshot listing-date fallback.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-05-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-03-v02-to-2026-11-05-v01-patch.zip'
             echo 'SQL required: No'
             echo 'Validation: feature tests; all Development JavaScript syntax; eBay navigation cleanup and retained eBay tools contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
@@ -120,5 +129,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-03-v02: record package validation'
+          git commit -m 'Development 2026-11-05-v01: record package validation'
           git push
