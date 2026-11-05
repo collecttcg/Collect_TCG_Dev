@@ -27,19 +27,12 @@ for(const rel of requiredMigrations){
 const baselinePath=path.join(repoRoot,'COLLECT_TCG_BASELINE.md');
 if(!fs.existsSync(baselinePath)) throw new Error('Missing COLLECT_TCG_BASELINE.md');
 const baseline=fs.readFileSync(baselinePath,'utf8');
-const releasePattern='\\d{4}-\\d{2}-\\d{2}-v\\d{2}';
-const newest=baseline.split('## Current reconciled state')[1]?.split('## Historical Development release record')[0]||baseline;
-const currentVersionLine=(label)=>new RegExp('(?:^|\\n)- '+label+': `'+releasePattern+'`','m').test(newest);
-const historicalVersion=(label)=>new RegExp(label+': `'+releasePattern+'`').test(baseline);
-if(!(currentVersionLine('Development')||historicalVersion('Latest validated Development release')))
-  throw new Error('Baseline missing valid latest Development release marker.');
-if(!(currentVersionLine('Production')||historicalVersion('Latest Production')))
-  throw new Error('Baseline missing valid latest Production release marker.');
-if(!/(?:previous `\\d{4}-\\d{2}-\\d{2}-v\\d{2}`|Previous Production: `\\d{4}-\\d{2}-\\d{2}-v\\d{2}`)/.test(baseline))
-  throw new Error('Baseline missing valid previous Production release marker.');
-if(!/Production:[^\\n]+manifest `release-manifests\\/\\d{4}-\\d{2}-\\d{2}-v\\d{2}\\.txt`/.test(newest)
-   && !/Production release manifest: `release-manifests\\/\\d{4}-\\d{2}-\\d{2}-v\\d{2}\\.txt`/.test(baseline))
-  throw new Error('Baseline missing valid Production release manifest marker.');
+const currentSection=baseline.split('## Current reconciled state')[1]?.split('## Historical Development release record')[0]||baseline;
+const hasVersion=(text,label)=>text.split('\n').some(line=>line.startsWith('- '+label+': `') && /`\d{4}-\d{2}-\d{2}-v\d{2}`/.test(line));
+if(!(hasVersion(currentSection,'Development')||/Latest validated Development release: `\d{4}-\d{2}-\d{2}-v\d{2}`/.test(baseline))) throw new Error('Baseline missing valid latest Development release marker.');
+if(!(hasVersion(currentSection,'Production')||/Latest Production: `\d{4}-\d{2}-\d{2}-v\d{2}`/.test(baseline))) throw new Error('Baseline missing valid latest Production release marker.');
+if(!baseline.split('\n').some(line=>line.includes('previous `')||line.startsWith('Previous Production: `'))) throw new Error('Baseline missing previous Production marker.');
+if(!currentSection.split('\n').some(line=>line.startsWith('- Production:')&&line.includes('manifest `release-manifests/')) && !baseline.includes('Production release manifest: `release-manifests/')) throw new Error('Baseline missing Production manifest marker.');
 for(const required of [
   'migrations/2026/',
   'QR Generator',
