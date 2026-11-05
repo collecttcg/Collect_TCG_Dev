@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-11-03
+Last reconciled against GitHub: 2026-11-05
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -14,8 +14,28 @@ Last reconciled against GitHub: 2026-11-03
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
-## Current Development
-Latest validated Development release: `2026-11-03-v01`
+## Current reconciled state — 2026-11-05
+
+### Latest validated releases
+- Development: `2026-11-03-v02`; previous `2026-11-03-v01`; manifest `release-manifests/2026-11-03-v02.txt`; package source `df39a93b2138732c22aa9f674f870df6fd75f76e`.
+- Development v02 full ZIP: `Collect-TCG-Dev-2026-11-03-v02-full.zip` (SHA256 `950a31875a30d8d0d373cc171ef730dc37d6e57fca84c5a28847eb83f9d9c5d3`).
+- Development v02 patch ZIP: `Collect-TCG-Dev-2026-11-03-v01-to-2026-11-03-v02-patch.zip` (SHA256 `38ad762832ef2a5504a7e8b12c26de719d300b6d8f349d3a588a672c962a3d4c`).
+- Production: `2026-11-03-v02`; previous `2026-11-03-v01`; manifest `release-manifests/2026-11-03-v02.txt`; source `5004b407617369d4dcfef88a2d0890ac9661f16f`; manifest/rollback commit `2bdbfee616938d65b35303d38402feff2d05b377`.
+- Production v02 full ZIP: `Collect-TCG-Production-2026-11-03-v02-full.zip` (SHA256 `872dc22886389b20a28c45fbaf566dfd31768bba2aa74e385caab0e8d55da07d`).
+- Production v02 patch ZIP: `Collect-TCG-Production-2026-11-03-v01-to-2026-11-03-v02-patch.zip` (SHA256 `afae239c9e3b943fd28bb0837f7d0ca5d27abd97e77ec003b182a001137f33de`).
+- v02 removed the duplicate eBay Ban List link from More/main navigation while retaining Inventory Tools > eBay > eBay Ban List. No SQL. Both v02 release workflows and Production Pages deployment succeeded; interactive desktop/mobile/Safari testing was not performed.
+
+### Unreleased Development changes / promotion gate
+- Development commit `0cae8e53a079fb9ffa777ef8a110fd63f51da4d5`: optional saved eBay listing URL appears below the Collect TCG card URL in single-card Facebook sales posts; registered in `dev/src/app/register-features.js` by commit `b39b883168554add605bb3192bcef6ee4d1d410b`.
+- Development commits `3acfcee3e07c316ece793544b0cdf5022b116c08`, `4444acf5930533bd36fbd847e03011a6be25b430`, `3213988c40426db5ea279715f86b196667219aff`: resolve actual card creation timestamp for sale snapshots, record unknown instead of fabricated 2000 date, and update analytics cache reference.
+- Development release workflow updated in commit `35ca402a33e321cf2af77fc3961b1f6a7660a221` to attempt validation/packaging of `2026-11-05-v01`; **not a confirmed release** until successful workflow, packages, manifest, and deployment are verified. Do not promote this work to Production without passing the release gate.
+- No new schema/RLS migration required by these frontend changes. No interactive browser/Safari testing has been confirmed.
+
+### Shared Supabase data correction
+- On 2026-11-04, the existing sale snapshot `card_sale_snapshots.id=43` for LUFFY (`card_id=c21edd25-757c-4f5c-aa5f-0e909c3e0ca4`) was explicitly approved and updated from `days_listed=9803` to `34` in the shared database; readback confirmed 47 snapshots, average 10 days, and no snapshots over 1000 days. This data fix affects both environments and does not imply a Production frontend deployment.
+
+## Historical Development release record (2026-11-03-v01)
+Development release at time of this record: `2026-11-03-v01`
 Previous Development: `2026-11-02-v03`
 Development release manifest: `release-manifests/2026-11-03-v01.txt`
 Development v01 package source commit: `8d7a606445ce485a484235136902efdc4a0d7147`
@@ -51,8 +71,8 @@ Development v01 validation completed:
 Development validation limitations:
 - Interactive desktop/mobile/Safari browser testing was not performed for v01.
 
-## Current Production
-Latest Production: `2026-11-03-v01`
+## Historical Production release record (2026-11-03-v01)
+Production release at time of this record: `2026-11-03-v01`
 Previous Production: `2026-11-02-v03`
 Development promoted from: `2026-11-03-v01` source `8d7a606445ce485a484235136902efdc4a0d7147`
 Production release manifest: `release-manifests/2026-11-03-v01.txt`
