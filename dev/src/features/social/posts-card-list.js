@@ -256,7 +256,7 @@ function cardListGameTitle(cards){
 function officialEbayAccountLines(){
     return [
       "🛒 OFFICIAL COLLECT TCG EBAY ACCOUNTS",
-      "All five accounts are owned and operated by Collect TCG MY & SG. View our seller history and feedback:",
+      "All five accounts are owned and operated by Collect TCG MY & SG.",
       "COLLECT_TCG_1: https://www.ebay.com/usr/COLLECT_TCG_1",
       "COLLECT_TCG_2: https://www.ebay.co.uk/str/collecttcg2",
       "COLLECT_TCG_3: https://www.ebay.co.uk/usr/collect_tcg_3",
