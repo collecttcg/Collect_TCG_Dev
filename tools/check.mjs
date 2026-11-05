@@ -29,10 +29,10 @@ if(!fs.existsSync(baselinePath)) throw new Error('Missing COLLECT_TCG_BASELINE.m
 const baseline=fs.readFileSync(baselinePath,'utf8');
 const releasePattern='`\\d{4}-\\d{2}-\\d{2}-v\\d{2}`';
 for(const [label,pattern] of [
-  ['latest Development release',new RegExp(`Latest validated Development release: ${releasePattern}`)],
-  ['latest Production release',new RegExp(`Latest Production: ${releasePattern}`)],
-  ['previous Production release',new RegExp(`Previous Production: ${releasePattern}`)],
-  ['Production release manifest',/Production release manifest: `release-manifests\/\d{4}-\d{2}-\d{2}-v\d{2}\.txt`/]
+  ['latest Development release',new RegExp(`(?:Latest validated Development release:|Development:) ${releasePattern}`)],
+  ['latest Production release',new RegExp(`(?:Latest Production:|Production:) ${releasePattern}`)],
+  ['previous Production release',new RegExp(`(?:Previous Production:|Production: ${releasePattern}; previous) ${releasePattern}`)],
+  ['Production release manifest',/(?:Production release manifest:|Production:[^\n]+manifest) `release-manifests\/\d{4}-\d{2}-\d{2}-v\d{2}\.txt`/]
 ]){
   if(!pattern.test(baseline)) throw new Error('Baseline missing valid '+label+' marker.');
 }
