@@ -301,10 +301,6 @@ function buildFbCardListPost(availableCards,prefs){
       divider,
       "",
       "HASHTAG :",
-      ...officialEbayAccountLines(),
-      "",
-      divider,
-      "",
       normalizePostHashtags(prefs.hashtags)
     ];
 
@@ -330,6 +326,10 @@ function buildFbCardListPost(availableCards,prefs){
       divider,
       "",
       ...appContext.postSalesFooterLines(prefs.language),
+      "",
+      divider,
+      "",
+      ...officialEbayAccountLines(),
       "",
       divider,
       "",
