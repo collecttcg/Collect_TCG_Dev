@@ -16,7 +16,7 @@ Last reconciled against GitHub: 2026-11-05
 
 ## Current reconciled state — 2026-11-05
 
-### Latest validated releases
+### Previous validated releases (2026-11-05-v01)
 - Development: `2026-11-05-v01`; previous `2026-11-03-v02`; manifest `release-manifests/2026-11-05-v01.txt`; package source `9f8312141068c2e7f33b85b8b341863255ff71ae`.
 - Development full ZIP: `Collect-TCG-Dev-2026-11-05-v01-full.zip` (SHA256 `6d00cb3c09bf04efea15d45a705b807ed07f6a8c75e7b2de4c2ecc3971dafe24`).
 - Development patch ZIP: `Collect-TCG-Dev-2026-11-03-v02-to-2026-11-05-v01-patch.zip` (SHA256 `f1c31d9090c662e3e1b5f60742c4e912a0ceaba025b71cc238662a413b694eec`).
@@ -38,7 +38,7 @@ Last reconciled against GitHub: 2026-11-05
 ### Shared Supabase data correction
 - On 2026-11-04, the existing sale snapshot `card_sale_snapshots.id=43` for LUFFY (`card_id=c21edd25-757c-4f5c-aa5f-0e909c3e0ca4`) was explicitly approved and updated from `days_listed=9803` to `34` in the shared database; readback confirmed 47 snapshots, average 10 days, and no snapshots over 1000 days. This data fix affects both environments and does not imply a Production frontend deployment.
 
-### Latest release update — 2026-11-05-v02
+### Latest validated releases — 2026-11-05-v02
 - Development `2026-11-05-v02` (previous `2026-11-05-v01`), manifest `release-manifests/2026-11-05-v02.txt`, source `c45f6ae7ea4815aae1e3bc4c4c7078d54b92fd1d`. Development Release workflow 42034890411 succeeded, including JavaScript syntax, regression and eBay-footer checks, SEO, repository/CSS validation, full/patch package integrity. Development Pages deployment 42034939622 succeeded.
 - Development full ZIP `Collect-TCG-Dev-2026-11-05-v02-full.zip` SHA256 `f3ce34887b14ffbc1f2db1e173c46dae9f81404d8cf5e4473b55675fe549a3cb`; patch ZIP `Collect-TCG-Dev-2026-11-05-v01-to-2026-11-05-v02-patch.zip` SHA256 `6d401a0eeaaa7678750de5ae2ff85c3a2c185548186446e1ed0ac64c139293b1`.
 - Production `2026-11-05-v02` (previous `2026-11-05-v01`), promoted from Development `2026-11-05-v02`, manifest `release-manifests/2026-11-05-v02.txt`, package source `698ef031a53425d55a4c278c92736f6a7a0775be`, manifest/rollback commit `d0d90b1bdbc9a117a49749680aa5e2c3be974555`. Production Release workflow 42035576367 succeeded after correction of two stale retained-module cache checks; Production Pages deployment 42035628327 succeeded and rollback anchor was advanced.
