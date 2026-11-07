@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-11-05
+Last reconciled against GitHub: 2026-11-07
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -14,7 +14,7 @@ Last reconciled against GitHub: 2026-11-05
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
-## Current reconciled state — 2026-11-05
+## Current reconciled state — 2026-11-07
 
 ### Previous validated releases (2026-11-05-v01)
 - Development: `2026-11-05-v01`; previous `2026-11-03-v02`; manifest `release-manifests/2026-11-05-v01.txt`; package source `9f8312141068c2e7f33b85b8b341863255ff71ae`.
@@ -45,6 +45,17 @@ Last reconciled against GitHub: 2026-11-05
 - Production full ZIP `Collect-TCG-Production-2026-11-05-v02-full.zip` SHA256 `499590cb45084667e9a10f0572500bc506ac4821b5438fb5bd3b15f217cce441`; patch ZIP `Collect-TCG-Production-2026-11-05-v01-to-2026-11-05-v02-patch.zip` SHA256 `399ca43693702f5307862147107ca2ab5c309c73d925ee598a09122a66180383`.
 - Both Full Card List and Short Drop Facebook posts include exactly one footer listing the five official eBay accounts from the Contact page. Removed the phrase about viewing seller history and feedback. Only `posts-card-list.js`, its cache import in `posts.js`, and release workflow files were changed for the promotion; Production-specific modules remain retained.
 - SQL required: No. Validation limitations: interactive desktop/mobile/Safari browser tests not performed; live Production not opened to avoid analytics contamination.
+
+### Latest Development release — 2026-11-07-v01
+- Development `2026-11-07-v01` (previous `2026-11-05-v02`), manifest `release-manifests/2026-11-07-v01.txt`, package source `89d2bc6c17a9cfbba62de3812201328880706baf`, manifest commit `45f0301a1a3b397cc472b10569f6659c634efb90`.
+- Purpose: show country attribution on each Owner Insights **Recently Viewed Cards** entry using the existing Qualified View country analytics. The compact line shows attributed country names with per-country view counts when repeated; unattributed cards show `Country unknown`.
+- Development full ZIP `Collect-TCG-Dev-2026-11-07-v01-full.zip` SHA256 `3b70f4167c19b00e1f757265ca6d5ea68e608b091f05de4cce91a51ebbdbd6ad`; patch ZIP `Collect-TCG-Dev-2026-11-05-v02-to-2026-11-07-v01-patch.zip` SHA256 `d45ab6d9a5b888ac497562c83da4f322a99468253b8834b5a8f43cbbaaaf47dd`.
+- Development Release workflow `42379012389` succeeded, including feature regression tests, all Development JavaScript syntax checks, the Recently Viewed country attribution contract, retained eBay/FX/HEIC contracts, SEO generation, repository/CSS/release contracts and package integrity.
+- Development Pages deployment `42379034500` succeeded for the manifest commit.
+- SQL/database/RLS/Edge Function change required: No. The UI reuses existing `get_country_card_view_insights` data; no shared Supabase state was changed.
+- Refactoring review: no related refactor warranted; the implementation is localized to Owner Insights.
+- Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
+- Production remains `2026-11-05-v02`; this Development change has **not** been promoted to Production.
 
 ## Historical Development release record (2026-11-03-v01)
 Development release at time of this record: `2026-11-03-v01`
