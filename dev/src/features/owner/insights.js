@@ -183,6 +183,7 @@ async function renderInsightsPage(){
       engagedVisitSeries:[],engagedVisitSupported:false,
       overviewPhotoRows:[],overviewPhotoSupported:false,
       recentQualifiedViews:[],recentQualifiedViewsSupported:false,
+      recentQualifiedCountries:[],recentQualifiedCountriesSupported:false,
       giveawayPerformance:null,giveawayPerformanceSupported:false,
       engagementSupported:false,saleSnapshotsSupported:false,saleSnapshots:[],
       editHistoryRows:[],editHistoryLoaded:false
@@ -235,6 +236,29 @@ async function renderInsightsPage(){
 
     function contactIntentCount(row){
       return Number(contactIntentMetrics(row).intent_count||0);
+    }
+
+    function recentQualifiedCountryLabel(cardId){
+      if(!state.recentQualifiedCountriesSupported) return "";
+
+      const id=String(cardId||"");
+      const countries=state.recentQualifiedCountries
+        .filter(row=>String(row?.card_id||"")===id)
+        .map(row=>({
+          code:String(row?.country_code||"").trim().toUpperCase(),
+          views:Math.max(0,Number(row?.views||0))
+        }))
+        .filter(row=>/^[A-Z]{2}$/.test(row.code) && row.code!=="XX" && row.views>0)
+        .sort((a,b)=>b.views-a.views || a.code.localeCompare(b.code));
+
+      if(!countries.length) return "Country unknown";
+
+      const visible=countries.slice(0,3).map(row=>{
+        const name=appContext.visitorCountryName?.(row.code)||row.code;
+        return row.views>1 ? `${name} (${row.views})` : name;
+      });
+      if(countries.length>3) visible.push(`+${countries.length-3} more`);
+      return visible.join(", ");
     }
 
     function contactIntentStage(row){
@@ -938,6 +962,7 @@ async function renderInsightsPage(){
                       const views=Math.max(0,Number(row.views_in_period||0));
                       const visitors=Math.max(0,Number(row.unique_visitors||0));
                       const meta=appContext.insightRecentCardMeta(card);
+                      const country=recentQualifiedCountryLabel(card.id);
 
                       return `<button type="button"
                                       class="insights-recent-qualified-item"
@@ -951,7 +976,7 @@ async function renderInsightsPage(){
                         <span class="insights-recent-qualified-copy">
                           <strong>${appContext.escapeHtml(card.name||"Untitled card")}</strong>
                           ${meta ? `<small>${appContext.escapeHtml(meta)}</small>` : ""}
-                          <span>${appContext.escapeHtml(appContext.insightRecentViewTimeLabel(row.viewed_at))}</span>
+                          <span>${appContext.escapeHtml(appContext.insightRecentViewTimeLabel(row.viewed_at))}${country ? ` · ${appContext.escapeHtml(country)}` : ""}</span>
                         </span>
                         <span class="insights-recent-qualified-stats">
                           <strong>${views.toLocaleString()}</strong>
@@ -1579,7 +1604,7 @@ async function renderInsightsPage(){
       const selectedStatus=statusSel.value;
       const selectedGame=gameSel.value;
 
-      const [views,series,siteSeries,countryResult,accessTimeResult,deviceResult,sourceResult,searchResult,returningResult,sessionDurationResult,engagedVisitResult,overviewPhotoResult,recentQualifiedResult,giveawayPerformanceResult,previous,engagement,saleSnapshots,filteredSeriesResult]=await Promise.all([
+      const [views,series,siteSeries,countryResult,accessTimeResult,deviceResult,sourceResult,searchResult,returningResult,sessionDurationResult,engagedVisitResult,overviewPhotoResult,recentQualifiedResult,recentQualifiedCountryResult,giveawayPerformanceResult,previous,engagement,saleSnapshots,filteredSeriesResult]=await Promise.all([
         appContext.fetchInsights(startDate,endDate),
         appContext.fetchViewSeries(startDate,endDate),
         appContext.fetchWebsiteVisitSeries(startDate,endDate),
@@ -1593,6 +1618,7 @@ async function renderInsightsPage(){
         appContext.fetchEngagedVisitSeries(startDate,endDate),
         appContext.fetchOverviewPhotoInsights(startDate,endDate),
         appContext.fetchRecentQualifiedCardViews(startDate,endDate,selectedStatus,selectedGame,20),
+        appContext.fetchCountryCardViewInsights(startDate,endDate),
         appContext.fetchGiveawayPerformance(startDate,endDate),
         previousRange?appContext.fetchInsights(previousRange.start,previousRange.end,{silent:true}):Promise.resolve([]),
         appContext.fetchCardEngagementInsights(startDate,endDate),
@@ -1728,6 +1754,10 @@ async function renderInsightsPage(){
           ? recentQualifiedResult.rows
           : [],
         recentQualifiedViewsSupported:recentQualifiedResult.supported,
+        recentQualifiedCountries:recentQualifiedCountryResult.supported && Array.isArray(recentQualifiedCountryResult.rows)
+          ? recentQualifiedCountryResult.rows
+          : [],
+        recentQualifiedCountriesSupported:recentQualifiedCountryResult.supported,
         giveawayPerformance:giveawayPerformanceResult.supported ? giveawayPerformanceResult.row : null,
         giveawayPerformanceSupported:giveawayPerformanceResult.supported,
         engagementSupported:engagement.supported,
