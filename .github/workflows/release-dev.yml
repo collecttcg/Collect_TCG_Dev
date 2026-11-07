@@ -75,6 +75,16 @@ jobs:
           for(let i=1;i<=5;i++) assert.match(source,new RegExp('COLLECT_TCG_'+i+': https://www\\.ebay\\.'));
           assert.match(fs.readFileSync('dev/src/features/social/posts.js','utf8'),/posts-card-list\.js\?v=2026-11-05-v04/);
           NODE
+      - name: Recently viewed country attribution contract
+        run: |
+          set -euo pipefail
+          grep -Fq 'recentQualifiedCountries:[],recentQualifiedCountriesSupported:false' dev/src/features/owner/insights.js
+          grep -Fq 'function recentQualifiedCountryLabel(cardId)' dev/src/features/owner/insights.js
+          grep -Fq 'appContext.fetchCountryCardViewInsights(startDate,endDate)' dev/src/features/owner/insights.js
+          grep -Fq 'const country=recentQualifiedCountryLabel(card.id);' dev/src/features/owner/insights.js
+          grep -Fq 'Country unknown' dev/src/features/owner/insights.js
+          grep -Fq 'country_code' dev/src/services/analytics.js
+
       - name: SEO self-test and generation
         run: |
           set -euo pipefail
@@ -96,9 +106,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-05-v02
-          PREVIOUS_VERSION: 2026-11-05-v01
-          PREVIOUS_COMMIT: 26f3ce630237a2cecc04c840f212b7e7370163b4
+          RELEASE_VERSION: 2026-11-07-v01
+          PREVIOUS_VERSION: 2026-11-05-v02
+          PREVIOUS_COMMIT: c45f6ae7ea4815aae1e3bc4c4c7078d54b92fd1d
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -115,27 +125,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-05-v02-packages
+          name: Collect-TCG-Dev-2026-11-07-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-05-v02-full.zip
-            release/Collect-TCG-Dev-2026-11-05-v01-to-2026-11-05-v02-patch.zip
+            release/Collect-TCG-Dev-2026-11-07-v01-full.zip
+            release/Collect-TCG-Dev-2026-11-05-v02-to-2026-11-07-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-05-v02.txt'
+          MANIFEST='release-manifests/2026-11-07-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-05-v02'
-            echo 'Previous version: 2026-11-05-v01'
+            echo 'Version: 2026-11-07-v01'
+            echo 'Previous version: 2026-11-05-v02'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: include five official Contact-page eBay accounts once in both Facebook Full Card List and Short Drop posts.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-05-v02-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-05-v01-to-2026-11-05-v02-patch.zip'
+            echo 'Purpose: show country attribution on Recently Viewed Cards in Owner Insights using existing Qualified View country analytics.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-07-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-05-v02-to-2026-11-07-v01-patch.zip'
             echo 'SQL required: No'
-            echo 'Validation: feature tests; all Development JavaScript syntax; eBay navigation cleanup and retained eBay tools contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
+            echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup and retained eBay tools contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
             cat release/checksums.txt
@@ -143,5 +153,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-05-v02: record package validation'
+          git commit -m 'Development 2026-11-07-v01: record package validation'
           git push
