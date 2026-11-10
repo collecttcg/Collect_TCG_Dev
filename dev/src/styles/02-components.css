@@ -13030,3 +13030,10 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
     flex:1 1 auto;
   }
 }
+
+
+/* Desktop card-detail menu: keep full-listing ZIP download out of the mobile menu. */
+.details-download-all-desktop{display:none;}
+@media (min-width:801px){
+  .details-download-all-desktop{display:block;}
+}

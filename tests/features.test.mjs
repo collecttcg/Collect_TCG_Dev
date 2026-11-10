@@ -1106,3 +1106,22 @@ test('Development 2026-11-10-v02 exposes valid saved eBay listings from card det
   assert.match(index,/02-components\.css\?v=2026-11-10-v04/);
   assert.match(register,/details\.js\?v=2026-11-10-v02/);
 });
+
+
+test('Development 2026-11-10-v05 offers a desktop-only ZIP of all listing images',()=>{
+  const details=readSource('../dev/src/features/cards/details.js');
+  const index=readSource('../dev/index.html');
+  const css=readSource('../dev/src/styles/02-components.css');
+  const register=readSource('../dev/src/app/register-features.js');
+
+  assert.match(index,/class="details-download-all-desktop" id="detailsDownloadAllBtn" role="menuitem">Download all listing images/);
+  assert.match(details,/async function downloadSingleCardImagesZip\(card, progressCallback, \{includeInventoryQr=true\}=\{\}\)/);
+  assert.match(details,/const totalItems = images.length \+ \(includeInventoryQr \? 1 : 0\);/);
+  assert.match(details,/if\(includeInventoryQr\)\{/);
+  assert.match(details,/downloadSingleCardImagesZip\(card,null,\{includeInventoryQr:false\}\)/);
+  assert.match(details,/recordCardEngagement\(card.id,"download","All listing images"\)/);
+  assert.match(css,/\.details-download-all-desktop\{display:none;\}/);
+  assert.match(css,/@media \(min-width:801px\)\{\s*\.details-download-all-desktop\{display:block;\}/);
+  assert.match(index,/02-components\.css\?v=2026-11-10-v05/);
+  assert.match(register,/details\.js\?v=2026-11-10-v05/);
+});

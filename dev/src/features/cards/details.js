@@ -457,7 +457,7 @@ async function downloadInventoryQrImage(){
     }
   }
 
-async function downloadSingleCardImagesZip(card, progressCallback){
+async function downloadSingleCardImagesZip(card, progressCallback, {includeInventoryQr=true}={}){
     if(!card) return {added:0, failed:[]};
     const images = appContext.getImages(card);
     if(!images.length) return {added:0, failed:[]};
@@ -467,7 +467,7 @@ async function downloadSingleCardImagesZip(card, progressCallback){
     let added = 0;
     const soldWatermark = appContext.shouldApplySoldDownloadWatermark(card);
 
-    const totalItems = images.length + 1;
+    const totalItems = images.length + (includeInventoryQr ? 1 : 0);
     for(let i=0;i<images.length;i++){
       try{
         const blob = soldWatermark
@@ -491,18 +491,20 @@ async function downloadSingleCardImagesZip(card, progressCallback){
       if(progressCallback) progressCallback(i+1, totalItems, added, failed.length);
     }
 
-    try{
-      const qrBlob = await appContext.createInventoryQrDownloadBlob(card);
-      const qrIndex = images.length + 1;
-      const qrFilename = `${String(qrIndex).padStart(2,"0")} - Inventory QR.png`;
-      zip.file(qrFilename, qrBlob);
-      added++;
-    }catch(err){
-      failed.push({
-        index:images.length + 1,
-        reason:err?.message || "Inventory QR could not be created"
-      });
-      console.warn("Could not add Inventory QR image to ZIP:", card?.id, err);
+    if(includeInventoryQr){
+      try{
+        const qrBlob = await appContext.createInventoryQrDownloadBlob(card);
+        const qrIndex = images.length + 1;
+        const qrFilename = \`${String(qrIndex).padStart(2,"0")} - Inventory QR.png\`;
+        zip.file(qrFilename, qrBlob);
+        added++;
+      }catch(err){
+        failed.push({
+          index:images.length + 1,
+          reason:err?.message || "Inventory QR could not be created"
+        });
+        console.warn("Could not add Inventory QR image to ZIP:", card?.id, err);
+      }
     }
 
     if(progressCallback) progressCallback(totalItems, totalItems, added, failed.length);
@@ -1921,6 +1923,34 @@ appContext.$("detailsDownloadBtn").addEventListener("click", ()=>{
     const index = Math.min(appContext.detailsImageIndex, images.length - 1);
     appContext.recordCardEngagement(card.id,"download","Card Image").catch(()=>{});
     appContext.downloadImageSource(images[index], card.name || card.card_code || "card", index + 1, card);
+  });
+
+appContext.$("detailsDownloadAllBtn").addEventListener("click", async ()=>{
+    const card=appContext.getDetailsCard();
+    if(!card) return;
+    const images=appContext.getImages(card);
+    if(!images.length){
+      appContext.showToast("No listing images to download");
+      return;
+    }
+
+    const button=appContext.$("detailsDownloadAllBtn");
+    const label=button.textContent;
+    button.disabled=true;
+    button.textContent="Preparing ZIP…";
+    try{
+      const result=await appContext.downloadSingleCardImagesZip(card,null,{includeInventoryQr:false});
+      appContext.recordCardEngagement(card.id,"download","All listing images").catch(()=>{});
+      appContext.showToast(result.failed.length
+        ? \`ZIP downloaded · ${result.added} included · ${result.failed.length} skipped\`
+        : \`All ${result.added} listing image${result.added===1 ? "" : "s"} downloaded\`);
+    }catch(error){
+      console.warn("Could not create listing-images ZIP:",error);
+      appContext.showToast("Could not create image ZIP. Please try again.");
+    }finally{
+      button.disabled=false;
+      button.textContent=label;
+    }
   });
 
 appContext.$("detailsCloseBtn").addEventListener("click", ()=>appContext.closeDetailsModal(true));
