@@ -14,7 +14,7 @@ Last reconciled against GitHub: 2026-11-10
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
-## Current reconciled state — 2026-11-07
+## Current reconciled state — 2026-11-10
 
 ### Previous validated releases (2026-11-05-v01)
 - Development: `2026-11-05-v01`; previous `2026-11-03-v02`; manifest `release-manifests/2026-11-05-v01.txt`; package source `9f8312141068c2e7f33b85b8b341863255ff71ae`.
@@ -56,6 +56,17 @@ Last reconciled against GitHub: 2026-11-10
 - Refactoring review: no related refactor warranted; the implementation is localized to Owner Insights.
 - Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 - Production was subsequently promoted as `2026-11-07-v01`; that Production release is recorded in the Production repository baseline.
+
+### Latest Development release — 2026-11-10-v02
+- Development `2026-11-10-v02` (previous `2026-11-10-v01`) adds a public **View on eBay ↗** action beside **Contact to Buy** on card details.
+- The action is shown only for available cards that are marked On eBay and have a valid saved HTTPS eBay listing URL. It opens the listing in a new tab with `noopener noreferrer`; absent/invalid URLs and all other statuses retain the existing contact-only path.
+- Source commit: `de9e37f083a19c77de5de6a10939d62c1bd61662`; immutable manifest: `release-manifests/2026-11-10-v02.txt`, recorded at `a56497d6b0d0d3318b88d0a742bb8bd8cd294228`.
+- Full ZIP: `Collect-TCG-Dev-2026-11-10-v02-full.zip` (SHA256 `45e40f9cd1fe8a50dc130cd6b055adcc8fb7e8d484174cadb7790893c3998a33`).
+- Patch ZIP: `Collect-TCG-Dev-2026-11-10-v01-to-2026-11-10-v02-patch.zip` (SHA256 `90d2c7be3606b865e61b7bc8fc3ed6a493048febccdf4bf29bf22565effa2486`).
+- Development Release workflow `42812194085` passed: feature regression tests, all Development JavaScript syntax checks, direct card-detail eBay CTA contract, retained eBay/FX/HEIC and country-attribution contracts, SEO self-test/generation/output validation, repository/CSS/release contracts, and package integrity.
+- SQL/database/RLS/Edge Function change required: No. The implementation reuses the existing saved eBay URL and validation.
+- Pages status when reconciled: build/report completed successfully; the manifest-commit deployment `42812250564` remains in progress.
+- Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 
 ### Latest Development release — 2026-11-10-v01
 - Development `2026-11-10-v01` (previous `2026-11-07-v01`) updates the Owner **eBay Messages → After Purchase** template to state: “It will be shipped over the weekend.”
