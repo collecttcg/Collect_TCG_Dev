@@ -43,7 +43,7 @@ grep -q 'posts.js?v=2026-09-30-v02' dev/src/app/register-features.js
 test "$(grep -o 'appContext.isLiveLifecycle(card)' dev/src/features/social/posts*.js | wc -l | tr -d ' ')" -ge "2"
 grep -Fq 'appContext.isLiveLifecycle(card) && appContext.cardMatchesListingScope' dev/src/features/media/collage.js
 grep -q '01-foundation.css?v=2026-09-29-v09' dev/index.html
-grep -q 'details.js?v=2026-11-10-v02' dev/src/app/register-features.js
+grep -q 'details.js?v=2026-11-10-v05' dev/src/app/register-features.js
 grep -q 'event.stopPropagation()' dev/src/features/content/home.js
 grep -q 'appContext.openDetailsModal(card)' dev/src/app/routing.js
 
