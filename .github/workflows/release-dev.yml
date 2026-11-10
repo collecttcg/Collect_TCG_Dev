@@ -1,4 +1,5 @@
 name: Development Release
+# 2026-11-10-v02 retry after CSS cache-contract refresh.
 on:
   workflow_dispatch:
   push:

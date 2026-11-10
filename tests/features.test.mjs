@@ -947,7 +947,7 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
   assert.doesNotMatch(routing,/appContext\.CARD_IMAGE_TYPES\s*=/);
   assert.doesNotMatch(enhancement,/window\.collect(?:Open|Close)ContactChooser/);
   assert.match(index,/src\/styles\/01-foundation\.css\?v=2026-09-29-v09/);
-  assert.match(index,/src\/styles\/02-components\.css\?v=2026-09-29-v09/);
+  assert.match(index,/src\/styles\/02-components\.css\?v=2026-11-10-v02/);
   assert.equal(styleOrder.filter(row=>row.load==='global').length,2);
   assert.ok(styleOrder.some(row=>row.file==='src/styles/27-insights-dashboard.css' && row.load==='dynamic-owner-insights'));
 });
