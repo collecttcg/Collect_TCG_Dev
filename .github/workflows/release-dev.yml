@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-10-v03 retry after Development SEO refresh.
+# 2026-11-10-v04 compact paired mobile purchase-action sizing.
 on:
   workflow_dispatch:
   push:
@@ -59,7 +59,7 @@ jobs:
           grep -Fq 'View on eBay' dev/src/features/cards/details.js
           grep -Fq 'target="_blank" rel="noopener noreferrer"' dev/src/features/cards/details.js
           grep -Fq 'details.js?v=2026-11-10-v02' dev/src/app/register-features.js
-          grep -Fq '02-components.css?v=2026-11-10-v03' dev/index.html
+          grep -Fq '02-components.css?v=2026-11-10-v04' dev/index.html
       - name: Retained FX and HEIC contracts
         run: |
           set -euo pipefail
@@ -113,9 +113,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-10-v03
-          PREVIOUS_VERSION: 2026-11-10-v02
-          PREVIOUS_COMMIT: aba745c2aa04ca7088f1f8a26f79ad65d5c4fb25
+          RELEASE_VERSION: 2026-11-10-v04
+          PREVIOUS_VERSION: 2026-11-10-v03
+          PREVIOUS_COMMIT: ec4b5963bfdbb97978a9267bd2654f1371d7d589
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -132,27 +132,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-10-v03-packages
+          name: Collect-TCG-Dev-2026-11-10-v04-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-10-v03-full.zip
-            release/Collect-TCG-Dev-2026-11-10-v02-to-2026-11-10-v03-patch.zip
+            release/Collect-TCG-Dev-2026-11-10-v04-full.zip
+            release/Collect-TCG-Dev-2026-11-10-v03-to-2026-11-10-v04-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-10-v03.txt'
+          MANIFEST='release-manifests/2026-11-10-v04.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-10-v03'
-            echo 'Previous version: 2026-11-10-v02'
+            echo 'Version: 2026-11-10-v04'
+            echo 'Previous version: 2026-11-10-v03'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: make paired mobile Contact to Buy and View on eBay actions identical in size.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-10-v03-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-10-v02-to-2026-11-10-v03-patch.zip'
+            echo 'Purpose: make paired mobile Contact to Buy and View on eBay actions compact and identical in size.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-10-v04-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-10-v03-to-2026-11-10-v04-patch.zip'
             echo 'SQL required: No'
-            echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, mobile paired purchase-action sizing, direct card-detail eBay CTA, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
+            echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
             cat release/checksums.txt
@@ -160,6 +160,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-10-v03: record package validation'
+          git commit -m 'Development 2026-11-10-v04: record package validation'
           git pull --rebase origin main
           git push

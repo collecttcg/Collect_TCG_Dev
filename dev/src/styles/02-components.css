@@ -13010,7 +13010,7 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
 /* DEV 2026-11-10-v03 — keep paired mobile purchase actions identical. */
 @media (max-width:899px){
   .modal.card-details-modal .detail-purchase-actions.has-ebay-link{
-    --detail-purchase-action-height:150px;
+    --detail-purchase-action-height:78px;
     align-items:stretch;
     grid-auto-rows:var(--detail-purchase-action-height);
   }
