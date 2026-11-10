@@ -1,0 +1,12 @@
+Version: 2026-11-10-v02
+Previous version: 2026-11-10-v01
+Source commit: de9e37f083a19c77de5de6a10939d62c1bd61662
+Purpose: add a direct eBay listing CTA to public card details when a valid saved eBay URL is present.
+Full ZIP: Collect-TCG-Dev-2026-11-10-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-10-v01-to-2026-11-10-v02-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, direct card-detail eBay CTA, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+45e40f9cd1fe8a50dc130cd6b055adcc8fb7e8d484174cadb7790893c3998a33  release/Collect-TCG-Dev-2026-11-10-v02-full.zip
+90d2c7be3606b865e61b7bc8fc3ed6a493048febccdf4bf29bf22565effa2486  release/Collect-TCG-Dev-2026-11-10-v01-to-2026-11-10-v02-patch.zip
