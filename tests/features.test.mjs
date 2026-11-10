@@ -947,7 +947,7 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
   assert.doesNotMatch(routing,/appContext\.CARD_IMAGE_TYPES\s*=/);
   assert.doesNotMatch(enhancement,/window\.collect(?:Open|Close)ContactChooser/);
   assert.match(index,/src\/styles\/01-foundation\.css\?v=2026-09-29-v09/);
-  assert.match(index,/src\/styles\/02-components\.css\?v=2026-11-10-v02/);
+  assert.match(index,/src\/styles\/02-components\.css\?v=2026-11-10-v03/);
   assert.equal(styleOrder.filter(row=>row.load==='global').length,2);
   assert.ok(styleOrder.some(row=>row.file==='src/styles/27-insights-dashboard.css' && row.load==='dynamic-owner-insights'));
 });
@@ -1078,6 +1078,17 @@ test('Development Qualified Views retain request-country attribution across embe
 });
 
 
+
+test('Development 2026-11-10-v03 keeps paired mobile purchase actions the same size',()=>{
+  const css=readSource('../dev/src/styles/02-components.css');
+  const index=readSource('../dev/index.html');
+
+  assert.match(css,/--detail-purchase-action-height:150px/);
+  assert.match(css,/detail-purchase-actions\.has-ebay-link > \.detail-buy-cta,[\s\S]*detail-purchase-actions\.has-ebay-link > \.detail-ebay-cta/);
+  assert.match(css,/detail-purchase-actions\.has-ebay-link > \.detail-buy-cta > summary\{[\s\S]*height:100%/);
+  assert.match(index,/02-components\.css\?v=2026-11-10-v03/);
+});
+
 test('Development 2026-11-10-v02 exposes valid saved eBay listings from card details',()=>{
   const details=readSource('../dev/src/features/cards/details.js');
   const listing=readSource('../dev/src/features/owner/ebay-listing-status.js');
@@ -1092,6 +1103,6 @@ test('Development 2026-11-10-v02 exposes valid saved eBay listings from card det
   assert.match(details,/target="_blank" rel="noopener noreferrer"/);
   assert.match(listing,/function normalizeEbayListingUrl\(value\)/);
   assert.match(css,/\.detail-ebay-cta/);
-  assert.match(index,/02-components\.css\?v=2026-11-10-v02/);
+  assert.match(index,/02-components\.css\?v=2026-11-10-v03/);
   assert.match(register,/details\.js\?v=2026-11-10-v02/);
 });

@@ -13005,3 +13005,28 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
   }
   .modal.card-details-modal .detail-ebay-cta{min-height:74px;}
 }
+
+
+/* DEV 2026-11-10-v03 — keep paired mobile purchase actions identical. */
+@media (max-width:899px){
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link{
+    --detail-purchase-action-height:150px;
+    align-items:stretch;
+    grid-auto-rows:var(--detail-purchase-action-height);
+  }
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link > .detail-buy-cta,
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link > .detail-ebay-cta{
+    min-height:var(--detail-purchase-action-height);
+    height:var(--detail-purchase-action-height);
+    align-self:stretch;
+  }
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link > .detail-buy-cta{
+    display:flex;
+    flex-direction:column;
+  }
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link > .detail-buy-cta > summary{
+    min-height:0 !important;
+    height:100%;
+    flex:1 1 auto;
+  }
+}
