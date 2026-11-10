@@ -60,7 +60,7 @@ import * as module58 from '../features/owner/psa-never-synced.js?v=2026-10-31-v0
 import * as module59 from '../features/owner/ebay-listing-status.js?v=2026-11-01-v02';
 import * as module60 from '../features/owner/quick-action-scroll.js?v=2026-11-01-v04';
 import * as module61 from '../features/owner/fx-low-price.js?v=2026-11-02-v03';
-import * as module62 from '../features/owner/ebay-messages.js?v=2026-11-03-v02';
+import * as module62 from '../features/owner/ebay-messages.js?v=2026-11-10-v01';
 import * as module63 from '../features/social/posts-ebay-link.js?v=2026-11-03-v01';
 
 export function registerFeatures(appContext){

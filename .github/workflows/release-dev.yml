@@ -50,6 +50,7 @@ jobs:
           grep -Fq "['messages','eBay Messages']" dev/src/features/owner/ebay-messages.js
           grep -Fq "['listing-status','eBay Listing Status']" dev/src/features/owner/ebay-messages.js
           grep -Fq 'positive feedback for our store' dev/src/features/owner/ebay-messages.js
+          grep -Fq 'It will be shipped over the weekend.' dev/src/features/owner/ebay-messages.js
           grep -Fq 'Listed on eBay' dev/src/features/owner/ebay-listing-status.js
           grep -Fq 'On eBay only' dev/src/features/owner/ebay-listing-status.js
           grep -Fq 'notesWithEbayListing' dev/src/features/owner/ebay-listing-status.js
@@ -106,9 +107,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-07-v01
-          PREVIOUS_VERSION: 2026-11-05-v02
-          PREVIOUS_COMMIT: c45f6ae7ea4815aae1e3bc4c4c7078d54b92fd1d
+          RELEASE_VERSION: 2026-11-10-v01
+          PREVIOUS_VERSION: 2026-11-07-v01
+          PREVIOUS_COMMIT: 89d2bc6c17a9cfbba62de3812201328880706baf
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -125,27 +126,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-07-v01-packages
+          name: Collect-TCG-Dev-2026-11-10-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-07-v01-full.zip
-            release/Collect-TCG-Dev-2026-11-05-v02-to-2026-11-07-v01-patch.zip
+            release/Collect-TCG-Dev-2026-11-10-v01-full.zip
+            release/Collect-TCG-Dev-2026-11-07-v01-to-2026-11-10-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-07-v01.txt'
+          MANIFEST='release-manifests/2026-11-10-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-07-v01'
-            echo 'Previous version: 2026-11-05-v02'
+            echo 'Version: 2026-11-10-v01'
+            echo 'Previous version: 2026-11-07-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: show country attribution on Recently Viewed Cards in Owner Insights using existing Qualified View country analytics.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-07-v01-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-05-v02-to-2026-11-07-v01-patch.zip'
+            echo 'Purpose: add the weekend dispatch timing sentence to the reusable Owner eBay After Purchase message.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-10-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-07-v01-to-2026-11-10-v01-patch.zip'
             echo 'SQL required: No'
-            echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup and retained eBay tools contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
+            echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
             cat release/checksums.txt
@@ -153,5 +154,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-07-v01: record package validation'
+          git commit -m 'Development 2026-11-10-v01: record package validation'
           git push
