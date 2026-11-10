@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-10-v03 paired mobile purchase-action sizing.
+# 2026-11-10-v03 retry after Development SEO refresh.
 on:
   workflow_dispatch:
   push:
