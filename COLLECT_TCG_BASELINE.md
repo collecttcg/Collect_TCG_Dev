@@ -57,6 +57,17 @@ Last reconciled against GitHub: 2026-11-10
 - Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 - Production was subsequently promoted as `2026-11-07-v01`; that Production release is recorded in the Production repository baseline.
 
+### Latest Development release — 2026-11-10-v03
+- Development `2026-11-10-v03` (previous `2026-11-10-v02`) makes the paired mobile **Contact to Buy** and **View on eBay ↗** actions identical in width and height.
+- The existing two-column grid is retained; both actions now share one 150px mobile row and the Contact-to-Buy summary fills its row. Desktop behavior, the contact chooser, and the eBay link rules remain unchanged.
+- Source commit: `ec4b5963bfdbb97978a9267bd2654f1371d7d589`; immutable manifest: `release-manifests/2026-11-10-v03.txt`, recorded at `58e2d4fa8e5a5fc03b1b84a74ed599ea784cd348`.
+- Full ZIP: `Collect-TCG-Dev-2026-11-10-v03-full.zip` (SHA256 `b80a2392dff51828ffb8e2ceeb6787dd74db234c7fde53cbc25da571aaa4ae34`).
+- Patch ZIP: `Collect-TCG-Dev-2026-11-10-v02-to-2026-11-10-v03-patch.zip` (SHA256 `519ec81e9fc4d27aa641ee711db92d6e252437fa9d3e6c299ee5bbd3658ce7ba`).
+- Development Release workflow `42815165653` passed all feature tests, Development JavaScript syntax checks, repository/CSS/release contracts, SEO self-test/generation/output validation, and package integrity. Development Pages workflow `42815225880` built and deployed successfully.
+- SQL/database/RLS/Edge Function change required: No.
+- Refactoring: Reviewed — no further change warranted; the correction is localized to the paired-action style contract.
+- Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
+
 ### Latest Development release — 2026-11-10-v02
 - Development `2026-11-10-v02` (previous `2026-11-10-v01`) adds a public **View on eBay ↗** action beside **Contact to Buy** on card details.
 - The action is shown only for available cards that are marked On eBay and have a valid saved HTTPS eBay listing URL. It opens the listing in a new tab with `noopener noreferrer`; absent/invalid URLs and all other statuses retain the existing contact-only path.
@@ -65,7 +76,7 @@ Last reconciled against GitHub: 2026-11-10
 - Patch ZIP: `Collect-TCG-Dev-2026-11-10-v01-to-2026-11-10-v02-patch.zip` (SHA256 `90d2c7be3606b865e61b7bc8fc3ed6a493048febccdf4bf29bf22565effa2486`).
 - Development Release workflow `42812194085` passed: feature regression tests, all Development JavaScript syntax checks, direct card-detail eBay CTA contract, retained eBay/FX/HEIC and country-attribution contracts, SEO self-test/generation/output validation, repository/CSS/release contracts, and package integrity.
 - SQL/database/RLS/Edge Function change required: No. The implementation reuses the existing saved eBay URL and validation.
-- Pages status when reconciled: build/report completed successfully; the manifest-commit deployment `42812250564` remains in progress.
+- Pages note: the initial manifest-commit deployment `42812250564` was superseded by the subsequent baseline commit; the application code itself had already been published in Pages run `42811977818` before v03.
 - Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 
 ### Latest Development release — 2026-11-10-v01
