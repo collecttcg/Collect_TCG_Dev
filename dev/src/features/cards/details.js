@@ -1182,6 +1182,9 @@ async function openDetailsModal(card){
         </details>`
       : "";
     const cost = card.cost == null ? "—" : appContext.fmtMoney(card.cost);
+    const ebayListingUrl=card?.on_ebay===true && typeof appContext.normalizeEbayListingUrl==="function"
+      ? appContext.normalizeEbayListingUrl(card.ebay_url||"")
+      : "";
     const isSoldListing = appContext.normalizeFilterValue(card.availability || "") === "sold";
     const isNfsListing = appContext.normalizeFilterValue(card.availability || "") === "collection (nfs)";
     const filteredResultNav=appContext.getFilteredResultNavigation(card.id);
@@ -1322,22 +1325,28 @@ async function openDetailsModal(card){
                   </small>
                 </span>
               </div>
-              <details class="detail-buy-cta">
-                <summary data-contact-buy-trigger aria-label="Contact to Buy">
-                  <span>Contact to Buy</span>
-                  <small>Choose contact method</small>
-                </summary>
-                <button type="button" class="mobile-buy-backdrop" data-mobile-buy-close aria-label="Close contact options"></button>
-                <div class="detail-buy-chooser">
-                  <button type="button" class="mobile-buy-close" data-mobile-buy-close aria-label="Close contact options">×</button>
-                  <div>
-                    <strong>Choose how to contact us</strong>
-                    <span>Select what you want to ask, then choose a platform.</span>
+              <div class="detail-purchase-actions${ebayListingUrl?" has-ebay-link":""}">
+                <details class="detail-buy-cta">
+                  <summary data-contact-buy-trigger aria-label="Contact to Buy">
+                    <span>Contact to Buy</span>
+                    <small>Choose contact method</small>
+                  </summary>
+                  <button type="button" class="mobile-buy-backdrop" data-mobile-buy-close aria-label="Close contact options"></button>
+                  <div class="detail-buy-chooser">
+                    <button type="button" class="mobile-buy-close" data-mobile-buy-close aria-label="Close contact options">×</button>
+                    <div>
+                      <strong>Choose how to contact us</strong>
+                      <span>Select what you want to ask, then choose a platform.</span>
+                    </div>
+                    ${contactIntentButtonsHtml("details-buy-intents")}
+                    ${detailsContactSocialLinksHtml("details-buy-social-links")}
                   </div>
-                  ${contactIntentButtonsHtml("details-buy-intents")}
-                  ${detailsContactSocialLinksHtml("details-buy-social-links")}
-                </div>
-              </details>
+                </details>
+                ${ebayListingUrl ? `<a class="detail-ebay-cta" href="${appContext.escapeHtml(ebayListingUrl)}" target="_blank" rel="noopener noreferrer" aria-label="View this listing on eBay (opens in a new tab)">
+                  <span>View on eBay <b aria-hidden="true">↗</b></span>
+                  <small>Open listing securely</small>
+                </a>` : ""}
+              </div>
             </div>
           ` : ""}
 

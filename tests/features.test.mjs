@@ -1076,3 +1076,22 @@ test('Development Qualified Views retain request-country attribution across embe
   assert.match(edge,/country_code: code \|\| null/);
   assert.match(edge,/record_card_view_event/);
 });
+
+
+test('Development 2026-11-10-v02 exposes valid saved eBay listings from card details',()=>{
+  const details=readSource('../dev/src/features/cards/details.js');
+  const listing=readSource('../dev/src/features/owner/ebay-listing-status.js');
+  const css=readSource('../dev/src/styles/02-components.css');
+  const index=readSource('../dev/index.html');
+  const register=readSource('../dev/src/app/register-features.js');
+
+  assert.match(details,/card\?\.on_ebay===true/);
+  assert.match(details,/normalizeEbayListingUrl\(card\.ebay_url\|\|""\)/);
+  assert.match(details,/class="detail-ebay-cta"/);
+  assert.match(details,/View on eBay/);
+  assert.match(details,/target="_blank" rel="noopener noreferrer"/);
+  assert.match(listing,/function normalizeEbayListingUrl\(value\)/);
+  assert.match(css,/\.detail-ebay-cta/);
+  assert.match(index,/02-components\.css\?v=2026-11-10-v02/);
+  assert.match(register,/details\.js\?v=2026-11-10-v02/);
+});

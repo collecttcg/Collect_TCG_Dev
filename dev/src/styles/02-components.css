@@ -12926,3 +12926,82 @@ body.light-mode .home-collector-spotlight-meta strong{
 @media(max-width:800px){
   .home-premium-section .home-premium-view-all{min-height:44px;display:inline-flex;align-items:center;}
 }
+
+
+/* ==========================================================
+   DEV 2026-11-10-v02 — DIRECT EBAY CARD-DETAIL CTA
+   Show the saved eBay listing only when a card explicitly has
+   a valid eBay URL. Keep Contact to Buy as the direct-sales path.
+   ========================================================== */
+.modal.card-details-modal .detail-purchase-actions{
+  min-width:0;
+  display:grid;
+  gap:8px;
+}
+.modal.card-details-modal .detail-purchase-actions.has-ebay-link{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.modal.card-details-modal .detail-ebay-cta{
+  min-width:0;
+  min-height:58px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  padding:8px 12px;
+  border:1px solid rgba(227,179,65,.42);
+  border-radius:11px;
+  background:rgba(227,179,65,.075);
+  color:#f1c24f;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+  text-align:center;
+  text-decoration:none;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease;
+}
+.modal.card-details-modal .detail-ebay-cta:hover,
+.modal.card-details-modal .detail-ebay-cta:focus-visible{
+  transform:translateY(-1px);
+  border-color:#e9bc4f;
+  background:rgba(227,179,65,.14);
+  outline:none;
+}
+.modal.card-details-modal .detail-ebay-cta > span{
+  font-size:13px;
+  font-weight:820;
+  line-height:1.12;
+}
+.modal.card-details-modal .detail-ebay-cta b{font-size:1.05em;}
+.modal.card-details-modal .detail-ebay-cta small{
+  color:#aeb2ba;
+  font-size:9px;
+  font-weight:650;
+  line-height:1.15;
+}
+body.light-mode .modal.card-details-modal .detail-ebay-cta{
+  border-color:rgba(148,107,24,.35);
+  background:#fffaf0;
+  color:#8a6112;
+}
+body.light-mode .modal.card-details-modal .detail-ebay-cta:hover,
+body.light-mode .modal.card-details-modal .detail-ebay-cta:focus-visible{
+  border-color:#a97618;
+  background:#f8ecd0;
+}
+body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
+
+@media (min-width:900px){
+  .modal.card-details-modal .detail-purchase-actions{
+    align-self:stretch;
+    height:100%;
+  }
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .modal.card-details-modal .detail-purchase-actions > *{
+    min-width:0;
+    height:100%;
+  }
+  .modal.card-details-modal .detail-ebay-cta{min-height:74px;}
+}
