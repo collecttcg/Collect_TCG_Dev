@@ -57,6 +57,17 @@ Last reconciled against GitHub: 2026-11-10
 - Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 - Production was subsequently promoted as `2026-11-07-v01`; that Production release is recorded in the Production repository baseline.
 
+### Latest Development release — 2026-11-10-v04
+- Development `2026-11-10-v04` (previous `2026-11-10-v03`) makes the paired mobile **Contact to Buy** and **View on eBay ↗** actions compact while retaining equal dimensions.
+- The shared mobile row was reduced from 150px to 78px. Both action labels remain two-line, touch-friendly controls; desktop, the contact chooser, and eBay-link eligibility are unchanged.
+- Source commit: `2777969a4476c95cae58ef41c7bbca2d6a1d77c9`; immutable manifest: `release-manifests/2026-11-10-v04.txt`, recorded at `718395f5dd1fce773ac453b82e446fcb9a4cb14e`.
+- Full ZIP: `Collect-TCG-Dev-2026-11-10-v04-full.zip` (SHA256 `76f2bfc8843ad673ace756a01b6c1b9fc219c205f10111cadd6f6077a7760ced`).
+- Patch ZIP: `Collect-TCG-Dev-2026-11-10-v03-to-2026-11-10-v04-patch.zip` (SHA256 `7cb424eb851338c2b244896d315aff238e7cd144dd855b9d7e2aa7fb436e2cda`).
+- Development Release workflow `42816058283` passed all feature tests, Development JavaScript syntax checks, repository/CSS/release contracts, SEO self-test/generation/output validation, and package integrity. Development Pages workflow `42816110205` built and deployed successfully.
+- SQL/database/RLS/Edge Function change required: No.
+- Refactoring: Reviewed — no additional refactor warranted; the correction is a single localized sizing adjustment.
+- Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
+
 ### Latest Development release — 2026-11-10-v03
 - Development `2026-11-10-v03` (previous `2026-11-10-v02`) makes the paired mobile **Contact to Buy** and **View on eBay ↗** actions identical in width and height.
 - The existing two-column grid is retained; both actions now share one 150px mobile row and the Contact-to-Buy summary fills its row. Desktop behavior, the contact chooser, and the eBay link rules remain unchanged.
