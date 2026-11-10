@@ -57,6 +57,17 @@ Last reconciled against GitHub: 2026-11-10
 - Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 - Production was subsequently promoted as `2026-11-07-v01`; that Production release is recorded in the Production repository baseline.
 
+### Latest Development release — 2026-11-10-v05
+- Development `2026-11-10-v05` (previous `2026-11-10-v04`) adds **Download all listing images** to the desktop Card Details **More** menu.
+- The action downloads a ZIP containing the listing photos only; it excludes the Inventory QR. The existing eBay-generator ZIP retains its Inventory QR, while existing sold/reserved download-watermark behavior remains unchanged.
+- Source commit: `c45f417c114c04bc87bfbcd5fc8e7a63e58cb25a`; immutable manifest: `release-manifests/2026-11-10-v05.txt`, recorded at `161a3ca9a9eafe0ea72d4712fdd646ffa08f3c31`.
+- Full ZIP: `Collect-TCG-Dev-2026-11-10-v05-full.zip` (SHA256 `2db713cb43a646936f443ce45ecc561b203cb10c6da0b919356ccefa9ea50386`).
+- Patch ZIP: `Collect-TCG-Dev-2026-11-10-v04-to-2026-11-10-v05-patch.zip` (SHA256 `22790b3fae7127ee7966277579d956d50e006eaf0ea76998c831ed17cb63a9ba`).
+- Development Release workflow `42822845948` passed feature tests, all Development JavaScript syntax checks, eBay/FX/HEIC and desktop listing-image ZIP contracts, SEO self-test/generation/output validation, repository/CSS/release contracts, and package integrity. Development Pages workflow `42822908713` built and deployed successfully.
+- SQL/database/RLS/Edge Function change required: No.
+- Refactoring: Reviewed and performed a localized optional `includeInventoryQr` flag in the shared ZIP helper so the new listing-photo ZIP does not duplicate download logic; existing eBay-generator behavior remains unchanged.
+- Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
+
 ### Latest Development release — 2026-11-10-v04
 - Development `2026-11-10-v04` (previous `2026-11-10-v03`) makes the paired mobile **Contact to Buy** and **View on eBay ↗** actions compact while retaining equal dimensions.
 - The shared mobile row was reduced from 150px to 78px. Both action labels remain two-line, touch-friendly controls; desktop, the contact chooser, and eBay-link eligibility are unchanged.
