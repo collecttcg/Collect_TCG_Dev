@@ -1,0 +1,12 @@
+Version: 2026-11-10-v05
+Previous version: 2026-11-10-v04
+Source commit: c45f417c114c04bc87bfbcd5fc8e7a63e58cb25a
+Purpose: add a desktop-only ZIP download of all listing images from the card-detail More menu.
+Full ZIP: Collect-TCG-Dev-2026-11-10-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-10-v04-to-2026-11-10-v05-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+2db713cb43a646936f443ce45ecc561b203cb10c6da0b919356ccefa9ea50386  release/Collect-TCG-Dev-2026-11-10-v05-full.zip
+22790b3fae7127ee7966277579d956d50e006eaf0ea76998c831ed17cb63a9ba  release/Collect-TCG-Dev-2026-11-10-v04-to-2026-11-10-v05-patch.zip
