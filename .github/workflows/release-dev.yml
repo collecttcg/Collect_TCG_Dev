@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-10-v05 retry after ZIP syntax correction.
+# 2026-11-10-v05 retry after CSS cache refresh.
 on:
   workflow_dispatch:
   push:
