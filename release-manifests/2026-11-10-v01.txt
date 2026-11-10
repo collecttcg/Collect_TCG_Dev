@@ -1,0 +1,12 @@
+Version: 2026-11-10-v01
+Previous version: 2026-11-07-v01
+Source commit: aba745c2aa04ca7088f1f8a26f79ad65d5c4fb25
+Purpose: add the weekend dispatch timing sentence to the reusable Owner eBay After Purchase message.
+Full ZIP: Collect-TCG-Dev-2026-11-10-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-07-v01-to-2026-11-10-v01-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+733a7205ab05dfa602507856bad7c959d8e81849b6c5f92893ac62a1257ef92b  release/Collect-TCG-Dev-2026-11-10-v01-full.zip
+6a82e9014e5ce35b7ce2bffe3e9d02641fd594b6c30570201343170868e5fe59  release/Collect-TCG-Dev-2026-11-07-v01-to-2026-11-10-v01-patch.zip
