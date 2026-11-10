@@ -69,7 +69,7 @@ grep -q 'analytics.js?v=2026-11-04-v01' dev/src/app/register-features.js
 grep -q 'catalogue.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'tiles.js?v=2026-11-01-v01' dev/src/app/register-features.js
 grep -q 'insights-dashboard.js?v=2026-09-29-v09' dev/src/app/register-features.js
-grep -q 'details.js?v=2026-11-10-v02' dev/src/app/register-features.js
+grep -q 'details.js?v=2026-11-10-v05' dev/src/app/register-features.js
 grep -q 'startup.js?v=2026-09-29-v09' dev/src/app/register-features.js
 
 echo "== Validate Phase 4 owner sales intelligence =="
@@ -115,7 +115,7 @@ grep -q 'function pageItems' dev/src/features/inventory/pagination.js
 grep -q 'createModalKeyboardController' dev/src/features/cards/details.js
 grep -q 'page.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'filtering.js?v=2026-09-29-v09' dev/src/app/register-features.js
-grep -q 'details.js?v=2026-11-10-v02' dev/src/app/register-features.js
+grep -q 'details.js?v=2026-11-10-v05' dev/src/app/register-features.js
 
 echo "== Validate visitor UX improvements =="
 set -euo pipefail
@@ -150,7 +150,7 @@ grep -q 'detailsContactSocialLinksHtml("details-buy-social-links")' dev/src/feat
 grep -q 'id="ebayDownloadImages"' dev/src/features/social/posts*.js
 grep -q 'downloadSingleCardImagesZip(selected' dev/src/features/social/posts*.js
 grep -q 'download eBay listing images' dev/src/features/social/posts*.js
-grep -q 'details.js?v=2026-11-10-v02' dev/src/app/register-features.js
+grep -q 'details.js?v=2026-11-10-v05' dev/src/app/register-features.js
 grep -q 'posts.js?v=2026-09-30-v02' dev/src/app/register-features.js
 
 echo "== Validate Facebook group-friendly post generator =="
@@ -199,7 +199,7 @@ grep -Fq 'appContext.isOwnerMode() ? `<div class="detail-item owner-only owner-p
 grep -Fq 'appContext.isOwnerMode() ? `<div class="owner-only owner-private-analytics clean-owner-views"' dev/src/features/cards/tiles.js
 grep -q 'home.js?v=2026-09-29-v09' dev/src/app/register-features.js
 grep -q 'tiles.js?v=2026-11-01-v01' dev/src/app/register-features.js
-grep -q 'details.js?v=2026-11-10-v02' dev/src/app/register-features.js
+grep -q 'details.js?v=2026-11-10-v05' dev/src/app/register-features.js
 grep -q 'register-features.js?v=2026-10-07-v02' dev/src/main.js
 grep -q 'src/main.js?v=2026-10-05-v01' dev/index.html
 

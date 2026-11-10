@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-10-v05 retry after release-contract cache refresh.
+# 2026-11-10-v05 retry after all release-contract cache refreshes.
 on:
   workflow_dispatch:
   push:
