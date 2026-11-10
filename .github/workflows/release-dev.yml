@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-10-v05 desktop listing-image ZIP download.
+# 2026-11-10-v05 retry after ZIP syntax correction.
 on:
   workflow_dispatch:
   push:

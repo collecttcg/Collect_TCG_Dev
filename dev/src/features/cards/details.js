@@ -495,7 +495,7 @@ async function downloadSingleCardImagesZip(card, progressCallback, {includeInven
       try{
         const qrBlob = await appContext.createInventoryQrDownloadBlob(card);
         const qrIndex = images.length + 1;
-        const qrFilename = \`${String(qrIndex).padStart(2,"0")} - Inventory QR.png\`;
+        const qrFilename = `${String(qrIndex).padStart(2,"0")} - Inventory QR.png`;
         zip.file(qrFilename, qrBlob);
         added++;
       }catch(err){
@@ -1942,8 +1942,8 @@ appContext.$("detailsDownloadAllBtn").addEventListener("click", async ()=>{
       const result=await appContext.downloadSingleCardImagesZip(card,null,{includeInventoryQr:false});
       appContext.recordCardEngagement(card.id,"download","All listing images").catch(()=>{});
       appContext.showToast(result.failed.length
-        ? \`ZIP downloaded · ${result.added} included · ${result.failed.length} skipped\`
-        : \`All ${result.added} listing image${result.added===1 ? "" : "s"} downloaded\`);
+        ? `ZIP downloaded · ${result.added} included · ${result.failed.length} skipped`
+        : `All ${result.added} listing image${result.added===1 ? "" : "s"} downloaded`);
     }catch(error){
       console.warn("Could not create listing-images ZIP:",error);
       appContext.showToast("Could not create image ZIP. Please try again.");
