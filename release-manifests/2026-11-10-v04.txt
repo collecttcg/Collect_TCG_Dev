@@ -1,0 +1,12 @@
+Version: 2026-11-10-v04
+Previous version: 2026-11-10-v03
+Source commit: 2777969a4476c95cae58ef41c7bbca2d6a1d77c9
+Purpose: make paired mobile Contact to Buy and View on eBay actions compact and identical in size.
+Full ZIP: Collect-TCG-Dev-2026-11-10-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-10-v03-to-2026-11-10-v04-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, and weekend dispatch message contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+76f2bfc8843ad673ace756a01b6c1b9fc219c205f10111cadd6f6077a7760ced  release/Collect-TCG-Dev-2026-11-10-v04-full.zip
+7cb424eb851338c2b244896d315aff238e7cd144dd855b9d7e2aa7fb436e2cda  release/Collect-TCG-Dev-2026-11-10-v03-to-2026-11-10-v04-patch.zip
