@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-11-07
+Last reconciled against GitHub: 2026-11-10
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -46,7 +46,7 @@ Last reconciled against GitHub: 2026-11-07
 - Both Full Card List and Short Drop Facebook posts include exactly one footer listing the five official eBay accounts from the Contact page. Removed the phrase about viewing seller history and feedback. Only `posts-card-list.js`, its cache import in `posts.js`, and release workflow files were changed for the promotion; Production-specific modules remain retained.
 - SQL required: No. Validation limitations: interactive desktop/mobile/Safari browser tests not performed; live Production not opened to avoid analytics contamination.
 
-### Latest Development release — 2026-11-07-v01
+### Previous Development release — 2026-11-07-v01
 - Development `2026-11-07-v01` (previous `2026-11-05-v02`), manifest `release-manifests/2026-11-07-v01.txt`, package source `89d2bc6c17a9cfbba62de3812201328880706baf`, manifest commit `45f0301a1a3b397cc472b10569f6659c634efb90`.
 - Purpose: show country attribution on each Owner Insights **Recently Viewed Cards** entry using the existing Qualified View country analytics. The compact line shows attributed country names with per-country view counts when repeated; unattributed cards show `Country unknown`.
 - Development full ZIP `Collect-TCG-Dev-2026-11-07-v01-full.zip` SHA256 `3b70f4167c19b00e1f757265ca6d5ea68e608b091f05de4cce91a51ebbdbd6ad`; patch ZIP `Collect-TCG-Dev-2026-11-05-v02-to-2026-11-07-v01-patch.zip` SHA256 `d45ab6d9a5b888ac497562c83da4f322a99468253b8834b5a8f43cbbaaaf47dd`.
@@ -55,7 +55,18 @@ Last reconciled against GitHub: 2026-11-07
 - SQL/database/RLS/Edge Function change required: No. The UI reuses existing `get_country_card_view_insights` data; no shared Supabase state was changed.
 - Refactoring review: no related refactor warranted; the implementation is localized to Owner Insights.
 - Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
-- Production remains `2026-11-05-v02`; this Development change has **not** been promoted to Production.
+- Production was subsequently promoted as `2026-11-07-v01`; that Production release is recorded in the Production repository baseline.
+
+### Latest Development release — 2026-11-10-v01
+- Development `2026-11-10-v01` (previous `2026-11-07-v01`) updates the Owner **eBay Messages → After Purchase** template to state: “It will be shipped over the weekend.”
+- Source commit: `aba745c2aa04ca7088f1f8a26f79ad65d5c4fb25`; immutable manifest: `release-manifests/2026-11-10-v01.txt`, recorded at `52fb6719eabb35424cc76ee9de312f43c473535f`.
+- Full ZIP: `Collect-TCG-Dev-2026-11-10-v01-full.zip` (SHA256 `733a7205ab05dfa602507856bad7c959d8e81849b6c5f92893ac62a1257ef92b`).
+- Patch ZIP: `Collect-TCG-Dev-2026-11-07-v01-to-2026-11-10-v01-patch.zip` (SHA256 `6a82e9014e5ce35b7ce2bffe3e9d02641fd594b6c30570201343170868e5fe59`).
+- Development Release workflow `42790879267` passed: feature tests, all Development JavaScript syntax checks, eBay weekend-dispatch contract, retained contracts, repository/CSS/release contracts, SEO self-test/generation/output validation, and package integrity.
+- Development Pages build/deploy workflow `42790925157` completed successfully for the manifest commit.
+- SQL/database/RLS/Edge Function change required: No.
+- Refactoring: reviewed; no application-code refactor warranted. The release workflow now rebases its manifest commit before pushing, preventing a concurrent SEO refresh from rejecting a completed release record.
+- Validation limitations: interactive desktop/mobile/Safari browser testing was not performed.
 
 ## Historical Development release record (2026-11-03-v01)
 Development release at time of this record: `2026-11-03-v01`
