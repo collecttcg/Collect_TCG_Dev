@@ -1127,13 +1127,13 @@ test('Development 2026-11-10-v05 offers a desktop-only ZIP of all listing images
 });
 
 test('Hidden Listings reuse the shared inventory discovery surface while keeping drafts private',()=>{
- const repository=read('dev/src/features/cards/repository.js');
- const filtering=read('dev/src/features/inventory/filtering.js');
- const shell=read('dev/src/features/inventory/page-shell.js');
- const page=read('dev/src/features/inventory/page.js');
- const lifecycle=read('dev/src/features/owner/lifecycle.js');
- const owners=read('dev/src/features/owner/card-owner-category.js');
- const registry=read('dev/src/app/register-features.js');
+ const repository=readSource('../dev/src/features/cards/repository.js');
+ const filtering=readSource('../dev/src/features/inventory/filtering.js');
+ const shell=readSource('../dev/src/features/inventory/page-shell.js');
+ const page=readSource('../dev/src/features/inventory/page.js');
+ const lifecycle=readSource('../dev/src/features/owner/lifecycle.js');
+ const owners=readSource('../dev/src/features/owner/card-owner-category.js');
+ const registry=readSource('../dev/src/app/register-features.js');
  assert.match(repository,/INVENTORY_ROUTES = new Set\([^\n]*"hidden-listings"/);
  assert.match(filtering,/scope === "hidden-listings"\) return lifecycle === "draft"/);
  assert.match(filtering,/title:"Hidden Listings"/);

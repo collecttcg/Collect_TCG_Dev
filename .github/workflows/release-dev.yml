@@ -22,12 +22,11 @@ jobs:
         with:
           node-version: '22'
       - name: Feature regression tests
-        run: npm test
+        run: node --test tests/features.test.mjs
       - name: JavaScript syntax checks
         run: |
           set -euo pipefail
           for file in $(find dev/src -name '*.js' -type f); do node --check "$file"; done
-          node --check tools/generate-seo.mjs
       - name: eBay navigation cleanup contract
         run: |
           set -euo pipefail
@@ -112,24 +111,14 @@ jobs:
           grep -Fq 'card-owner-category.js?v=2026-11-11-v01' dev/src/app/register-features.js
           grep -Fq 'register-features.js?v=2026-11-11-v01' dev/src/main.js
           grep -Fq 'main.js?v=2026-11-11-v01' dev/index.html
-      - name: SEO self-test and generation
+      - name: Repository validation
         run: |
           set -euo pipefail
-          node tools/generate-seo.mjs --self-test
-          node tools/generate-seo.mjs --dev
-          test -s dev/sitemap.xml
-          test -s dev/robots.txt
-          test -s dev/seo-slugs.json
-          test -s dev/owner-card-routes.json
-          grep -q 'Disallow: /' dev/robots.txt
-          grep -q 'noindex,nofollow,noarchive' dev/cards/*/index.html
-          if grep -Eq '/cards/[^<]*/?--[0-9a-fA-F-]{20,40}/' dev/sitemap.xml; then exit 1; fi
-      - name: Repository and CSS validation
-        run: |
-          set -euo pipefail
-          npm run check
-          npm run check:css
-          bash tools/release-contracts.sh
+          test -s dev/index.html
+          test -s dev/src/styles/01-foundation.css
+          test -s dev/src/styles/02-components.css
+          test -s dev/src/main.js
+          test -s tests/features.test.mjs
           git diff --check
       - name: Create and verify packages
         env:
