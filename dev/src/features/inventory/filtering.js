@@ -23,9 +23,12 @@ function isLiveLifecycle(card){
 function cardMatchesListingScope(card, scope = appContext.listingAvailabilityScope){
     const lifecycle=appContext.cardLifecycle(card);
 
+    // Hidden Listings is owner-only at the router level and is intentionally
+    // the sole inventory-style surface that can include drafts.
+    if(scope === "hidden-listings") return lifecycle === "draft";
+
     // Normal catalogue/listing surfaces are live-only for everyone, including
-    // Owner Mode. Draft listings are managed from the dedicated owner-only
-    // Hidden Listings page; archived listings remain in lifecycle tools.
+    // Owner Mode. Archived listings remain in lifecycle tools.
     if(lifecycle!=="live") return false;
 
     const availability = appContext.normalizeFilterValue(card && card.availability ? card.availability : "Available");
@@ -40,6 +43,13 @@ function cardMatchesListingScope(card, scope = appContext.listingAvailabilitySco
   }
 
 function listingScopeMeta(scope){
+    if(scope === "hidden-listings"){
+      return {
+        title:"Hidden Listings",
+        description:"Hidden from visitors and normal catalogue pages. Filter, browse and manage draft listings before publishing.",
+        eyebrow:"Owner · Hidden Listings"
+      };
+    }
     if(scope === "collection"){
       return {
         title:"Collection / Not For Sale",

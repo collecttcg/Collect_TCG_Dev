@@ -100,5 +100,5 @@ export function initialize(appContext,runtime){
     "by-game"
   ]);
 
-  appContext.INVENTORY_ROUTES = new Set(["inventory","collection","reserved","sold"]);
+  appContext.INVENTORY_ROUTES = new Set(["inventory","collection","reserved","sold","hidden-listings"]);
 }

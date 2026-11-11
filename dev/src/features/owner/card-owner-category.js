@@ -156,21 +156,6 @@ export function register(appContext){
   const originalRenderInventoryPage=appContext.renderInventoryPage;
   appContext.renderInventoryPage=function(scope="inventory"){ const result=originalRenderInventoryPage(scope); wireOwnerInventoryFilter(scope); return result; };
 
-  function wireHiddenListingsOwnerFilter(){
-    if(!appContext.isOwnerMode()) return;
-    const grid=appContext.$("hiddenListingsGrid"),tools=appContext.view?.querySelector?.(".inventory-display-tools");
-    if(!grid || !tools) return;
-    const wrap=document.createElement("div");
-    wrap.className="field owner-only"; wrap.style.minWidth="160px";
-    wrap.innerHTML=`<label for="hiddenOwnerCategoryFilter">Owner</label><select id="hiddenOwnerCategoryFilter"><option value="">All Owners</option>${OWNER_CATEGORIES.map(name=>`<option value="${appContext.escapeHtml(name)}">${appContext.escapeHtml(name)}</option>`).join("")}</select>`;
-    tools.appendChild(wrap);
-    const select=wrap.querySelector("select"),summary=tools.querySelector(".inventory-result-summary strong");
-    const apply=()=>{ const category=sanitizeOwnerCategory(select.value); let shown=0; Array.from(grid.children).forEach(tile=>{ const card=appContext.getCardById?.(tile.dataset.cardId||""); const visible=!category || sanitizeOwnerCategory(card?._owner_category)===category; tile.hidden=!visible; if(visible) shown++; }); if(summary) summary.textContent=shown.toLocaleString(); };
-    select.addEventListener("change",apply);
-  }
-
-  const originalRenderHiddenListingsPage=appContext.renderHiddenListingsPage;
-  if(typeof originalRenderHiddenListingsPage==="function") appContext.renderHiddenListingsPage=function(...args){ const result=originalRenderHiddenListingsPage(...args); wireHiddenListingsOwnerFilter(); return result; };
 
   async function bulkAssignOwnerCategory(cardIds,category){
     if(!appContext.requireOwner("bulk edit card owner")) return {saved:0,failed:cardIds.length};

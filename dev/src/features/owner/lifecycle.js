@@ -122,54 +122,10 @@ function renderHiddenListingsPage(){
       return;
     }
 
-    const drafts=appContext.cards.filter(card=>appContext.cardLifecycle(card)==="draft");
-    const compact=appContext.effectiveInventoryViewMode()==="compact";
-
-    appContext.view.innerHTML=`
-      <div class="page-head listing-page-head">
-        <div class="listing-page-title-copy">
-          <div class="eyebrow">Owner · Hidden Listings</div>
-          <h2>Hidden Listings</h2>
-          <p>Hidden from visitors and normal catalogue pages. Use the owner menu on any card to edit, unhide/publish, archive or delete it.</p>
-        </div>
-      </div>
-
-      <div class="inventory-display-tools">
-        <div class="inventory-result-summary">
-          <strong>${drafts.length.toLocaleString()}</strong>
-          <span>${drafts.length===1 ? "hidden listing" : "hidden listings"}</span>
-        </div>
-        <button type="button"
-                class="view-mode-toggle desktop-compact-view-toggle"
-                id="hiddenListingsViewToggle"
-                aria-pressed="${compact?"true":"false"}">
-          ${compact?"▦ Grid View":"☷ Compact View"}
-        </button>
-      </div>
-
-      ${drafts.length
-        ? `<div id="hiddenListingsGrid" class="${compact ? "grid compact-list" : "grid"}">${drafts.map(appContext.cardTileHTML).join("")}</div>`
-        : `<div class="empty-state inventory-no-results">
-             <div class="empty-icon">◌</div>
-             <h3>No hidden listings</h3>
-             <p>Listings you hide from visitors will appear here.</p>
-           </div>`}
-    `;
-
-    const grid=appContext.$("hiddenListingsGrid");
-    if(grid){
-      appContext.wireShimmer(grid);
-      appContext.wireCardActions(grid);
-    }
-
-    appContext.$("hiddenListingsViewToggle")?.addEventListener("click",()=>{
-      if(appContext.isMobileInventoryLayout()) return;
-      const next=appContext.getInventoryViewMode()==="compact" ? "grid" : "compact";
-      appContext.setInventoryViewMode(next);
-      appContext.renderHiddenListingsPage();
-    });
-
-    appContext.updateCompareTray();
+    // Keep draft cards owner-only, but render their listing workspace through
+    // the shared Inventory page so Browse the Vault, search, filters and
+    // sorting stay consistent with the normal catalogue.
+    return appContext.renderInventoryPage("hidden-listings");
   }
 
 function duplicateGradeKey(card){

@@ -40,6 +40,7 @@ function inventoryQuickFiltersHTML(){
 
 function inventoryPageHTML(scopeMeta,scope){
     const isCollection=scope==="collection";
+    const isHiddenListings=scope==="hidden-listings";
     const compact=appContext.effectiveInventoryViewMode()==="compact";
     const mobileSortOptions=appContext.inventorySortOptions(scope);
 
@@ -52,8 +53,8 @@ function inventoryPageHTML(scopeMeta,scope){
         </div>
       </div>
 
-      ${["inventory","collection"].includes(scope) ? `
-        <section class="inventory-game-browser" id="inventoryGameBrowser" aria-label="Browse ${isCollection ? "Collection" : "Inventory"} by game"></section>
+      ${["inventory","collection","hidden-listings"].includes(scope) ? `
+        <section class="inventory-game-browser" id="inventoryGameBrowser" aria-label="Browse ${isHiddenListings ? "Hidden Listings" : (isCollection ? "Collection" : "Inventory")} by game"></section>
       ` : ""}
 
       <!-- Desktop/mobile top controls only. Keep the filter drawer OUTSIDE

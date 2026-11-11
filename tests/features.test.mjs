@@ -1125,3 +1125,21 @@ test('Development 2026-11-10-v05 offers a desktop-only ZIP of all listing images
   assert.match(index,/02-components\.css\?v=2026-11-10-v05/);
   assert.match(register,/details\.js\?v=2026-11-10-v05/);
 });
+
+test('Hidden Listings reuse the shared inventory discovery surface while keeping drafts private',()=>{
+ const repository=read('dev/src/features/cards/repository.js');
+ const filtering=read('dev/src/features/inventory/filtering.js');
+ const shell=read('dev/src/features/inventory/page-shell.js');
+ const page=read('dev/src/features/inventory/page.js');
+ const lifecycle=read('dev/src/features/owner/lifecycle.js');
+ const owners=read('dev/src/features/owner/card-owner-category.js');
+ const registry=read('dev/src/app/register-features.js');
+ assert.match(repository,/INVENTORY_ROUTES = new Set\([^\n]*"hidden-listings"/);
+ assert.match(filtering,/scope === "hidden-listings"\) return lifecycle === "draft"/);
+ assert.match(filtering,/title:"Hidden Listings"/);
+ assert.match(shell,/\["inventory","collection","hidden-listings"\]\.includes\(scope\)/);
+ assert.match(page,/\["inventory","collection","hidden-listings"\]\.includes\(appContext\.listingAvailabilityScope\)/);
+ assert.match(lifecycle,/return appContext\.renderInventoryPage\("hidden-listings"\);/);
+ assert.doesNotMatch(owners,/hiddenListingsGrid/);
+ for(const ref of ['repository.js?v=2026-11-11-v01','filtering.js?v=2026-11-11-v01','page.js?v=2026-11-11-v01','lifecycle.js?v=2026-11-11-v01','card-owner-category.js?v=2026-11-11-v01']) assert.ok(registry.includes(ref));
+});

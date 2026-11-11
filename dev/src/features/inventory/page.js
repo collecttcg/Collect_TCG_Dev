@@ -144,7 +144,8 @@ function renderInventoryPage(scope = "inventory"){
       const families=inventoryGameFamilies();
       const selectedFamily=families.find(inventoryFamilyHasSelection);
       const allActive=!selectedFamily && !(appContext.pillFilterState.game?.size);
-      const browserLabel=appContext.listingAvailabilityScope==="collection" ? "Collection" : "Inventory";
+      const isHiddenListings=appContext.listingAvailabilityScope==="hidden-listings";
+      const browserLabel=isHiddenListings ? "Hidden Listings" : (appContext.listingAvailabilityScope==="collection" ? "Collection" : "Inventory");
       const allTile=`
         <button type="button" class="inventory-game-tile ${allActive ? "active" : ""}" data-inventory-game-family="all" aria-pressed="${allActive ? "true" : "false"}">
           <span class="inventory-game-art inventory-game-art-all" aria-hidden="true"><span>ALL</span></span>
@@ -182,7 +183,7 @@ function renderInventoryPage(scope = "inventory"){
 
       return `
         <div class="inventory-game-browser-head">
-          <div><span class="eyebrow">Browse the vault</span><h3>${appContext.listingAvailabilityScope==="collection" ? "Browse Collection by game" : "Shop by game"}</h3></div>
+          <div><span class="eyebrow">Browse the vault</span><h3>${isHiddenListings ? "Browse Hidden Listings by game" : (appContext.listingAvailabilityScope==="collection" ? "Browse Collection by game" : "Shop by game")}</h3></div>
           <span>Choose a game to refine the grid</span>
         </div>
         <div class="inventory-game-tiles">${allTile}${familyTiles}</div>
@@ -191,7 +192,7 @@ function renderInventoryPage(scope = "inventory"){
 
     function syncInventoryGameBrowser(){
       const mount=appContext.$("inventoryGameBrowser");
-      if(!mount || !["inventory","collection"].includes(appContext.listingAvailabilityScope)) return;
+      if(!mount || !["inventory","collection","hidden-listings"].includes(appContext.listingAvailabilityScope)) return;
       const families=inventoryGameFamilies();
       const previousTiles=mount.querySelector(".inventory-game-tiles");
       const previousSeries=mount.querySelector(".inventory-game-series");
