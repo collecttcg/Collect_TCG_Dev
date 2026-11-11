@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-11-v01: give owner Hidden Listings the shared Inventory browse and filter surface.
+# 2026-11-11-v01: validate owner Hidden Listings shared Inventory browse and filter surface.
 on:
   workflow_dispatch:
   push:
