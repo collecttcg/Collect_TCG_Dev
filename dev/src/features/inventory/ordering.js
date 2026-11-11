@@ -1,0 +1,443 @@
+/** Module: features/inventory/ordering. Shared dependencies are explicit on appContext. */
+export function register(appContext){
+function orderRpcUnavailable(error,rpcName){
+    const message=`${error.message||""} ${error.details||""}`.toLowerCase();
+    return message.includes(rpcName) || message.includes("function") || message.includes("schema cache");
+  }
+
+function normalizeOrderGroups(groups){
+    return (groups||[]).map(group=>({
+      key:appContext.normalizeFilterValue(group?.key||"") || "__other__",
+      label:String(group?.label||"").trim() || "Other"
+    })).filter(group=>group.key);
+  }
+
+async function loadCollectionGameOrder(){
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("get_collection_game_order");
+      if(error){
+        if(appContext.orderRpcUnavailable(error,"get_collection_game_order")) appContext.collectionGameOrderSupported=false;
+        appContext.collectionGameOrderByKey.clear();
+        return false;
+      }
+
+      appContext.collectionGameOrderByKey.clear();
+      (Array.isArray(data)?data:[]).forEach(row=>{
+        const key=appContext.normalizeFilterValue(row?.game_key||"") || "__other__";
+        const order=Number(row?.sort_order);
+        if(key && Number.isFinite(order)) appContext.collectionGameOrderByKey.set(key,order);
+      });
+      appContext.collectionGameOrderSupported=true;
+      return true;
+    }catch(error){
+      console.warn("Collection game order unavailable:",error);
+      appContext.collectionGameOrderSupported=false;
+      appContext.collectionGameOrderByKey.clear();
+      return false;
+    }
+  }
+
+function collectionCustomGameOrderValue(gameKey){
+    const key=appContext.normalizeFilterValue(gameKey||"") || "__other__";
+    const value=appContext.collectionGameOrderByKey.get(key);
+    return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+  }
+
+async function saveCollectionGameOrder(groups){
+    if(!appContext.requireCollectionOrderOwner("save Collection game order")) return false;
+
+    const clean=appContext.normalizeOrderGroups(groups);
+
+    if(!clean.length){
+      appContext.showToast("No Collection game categories to save");
+      return false;
+    }
+
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("set_collection_game_order",{
+        p_game_keys:clean.map(group=>group.key),
+        p_game_labels:clean.map(group=>group.label)
+      });
+
+      if(error){
+        console.error("Collection game-order save error:",error);
+        if(appContext.orderRpcUnavailable(error,"set_collection_game_order")){
+          appContext.collectionGameOrderSupported=false;
+          appContext.showToast("Run the Collection Game Order SQL migration first");
+        }else{
+          appContext.showToast("Could not save Collection game order");
+        }
+        return false;
+      }
+
+      appContext.collectionGameOrderByKey.clear();
+      clean.forEach((group,index)=>appContext.collectionGameOrderByKey.set(group.key,index+1));
+      appContext.collectionGameOrderSupported=true;
+      return Number(data||0)>=0;
+    }catch(error){
+      console.error("Collection game-order save failed:",error);
+      appContext.showToast("Could not save Collection game order");
+      return false;
+    }
+  }
+
+async function loadCollectionCardOrder(){
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("get_collection_card_order");
+      if(error){
+        if(appContext.orderRpcUnavailable(error,"get_collection_card_order")) appContext.collectionCardOrderSupported=false;
+        appContext.collectionCardOrderById.clear();
+        return false;
+      }
+
+      appContext.collectionCardOrderById.clear();
+      (Array.isArray(data)?data:[]).forEach(row=>{
+        const id=appContext.safeCardId(row?.card_id||"");
+        const order=Number(row?.sort_order);
+        if(id && Number.isFinite(order)) appContext.collectionCardOrderById.set(id,order);
+      });
+      appContext.collectionCardOrderSupported=true;
+      return true;
+    }catch(error){
+      console.warn("Collection custom order unavailable:",error);
+      appContext.collectionCardOrderSupported=false;
+      appContext.collectionCardOrderById.clear();
+      return false;
+    }
+  }
+
+function collectionCustomOrderValue(card){
+    const id=appContext.safeCardId(card?.id||"");
+    const value=id ? appContext.collectionCardOrderById.get(id) : null;
+    return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+  }
+
+async function saveCollectionCardOrder(cardIds){
+    if(!appContext.requireCollectionOrderOwner("save Collection card order")) return false;
+
+    const ids=(cardIds||[]).map(id=>appContext.safeCardId(id)).filter(Boolean);
+    if(!ids.length){
+      appContext.showToast("No Collection cards to reorder");
+      return false;
+    }
+
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("set_collection_card_order",{p_card_ids:ids});
+      if(error){
+        console.error("Collection order save error:",error);
+        if(appContext.orderRpcUnavailable(error,"set_collection_card_order")){
+          appContext.collectionCardOrderSupported=false;
+          appContext.showToast("Run the Collection Custom Order SQL migration first");
+        }else{
+          appContext.showToast("Could not save Collection card order");
+        }
+        return false;
+      }
+
+      appContext.collectionCardOrderById.clear();
+      ids.forEach((id,index)=>appContext.collectionCardOrderById.set(id,index+1));
+      appContext.collectionCardOrderSupported=true;
+      return Number(data||0)>=0;
+    }catch(error){
+      console.error("Collection order save failed:",error);
+      appContext.showToast("Could not save Collection card order");
+      return false;
+    }
+  }
+
+async function loadInventoryGameOrder(){
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("get_inventory_game_order");
+      if(error){
+        if(appContext.orderRpcUnavailable(error,"get_inventory_game_order"))
+          appContext.inventoryGameOrderSupported=false;
+        appContext.inventoryGameOrderByKey.clear();
+        return false;
+      }
+      appContext.inventoryGameOrderByKey.clear();
+      (Array.isArray(data)?data:[]).forEach(row=>{
+        const key=appContext.normalizeFilterValue(row?.game_key||"") || "__other__";
+        const order=Number(row?.sort_order);
+        if(key && Number.isFinite(order)) appContext.inventoryGameOrderByKey.set(key,order);
+      });
+      appContext.inventoryGameOrderSupported=true;
+      return true;
+    }catch(error){
+      console.warn("Inventory game order unavailable:",error);
+      appContext.inventoryGameOrderSupported=false;
+      appContext.inventoryGameOrderByKey.clear();
+      return false;
+    }
+  }
+
+function inventoryCustomGameOrderValue(gameKey){
+    const key=appContext.normalizeFilterValue(gameKey||"") || "__other__";
+    const value=appContext.inventoryGameOrderByKey.get(key);
+    return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+  }
+
+async function saveInventoryGameOrder(groups){
+    if(!appContext.requireCollectionOrderOwner("save Inventory game order")) return false;
+    const clean=appContext.normalizeOrderGroups(groups);
+    if(!clean.length){ appContext.showToast("No Inventory game categories to save"); return false; }
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("set_inventory_game_order",{
+        p_game_keys:clean.map(group=>group.key),
+        p_game_labels:clean.map(group=>group.label)
+      });
+      if(error){
+        console.error("Inventory game-order save error:",error);
+        if(appContext.orderRpcUnavailable(error,"set_inventory_game_order")){
+          appContext.inventoryGameOrderSupported=false;
+          appContext.showToast("Run the Inventory Custom Order SQL migration first");
+        }else appContext.showToast("Could not save Inventory game order");
+        return false;
+      }
+      appContext.inventoryGameOrderByKey.clear();
+      clean.forEach((group,index)=>appContext.inventoryGameOrderByKey.set(group.key,index+1));
+      appContext.inventoryGameOrderSupported=true;
+      return Number(data||0)>=0;
+    }catch(error){
+      console.error("Inventory game-order save failed:",error);
+      appContext.showToast("Could not save Inventory game order");
+      return false;
+    }
+  }
+
+async function loadInventoryCardOrder(){
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("get_inventory_card_order");
+      if(error){
+        if(appContext.orderRpcUnavailable(error,"get_inventory_card_order"))
+          appContext.inventoryCardOrderSupported=false;
+        appContext.inventoryCardOrderById.clear();
+        return false;
+      }
+      appContext.inventoryCardOrderById.clear();
+      (Array.isArray(data)?data:[]).forEach(row=>{
+        const id=appContext.safeCardId(row?.card_id||"");
+        const order=Number(row?.sort_order);
+        if(id && Number.isFinite(order)) appContext.inventoryCardOrderById.set(id,order);
+      });
+      appContext.inventoryCardOrderSupported=true;
+      return true;
+    }catch(error){
+      console.warn("Inventory custom order unavailable:",error);
+      appContext.inventoryCardOrderSupported=false;
+      appContext.inventoryCardOrderById.clear();
+      return false;
+    }
+  }
+
+function inventoryCustomOrderValue(card){
+    const id=appContext.safeCardId(card?.id||"");
+    const value=id ? appContext.inventoryCardOrderById.get(id) : null;
+    return Number.isFinite(value) ? value : Number.MAX_SAFE_INTEGER;
+  }
+
+function mergeFilteredCustomOrder(fullOrderIds,visibleOrderIds){
+    const full=[];
+    const seenFull=new Set();
+    (fullOrderIds||[]).forEach(value=>{
+      const id=appContext.safeCardId(value);
+      if(!id || seenFull.has(id)) return;
+      seenFull.add(id);
+      full.push(id);
+    });
+
+    const visible=[];
+    const seenVisible=new Set();
+    (visibleOrderIds||[]).forEach(value=>{
+      const id=appContext.safeCardId(value);
+      if(!id || seenVisible.has(id) || !seenFull.has(id)) return;
+      seenVisible.add(id);
+      visible.push(id);
+    });
+
+    if(!visible.length) return full;
+    const visibleSet=new Set(visible);
+    const slots=[];
+    full.forEach((id,index)=>{ if(visibleSet.has(id)) slots.push(index); });
+    const merged=full.slice();
+    slots.forEach((index,slotIndex)=>{ merged[index]=visible[slotIndex]; });
+    return merged;
+  }
+
+async function saveInventoryCardOrder(cardIds){
+    if(!appContext.requireCollectionOrderOwner("save Inventory card order")) return false;
+    const ids=(cardIds||[]).map(id=>appContext.safeCardId(id)).filter(Boolean);
+    if(!ids.length){ appContext.showToast("No Inventory cards to reorder"); return false; }
+    try{
+      const {data,error}=await appContext.supabaseClient.rpc("set_inventory_card_order",{p_card_ids:ids});
+      if(error){
+        console.error("Inventory order save error:",error);
+        if(appContext.orderRpcUnavailable(error,"set_inventory_card_order")){
+          appContext.inventoryCardOrderSupported=false;
+          appContext.showToast("Run the Inventory Custom Order SQL migration first");
+        }else appContext.showToast("Could not save Inventory card order");
+        return false;
+      }
+      appContext.inventoryCardOrderById.clear();
+      ids.forEach((id,index)=>appContext.inventoryCardOrderById.set(id,index+1));
+      appContext.inventoryCardOrderSupported=true;
+      return Number(data||0)>=0;
+    }catch(error){
+      console.error("Inventory order save failed:",error);
+      appContext.showToast("Could not save Inventory card order");
+      return false;
+    }
+  }
+
+function inventoryNewCardGameKey(card){
+    return appContext.normalizeFilterValue(card?.game||"") || "__other__";
+  }
+
+function inventoryNewCardOrderDescriptor(card){
+    const format=appContext.effectiveFormat(card);
+    if(format==="Graded"){
+      const grades=(Array.isArray(card?.grading)?card.grading:[])
+        .map(row=>parseFloat(String(row?.grade??"")))
+        .filter(Number.isFinite);
+      return {formatRank:0,grade:grades.length?Math.max(...grades):null,conditionRank:0};
+    }
+    if(format==="Sealed") return {formatRank:2,grade:null,conditionRank:0};
+    const rawRank={M:0,NM:1,LP:2,MP:3,HP:4,DMG:5,NA:6};
+    return {
+      formatRank:1,
+      grade:null,
+      conditionRank:rawRank[String(card?.condition||"").toUpperCase()] ?? 7
+    };
+  }
+
+function compareInventoryNewCardPlacement(a,b){
+    const ao=appContext.inventoryNewCardOrderDescriptor(a);
+    const bo=appContext.inventoryNewCardOrderDescriptor(b);
+    if(ao.formatRank!==bo.formatRank) return ao.formatRank-bo.formatRank;
+    if(ao.formatRank===0){
+      if(ao.grade==null && bo.grade!=null) return 1;
+      if(ao.grade!=null && bo.grade==null) return -1;
+      if(ao.grade!=null && bo.grade!=null && ao.grade!==bo.grade) return bo.grade-ao.grade;
+    }
+    if(ao.formatRank===1 && ao.conditionRank!==bo.conditionRank) return ao.conditionRank-bo.conditionRank;
+    return 0;
+  }
+
+function inventoryNewCardBucketRank(card){
+    const descriptor=appContext.inventoryNewCardOrderDescriptor(card);
+    if(descriptor.formatRank===0) return 0;
+    if(descriptor.formatRank===2) return 8;
+    return descriptor.conditionRank+1;
+  }
+
+function inventoryCustomOrderWithNewCard(newCard){
+    const newId=appContext.safeCardId(newCard?.id||"");
+    if(!newId || !appContext.cardMatchesListingScope(newCard,"inventory")) return null;
+    const existing=appContext.cards
+      .filter(card=>card && appContext.safeCardId(card.id)!==newId && appContext.cardMatchesListingScope(card,"inventory"))
+      .slice()
+      .sort((a,b)=>{
+        const ao=appContext.inventoryCustomOrderValue(a);
+        const bo=appContext.inventoryCustomOrderValue(b);
+        if(ao!==bo) return ao-bo;
+        return String(a.name||"").localeCompare(String(b.name||""),undefined,{sensitivity:"base",numeric:true});
+      });
+
+    const newGameKey=appContext.inventoryNewCardGameKey(newCard);
+    const sameGameIndexes=[];
+    existing.forEach((card,index)=>{
+      if(appContext.inventoryNewCardGameKey(card)===newGameKey) sameGameIndexes.push(index);
+    });
+
+    let insertAt=existing.length;
+    if(sameGameIndexes.length){
+      // Existing cards keep their relative order. Only the newly added card is
+      // slotted inside its own game/category using grade/condition/format.
+      insertAt=sameGameIndexes[sameGameIndexes.length-1]+1;
+      for(const index of sameGameIndexes){
+        if(appContext.compareInventoryNewCardPlacement(newCard,existing[index])<0){
+          insertAt=index;
+          break;
+        }
+      }
+    }else{
+      // For a brand-new game/category, respect the saved game-group order when
+      // possible without rearranging any existing card.
+      const newGameOrder=appContext.inventoryCustomGameOrderValue(newGameKey);
+      if(Number.isFinite(newGameOrder) && newGameOrder<Number.MAX_SAFE_INTEGER){
+        const nextGameIndex=existing.findIndex(card=>{
+          const key=appContext.inventoryNewCardGameKey(card);
+          const order=appContext.inventoryCustomGameOrderValue(key);
+          return Number.isFinite(order) && order>newGameOrder;
+        });
+        if(nextGameIndex>=0) insertAt=nextGameIndex;
+      }
+    }
+
+    const ordered=existing.map(card=>appContext.safeCardId(card.id)).filter(Boolean);
+    ordered.splice(insertAt,0,newId);
+    return ordered;
+  }
+
+async function insertNewInventoryCardIntoCustomOrder(newCard){
+    if(appContext.inventoryCardOrderSupported===false) return false;
+    const ids=appContext.inventoryCustomOrderWithNewCard(newCard);
+    if(!ids) return true;
+    return appContext.saveInventoryCardOrder(ids);
+  }
+
+function runWhenIdle(callback,timeout=1200){
+    if("requestIdleCallback" in window){
+      return requestIdleCallback(callback,{timeout});
+    }
+    return setTimeout(callback,80);
+  }
+
+  Object.assign(appContext,{orderRpcUnavailable,normalizeOrderGroups,loadCollectionGameOrder,collectionCustomGameOrderValue,saveCollectionGameOrder,loadCollectionCardOrder,collectionCustomOrderValue,saveCollectionCardOrder,loadInventoryGameOrder,inventoryCustomGameOrderValue,saveInventoryGameOrder,loadInventoryCardOrder,inventoryCustomOrderValue,mergeFilteredCustomOrder,saveInventoryCardOrder,inventoryNewCardGameKey,inventoryNewCardOrderDescriptor,compareInventoryNewCardPlacement,inventoryNewCardBucketRank,inventoryCustomOrderWithNewCard,insertNewInventoryCardIntoCustomOrder,runWhenIdle});
+}
+
+/** State and event initialization; called in preserved startup order. */
+export function initialize(appContext,runtime){
+  appContext.soldAtSupported = false;
+
+  appContext.languageDetailsSupported = null;
+
+  appContext.lifecycleSupported = false;
+
+  appContext.ownerPrivateSupported = false;
+
+  appContext.cardImageVariantsSupported = false;
+
+  appContext.thumbnailUrlSupported = false;
+
+  appContext.editHistorySupported = false;
+
+  appContext.giveaways = [];
+
+  appContext.showcases = [];
+
+  appContext.activeShowcaseCategory = "All";
+
+
+  appContext.$ = (id) => document.getElementById(id);
+
+  appContext.view = appContext.$("view");
+
+  appContext.toastEl = appContext.$("toast");
+
+
+  appContext.mobileMoreMenuEl = appContext.$("mobileMoreMenu");
+
+  appContext.detailsMoreMenuEl = appContext.$("detailsMoreMenu");
+
+  appContext.supabaseClient = runtime.createClient();
+
+  appContext.ownerSession = null;
+
+  appContext.ownerVerified = false;
+
+  appContext.inventoryRenderController = null;
+
+  appContext.inventoryStickyObserver = null;
+
+  appContext.detailsPreservedListingHash = "";
+}

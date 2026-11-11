@@ -1,0 +1,72 @@
+import * as module0 from '../features/core/utilities.js?v=2026-09-29-v09';
+import * as module1 from '../features/cards/favorites.js?v=2026-09-29-v09';
+import * as module2 from '../features/inventory/ordering.js?v=2026-09-29-v09';
+import * as module3 from '../services/auth.js?v=2026-09-29-v09';
+import * as module4 from '../features/media/collage.js?v=2026-09-29-v09';
+import * as module5 from '../features/cards/repository.js?v=2026-11-11-v01';
+import * as module6 from '../app/navigation.js?v=2026-09-29-v09';
+import * as module7 from '../ui/notifications.js?v=2026-09-29-v09';
+import * as module8 from '../features/cards/pricing.js?v=2026-09-29-v09';
+import * as module9 from '../services/catalogue.js?v=2026-09-29-v09';
+import * as module10 from '../features/content/giveaways-data.js?v=2026-09-29-v09';
+import * as module11 from '../features/content/showcase-data.js?v=2026-09-29-v09';
+import * as module12 from '../services/analytics.js?v=2026-11-04-v01';
+import * as module13 from '../services/contact-intent-policy.js?v=2026-09-29-v09';
+import * as module14 from '../features/owner/psa.js?v=2026-09-29-v09';
+import * as module15 from '../app/routing.js?v=2026-09-29-v09';
+import * as module16 from '../features/media/images.js?v=2026-09-29-v11';
+import * as module17 from '../features/cards/presentation.js?v=2026-09-29-v09';
+import * as module18 from '../features/owner/forms.js?v=2026-09-29-v09';
+import * as module19 from '../features/content/home.js?v=2026-09-29-v09';
+import * as module20 from '../features/inventory/filtering.js?v=2026-11-11-v01';
+import * as module21 from '../features/cards/related.js?v=2026-09-29-v09';
+import * as module22 from '../features/cards/compare.js?v=2026-09-29-v09';
+import * as module23 from '../features/cards/tiles.js?v=2026-11-01-v01';
+import * as module24 from '../features/inventory/page.js?v=2026-11-11-v01';
+import * as module25 from '../features/content/giveaways.js?v=2026-09-29-v09';
+import * as module26 from '../features/content/showcase.js?v=2026-09-29-v09';
+import * as module27 from '../features/content/giveaway-pages.js?v=2026-09-29-v09';
+import * as module28 from '../features/owner/insights.js?v=2026-09-29-v09';
+import * as module29 from '../features/owner/insights-intent-rates.js?v=2026-09-29-v09';
+import * as module30 from '../features/owner/insights-dashboard.js?v=2026-09-29-v09';
+import * as module31 from '../features/content/reviews.js?v=2026-09-29-v09';
+import * as module32 from '../features/content/information.js?v=2026-10-31-v01';
+import * as module33 from '../features/social/posts.js?v=2026-09-30-v02';
+import * as module34 from '../features/owner/quality.js?v=2026-09-29-v09';
+import * as module35 from '../features/owner/tools.js?v=2026-09-29-v09';
+import * as module36 from '../features/owner/bulk-status.js?v=2026-09-29-v09';
+import * as module37 from '../features/owner/image-maintenance.js?v=2026-09-29-v09';
+import * as module38 from '../features/owner/lifecycle.js?v=2026-11-11-v01';
+import * as module39 from '../features/owner/bulk-price.js?v=2026-09-29-v09';
+import * as module40 from '../features/owner/bulk-metadata.js?v=2026-09-29-v09';
+import * as module41 from '../features/owner/history.js?v=2026-09-29-v09';
+import * as module42 from '../features/owner/export.js?v=2026-09-29-v09';
+import * as module43 from '../features/owner/add.js?v=2026-09-29-v09';
+import * as module44 from '../features/cards/details.js?v=2026-11-10-v05';
+import * as module45 from '../features/owner/editor.js?v=2026-09-29-v09';
+import * as module46 from '../app/theme.js?v=2026-09-29-v09';
+import * as module47 from '../app/startup.js?v=2026-09-29-v09';
+import * as module48 from '../features/owner/mobile-card-editor.js?v=2026-10-07-v03';
+import * as module49 from '../features/social/posts-hidden-ebay.js?v=2026-11-02-v02';
+import * as module50 from '../features/owner/card-owner-category.js?v=2026-11-11-v01';
+import * as module51 from '../features/owner/card-scanner.js?v=2026-10-24-v13';
+import * as module52 from '../features/owner/ebay-banlist.js?v=2026-11-03-v01';
+import * as module53 from '../features/owner/dashboard.js?v=2026-11-03-v01';
+import * as module54 from '../features/owner/inventory-value-overview.js?v=2026-10-26-v01';
+import * as module55 from '../features/media/heic-support.js?v=2026-10-30-v06';
+import * as module56 from '../features/owner/image-drag-autoscroll.js?v=2026-10-30-v01';
+import * as module57 from '../features/owner/image-file-drop.js?v=2026-10-30-v01';
+import * as module58 from '../features/owner/psa-never-synced.js?v=2026-10-31-v01';
+import * as module59 from '../features/owner/ebay-listing-status.js?v=2026-11-01-v02';
+import * as module60 from '../features/owner/quick-action-scroll.js?v=2026-11-01-v04';
+import * as module61 from '../features/owner/fx-low-price.js?v=2026-11-02-v03';
+import * as module62 from '../features/owner/ebay-messages.js?v=2026-11-10-v01';
+import * as module63 from '../features/social/posts-ebay-link.js?v=2026-11-03-v01';
+
+export function registerFeatures(appContext){
+  module0.register(appContext); module1.register(appContext); module2.register(appContext); module3.register(appContext); module4.register(appContext); module5.register(appContext); module6.register(appContext); module7.register(appContext); module8.register(appContext); module9.register(appContext); module10.register(appContext); module11.register(appContext); module12.register(appContext); module13.register(appContext); module14.register(appContext); module15.register(appContext); module16.register(appContext); module17.register(appContext); module18.register(appContext); module19.register(appContext); module20.register(appContext); module21.register(appContext); module22.register(appContext); module23.register(appContext); module24.register(appContext); module25.register(appContext); module26.register(appContext); module27.register(appContext); module28.register(appContext); module29.register(appContext); if(typeof document!=="undefined") module30.register(appContext); module31.register(appContext); module32.register(appContext); module33.register(appContext); module34.register(appContext); module35.register(appContext); module36.register(appContext); module37.register(appContext); module38.register(appContext); module39.register(appContext); module40.register(appContext); module41.register(appContext); module42.register(appContext); module43.register(appContext); module44.register(appContext); module45.register(appContext); module46.register(appContext); module47.register(appContext); module48.register(appContext); module49.register(appContext); module50.register(appContext); module51.register(appContext); module52.register(appContext); module53.register(appContext); module54.register(appContext); module55.register(appContext); module56.register(appContext); module57.register(appContext); module58.register(appContext); module59.register(appContext); module60.register(appContext); module61.register(appContext); module62.register(appContext); module63.register(appContext);
+}
+
+export function initializeApp(appContext,runtime){
+  module0.initialize(appContext,runtime); module1.initialize(appContext,runtime); module2.initialize(appContext,runtime); module4.initialize(appContext,runtime); module5.initialize(appContext,runtime); module6.initialize(appContext,runtime); module8.initialize(appContext,runtime); module9.initialize(appContext,runtime); module10.initialize(appContext,runtime); module11.initialize(appContext,runtime); module12.initialize(appContext,runtime); module14.initialize(appContext,runtime); module15.initialize(appContext,runtime); module16.initialize(appContext,runtime); module17.initialize(appContext,runtime); module18.initialize(appContext,runtime); module19.initialize(appContext,runtime); module20.initialize(appContext,runtime); module21.initialize(appContext,runtime); module23.initialize(appContext,runtime); module25.initialize(appContext,runtime); module26.initialize(appContext,runtime); module27.initialize(appContext,runtime); module28.initialize(appContext,runtime); module32.initialize(appContext,runtime); module33.initialize(appContext,runtime); module34.initialize(appContext,runtime); module35.initialize(appContext,runtime); module37.initialize(appContext,runtime); module43.initialize(appContext,runtime); module44.initialize(appContext,runtime); module45.initialize(appContext,runtime); module48.initialize(appContext,runtime); module52.initialize(appContext,runtime); module46.initialize(appContext,runtime); module47.initialize(appContext,runtime); module54.initialize(appContext,runtime); module55.initialize(appContext,runtime); module56.initialize(appContext,runtime); module57.initialize(appContext,runtime); module60.initialize(appContext,runtime); module61.initialize(appContext,runtime);
+}
