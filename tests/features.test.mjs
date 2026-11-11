@@ -935,7 +935,7 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
 
   assert.match(initializer,/export \{ initializeApp \} from '\.\/register-features\.js\?v=2026-10-05-v01'/);
   assert.equal((registry.match(/posts\.js\?v=2026-09-30-v02/g)||[]).length,1);
-  assert.equal((registry.match(/page\.js\?v=2026-09-29-v09/g)||[]).length,1);
+  assert.equal((registry.match(/page\.js\?v=2026-11-11-v01/g)||[]).length,1);
   assert.doesNotMatch(analytics,/function insightContactMetrics\(/);
   assert.doesNotMatch(analytics,/function insightInterestScore\(/);
   assert.match(policy,/function insightContactMetrics\(/);
