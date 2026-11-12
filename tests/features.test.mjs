@@ -1143,3 +1143,15 @@ test('Hidden Listings reuse the shared inventory discovery surface while keeping
  assert.doesNotMatch(owners,/hiddenListingsGrid/);
  for(const ref of ['repository.js?v=2026-11-11-v01','filtering.js?v=2026-11-11-v01','page.js?v=2026-11-11-v01','lifecycle.js?v=2026-11-11-v01','card-owner-category.js?v=2026-11-11-v01']) assert.ok(registry.includes(ref));
 });
+
+
+test('Owner pre-errata/error checkbox round-trips through Add/Edit card name without schema changes',()=>{
+  const forms=readSource('../dev/src/features/owner/forms.js');
+  const registry=readSource('../dev/src/app/register-features.js');
+  assert.match(forms,/id="\$\{p\}PreErrataError"/);
+  assert.match(forms,/storedName\.replace\(errorPrefix,""\)/);
+  assert.match(forms,/\.checked=errorPrefix\.test\(storedName\)/);
+  assert.match(forms,/\[PRE ERRATA\] \[ERROR\]/);
+  assert.match(forms,/PreErrataError"\)\?\.checked/);
+  assert.match(registry,/forms\.js\?v=2026-11-12-v05/);
+});
