@@ -1,0 +1,12 @@
+Version: 2026-11-12-v02
+Previous version: 2026-11-12-v01
+Source commit: a78552d408f95f8155dc920bc98a749b51d63ead
+Purpose: change all five eBay Ban List account shortcuts to the signed-in account Blocked Buyers management page.
+Full ZIP: Collect-TCG-Dev-2026-11-12-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-12-v01-to-2026-11-12-v02-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+661fcde440f59654fdc01b3c7af368484786631d94ab68778901a7507e1c65dd  release/Collect-TCG-Dev-2026-11-12-v02-full.zip
+20a4d1cd90477a05c48891f8edf3924f6872d6b88463b60a149cab4dc25260ad  release/Collect-TCG-Dev-2026-11-12-v01-to-2026-11-12-v02-patch.zip
