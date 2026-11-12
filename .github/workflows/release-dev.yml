@@ -104,13 +104,13 @@ jobs:
           grep -Fq '["inventory","collection","hidden-listings"].includes(scope)' dev/src/features/inventory/page-shell.js
           grep -Fq '["inventory","collection","hidden-listings"].includes(appContext.listingAvailabilityScope)' dev/src/features/inventory/page.js
           ! grep -Fq 'hiddenListingsGrid' dev/src/features/owner/card-owner-category.js
-          grep -Fq 'repository.js?v=2026-11-12-v01' dev/src/app/register-features.js
-          grep -Fq 'filtering.js?v=2026-11-12-v01' dev/src/app/register-features.js
-          grep -Fq 'page.js?v=2026-11-12-v01' dev/src/app/register-features.js
-          grep -Fq 'lifecycle.js?v=2026-11-12-v01' dev/src/app/register-features.js
-          grep -Fq 'card-owner-category.js?v=2026-11-12-v01' dev/src/app/register-features.js
-          grep -Fq 'register-features.js?v=2026-11-12-v01' dev/src/main.js
-          grep -Fq 'main.js?v=2026-11-12-v01' dev/index.html
+          grep -Fq 'repository.js?v=2026-11-11-v01' dev/src/app/register-features.js
+          grep -Fq 'filtering.js?v=2026-11-11-v01' dev/src/app/register-features.js
+          grep -Fq 'page.js?v=2026-11-11-v01' dev/src/app/register-features.js
+          grep -Fq 'lifecycle.js?v=2026-11-11-v01' dev/src/app/register-features.js
+          grep -Fq 'card-owner-category.js?v=2026-11-11-v01' dev/src/app/register-features.js
+          grep -Fq 'register-features.js?v=2026-11-11-v01' dev/src/main.js
+          grep -Fq 'main.js?v=2026-11-11-v01' dev/index.html
       - name: Repository validation
         run: |
           set -euo pipefail
