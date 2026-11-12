@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-12-v06: validate eBay listing generator negotiation section.
+# 2026-11-12-v07: validate eBay listing generator negotiation section.
 on:
   workflow_dispatch:
   push:
@@ -39,7 +39,9 @@ jobs:
           grep -Fq 'We welcome reasonable offers.' dev/src/features/social/posts-marketplace.js
           grep -Fq 'posts-marketplace.js?v=2026-11-12-v04' dev/src/features/social/posts.js
           grep -Fq 'posts.js?v=2026-11-12-v04' dev/src/app/register-features.js
-          grep -Fq 'forms.js?v=2026-11-12-v06' dev/src/app/register-features.js
+          grep -Fq 'forms.js?v=2026-11-12-v07' dev/src/app/register-features.js
+          grep -Fq 'add.js?v=2026-11-12-v07' dev/src/app/register-features.js
+          grep -Fq 'else appContext.wirePreErrataError("add")' dev/src/features/owner/add.js
           grep -Fq 'PreErrataError' dev/src/features/owner/forms.js
           grep -Fq 'const EBAY_BLOCKED_BUYERS_URL="https://www.ebay.com/bmgt/BuyerBlock"' dev/src/features/owner/ebay-banlist.js
           grep -Fq 'length:EBAY_ACCOUNT_COUNT' dev/src/features/owner/ebay-banlist.js
@@ -131,9 +133,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-12-v06
-          PREVIOUS_VERSION: 2026-11-12-v05
-          PREVIOUS_COMMIT: fcc387c8fa407fa037f1a0b71d996a8017da8131
+          RELEASE_VERSION: 2026-11-12-v07
+          PREVIOUS_VERSION: 2026-11-12-v06
+          PREVIOUS_COMMIT: d3bb1ba960923e87b254c3526554c0d501b1fcfc
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -150,25 +152,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-12-v06-packages
+          name: Collect-TCG-Dev-2026-11-12-v07-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-12-v06-full.zip
-            release/Collect-TCG-Dev-2026-11-12-v05-to-2026-11-12-v06-patch.zip
+            release/Collect-TCG-Dev-2026-11-12-v07-full.zip
+            release/Collect-TCG-Dev-2026-11-12-v06-to-2026-11-12-v07-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-12-v06.txt'
+          MANIFEST='release-manifests/2026-11-12-v07.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-12-v06'
-            echo 'Previous version: 2026-11-12-v05'
+            echo 'Version: 2026-11-12-v07'
+            echo 'Previous version: 2026-11-12-v06'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: update pre-errata/error checkbox to display or remove both title prefixes immediately before saving.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-12-v06-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-12-v05-to-2026-11-12-v06-patch.zip'
+            echo 'Purpose: wire the pre-errata title checkbox on new Add Card forms as well as Edit and Clone forms.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-12-v07-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-12-v06-to-2026-11-12-v07-patch.zip'
             echo 'SQL required: No'
             echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
@@ -178,6 +180,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-12-v06: record package validation'
+          git commit -m 'Development 2026-11-12-v07: record package validation'
           git pull --rebase origin main
           git push
