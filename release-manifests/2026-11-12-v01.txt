@@ -1,0 +1,12 @@
+Version: 2026-11-12-v01
+Previous version: 2026-11-10-v05
+Source commit: 77793b6a073f45d9b46dd6513b50cc8489f01cf6
+Purpose: finalize Hidden Listings shared Inventory browsing and update the COLLECT_TCG_2 eBay store URL across Contact, Owner eBay Ban List, and Card List Post Generator.
+Full ZIP: Collect-TCG-Dev-2026-11-12-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-10-v05-to-2026-11-12-v01-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+d4dba01da699b15ed6f931941a20e472fb4e087392bddeea443a247b251e86c2  release/Collect-TCG-Dev-2026-11-12-v01-full.zip
+58eb74fd8c60d2a54ce24d336479bc32270f91a91c0a33b99ed454d8e20170a0  release/Collect-TCG-Dev-2026-11-10-v05-to-2026-11-12-v01-patch.zip
