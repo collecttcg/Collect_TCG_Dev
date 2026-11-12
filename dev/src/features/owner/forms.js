@@ -1529,8 +1529,16 @@ function populateFields(p, card){
     appContext.wireAutoCapitalization(p);
     const storedName=String(card?.name||"");
     const errorPrefix=/^\[PRE ERRATA\]\s*\[ERROR\]\s*/i;
-    appContext.$(p + "Name").value = storedName.replace(errorPrefix,"");
-    if(appContext.$(p + "PreErrataError")) appContext.$(p + "PreErrataError").checked=errorPrefix.test(storedName);
+    const nameInput=appContext.$(p + "Name");
+    const errorToggle=appContext.$(p + "PreErrataError");
+    nameInput.value=storedName;
+    if(errorToggle){
+      errorToggle.checked=errorPrefix.test(storedName);
+      errorToggle.addEventListener("change",()=>{
+        const baseName=nameInput.value.replace(/^(?:\[PRE ERRATA\]\s*\[ERROR\]\s*)+/i,"").trimStart();
+        nameInput.value=(errorToggle.checked ? "[PRE ERRATA] [ERROR] " : "")+baseName;
+      });
+    }
     appContext.$(p + "CardCode").value = card ? (card.card_code || "") : "";
     appContext.$(p + "Year").value = card && card.year ? card.year : "";
     appContext.$(p + "Game").value = card ? card.game : "";
