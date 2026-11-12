@@ -1,0 +1,12 @@
+Version: 2026-11-12-v05
+Previous version: 2026-11-12-v04
+Source commit: fcc387c8fa407fa037f1a0b71d996a8017da8131
+Purpose: add an Owner Add/Edit pre-errata/error checkbox that prefixes card names with [PRE ERRATA] [ERROR] and round-trips on reopen.
+Full ZIP: Collect-TCG-Dev-2026-11-12-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-12-v04-to-2026-11-12-v05-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+793eb8383168f86cc678a7209be923e5c7b1323c3a79ad9733f490b7261c6b71  release/Collect-TCG-Dev-2026-11-12-v05-full.zip
+5774064e6c1ce74803f7d50cb49bde46650532d1b350aa9752ef1f94006b2a7a  release/Collect-TCG-Dev-2026-11-12-v04-to-2026-11-12-v05-patch.zip
