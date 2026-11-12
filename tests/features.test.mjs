@@ -1149,8 +1149,9 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   const forms=readSource('../dev/src/features/owner/forms.js');
   const registry=readSource('../dev/src/app/register-features.js');
   assert.match(forms,/id="\$\{p\}PreErrataError"/);
-  assert.match(forms,/storedName\.replace\(errorPrefix,""\)/);
+  assert.match(forms,/nameInput\.value=storedName/);
   assert.match(forms,/\.checked=errorPrefix\.test\(storedName\)/);
+  assert.match(forms,/errorToggle\.addEventListener\("change"/);
   assert.match(forms,/\[PRE ERRATA\] \[ERROR\]/);
   assert.match(forms,/PreErrataError"\)\?\.checked/);
   assert.match(registry,/forms\.js\?v=2026-11-12-v05/);
