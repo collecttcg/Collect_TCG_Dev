@@ -31,6 +31,7 @@ function renderAddPage(){
     };
     appContext.wireGameCombobox("add");
     if(cloneDraft) appContext.populateFields("add", cloneDraft);
+    else appContext.wirePreErrataError("add");
     const cancelBtn=appContext.$("addCancelBtn");
     if(cancelBtn){
       cancelBtn.addEventListener("click",()=>{ appContext.pendingCloneCard=null; });
