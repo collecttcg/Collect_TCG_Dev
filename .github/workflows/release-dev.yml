@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-12-v02: validate owner Hidden Listings shared Inventory browse and filter surface.
+# 2026-11-12-v03: validate eBay listing generator negotiation section.
 on:
   workflow_dispatch:
   push:
@@ -35,6 +35,10 @@ jobs:
           ! grep -Fq 'addNavLink(document.getElementById("mainnav")' dev/src/features/owner/ebay-banlist.js
           grep -Fq "['banlist','eBay Ban List']" dev/src/features/owner/ebay-messages.js
           grep -Fq 'ebay-banlist.js?v=2026-11-12-v02' dev/src/app/register-features.js
+          grep -Fq '"[NEGOTIATION]"' dev/src/features/social/posts-marketplace.js
+          grep -Fq 'Please do not ask for our best price.' dev/src/features/social/posts-marketplace.js
+          grep -Fq 'posts-marketplace.js?v=2026-11-12-v03' dev/src/features/social/posts.js
+          grep -Fq 'posts.js?v=2026-11-12-v03' dev/src/app/register-features.js
           grep -Fq 'const EBAY_BLOCKED_BUYERS_URL="https://www.ebay.com/bmgt/BuyerBlock"' dev/src/features/owner/ebay-banlist.js
           grep -Fq 'length:EBAY_ACCOUNT_COUNT' dev/src/features/owner/ebay-banlist.js
           grep -Fq 'href="${EBAY_BLOCKED_BUYERS_URL}"' dev/src/features/owner/ebay-banlist.js
@@ -125,9 +129,9 @@ jobs:
           git diff --check
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-12-v02
-          PREVIOUS_VERSION: 2026-11-12-v01
-          PREVIOUS_COMMIT: 77793b6a073f45d9b46dd6513b50cc8489f01cf6
+          RELEASE_VERSION: 2026-11-12-v03
+          PREVIOUS_VERSION: 2026-11-12-v02
+          PREVIOUS_COMMIT: a78552d408f95f8155dc920bc98a749b51d63ead
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -144,25 +148,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-12-v02-packages
+          name: Collect-TCG-Dev-2026-11-12-v03-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-12-v02-full.zip
-            release/Collect-TCG-Dev-2026-11-12-v01-to-2026-11-12-v02-patch.zip
+            release/Collect-TCG-Dev-2026-11-12-v03-full.zip
+            release/Collect-TCG-Dev-2026-11-12-v02-to-2026-11-12-v03-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-12-v02.txt'
+          MANIFEST='release-manifests/2026-11-12-v03.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-12-v02'
-            echo 'Previous version: 2026-11-12-v01'
+            echo 'Version: 2026-11-12-v03'
+            echo 'Previous version: 2026-11-12-v02'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: change all five eBay Ban List account shortcuts to the signed-in account Blocked Buyers management page.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-12-v02-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-12-v01-to-2026-11-12-v02-patch.zip'
+            echo 'Purpose: add a NEGOTIATION section after ITEM DETAILS in the eBay listing generator, requesting buyers state their best offer first.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-12-v03-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-12-v02-to-2026-11-12-v03-patch.zip'
             echo 'SQL required: No'
             echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
@@ -172,6 +176,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-12-v02: record package validation'
+          git commit -m 'Development 2026-11-12-v03: record package validation'
           git pull --rebase origin main
           git push
