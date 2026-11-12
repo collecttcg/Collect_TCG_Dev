@@ -1154,5 +1154,5 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   assert.match(forms,/errorToggle\.addEventListener\("change"/);
   assert.match(forms,/\[PRE ERRATA\] \[ERROR\]/);
   assert.match(forms,/PreErrataError"\)\?\.checked/);
-  assert.match(registry,/forms\.js\?v=2026-11-12-v05/);
+  assert.match(registry,/forms\.js\?v=2026-11-12-v06/);
 });
