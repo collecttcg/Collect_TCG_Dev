@@ -258,7 +258,7 @@ function officialEbayAccountLines(){
       "🛒 OFFICIAL COLLECT TCG EBAY ACCOUNTS",
       "All five accounts are owned and operated by Collect TCG MY & SG.",
       "COLLECT_TCG_1: https://www.ebay.com/usr/COLLECT_TCG_1",
-      "COLLECT_TCG_2: https://www.ebay.co.uk/str/collecttcg2",
+      "COLLECT_TCG_2: https://www.ebay.com/str/collecttcg2",
       "COLLECT_TCG_3: https://www.ebay.co.uk/usr/collect_tcg_3",
       "COLLECT_TCG_4: https://www.ebay.co.uk/usr/collect_tcg_4",
       "COLLECT_TCG_5: https://www.ebay.co.uk/usr/collect_tcg_5"
