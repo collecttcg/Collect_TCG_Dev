@@ -1,6 +1,6 @@
 /** Owner-only shared eBay ban list. Data access is additionally protected by Supabase RLS. */
 const EBAY_BLOCKED_BUYERS_URL="https://www.ebay.com/bmgt/BuyerBlock";
-const EBAY_ACCOUNT_URLS=["https://www.ebay.com/usr/COLLECT_TCG_1","https://www.ebay.co.uk/str/collecttcg2","https://www.ebay.co.uk/usr/collect_tcg_3","https://www.ebay.co.uk/usr/collect_tcg_4","https://www.ebay.co.uk/usr/collect_tcg_5"];
+const EBAY_ACCOUNT_URLS=["https://www.ebay.com/usr/COLLECT_TCG_1","https://www.ebay.com/str/collecttcg2","https://www.ebay.co.uk/usr/collect_tcg_3","https://www.ebay.co.uk/usr/collect_tcg_4","https://www.ebay.co.uk/usr/collect_tcg_5"];
 function escapeHtml(value){return String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));}
 function normalizeUsername(value){return String(value||"").trim().replace(/^@+/,"");}
 export function register(appContext){
