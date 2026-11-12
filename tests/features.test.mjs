@@ -1152,7 +1152,9 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   assert.match(forms,/nameInput\.value=storedName/);
   assert.match(forms,/\.checked=errorPrefix\.test\(storedName\)/);
   assert.match(forms,/errorToggle\.addEventListener\("change"/);
+  assert.match(forms,/wirePreErrataError,populateFields/);
+  assert.match(readSource("../dev/src/features/owner/add.js"),/else appContext\.wirePreErrataError\("add"\)/);
   assert.match(forms,/\[PRE ERRATA\] \[ERROR\]/);
   assert.match(forms,/PreErrataError"\)\?\.checked/);
-  assert.match(registry,/forms\.js\?v=2026-11-12-v06/);
+  assert.match(registry,/forms\.js\?v=2026-11-12-v07/);
 });
