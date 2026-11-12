@@ -1525,20 +1525,25 @@ function wireAutoCapitalization(p){
     }
   }
 
+function wirePreErrataError(p){
+    const nameInput=appContext.$(p + "Name");
+    const errorToggle=appContext.$(p + "PreErrataError");
+    if(!nameInput || !errorToggle || errorToggle.dataset.titleToggleWired) return;
+    errorToggle.dataset.titleToggleWired="1";
+    errorToggle.checked=/^\[PRE ERRATA\]\s*\[ERROR\]\s*/i.test(nameInput.value);
+    errorToggle.addEventListener("change",()=>{
+      const baseName=nameInput.value.replace(/^(?:\[PRE ERRATA\]\s*\[ERROR\]\s*)+/i,"").trimStart();
+      nameInput.value=(errorToggle.checked ? "[PRE ERRATA] [ERROR] " : "")+baseName;
+    });
+  }
+
 function populateFields(p, card){
     appContext.wireAutoCapitalization(p);
     const storedName=String(card?.name||"");
     const errorPrefix=/^\[PRE ERRATA\]\s*\[ERROR\]\s*/i;
     const nameInput=appContext.$(p + "Name");
-    const errorToggle=appContext.$(p + "PreErrataError");
     nameInput.value=storedName;
-    if(errorToggle){
-      errorToggle.checked=errorPrefix.test(storedName);
-      errorToggle.addEventListener("change",()=>{
-        const baseName=nameInput.value.replace(/^(?:\[PRE ERRATA\]\s*\[ERROR\]\s*)+/i,"").trimStart();
-        nameInput.value=(errorToggle.checked ? "[PRE ERRATA] [ERROR] " : "")+baseName;
-      });
-    }
+    appContext.wirePreErrataError(p);
     appContext.$(p + "CardCode").value = card ? (card.card_code || "") : "";
     appContext.$(p + "Year").value = card && card.year ? card.year : "";
     appContext.$(p + "Game").value = card ? card.game : "";
@@ -1614,7 +1619,7 @@ function collectFields(p, id, formState){
     };
   }
 
-  Object.assign(appContext,{wireGameCombobox,normalizeYearValue,isValidYearValue,normalizePriceNegotiability,priceNegotiabilityFromNotes,stripPriceNegotiabilityMarker,notesWithPriceNegotiability,fieldsTemplate,wireImageControls,gradingRowHTML,wireGradingControls,validMyrFxRates,readCachedMyrFxRates,saveCachedMyrFxRates,fetchCurrentMyrFxRates,fxRateDateLabel,roundConvertedCardPrice,convertedPriceValue,applyMyrConversionToFields,updateFxRateStatus,wireAutoCurrencyConversion,ensureMyrConversionBeforeSave,wireAvailabilityPriceState,invalidFieldLabel,reportFirstInvalidField,wireSoldDateField,wireAutoCapitalization,populateFields,collectFields});
+  Object.assign(appContext,{wireGameCombobox,normalizeYearValue,isValidYearValue,normalizePriceNegotiability,priceNegotiabilityFromNotes,stripPriceNegotiabilityMarker,notesWithPriceNegotiability,fieldsTemplate,wireImageControls,gradingRowHTML,wireGradingControls,validMyrFxRates,readCachedMyrFxRates,saveCachedMyrFxRates,fetchCurrentMyrFxRates,fxRateDateLabel,roundConvertedCardPrice,convertedPriceValue,applyMyrConversionToFields,updateFxRateStatus,wireAutoCurrencyConversion,ensureMyrConversionBeforeSave,wireAvailabilityPriceState,invalidFieldLabel,reportFirstInvalidField,wireSoldDateField,wireAutoCapitalization,wirePreErrataError,populateFields,collectFields});
 }
 
 /** State and event initialization; called in preserved startup order. */
