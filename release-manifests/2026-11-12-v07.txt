@@ -1,0 +1,12 @@
+Version: 2026-11-12-v07
+Previous version: 2026-11-12-v06
+Source commit: aa545e2de5c5398f2afdc70ab04e36457fc1bcd1
+Purpose: wire the pre-errata title checkbox on new Add Card forms as well as Edit and Clone forms.
+Full ZIP: Collect-TCG-Dev-2026-11-12-v07-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-12-v06-to-2026-11-12-v07-patch.zip
+SQL required: No
+Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+4b3d8708f285af4615e0a5653f871ff96e1a288828a95e51aa924a906ad1362c  release/Collect-TCG-Dev-2026-11-12-v07-full.zip
+160c0d3dddd51fceed86d79b60ff305a8782615a033591e56f98d8e28c9cd8a9  release/Collect-TCG-Dev-2026-11-12-v06-to-2026-11-12-v07-patch.zip
