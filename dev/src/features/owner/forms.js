@@ -174,6 +174,12 @@ function fieldsTemplate(p){
         <label for="${p}Name">Card name</label>
         <input type="text" id="${p}Name" required placeholder="e.g. Charizard ex">
       </div>
+      <div class="field">
+        <label class="psa-image-privacy-toggle" for="${p}PreErrataError">
+          <input type="checkbox" id="${p}PreErrataError">
+          <span><strong>Pre-errata / error card</strong><small>When checked, the saved card title starts with [PRE ERRATA] [ERROR]. Uncheck to remove both tags.</small></span>
+        </label>
+      </div>
       <div class="field-row">
         <div class="field">
           <label for="${p}CardCode">Card code</label>
@@ -1521,7 +1527,10 @@ function wireAutoCapitalization(p){
 
 function populateFields(p, card){
     appContext.wireAutoCapitalization(p);
-    appContext.$(p + "Name").value = card ? card.name : "";
+    const storedName=String(card?.name||"");
+    const errorPrefix=/^\[PRE ERRATA\]\s*\[ERROR\]\s*/i;
+    appContext.$(p + "Name").value = storedName.replace(errorPrefix,"");
+    if(appContext.$(p + "PreErrataError")) appContext.$(p + "PreErrataError").checked=errorPrefix.test(storedName);
     appContext.$(p + "CardCode").value = card ? (card.card_code || "") : "";
     appContext.$(p + "Year").value = card && card.year ? card.year : "";
     appContext.$(p + "Game").value = card ? card.game : "";
@@ -1548,7 +1557,7 @@ function populateFields(p, card){
 function collectFields(p, id, formState){
     return {
       id: id || appContext.uid(),
-      name: appContext.$(p + "Name").value.trim().toUpperCase(),
+      name: (appContext.$(p + "PreErrataError")?.checked ? "[PRE ERRATA] [ERROR] " : "") + appContext.$(p + "Name").value.trim().replace(/^(?:\[PRE ERRATA\]\s*\[ERROR\]\s*)+/i,"").toUpperCase(),
       card_code: appContext.$(p + "CardCode").value.trim().toUpperCase(),
       year: appContext.normalizeYearValue(appContext.$(p + "Year").value),
       game: appContext.$(p + "Game").value.trim(),
