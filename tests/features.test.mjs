@@ -1150,7 +1150,7 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   const registry=readSource('../dev/src/app/register-features.js');
   assert.match(forms,/id="\$\{p\}PreErrataError"/);
   assert.match(forms,/nameInput\.value=storedName/);
-  assert.match(forms,/\.checked=errorPrefix\.test\(storedName\)/);
+  assert.match(forms,/errorToggle\.checked=\/\^/);
   assert.match(forms,/errorToggle\.addEventListener\("change"/);
   assert.match(forms,/wirePreErrataError,populateFields/);
   assert.match(readSource("../dev/src/features/owner/add.js"),/else appContext\.wirePreErrataError\("add"\)/);
