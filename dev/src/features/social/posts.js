@@ -331,7 +331,7 @@ function buildFbPostText(card, values){
     const soldPrice=isSold && appContext.hasListedPrice(usdPrice)
       ? `USD ${Number(usdPrice).toLocaleString("en-US",{maximumFractionDigits:2})}`
       : "";
-    const priceDetailsLabel=soldPrice?"💰 Sold Price:":appContext.facebookGroupSalesCopy(values.language).price;
+    const priceDetailsLabel=isSold?"💰 Sold Price:":appContext.facebookGroupSalesCopy(values.language).price;
     const carousellShopUrl = appContext.safeHttpUrl(values.carousellShopUrl);
     const instagramUrl = appContext.safeHttpUrl(values.instagramUrl);
     const hashtags = normalizePostHashtags(values.hashtags || appContext.defaultFbHashtags(card));
@@ -343,7 +343,7 @@ function buildFbPostText(card, values){
       "",
       priceDetailsLabel,
       "",
-      soldPrice||websiteCardUrl,
+      isSold?(soldPrice||"Price unavailable"):websiteCardUrl,
       "",
       divider,
       "",
