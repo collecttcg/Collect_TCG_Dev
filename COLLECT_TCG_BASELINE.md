@@ -220,3 +220,21 @@ A release is complete only after applicable implementation, validation, regressi
 
 ## Baseline maintenance
 Reconcile this file in both Development and Production repositories after every accepted release or meaningful state change. Preserve historical release facts and retained/removed behavior; never rewrite immutable manifests from assumptions.
+
+
+## Current working baseline — 2026-11-13 (post-release maintenance; not an immutable release)
+
+This section records subsequent GitHub commits and does **not** supersede the last validated immutable release manifest, change the protected rollback anchor, or imply a successful browser-test matrix.
+
+### Production and Development state
+- Card-detail purchase-area Safari mitigation: constrain desktop Contact to Buy / eBay purchase action heights and avoid percentage-height stretching of the right column. Development commits `ad868cec` (CSS) and `1ded49da` (stylesheet cache); Production commits `d4d24f0b` (CSS) and `5c0b0d9b` (stylesheet cache).
+- eBay Post Generator **Prepare eBay Listing** now downloads the selected card's image ZIP **without copying** the title, item specifics or description to the clipboard. The separate Copy Title, Copy Item Specifics, Copy Description and Copy All controls retain explicit clipboard behavior. Both repositories received the marketplace module update and import-chain cache refresh on 2026-11-13.
+- Production eBay generator final code/cache commit: `151003ef591ec570ea11285edf8f7d60b9ae1989`; Development final code/cache commit: `ced0d43f456f3aa2c2ff4d251b3fb8768d1fb063`.
+- Existing eBay image ZIP download behavior, Owner access checks, card selection and listing text fields remain retained.
+- The 2026-11-13 maintenance changes require no known SQL, Supabase RLS or Edge Function migration.
+- **Verification scope:** GitHub write operations succeeded and source behavior was inspected. No interactive Safari/Chrome/Firefox/Edge/mobile regression run, release-package checksum, new immutable release manifest, Pages deployment confirmation or rollback-anchor advancement is claimed for these maintenance commits.
+
+### Forward maintenance rules
+- Do not reintroduce automatic clipboard writes in Prepare eBay Listing. Copying must remain an explicit action on a dedicated Copy button.
+- Do not restore the desktop percentage-height purchase CTA behavior that caused Safari's tall yellow panel.
+- Preserve Development and Production separation; promote only explicitly approved changes. Keep immutable historical release records and last-known-good rollback anchors unchanged until the full release validation contract is satisfied.
