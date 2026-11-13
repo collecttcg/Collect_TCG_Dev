@@ -247,3 +247,12 @@ This section records subsequent GitHub commits and does **not** supersede the la
 - Development Insights: latest qualified card view country and Mobile/PC context implemented, with fallback to unknown when unavailable; tracking database migration applied. Device recording and complete Insights rendering have **not** been verified end-to-end; do not claim operational completeness.
 - Development SEO refresh workflow: `.github/workflows/dev-seo.yml` executes `npm test`, repository/CSS checks, generator self-test, then generates and validates noindexed Development card pages. Earlier failure was due to stale regression expectations; tests were updated in commit `5b52205`. This baseline update triggers the SEO workflow, but **a successful current run and generated SEO output are not yet confirmed**.
 - Production is unchanged by these Development-only changes. Preserve historical release manifests and rollback anchors.
+
+
+### Development Facebook sold-price correction and SEO regression repair — 2026-11-13
+- Sold-card Facebook sales posts now show `💰 SOLD PRICE: USD N` on **one line**, replacing only the original "Price & full details" card URL. Non-sold listings retain that URL.
+- Saved **eBay Listing URL must remain present** independently of the website-card URL on sold and available listings; this is mandatory retained behavior. eBay post wrapper corrected in `1664523d`. Sold price layout corrected in `cc1abdfb`.
+- Fixed the earlier regression suite's newly added test that referenced undefined `readFileSync` (the test harness imports `fs` and uses `readSource`); updated test assertions for the retained eBay link and single-line SOLD PRICE in `b05a69a0`.
+- Browser module cache refresh committed through `ed4696d`.
+- The SEO workflow was previously blocked at the test stage. This correction is committed, but **a successful current SEO workflow run is not yet independently confirmed**. Do not label it validated without seeing passing checks, generated files and successful workflow completion.
+- Production is unchanged; immutable release manifests and rollback anchors are untouched.
