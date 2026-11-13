@@ -1,4 +1,7 @@
-/** Development: include a saved eBay listing URL in single-card Facebook sales posts. */
+/** Development: include a saved eBay listing URL in single-card Facebook sales posts.
+ * The URL is appended independently of the website-card price/details URL,
+ * because Sold cards show a price instead of that website URL.
+ */
 export function register(appContext){
   const originalBuildFbPostText=appContext.buildFbPostText;
   if(typeof originalBuildFbPostText!=="function") return;
@@ -13,11 +16,12 @@ export function register(appContext){
     if(!ebayUrl) return post;
 
     const websiteCardUrl=appContext.getCardShareUrl(card.id);
-    if(!websiteCardUrl || !post.includes(websiteCardUrl)) return post;
+    const separator="━━━━━━━━━━━━━━━━━━━━━━━━";
+    const marker=post.indexOf("\n"+separator);
+    if(marker<0) return post+"\n\n🛒 eBay Listing:\n"+ebayUrl;
 
-    return post.replace(
-      websiteCardUrl,
-      `${websiteCardUrl}\n\n🛒 eBay Listing:\n${ebayUrl}`
-    );
+    // Insert the eBay link after the price/details section, for both
+    // available and sold cards, without changing any existing URLs.
+    return post.slice(0,marker)+"\n\n🛒 eBay Listing:\n"+ebayUrl+post.slice(marker);
   };
 }
