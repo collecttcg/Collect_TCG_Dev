@@ -13037,3 +13037,45 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
 @media (min-width:801px){
   .details-download-all-desktop{display:block;}
 }
+
+/* DEV 2026-11-13 — Cross-browser card-detail purchase sizing.
+   Safari may resolve percentage heights against the full detail column,
+   producing a giant gold CTA. Size actions by content, not ancestors. */
+@media (min-width:900px){
+  .modal.card-details-modal .detail-purchase-panel{
+    height:auto !important;
+    min-height:0 !important;
+    align-items:start !important;
+    grid-auto-rows:min-content !important;
+  }
+  .modal.card-details-modal .detail-purchase-actions,
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link{
+    height:auto !important;
+    min-height:0 !important;
+    align-self:start !important;
+    align-items:start !important;
+    grid-auto-rows:min-content !important;
+  }
+  .modal.card-details-modal .detail-purchase-actions > *,
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link > .detail-buy-cta,
+  .modal.card-details-modal .detail-purchase-actions.has-ebay-link > .detail-ebay-cta{
+    height:64px !important;
+    min-height:64px !important;
+    max-height:64px !important;
+    align-self:start !important;
+    box-sizing:border-box !important;
+  }
+  .modal.card-details-modal .detail-purchase-actions .detail-buy-cta > summary{
+    height:100% !important;
+    min-height:0 !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+  }
+  .modal.card-details-modal .detail-purchase-location{
+    height:auto !important;
+    min-height:64px !important;
+    align-self:start !important;
+  }
+}
