@@ -934,7 +934,7 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
   const styleOrder=JSON.parse(readSource('../docs/style-order.json'));
 
   assert.match(initializer,/export \{ initializeApp \} from '\.\/register-features\.js\?v=2026-10-05-v01'/);
-  assert.equal((registry.match(/posts\.js\?v=2026-11-12-v04/g)||[]).length,1);
+  assert.equal((registry.match(/posts\.js\?v=2026-11-13-v01/g)||[]).length,1);
   assert.equal((registry.match(/page\.js\?v=2026-11-11-v01/g)||[]).length,1);
   assert.doesNotMatch(analytics,/function insightContactMetrics\(/);
   assert.doesNotMatch(analytics,/function insightInterestScore\(/);
@@ -947,7 +947,7 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
   assert.doesNotMatch(routing,/appContext\.CARD_IMAGE_TYPES\s*=/);
   assert.doesNotMatch(enhancement,/window\.collect(?:Open|Close)ContactChooser/);
   assert.match(index,/src\/styles\/01-foundation\.css\?v=2026-09-29-v09/);
-  assert.match(index,/src\/styles\/02-components\.css\?v=2026-11-10-v05/);
+  assert.match(index,/src\/styles\/02-components\.css\?v=2026-11-13-safari-fix01/);
   assert.equal(styleOrder.filter(row=>row.load==='global').length,2);
   assert.ok(styleOrder.some(row=>row.file==='src/styles/27-insights-dashboard.css' && row.load==='dynamic-owner-insights'));
 });
@@ -1045,10 +1045,11 @@ test('Development v14 eBay generator has one-step Prepare eBay Listing workflow'
   const posts=postGeneratorSource();
   assert.ok(posts.includes('id="ebayPrepareListing" disabled>Prepare eBay Listing</button>'));
   assert.ok(posts.includes('requireOwner("prepare eBay listing")'));
-  assert.ok(posts.includes('copyPlainText(fullListingText(),"eBay listing copied")'));
+  assert.ok(!posts.includes('const copied=await appContext.copyPlainText(fullListingText(),"eBay listing copied")'), 'Prepare must not automatically copy listing text');
+  assert.ok(posts.includes('copyAll.addEventListener("click",()=>appContext.copyPlainText(fullListingText(),"eBay listing copied"))'), 'Copy All remains explicit');
   assert.ok(posts.includes('downloadSingleCardImagesZip(selected,(done,total)=>{prepareListing.textContent='));
-  assert.ok(posts.includes('eBay listing ready · text copied + image ZIP downloaded'));
-  assert.ok(posts.includes('eBay listing ready · text copied'));
+  assert.ok(posts.includes('eBay images ZIP downloaded'));
+  assert.ok(posts.includes('No images available to download'));
   assert.ok(posts.includes('Could not fully prepare eBay listing'));
 });
 test('Development 2026-09-30-v02 places Prepare eBay Listing above the listing fields',()=>{
@@ -1086,7 +1087,7 @@ test('Development 2026-11-10-v04 keeps paired mobile purchase actions compact an
   assert.match(css,/--detail-purchase-action-height:78px/);
   assert.match(css,/detail-purchase-actions\.has-ebay-link > \.detail-buy-cta,[\s\S]*detail-purchase-actions\.has-ebay-link > \.detail-ebay-cta/);
   assert.match(css,/detail-purchase-actions\.has-ebay-link > \.detail-buy-cta > summary\{[\s\S]*height:100%/);
-  assert.match(index,/02-components\.css\?v=2026-11-10-v05/);
+  assert.match(index,/02-components\.css\?v=2026-11-13-safari-fix01/);
 });
 
 test('Development 2026-11-10-v02 exposes valid saved eBay listings from card details',()=>{
@@ -1103,7 +1104,7 @@ test('Development 2026-11-10-v02 exposes valid saved eBay listings from card det
   assert.match(details,/target="_blank" rel="noopener noreferrer"/);
   assert.match(listing,/function normalizeEbayListingUrl\(value\)/);
   assert.match(css,/\.detail-ebay-cta/);
-  assert.match(index,/02-components\.css\?v=2026-11-10-v05/);
+  assert.match(index,/02-components\.css\?v=2026-11-13-safari-fix01/);
   assert.match(register,/details\.js\?v=2026-11-10-v05/);
 });
 
@@ -1122,7 +1123,7 @@ test('Development 2026-11-10-v05 offers a desktop-only ZIP of all listing images
   assert.match(details,/recordCardEngagement\(card.id,"download","All listing images"\)/);
   assert.match(css,/\.details-download-all-desktop\{display:none;\}/);
   assert.match(css,/@media \(min-width:801px\)\{\s*\.details-download-all-desktop\{display:block;\}/);
-  assert.match(index,/02-components\.css\?v=2026-11-10-v05/);
+  assert.match(index,/02-components\.css\?v=2026-11-13-safari-fix01/);
   assert.match(register,/details\.js\?v=2026-11-10-v05/);
 });
 
