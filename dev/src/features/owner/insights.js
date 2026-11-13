@@ -182,7 +182,7 @@ async function renderInsightsPage(){
       sessionDurationInsights:null,sessionDurationSupported:false,
       engagedVisitSeries:[],engagedVisitSupported:false,
       overviewPhotoRows:[],overviewPhotoSupported:false,
-      recentQualifiedViews:[],recentQualifiedViewsSupported:false,
+      recentQualifiedViews:[],latestQualifiedContext:[],recentQualifiedViewsSupported:false,
       recentQualifiedCountries:[],recentQualifiedCountriesSupported:false,
       giveawayPerformance:null,giveawayPerformanceSupported:false,
       engagementSupported:false,saleSnapshotsSupported:false,saleSnapshots:[],
@@ -962,7 +962,11 @@ async function renderInsightsPage(){
                       const views=Math.max(0,Number(row.views_in_period||0));
                       const visitors=Math.max(0,Number(row.unique_visitors||0));
                       const meta=appContext.insightRecentCardMeta(card);
-                      const country=recentQualifiedCountryLabel(card.id);
+                      const latest=state.latestQualifiedContext.find(item=>String(item.card_id)===String(card.id));
+                      const country=latest?.country_code && /^[A-Z]{2}$/.test(latest.country_code) && latest.country_code!=="XX"
+                        ? (appContext.visitorCountryName?.(latest.country_code)||latest.country_code)
+                        : "Country unknown";
+                      const device=latest?.device_type==="desktop"?"PC":latest?.device_type==="mobile"?"Mobile":"Device unknown";
 
                       return `<button type="button"
                                       class="insights-recent-qualified-item"
@@ -976,7 +980,7 @@ async function renderInsightsPage(){
                         <span class="insights-recent-qualified-copy">
                           <strong>${appContext.escapeHtml(card.name||"Untitled card")}</strong>
                           ${meta ? `<small>${appContext.escapeHtml(meta)}</small>` : ""}
-                          <span>${appContext.escapeHtml(appContext.insightRecentViewTimeLabel(row.viewed_at))}${country ? ` · ${appContext.escapeHtml(country)}` : ""}</span>
+                          <span>${appContext.escapeHtml(appContext.insightRecentViewTimeLabel(row.viewed_at))} · ${appContext.escapeHtml(country)} · ${appContext.escapeHtml(device)}</span>
                         </span>
                         <span class="insights-recent-qualified-stats">
                           <strong>${views.toLocaleString()}</strong>
@@ -1604,7 +1608,7 @@ async function renderInsightsPage(){
       const selectedStatus=statusSel.value;
       const selectedGame=gameSel.value;
 
-      const [views,series,siteSeries,countryResult,accessTimeResult,deviceResult,sourceResult,searchResult,returningResult,sessionDurationResult,engagedVisitResult,overviewPhotoResult,recentQualifiedResult,recentQualifiedCountryResult,giveawayPerformanceResult,previous,engagement,saleSnapshots,filteredSeriesResult]=await Promise.all([
+      const [views,series,siteSeries,countryResult,accessTimeResult,deviceResult,sourceResult,searchResult,returningResult,sessionDurationResult,engagedVisitResult,overviewPhotoResult,recentQualifiedResult,recentQualifiedCountryResult,latestContextResult,giveawayPerformanceResult,previous,engagement,saleSnapshots,filteredSeriesResult]=await Promise.all([
         appContext.fetchInsights(startDate,endDate),
         appContext.fetchViewSeries(startDate,endDate),
         appContext.fetchWebsiteVisitSeries(startDate,endDate),
@@ -1619,6 +1623,10 @@ async function renderInsightsPage(){
         appContext.fetchOverviewPhotoInsights(startDate,endDate),
         appContext.fetchRecentQualifiedCardViews(startDate,endDate,selectedStatus,selectedGame,20),
         appContext.fetchCountryCardViewInsights(startDate,endDate),
+        appContext.supabaseClient.rpc("get_recent_qualified_card_view_latest_context",{
+          p_start:startDate.toISOString(),p_end:endDate.toISOString(),
+          p_status:selectedStatus||null,p_game:selectedGame||null,p_limit:20
+        }).catch(()=>({data:[]})),
         appContext.fetchGiveawayPerformance(startDate,endDate),
         previousRange?appContext.fetchInsights(previousRange.start,previousRange.end,{silent:true}):Promise.resolve([]),
         appContext.fetchCardEngagementInsights(startDate,endDate),
@@ -1750,6 +1758,7 @@ async function renderInsightsPage(){
           ? overviewPhotoResult.rows
           : [],
         overviewPhotoSupported:overviewPhotoResult.supported,
+        latestQualifiedContext:Array.isArray(latestContextResult?.data)?latestContextResult.data:[],
         recentQualifiedViews:recentQualifiedResult.supported && Array.isArray(recentQualifiedResult.rows)
           ? recentQualifiedResult.rows
           : [],
