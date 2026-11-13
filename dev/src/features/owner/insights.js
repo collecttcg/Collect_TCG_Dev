@@ -962,7 +962,7 @@ async function renderInsightsPage(){
                       const views=Math.max(0,Number(row.views_in_period||0));
                       const visitors=Math.max(0,Number(row.unique_visitors||0));
                       const meta=appContext.insightRecentCardMeta(card);
-                      const latest=state.latestQualifiedContext.find(item=>String(item.card_id)===String(card.id));
+                      const latest=(Array.isArray(state.latestQualifiedContext)?state.latestQualifiedContext:[]).find(item=>String(item.card_id)===String(card.id));
                       const country=latest?.country_code && /^[A-Z]{2}$/.test(latest.country_code) && latest.country_code!=="XX"
                         ? (appContext.visitorCountryName?.(latest.country_code)||latest.country_code)
                         : "Country unknown";
@@ -1623,10 +1623,10 @@ async function renderInsightsPage(){
         appContext.fetchOverviewPhotoInsights(startDate,endDate),
         appContext.fetchRecentQualifiedCardViews(startDate,endDate,selectedStatus,selectedGame,20),
         appContext.fetchCountryCardViewInsights(startDate,endDate),
-        appContext.supabaseClient.rpc("get_recent_qualified_card_view_latest_context",{
+        Promise.resolve().then(()=>appContext.supabaseClient.rpc("get_recent_qualified_card_view_latest_context",{
           p_start:startDate.toISOString(),p_end:endDate.toISOString(),
           p_status:selectedStatus||null,p_game:selectedGame||null,p_limit:20
-        }).catch(()=>({data:[]})),
+        })).catch(error=>{console.warn("Latest card-view context unavailable:",error);return {data:[]};}),
         appContext.fetchGiveawayPerformance(startDate,endDate),
         previousRange?appContext.fetchInsights(previousRange.start,previousRange.end,{silent:true}):Promise.resolve([]),
         appContext.fetchCardEngagementInsights(startDate,endDate),
