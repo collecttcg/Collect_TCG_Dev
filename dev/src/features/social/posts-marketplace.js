@@ -271,13 +271,11 @@ function renderEbayListingGeneratorPage(){
       copyAll.disabled=true;
       prepareListing.textContent="Preparing…";
       try{
-        const copied=await appContext.copyPlainText(fullListingText(),"eBay listing copied");
-        if(!copied) throw new Error("Could not copy eBay listing");
         if(appContext.getImages(selected).length){
           prepareListing.textContent="Creating image ZIP…";
           const result=await appContext.downloadSingleCardImagesZip(selected,(done,total)=>{prepareListing.textContent="Preparing "+done+"/"+total;});
-          appContext.showToast(result?.failed?.length ? "eBay listing ready · text copied · "+result.added+" images included · "+result.failed.length+" skipped" : "eBay listing ready · text copied + image ZIP downloaded");
-        }else appContext.showToast("eBay listing ready · text copied");
+          appContext.showToast(result?.failed?.length ? "eBay image ZIP downloaded · "+result.added+" images included · "+result.failed.length+" skipped" : "eBay images ZIP downloaded");
+        }else appContext.showToast("No images available to download");
       }catch(error){
         console.error("Prepare eBay listing error:",error);
         appContext.showToast("Could not fully prepare eBay listing");
