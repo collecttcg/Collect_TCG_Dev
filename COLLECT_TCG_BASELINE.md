@@ -238,3 +238,12 @@ This section records subsequent GitHub commits and does **not** supersede the la
 - Do not reintroduce automatic clipboard writes in Prepare eBay Listing. Copying must remain an explicit action on a dedicated Copy button.
 - Do not restore the desktop percentage-height purchase CTA behavior that caused Safari's tall yellow panel.
 - Preserve Development and Production separation; promote only explicitly approved changes. Keep immutable historical release records and last-known-good rollback anchors unchanged until the full release validation contract is satisfied.
+
+
+## Development working baseline — 2026-11-13 (Facebook sold-price and Insights; pending verification)
+
+- Facebook Post Generator: sold cards replace the "Price & full details" card URL with **Sold Price: USD [recorded price]**. Uses `price_usd` with `price` fallback. If sold price is missing, prints `Price unavailable` rather than an invented price or the URL. Available cards retain their existing card URL. eBay link remains unchanged.
+- Development source commits: `6e5a690d` and `949ad234`; updated Post Generator module import `d2217029`. Regression guard added `cd26f10e`.
+- Development Insights: latest qualified card view country and Mobile/PC context implemented, with fallback to unknown when unavailable; tracking database migration applied. Device recording and complete Insights rendering have **not** been verified end-to-end; do not claim operational completeness.
+- Development SEO refresh workflow: `.github/workflows/dev-seo.yml` executes `npm test`, repository/CSS checks, generator self-test, then generates and validates noindexed Development card pages. Earlier failure was due to stale regression expectations; tests were updated in commit `5b52205`. This baseline update triggers the SEO workflow, but **a successful current run and generated SEO output are not yet confirmed**.
+- Production is unchanged by these Development-only changes. Preserve historical release manifests and rollback anchors.
