@@ -341,9 +341,9 @@ function buildFbPostText(card, values){
     const lines = [
       title,
       "",
-      priceDetailsLabel,
-      "",
-      isSold?(soldPrice||"Price unavailable"):websiteCardUrl,
+      ...(isSold
+        ? [`💰 SOLD PRICE: ${soldPrice||"Price unavailable"}`]
+        : [priceDetailsLabel,"",websiteCardUrl]),
       "",
       divider,
       "",
