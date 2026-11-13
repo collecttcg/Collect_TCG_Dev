@@ -1159,3 +1159,11 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   assert.match(forms,/PreErrataError"\)\?\.checked/);
   assert.match(registry,/forms\.js\?v=2026-11-12-v07/);
 });
+
+test("Sold Facebook post uses recorded USD price instead of card URL",()=>{
+  const posts=readFileSync("dev/src/features/social/posts.js","utf8");
+  assert.ok(posts.includes('const isSold=String(card.availability||card.status||"").trim().toLowerCase()==="sold"'));
+  assert.ok(posts.includes('const usdPrice=card.price_usd ?? card.price'));
+  assert.ok(posts.includes('isSold?(soldPrice||"Price unavailable"):websiteCardUrl'));
+  assert.ok(posts.includes('soldPrice?"💰 Sold Price:"') || posts.includes('isSold?"💰 Sold Price:"'));
+});
