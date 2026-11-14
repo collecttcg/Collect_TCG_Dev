@@ -13081,22 +13081,28 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
   }
 }
 
-/* Desktop filter controls share 13px type and 50px height with Custom Order.
+/* Desktop filter controls share 11px type and 40px height with Custom Order.
    Include 992–1179 CSS-pixel viewports (Retina / browser zoom). */
 @media (min-width:992px){
   #desktopFilterToggleRow #sortByBtn,
   #desktopFilterToggleRow #desktopFilterToggleBtn,
-  #filterDrawerShell .filter-drawer-head strong,
+  #filterDrawerShell[aria-label] .filter-drawer-head strong,
   #filterDrawerShell .filter-row .overview-select-btn{
     font-family:inherit !important;
-    font-size:13px !important;
+    font-size:11px !important;
     font-weight:700 !important;
     letter-spacing:.04em !important;
     line-height:1 !important;
   }
   #desktopFilterToggleRow #sortByBtn,
   #desktopFilterToggleRow #desktopFilterToggleBtn,
-  #filterDrawerShell .filter-row .overview-select-btn,
+  #filterDrawerShell .filter-row .overview-select-btn{
+    height:40px !important;
+    min-height:40px !important;
+    max-height:40px !important;
+    box-sizing:border-box !important;
+    padding-block:0 !important;
+  }
   #filterDrawerShell .price-range-filter{
     height:50px !important;
     min-height:50px !important;
