@@ -5616,7 +5616,8 @@ body.light-mode .modal-overlay{background:rgba(54,48,40,.42) !important;}
   .desktop-filter-toggle-btn,
   .desktop-listing-currency-control > span,
   .desktop-listing-currency-control select,
-  #filterDrawerShell .overview-select-btn{
+  #filterDrawerShell .overview-select-btn,
+  #filterDrawerShell .filter-drawer-head strong{
     font-size:16px !important;
   }
   .listing-filter-tools .quick-filter,
@@ -5640,10 +5641,10 @@ body.light-mode .modal-overlay{background:rgba(54,48,40,.42) !important;}
   .desktop-filter-toggle-btn,
   .desktop-listing-currency-control > span,
   .desktop-listing-currency-control select,
-  #filterDrawerShell .overview-select-btn{
+  #filterDrawerShell .overview-select-btn,
+  #filterDrawerShell .filter-drawer-head strong{
     font-size:18px !important;
   }
-  #filterDrawerShell .filter-drawer-head strong{font-size:20px !important;}
   #filterDrawerShell .filter-drawer-head span,
   #filterDrawerShell .clear-all-filters-btn{font-size:15px !important;}
   .listing-filter-tools .quick-filter,
