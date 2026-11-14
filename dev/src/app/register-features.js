@@ -57,7 +57,7 @@ import * as module55 from '../features/media/heic-support.js?v=2026-10-30-v06';
 import * as module56 from '../features/owner/image-drag-autoscroll.js?v=2026-10-30-v01';
 import * as module57 from '../features/owner/image-file-drop.js?v=2026-10-30-v01';
 import * as module58 from '../features/owner/psa-never-synced.js?v=2026-10-31-v01';
-import * as module59 from '../features/owner/ebay-listing-status.js?v=2026-11-01-v02';
+import * as module59 from '../features/owner/ebay-listing-status.js?v=2026-11-01-v02&ui=2026-11-14-compact';
 import * as module60 from '../features/owner/quick-action-scroll.js?v=2026-11-01-v04';
 import * as module61 from '../features/owner/fx-low-price.js?v=2026-11-02-v03';
 import * as module62 from '../features/owner/ebay-messages.js?v=2026-11-10-v01';
