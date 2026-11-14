@@ -1,0 +1,12 @@
+Version: 2026-11-14-v04
+Previous version: 2026-11-14-v03
+Source commit: 1566fdd208dccf54440fbe30cdfa139cf6958ea4
+Purpose: replace Championship with On eBay in desktop and mobile quick filters.
+Full ZIP: Collect-TCG-Dev-2026-11-14-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-14-v03-to-2026-11-14-v04-patch.zip
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+6eca9bd7b6fe56923bb175a6c14f682711d197e1500f2b74165bf7622ac33f8d  release/Collect-TCG-Dev-2026-11-14-v04-full.zip
+4a983054814fe015525500703db02d08ccf2e656e6331710448b8e8d11f76662  release/Collect-TCG-Dev-2026-11-14-v03-to-2026-11-14-v04-patch.zip
