@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-12-v07: validate eBay listing generator negotiation section.
+# 2026-11-14-v01: validate the current Development release.
 on:
   workflow_dispatch:
   push:
@@ -21,122 +21,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Feature regression tests
-        run: node --test tests/features.test.mjs
-      - name: JavaScript syntax checks
+      - name: Development validation
+        run: npm run validate
+      - name: Verify SEO workflow and generator
         run: |
-          set -euo pipefail
-          for file in $(find dev/src -name '*.js' -type f); do node --check "$file"; done
-      - name: eBay navigation cleanup contract
-        run: |
-          set -euo pipefail
-          grep -Fq "#/inventory-tools?mode=ebay&sub=banlist" dev/src/features/owner/ebay-banlist.js
-          ! grep -Fq 'addNavLink(document.getElementById("premiumDesktopMoreMenu")' dev/src/features/owner/ebay-banlist.js
-          ! grep -Fq 'addNavLink(document.getElementById("mainnav")' dev/src/features/owner/ebay-banlist.js
-          grep -Fq "['banlist','eBay Ban List']" dev/src/features/owner/ebay-messages.js
-          grep -Fq 'ebay-banlist.js?v=2026-11-12-v02' dev/src/app/register-features.js
-          grep -Fq '"[NEGOTIATION]"' dev/src/features/social/posts-marketplace.js
-          grep -Fq 'We welcome reasonable offers.' dev/src/features/social/posts-marketplace.js
-          grep -Fq 'posts-marketplace.js?v=2026-11-12-v04' dev/src/features/social/posts.js
-          grep -Fq 'posts.js?v=2026-11-12-v04' dev/src/app/register-features.js
-          grep -Fq 'forms.js?v=2026-11-12-v07' dev/src/app/register-features.js
-          grep -Fq 'add.js?v=2026-11-12-v07' dev/src/app/register-features.js
-          grep -Fq 'else appContext.wirePreErrataError("add")' dev/src/features/owner/add.js
-          grep -Fq 'function wirePreErrataError(p)' dev/src/features/owner/forms.js
-          grep -Fq 'PreErrataError' dev/src/features/owner/forms.js
-          grep -Fq 'const EBAY_BLOCKED_BUYERS_URL="https://www.ebay.com/bmgt/BuyerBlock"' dev/src/features/owner/ebay-banlist.js
-          grep -Fq 'length:EBAY_ACCOUNT_COUNT' dev/src/features/owner/ebay-banlist.js
-          grep -Fq 'href="${EBAY_BLOCKED_BUYERS_URL}"' dev/src/features/owner/ebay-banlist.js
-      - name: Facebook link and snapshot date contracts
-        run: |
-          set -euo pipefail
-          grep -Fq 'posts-ebay-link.js?v=2026-11-03-v01' dev/src/app/register-features.js
-          grep -Fq 'analytics.js?v=2026-11-04-v01' dev/src/app/register-features.js
-          grep -Fq '🛒 eBay Listing:' dev/src/features/social/posts-ebay-link.js
-          grep -Fq '.select("created_at")' dev/src/services/analytics.js
-          grep -Fq 'const daysListed=validCreatedAt' dev/src/services/analytics.js
-          ! sed -n '/async function captureSaleConversionSnapshot(card)/,/function getAnalyticsSessionId()/p' dev/src/services/analytics.js | grep -Fq '2000-01-01'
-      - name: Retained eBay tools contracts
-        run: |
-          set -euo pipefail
-          grep -Fq "['messages','eBay Messages']" dev/src/features/owner/ebay-messages.js
-          grep -Fq "['listing-status','eBay Listing Status']" dev/src/features/owner/ebay-messages.js
-          grep -Fq 'positive feedback for our store' dev/src/features/owner/ebay-messages.js
-          grep -Fq 'It will be shipped over the weekend.' dev/src/features/owner/ebay-messages.js
-          grep -Fq 'Listed on eBay' dev/src/features/owner/ebay-listing-status.js
-          grep -Fq 'On eBay only' dev/src/features/owner/ebay-listing-status.js
-          grep -Fq 'notesWithEbayListing' dev/src/features/owner/ebay-listing-status.js
-          grep -Fq 'class="detail-ebay-cta"' dev/src/features/cards/details.js
-          grep -Fq 'View on eBay' dev/src/features/cards/details.js
-          grep -Fq 'target="_blank" rel="noopener noreferrer"' dev/src/features/cards/details.js
-          grep -Fq 'details.js?v=2026-11-10-v05' dev/src/app/register-features.js
-          grep -Fq '02-components.css?v=2026-11-10-v05' dev/index.html
-          grep -Fq 'id="detailsDownloadAllBtn"' dev/index.html
-          grep -Fq 'Download all listing images' dev/index.html
-          grep -Fq 'downloadSingleCardImagesZip(card,null,{includeInventoryQr:false})' dev/src/features/cards/details.js
-          grep -Fq '.details-download-all-desktop{display:none;}' dev/src/styles/02-components.css
-      - name: Retained FX and HEIC contracts
-        run: |
-          set -euo pipefail
-          grep -Fq 'FX_NORMAL_CONVERSION_BELOW_MYR=400' dev/src/features/owner/fx-low-price.js
-          grep -Fq 'Math.round(raw)' dev/src/features/owner/fx-low-price.js
-          grep -Fq 'image/heic-sequence' dev/src/features/media/heic-support.js
-          grep -Fq 'image/heif-sequence' dev/src/features/media/heic-support.js
-          grep -Fq 'convertHeicOwnerImage' dev/src/features/media/heic-support.js
-      - name: Card-list official eBay footer regression contract
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import assert from 'node:assert/strict';
-          const source=fs.readFileSync('dev/src/features/social/posts-card-list.js','utf8');
-          const full=source.split('function buildFbCardListPost(')[1].split('function buildFbCardDropPost(')[0];
-          const drop=source.split('function buildFbCardDropPost(')[1].split('function balancedCardDropCards(')[0];
-          for(const section of [full,drop]) assert.equal((section.match(/\.\.\.officialEbayAccountLines\(\)/g)||[]).length,1);
-          assert.equal((source.match(/View our seller history and feedback/g)||[]).length,0);
-          for(let i=1;i<=5;i++) assert.match(source,new RegExp('COLLECT_TCG_'+i+': https://www\\.ebay\\.'));
-          assert.match(fs.readFileSync('dev/src/features/social/posts.js','utf8'),/posts-card-list\.js\?v=2026-11-05-v04/);
-          NODE
-      - name: Recently viewed country attribution contract
-        run: |
-          set -euo pipefail
-          grep -Fq 'recentQualifiedCountries:[],recentQualifiedCountriesSupported:false' dev/src/features/owner/insights.js
-          grep -Fq 'function recentQualifiedCountryLabel(cardId)' dev/src/features/owner/insights.js
-          grep -Fq 'appContext.fetchCountryCardViewInsights(startDate,endDate)' dev/src/features/owner/insights.js
-          grep -Fq 'const country=recentQualifiedCountryLabel(card.id);' dev/src/features/owner/insights.js
-          grep -Fq 'Country unknown' dev/src/features/owner/insights.js
-          grep -Fq 'country_code' dev/src/services/analytics.js
-
-      - name: Hidden Listings inventory-surface contract
-        run: |
-          set -euo pipefail
-          grep -Fq '"hidden-listings"' dev/src/features/cards/repository.js
-          grep -Fq 'scope === "hidden-listings") return lifecycle === "draft"' dev/src/features/inventory/filtering.js
-          grep -Fq 'return appContext.renderInventoryPage("hidden-listings");' dev/src/features/owner/lifecycle.js
-          grep -Fq '["inventory","collection","hidden-listings"].includes(scope)' dev/src/features/inventory/page-shell.js
-          grep -Fq '["inventory","collection","hidden-listings"].includes(appContext.listingAvailabilityScope)' dev/src/features/inventory/page.js
-          ! grep -Fq 'hiddenListingsGrid' dev/src/features/owner/card-owner-category.js
-          grep -Fq 'repository.js?v=2026-11-11-v01' dev/src/app/register-features.js
-          grep -Fq 'filtering.js?v=2026-11-11-v01' dev/src/app/register-features.js
-          grep -Fq 'page.js?v=2026-11-11-v01' dev/src/app/register-features.js
-          grep -Fq 'lifecycle.js?v=2026-11-11-v01' dev/src/app/register-features.js
-          grep -Fq 'card-owner-category.js?v=2026-11-11-v01' dev/src/app/register-features.js
-          grep -Fq 'register-features.js?v=2026-11-11-v01' dev/src/main.js
-          grep -Fq 'main.js?v=2026-11-11-v01' dev/index.html
-      - name: Repository validation
-        run: |
-          set -euo pipefail
-          test -s dev/index.html
-          test -s dev/src/styles/01-foundation.css
-          test -s dev/src/styles/02-components.css
-          test -s dev/src/main.js
-          test -s tests/features.test.mjs
-          git diff --check
+          node tools/check-seo-workflow.mjs
+          node --check tools/generate-seo.mjs
+          node tools/generate-seo.mjs --self-test
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-12-v07
-          PREVIOUS_VERSION: 2026-11-12-v06
-          PREVIOUS_COMMIT: d3bb1ba960923e87b254c3526554c0d501b1fcfc
+          RELEASE_VERSION: 2026-11-14-v01
+          PREVIOUS_VERSION: 2026-11-12-v07
+          PREVIOUS_COMMIT: aa545e2de5c5398f2afdc70ab04e36457fc1bcd1
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -153,27 +49,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-12-v07-packages
+          name: Collect-TCG-Dev-2026-11-14-v01-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-12-v07-full.zip
-            release/Collect-TCG-Dev-2026-11-12-v06-to-2026-11-12-v07-patch.zip
+            release/Collect-TCG-Dev-2026-11-14-v01-full.zip
+            release/Collect-TCG-Dev-2026-11-12-v07-to-2026-11-14-v01-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-12-v07.txt'
+          MANIFEST='release-manifests/2026-11-14-v01.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-12-v07'
-            echo 'Previous version: 2026-11-12-v06'
+            echo 'Version: 2026-11-14-v01'
+            echo 'Previous version: 2026-11-12-v07'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: wire the pre-errata title checkbox on new Add Card forms as well as Edit and Clone forms.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-12-v07-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-12-v06-to-2026-11-12-v07-patch.zip'
-            echo 'SQL required: No'
-            echo 'Validation: feature tests; all Development JavaScript syntax; Recently Viewed country attribution contract; eBay navigation cleanup, retained eBay tools, compact paired mobile purchase-action sizing, direct card-detail eBay CTA, desktop-only all-listing-images ZIP download, weekend dispatch message, and Hidden Listings shared-inventory workspace contracts; retained FX/HEIC contracts; repository/CSS/release contracts; SEO self-test/generation/output validation; package integrity.'
+            echo 'Purpose: validate the November 13–14 Development updates and exercise generated Facebook posts.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-14-v01-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-12-v07-to-2026-11-14-v01-patch.zip'
+            echo 'SQL required: No for validation and existing storefront updates. Experimental Development eBay feedback depends on its separate migration and is excluded from promotion.'
+            echo 'Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
             cat release/checksums.txt
@@ -181,6 +77,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-12-v07: record package validation'
+          git commit -m 'Development 2026-11-14-v01: record package validation'
           git pull --rebase origin main
           git push
