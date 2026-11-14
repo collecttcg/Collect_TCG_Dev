@@ -1,0 +1,12 @@
+Version: 2026-11-14-v01
+Previous version: 2026-11-12-v07
+Source commit: a9e2d7fd08aedd9c9b45596a5481be2b1d18b635
+Purpose: validate the November 13–14 Development updates and exercise generated Facebook posts.
+Full ZIP: Collect-TCG-Dev-2026-11-14-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-12-v07-to-2026-11-14-v01-patch.zip
+SQL required: No for validation and existing storefront updates. Experimental Development eBay feedback depends on its separate migration and is excluded from promotion.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+feb91f16b82082d3a6f73525329a043fcbb32410ebb5e1be8dd930bbf3c89ce0  release/Collect-TCG-Dev-2026-11-14-v01-full.zip
+66a69499e219be18acf1f7c7dbd1da0d7dd449781a4ca6f0de9d56bf2ddb8b74  release/Collect-TCG-Dev-2026-11-12-v07-to-2026-11-14-v01-patch.zip
