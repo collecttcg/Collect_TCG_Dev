@@ -1,0 +1,12 @@
+Version: 2026-11-14-v03
+Previous version: 2026-11-14-v01
+Source commit: e23b55ff9b1fc400f50168835ab5d603c15a96ee
+Purpose: add Owner-only filename renaming to the private Photo Library.
+Full ZIP: Collect-TCG-Dev-2026-11-14-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-14-v01-to-2026-11-14-v03-patch.zip
+SQL required: Yes. Versioned Owner-only Photo Library rename policy.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+d6bd573ce1bbe4f7530e82ab6fcc354ab85ebe9e265f50442c6dc843789f76cc  release/Collect-TCG-Dev-2026-11-14-v03-full.zip
+8fe35007b7e538f1996d39eb1630c465807d1f3942d9805e2d57ad583a7e3592  release/Collect-TCG-Dev-2026-11-14-v01-to-2026-11-14-v03-patch.zip
