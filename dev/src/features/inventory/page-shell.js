@@ -15,7 +15,7 @@ function syncQuickFilterUI(){
         raw:"Raw",
         sealed:"Sealed",
         championship:"Championship",
-        ebay:"On eBay",
+        ebay:"Listed on eBay",
         vintage:"Vintage",
         trending:"Trending",
         new:"Newly Added"
@@ -30,7 +30,7 @@ function inventoryQuickFiltersHTML(){
       ["graded","Slabs","Slabs"],
       ["raw","Raw","Raw"],
       ["sealed","Sealed","Sealed"],
-      ["ebay","On eBay","On eBay"],
+      ["ebay","Listed on eBay","On eBay"],
       ["vintage","Vintage","Vintage"],
       ["trending","🔥 Trending","Trending"],
       ["new","Newly Added","Newly Added"]
@@ -56,6 +56,19 @@ function inventoryPageHTML(scopeMeta,scope){
 
       ${["inventory","collection","hidden-listings"].includes(scope) ? `
         <section class="inventory-game-browser" id="inventoryGameBrowser" aria-label="Browse ${isHiddenListings ? "Hidden Listings" : (isCollection ? "Collection" : "Inventory")} by game"></section>
+      ` : ""}
+
+      ${scope==="inventory" ? `
+        <aside class="inventory-ebay-callout" aria-label="Shopping through eBay">
+          <div>
+            <strong>Prefer to buy through eBay?</strong>
+            <p>Browse cards listed on our official Collect TCG eBay accounts.</p>
+          </div>
+          <div class="inventory-ebay-actions">
+            <a class="btn-ghost" href="#/inventory?quick=ebay">Browse eBay-listed cards →</a>
+            <a href="#/contact">View official eBay accounts →</a>
+          </div>
+        </aside>
       ` : ""}
 
       <!-- Desktop/mobile top controls only. Keep the filter drawer OUTSIDE

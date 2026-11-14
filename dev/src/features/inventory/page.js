@@ -1,5 +1,5 @@
 import { createInventoryPagination } from './pagination.js?v=2026-09-29-v09';
-import { registerInventoryShell } from './page-shell.js?v=2026-11-14-v04';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-15-v01';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
@@ -1915,7 +1915,7 @@ function renderInventoryPage(scope = "inventory"){
           raw:"Raw",
           sealed:"Sealed",
           championship:"Championship",
-          ebay:"On eBay",
+          ebay:"Listed on eBay",
           vintage:"Vintage",
           trending:"Trending"
         };

@@ -13134,3 +13134,30 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
     box-sizing:border-box !important;
   }
 }
+
+.inventory-ebay-callout{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px 20px;
+  padding:14px 16px;
+  margin-bottom:14px;
+  border:1px solid currentColor;
+  border-color:color-mix(in srgb,currentColor 22%,transparent);
+  border-radius:12px;
+  background:var(--panel);
+}
+.inventory-ebay-callout p{margin:4px 0 0;}
+.inventory-ebay-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 16px;
+}
+.inventory-ebay-actions a{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+}
+.inventory-ebay-actions a:not(.btn-ghost){text-decoration:underline;}
