@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-14
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Photo Library rename — 2026-11-14
+
+- Owners can rename saved originals from Add Card and Edit Card. Renaming keeps the image extension and affects the private original only. Published listing copies use separate storage.
+- Rename migration: `migrations/2026/2026-11-14-v03-OWNER-PHOTO-LIBRARY-RENAME.sql`. Production rollout uses the same private library so existing saved originals remain available. The release manifests record packaging and validation.
+
 ## Development Photo Library — 2026-11-14 (validation pending)
 
 - Owner Add Card and Edit Card can save JPEG, PNG and WebP originals to the private `owner-card-photo-library-dev` bucket and select multiple files for the existing listing preview. Direct uploads and URL entry remain available. Saved listing copies still use the established listing image pipeline.

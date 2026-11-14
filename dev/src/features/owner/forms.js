@@ -1,4 +1,4 @@
-import { wirePhotoLibrary } from "./photo-library.js?v=2026-11-14-v02";
+import { wirePhotoLibrary } from "./photo-library.js?v=2026-11-14-v03";
 /** Module: features/owner/forms. Shared dependencies are explicit on appContext. */
 export function register(appContext){
 function wireGameCombobox(p){

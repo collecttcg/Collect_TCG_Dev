@@ -1,3 +1,4 @@
+// Both environments use the existing private bucket so saved originals remain available.
 const BUCKET = "owner-card-photo-library-dev";
 const PAGE_SIZE = 25;
 
@@ -31,9 +32,36 @@ export function wirePhotoLibrary(appContext, dialog, addFiles) {
       check.type = "checkbox";
       check.value = file.name;
       check.addEventListener("change", updateControls);
-      label.append(check, " ", file.name.replace(/^[0-9a-f-]{36}--/, ""));
+      const filename = file.name.replace(/^[0-9a-f-]{36}--/, "");
+      label.append(check, " ", filename);
       const row = document.createElement("div");
-      row.append(label);
+      const rename = document.createElement("button");
+      rename.type = "button";
+      rename.className = "btn-ghost";
+      rename.textContent = "Rename";
+      rename.setAttribute("aria-label", `Rename ${filename}`);
+      rename.addEventListener("click", () => {
+        if (busy || !appContext.requireOwner("rename a library photo")) return;
+        const extension = filename.slice(filename.lastIndexOf("."));
+        const entered = window.prompt("New photo name (file extension is kept)", filename.slice(0, -extension.length));
+        if (entered === null) return;
+        const stem = entered.trim().replace(/\.(?:jpe?g|png|webp)$/i, "")
+          .replace(/[^a-zA-Z0-9_.-]+/g, "-").slice(0, 96);
+        if (!stem || !/[a-zA-Z0-9]/.test(stem)) {
+          status.textContent = "Enter a name containing a letter or number.";
+          return;
+        }
+        const prefix = file.name.match(/^[0-9a-f-]{36}--/)?.[0] || `${crypto.randomUUID()}--`;
+        const destination = `${prefix}${stem}${extension}`;
+        if (destination === file.name) return;
+        void run("Renaming photo…", async storage => {
+          const {error} = await storage.move(file.name, destination);
+          if (error) throw error;
+          await load(storage, offset);
+          status.textContent = `Renamed to ${stem}${extension}.`;
+        });
+      });
+      row.append(label, " ", rename);
       list.append(row);
     }
     status.textContent = data.length ? "Select photos to add to this card." : "No photos saved here yet.";
@@ -45,7 +73,7 @@ export function wirePhotoLibrary(appContext, dialog, addFiles) {
     next.disabled ||= !hasNext;
     upload.disabled ||= !picker.files.length;
     attach.disabled ||= !list.querySelector("input:checked");
-    for (const check of list.querySelectorAll("input")) check.disabled = busy;
+    for (const control of list.querySelectorAll("input, button")) control.disabled = busy;
   }
 
   async function run(message, operation) {
