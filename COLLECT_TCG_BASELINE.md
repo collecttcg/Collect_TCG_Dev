@@ -12,7 +12,7 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
-Last reconciled against GitHub: 2026-11-14
+Last reconciled against GitHub: 2026-11-15
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -26,7 +26,13 @@ Last reconciled against GitHub: 2026-11-14
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
-## Current Development release — 2026-11-14-v04
+## Current Development release — 2026-11-15-v01
+
+- Previous Development release: `2026-11-14-v04`. [Release manifest and ZIP checksums](release-manifests/2026-11-15-v01.txt).
+- Inventory now shows an eBay callout above the filter toolbar. One link opens eBay-listed Inventory and the other opens Contact, which lists the official eBay accounts. Desktop quick filter label is “Listed on eBay”; mobile keeps “On eBay” for fit.
+- All 87 tests, release contracts, CSS checks, SEO generator self-test, and both ZIP integrity checks passed. Both links were exercised on deployed desktop Development; all 88 resulting cards had eBay badges, and Contact exposed the official accounts. Interactive mobile and Safari checks were not performed. No SQL required.
+
+## Previous Development release — 2026-11-14-v04
 
 - Previous Development release: `2026-11-14-v03`. [Release manifest and ZIP checksums](release-manifests/2026-11-14-v04.txt).
 - On eBay replaces Championship in desktop and mobile listing quick filters. It uses the existing eBay listing marker and persists in the listing URL. Championship landing links retain their existing behavior. No SQL required.
