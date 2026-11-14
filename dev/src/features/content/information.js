@@ -34,6 +34,21 @@ function renderAboutPage(){
           <a class="about-link" href="https://www.facebook.com/profile.php?id=61590041416102" target="_blank" rel="noopener noreferrer">
             <span><b>Facebook</b><small>Collect TCG MY &amp; SG</small></span><span>↗</span>
           </a>
+          <a class="about-link" href="https://www.ebay.com/usr/COLLECT_TCG_1" target="_blank" rel="noopener noreferrer">
+            <span><b>🛒 eBay COLLECT_TCG_1</b><small>Official Collect TCG account</small></span><span>↗</span>
+          </a>
+          <a class="about-link" href="https://www.ebay.com/str/collecttcg2" target="_blank" rel="noopener noreferrer">
+            <span><b>🛒 eBay COLLECT_TCG_2</b><small>Official Collect TCG account</small></span><span>↗</span>
+          </a>
+          <a class="about-link" href="https://www.ebay.co.uk/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer">
+            <span><b>🛒 eBay COLLECT_TCG_3</b><small>Official Collect TCG account</small></span><span>↗</span>
+          </a>
+          <a class="about-link" href="https://www.ebay.co.uk/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer">
+            <span><b>🛒 eBay COLLECT_TCG_4</b><small>Official Collect TCG account</small></span><span>↗</span>
+          </a>
+          <a class="about-link" href="https://www.ebay.co.uk/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer">
+            <span><b>🛒 eBay COLLECT_TCG_5</b><small>Official Collect TCG account</small></span><span>↗</span>
+          </a>
         </div>
 
         <h3 class="about-subhead">🌏 Worldwide Shipping &amp; High-Value Delivery</h3>
