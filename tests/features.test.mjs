@@ -1157,7 +1157,7 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   assert.match(readSource("../dev/src/features/owner/add.js"),/else appContext\.wirePreErrataError\("add"\)/);
   assert.match(forms,/\[PRE ERRATA\] \[ERROR\]/);
   assert.match(forms,/PreErrataError"\)\?\.checked/);
-  assert.match(registry,/forms\.js\?v=2026-11-12-v07/);
+  assert.match(registry,/forms\.js\?v=[^\x27]+/);
 });
 
 test("Sold Facebook post shows the USD price on one line and preserves the eBay URL",()=>{

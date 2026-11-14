@@ -26,6 +26,12 @@ Last reconciled against GitHub: 2026-11-14
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development Photo Library — 2026-11-14 (validation pending)
+
+- Owner Add Card and Edit Card can save JPEG, PNG and WebP originals to the private `owner-card-photo-library-dev` bucket and select multiple files for the existing listing preview. Direct uploads and URL entry remain available. Saved listing copies still use the established listing image pipeline.
+- Migration: `migrations/2026/2026-11-14-v02-OWNER-PHOTO-LIBRARY-DEV.sql`. Required, not applied. It defines owner-only read and upload access. Existing listing image storage is independent.
+- Development repository validation, JavaScript syntax checks, SEO generator self-test, and a mocked storage flow passed. Live storage, Owner/public RLS, and browser testing remain pending. No new release manifest or packages have been recorded.
+
 ## Latest release and promotion — 2026-11-14
 
 - Development: `2026-11-14-v01`; previous `2026-11-12-v07`; manifest `release-manifests/2026-11-14-v01.txt`; package source `a9e2d7fd08aedd9c9b45596a5481be2b1d18b635`; manifest commit `b433461d7013edce2cb87e45619193180de31c38`.

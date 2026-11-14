@@ -1,3 +1,4 @@
+import { wirePhotoLibrary } from "./photo-library.js?v=2026-11-14-v02";
 /** Module: features/owner/forms. Shared dependencies are explicit on appContext. */
 export function register(appContext){
 function wireGameCombobox(p){
@@ -155,6 +156,19 @@ function fieldsTemplate(p){
           </div>
 
           <input type="file" id="${p}ImageFile" accept="image/jpeg,image/png,image/webp" multiple>
+          <div class="owner-only" id="${p}PhotoLibrary">
+            <button type="button" class="btn-ghost" data-library-open aria-expanded="false" aria-controls="${p}PhotoLibraryPanel">Photo Library</button>
+            <div id="${p}PhotoLibraryPanel" data-library-panel hidden>
+              <label for="${p}LibraryFiles">Save originals for later</label>
+              <input type="file" id="${p}LibraryFiles" data-library-files accept="image/jpeg,image/png,image/webp" multiple>
+              <button type="button" class="btn-ghost" data-library-upload>Save to Photo Library</button>
+              <p role="status"></p>
+              <div data-library-list></div>
+              <button type="button" class="btn-ghost" data-library-previous>Previous photos</button>
+              <button type="button" class="btn-ghost" data-library-next>Next photos</button>
+              <button type="button" class="btn-ghost" data-library-attach>Add selected to card</button>
+            </div>
+          </div>
           <div class="image-url-row">
             <input type="text" id="${p}ImageUrl" placeholder="Paste an image URL, then click Add URL">
             <button type="button" class="btn-ghost" id="${p}AddImageUrl">Add URL</button>
@@ -884,17 +898,14 @@ function wireImageControls(p, formState){
       });
     }
 
-    fileInput.addEventListener("change", async ()=>{
-      if(!appContext.requireOwner("add card image")) return;
-
-      const files = Array.from(fileInput.files || []);
-      if(!files.length) return;
+    async function addImageFiles(files){
+      if(!files.length || fileInput.disabled || !appContext.requireOwner("add card image")) return 0;
 
       formState.processingImages = Number(formState.processingImages || 0) + files.length;
       fileInput.disabled = true;
 
+      let added=0;
       try{
-        let added=0;
         for(const file of files){
           // Always keep a clean, high-quality version client-side during this
           // Add/Edit session so the owner can switch watermark on/off.
@@ -915,9 +926,6 @@ function wireImageControls(p, formState){
           added++;
         }
 
-        fileInput.value = "";
-        refreshPreview();
-
         appContext.showToast(`${files.length===1 ? "Image" : `${files.length} images`} added as original`);
       }catch(e){
         console.warn("Card image processing failed:", e);
@@ -931,7 +939,22 @@ function wireImageControls(p, formState){
       }finally{
         formState.processingImages = Math.max(0, Number(formState.processingImages || 0) - files.length);
         fileInput.disabled = false;
+        if(added) refreshPreview();
       }
+      return added;
+    }
+
+    fileInput.addEventListener("change", async ()=>{
+      try {
+        await addImageFiles(Array.from(fileInput.files || []));
+      } finally {
+        fileInput.value = "";
+      }
+    });
+    const library = appContext.$(p + "PhotoLibrary");
+    if(library) wirePhotoLibrary(appContext, library, async files => {
+      if(!fileInput.isConnected) return 0;
+      return addImageFiles(files);
     });
 
     async function addUrl(){
