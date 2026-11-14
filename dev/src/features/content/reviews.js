@@ -409,6 +409,19 @@ async function renderReviewsPage(){
 
     if(appContext.currentRoute()!=="reviews") return;
 
+    let ebayFeedback=[];
+    let ebayFeedbackError=false;
+    try{
+      const {data,error}=await appContext.supabaseClient.from("ebay_feedback_dev")
+        .select("ebay_account,feedback_id,feedback_type,comment,feedback_at")
+        .order("feedback_at",{ascending:false}).limit(100);
+      if(error) throw error;
+      ebayFeedback=Array.isArray(data)?data:[];
+    }catch(error){
+      ebayFeedbackError=true;
+      console.warn("Development eBay feedback unavailable:",error);
+    }
+
     const summary=appContext.approvedReviewSummary();
     const pendingCount=appContext.ownerReviewSubmissions.filter(row=>String(row.status)==="pending").length;
 
@@ -444,6 +457,18 @@ async function renderReviewsPage(){
         <div class="review-summary-trust">
           <strong>Review Protection</strong>
           <span>Reviews are checked before publishing.</span>
+        </div>
+      </section>
+
+      <section class="reviews-list-panel" aria-label="eBay seller feedback" style="margin-bottom:18px">
+        <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Original eBay feedback from Collect TCG accounts 1–5. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
+        <div class="reviews-list">
+          ${ebayFeedbackError ? '<div class="reviews-empty">eBay feedback is temporarily unavailable.</div>' : ebayFeedback.length ? ebayFeedback.map(item=>`
+            <article class="review-card">
+              <div class="review-moderation-head"><strong>${appContext.escapeHtml(item.ebay_account)}</strong><span class="review-status">${appContext.escapeHtml(item.feedback_type.toUpperCase())} · eBay</span></div>
+              <p>${appContext.escapeHtml(item.comment)}</p>
+              <div class="review-moderation-meta"><span>${appContext.escapeHtml(appContext.reviewDateLabel(item.feedback_at))}</span></div>
+            </article>`).join("") : '<div class="reviews-empty">No synchronized eBay seller feedback yet. Account connections are pending.</div>'}
         </div>
       </section>
 
