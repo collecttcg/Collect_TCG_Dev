@@ -26,7 +26,13 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
-## Current Development release — 2026-11-15-v01
+## Current Development release — 2026-11-15-v02
+
+- Previous Development release: `2026-11-15-v01`. [Release manifest and ZIP checksums](release-manifests/2026-11-15-v02.txt).
+- Removed the Inventory eBay callout and its styles. The quick-filter button reads “Listed on eBay” in desktop and mobile markup and continues to use `quick=ebay`.
+- All 87 tests, release contracts, CSS checks, SEO generator self-test, and both ZIP integrity checks passed. No SQL required. Interactive desktop, mobile, and Safari testing was not performed for this release.
+
+## Previous Development release — 2026-11-15-v01
 
 - Previous Development release: `2026-11-14-v04`. [Release manifest and ZIP checksums](release-manifests/2026-11-15-v01.txt).
 - Inventory now shows an eBay callout above the filter toolbar. One link opens eBay-listed Inventory and the other opens Contact, which lists the official eBay accounts. Desktop quick filter label is “Listed on eBay”; mobile keeps “On eBay” for fit.
