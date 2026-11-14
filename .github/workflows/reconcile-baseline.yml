@@ -1,0 +1,94 @@
+name: Reconcile baseline
+on:
+  push:
+    branches: [main, production-last-known-good]
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reconcile-baseline
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 30
+      - name: Record GitHub state in the baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DEV_HEAD="$(git ls-remote --exit-code https://github.com/collecttcg/Collect_TCG_Dev.git refs/heads/main | cut -f1)"
+          export PROD_HEAD="$(git ls-remote --exit-code https://github.com/collecttcg/Collect_TCG.git refs/heads/main | cut -f1)"
+          export PROD_ROLLBACK="$(git ls-remote --exit-code https://github.com/collecttcg/Collect_TCG.git refs/heads/production-last-known-good | cut -f1)"
+          export LOCAL_CHANGE="$(git log -1 --format=%H -- . ':!COLLECT_TCG_BASELINE.md')"
+          python3 - <<'PY'
+          import os
+          import re
+          import subprocess
+          from pathlib import Path
+
+          # Follow baseline-only commits to their parent to avoid a new update
+          # every time the two repositories observe each other's baseline write.
+          def change_head(name, sha):
+              remote = f"https://github.com/collecttcg/{name}.git"
+              for _ in range(10):
+                  subprocess.run(["git", "fetch", "--quiet", "--depth=2", remote, sha], check=True)
+                  files = subprocess.check_output(
+                      ["git", "diff-tree", "--no-commit-id", "--name-only", "-r", sha], text=True
+                  ).splitlines()
+                  if files != ["COLLECT_TCG_BASELINE.md"]:
+                      return sha
+                  sha = subprocess.check_output(["git", "rev-parse", f"{sha}^"], text=True).strip()
+              raise RuntimeError("Too many consecutive baseline-only commits")
+
+          dev = change_head("Collect_TCG_Dev", os.environ["DEV_HEAD"])
+          prod = change_head("Collect_TCG", os.environ["PROD_HEAD"])
+          manifests = sorted(Path("release-manifests").glob("????-??-??-v??.txt"))
+          manifest = manifests[-1]
+          source = re.search(r"^Source commit: ([0-9a-f]{40})$", manifest.read_text(), re.M)
+          if not source:
+              raise RuntimeError(f"Missing source commit in {manifest}")
+          latest_changes = subprocess.check_output(
+              ["git", "log", "-1", "--format=%s", os.environ["LOCAL_CHANGE"]], text=True
+          ).strip()
+          latest_changes = latest_changes.replace("`", "'").replace("<", "&lt;").replace(">", "&gt;")
+          start = "<!-- BEGIN AUTOMATED BASELINE STATE -->"
+          end = "<!-- END AUTOMATED BASELINE STATE -->"
+          block = f"""{start}
+          ## GitHub state
+
+          - Development latest non-baseline commit: `{dev}`.
+          - Production latest non-baseline commit: `{prod}`.
+          - Production rollback ref: `{os.environ['PROD_ROLLBACK']}`.
+          - Latest local release manifest: [`{manifest.stem}`]({manifest.as_posix()}) from `{source[1]}`.
+          - Latest local change: `{os.environ['LOCAL_CHANGE']}` · {latest_changes}.
+
+          This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
+          {end}
+          """
+          baseline = Path("COLLECT_TCG_BASELINE.md")
+          contents = baseline.read_text()
+          if start in contents:
+              before, rest = contents.split(start, 1)
+              _, after = rest.split(end, 1)
+              updated = before + block.rstrip("\n") + after
+          else:
+              title, body = contents.split("\n", 1)
+              updated = title + "\n\n" + block + body
+          baseline.write_text(updated)
+          PY
+          git diff --check
+          if git diff --quiet -- COLLECT_TCG_BASELINE.md; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add COLLECT_TCG_BASELINE.md
+          git commit -m 'docs: reconcile GitHub state in baseline'
+          git push origin HEAD:main
