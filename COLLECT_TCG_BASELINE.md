@@ -1,6 +1,6 @@
 # Collect TCG Current Baseline
 
-Last reconciled against GitHub: 2026-11-10
+Last reconciled against GitHub: 2026-11-14
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -13,6 +13,17 @@ Last reconciled against GitHub: 2026-11-10
 - `V210` is the final legacy `V###` release.
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
+
+## Latest release and promotion — 2026-11-14
+
+- Development: `2026-11-14-v01`; previous `2026-11-12-v07`; manifest `release-manifests/2026-11-14-v01.txt`; package source `a9e2d7fd08aedd9c9b45596a5481be2b1d18b635`; manifest commit `b433461d7013edce2cb87e45619193180de31c38`.
+- Development passed all 86 tests, repository and CSS checks, release contracts, and the SEO generator self-test. The full and patch ZIPs passed integrity checks. File names and checksums are in the immutable manifest.
+- The release workflow uses `npm run validate` in place of stale cache-version checks. The registered Facebook generator is exercised with Sold, Available, group-friendly, and missing-price cases. Sold posts show one USD price line and preserve the saved eBay URL.
+- Desktop inventory sort and filter controls use 11px labels and 40px heights at widths of 992px and above. The eBay checkbox measures 18 × 18px. Development desktop Cloud Browser confirmed these measurements at 1363 × 936 before packaging. The release workflow did not include interactive browser testing.
+- About Us lists the five official eBay accounts. The experimental eBay feedback feature and its separate SQL migration stayed in Development. The promoted storefront changes required no SQL.
+- Production: `2026-11-14-v01`; previous `2026-11-12-v06`; manifest `release-manifests/2026-11-14-v01.txt` in the Production repository; promoted from Development `2026-11-14-v01`. Production package source `4ab6679f643755f29d10c4ba2e076f9bc248dad5`; manifest commit `19f60813cf3eac2073073b9c7edb652069f5f315`.
+- Production Pages served the new asset version. The last observed `production-last-known-good` ref was `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`, so rollback-anchor advancement is unconfirmed. No interactive Production browser test was performed.
+- The November 13 notes below record the state at the time. Sold Facebook post behavior is covered by the November 14 tests, and Production had already received the sold-post and Insights updates on November 13. End-to-end Insights device capture remains unverified.
 
 ## Current reconciled state — 2026-11-10
 
