@@ -1,0 +1,12 @@
+Version: 2026-11-15-v01
+Previous version: 2026-11-14-v04
+Source commit: d0f70665d4f639258852ef4596a62524d06f6a43
+Purpose: make eBay listings and official seller accounts easier to find in Inventory.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-14-v04-to-2026-11-15-v01-patch.zip
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+ffcf526a9a71d5926139485554b86136355908f59042f5fbd756747f4bd2681a  release/Collect-TCG-Dev-2026-11-15-v01-full.zip
+1f84a04b9071cf70a42c2f9fdd451091e1c72d7ff05b420dbf4b3e82db241443  release/Collect-TCG-Dev-2026-11-14-v04-to-2026-11-15-v01-patch.zip
