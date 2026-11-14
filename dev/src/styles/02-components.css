@@ -13081,14 +13081,14 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
   }
 }
 
-/* Desktop filter controls share the same type scale and 50px height as
-   the Custom Order toolbar control; do not let legacy drawer rules enlarge them. */
-@media (min-width:1180px){
+/* Desktop filter controls share 13px type and 50px height with Custom Order.
+   Include 992–1179 CSS-pixel viewports (Retina / browser zoom). */
+@media (min-width:992px){
   #filterDrawerShell .filter-drawer-head strong,
   #filterDrawerShell .overview-select-btn,
   #filterDrawerShell .overview-select-btn span{
     font-family:inherit !important;
-    font-size:6.5px !important;
+    font-size:13px !important;
     font-weight:700 !important;
     letter-spacing:.04em !important;
     line-height:1 !important;
