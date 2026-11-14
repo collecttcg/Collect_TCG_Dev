@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `c73c5b88f56dce9d1c9993eadb87906924ea651b`.
+- Development latest non-baseline commit: `1566fdd208dccf54440fbe30cdfa139cf6958ea4`.
 - Production latest non-baseline commit: `0ada2d141c1d1c8540f0dc9a14ae6fbf7db54de1`.
 - Production rollback ref: `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`.
 - Latest local release manifest: [`2026-11-14-v03`](release-manifests/2026-11-14-v03.txt) from `e23b55ff9b1fc400f50168835ab5d603c15a96ee`.
-- Latest local change: `c73c5b88f56dce9d1c9993eadb87906924ea651b` · Development 2026-11-14-v03: record package validation.
+- Latest local change: `1566fdd208dccf54440fbe30cdfa139cf6958ea4` · Dev 2026-11-14-v04: add On eBay inventory quick filter.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
