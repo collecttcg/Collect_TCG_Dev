@@ -31,6 +31,7 @@ Last reconciled against GitHub: 2026-11-14
 - Previous Development release: `2026-11-14-v03`. [Release manifest and ZIP checksums](release-manifests/2026-11-14-v04.txt).
 - On eBay replaces Championship in desktop and mobile listing quick filters. It uses the existing eBay listing marker and persists in the listing URL. Championship landing links retain their existing behavior. No SQL required.
 - All 87 tests, Dev release contracts, SEO generator self-test, and both ZIP integrity checks passed. Development desktop browser showed 85 eBay-marked tiles out of 85 results and restored the filter on reload. Mobile markup and CSS were checked without an interactive mobile or Safari session.
+- Promoted to Production `2026-11-14-v03`. Production Pages served the new filter code, and the release manifest records ZIP integrity checks. Production rollback-anchor advancement remains unconfirmed.
 
 ## Photo Library rename — 2026-11-14
 
