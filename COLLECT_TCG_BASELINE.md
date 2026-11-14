@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `0400a62132a311eeab30b59c22d1e213da8275cf`.
+- Development latest non-baseline commit: `e23b55ff9b1fc400f50168835ab5d603c15a96ee`.
 - Production latest non-baseline commit: `38cd267d9407a00edfdb19cf477ed4175431981f`.
 - Production rollback ref: `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`.
 - Latest local release manifest: [`2026-11-14-v01`](release-manifests/2026-11-14-v01.txt) from `a9e2d7fd08aedd9c9b45596a5481be2b1d18b635`.
-- Latest local change: `0400a62132a311eeab30b59c22d1e213da8275cf` · Dev: add private listing photo library to Add and Edit Card.
+- Latest local change: `e23b55ff9b1fc400f50168835ab5d603c15a96ee` · Dev 2026-11-14-v03: allow renaming private library photos.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
