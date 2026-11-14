@@ -1,0 +1,12 @@
+Version: 2026-11-15-v02
+Previous version: 2026-11-15-v01
+Source commit: 95bb2e07c8e12eaf272ce53fd987e275bfb2f1a1
+Purpose: remove the Inventory eBay callout and retain Listed on eBay on desktop and mobile.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v01-to-2026-11-15-v02-patch.zip
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: no interactive desktop/mobile/Safari browser test.
+
+2b7e2ade969a3c2f40bc5a46d66fc1c9a8cf3d75ec8281b88ff09bf0ce252c79  release/Collect-TCG-Dev-2026-11-15-v02-full.zip
+55e8a8801e570908cf235f7cff5e9d52a4b6e173bdc1c415d534443addd36887  release/Collect-TCG-Dev-2026-11-15-v01-to-2026-11-15-v02-patch.zip
