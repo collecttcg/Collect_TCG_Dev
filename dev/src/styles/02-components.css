@@ -5501,7 +5501,7 @@ body.light-mode .modal-overlay{background:rgba(54,48,40,.42) !important;}
   }
 
   #filterDrawerShell .filter-drawer-head strong{
-    font-size:clamp(15px,.9vw,20px) !important;
+    font-size:clamp(14px,.73vw,15px) !important;
     font-weight:820 !important;
   }
 
@@ -5525,7 +5525,7 @@ body.light-mode .modal-overlay{background:rgba(54,48,40,.42) !important;}
   #filterDrawerShell .overview-select-btn{
     min-height:clamp(52px,3vw,64px) !important;
     padding:10px clamp(14px,.9vw,19px) !important;
-    font-size:clamp(14px,.82vw,18px) !important;
+    font-size:clamp(14px,.73vw,15px) !important;
     font-weight:720 !important;
     border-radius:11px !important;
   }
@@ -5618,7 +5618,7 @@ body.light-mode .modal-overlay{background:rgba(54,48,40,.42) !important;}
   .desktop-listing-currency-control select,
   #filterDrawerShell .overview-select-btn,
   #filterDrawerShell .filter-drawer-head strong{
-    font-size:16px !important;
+    font-size:15px !important;
   }
   .listing-filter-tools .quick-filter,
   .listing-filter-tools .desktop-quick-filters-toggle,
@@ -5643,7 +5643,7 @@ body.light-mode .modal-overlay{background:rgba(54,48,40,.42) !important;}
   .desktop-listing-currency-control select,
   #filterDrawerShell .overview-select-btn,
   #filterDrawerShell .filter-drawer-head strong{
-    font-size:18px !important;
+    font-size:16px !important;
   }
   #filterDrawerShell .filter-drawer-head span,
   #filterDrawerShell .clear-all-filters-btn{font-size:15px !important;}
