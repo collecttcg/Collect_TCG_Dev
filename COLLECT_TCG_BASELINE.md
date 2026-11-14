@@ -290,3 +290,9 @@ This section records subsequent GitHub commits and does **not** supersede the la
 - Browser module cache refresh committed through `ed4696d`.
 - The SEO workflow was previously blocked at the test stage. This correction is committed, but **a successful current SEO workflow run is not yet independently confirmed**. Do not label it validated without seeing passing checks, generated files and successful workflow completion.
 - Production is unchanged; immutable release manifests and rollback anchors are untouched.
+
+## Owner Photo Library release — 2026-11-14-v03
+
+- Add Card and Edit Card support uploading, selecting and renaming private library originals. Both environments use the existing private bucket so saved originals are available across the two sites. Listing copies are separate.
+- The Owner-only rename migration was applied to shared Supabase and policy definitions were verified. Signed-in browser testing remains pending.
+- Development checks and mocked upload, rename and attachment passed. See the [release manifest](release-manifests/2026-11-14-v03.txt) for packaging and validation details.
