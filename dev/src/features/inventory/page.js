@@ -1,5 +1,5 @@
 import { createInventoryPagination } from './pagination.js?v=2026-09-29-v09';
-import { registerInventoryShell } from './page-shell.js?v=2026-09-29-v09';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-14-v04';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
@@ -27,7 +27,7 @@ function renderInventoryPage(scope = "inventory"){
 
     const scopeMeta = appContext.listingScopeMeta(appContext.listingAvailabilityScope);
     const requestedQuick=appContext.safeUrlFilterText(listingParams.get("quick"),24);
-    appContext.activeQuickFilter=["all","new","graded","raw","sealed","championship","vintage","trending"].includes(requestedQuick)
+    appContext.activeQuickFilter=["all","new","graded","raw","sealed","championship","ebay","vintage","trending"].includes(requestedQuick)
       ? requestedQuick
       : "all";
     appContext.view.innerHTML=appContext.inventoryPageHTML(scopeMeta,appContext.listingAvailabilityScope);
@@ -435,7 +435,7 @@ function renderInventoryPage(scope = "inventory"){
       }[appContext.$("sortBy").value];
       appContext.$("sortByBtn").querySelector("span").textContent = sortLabel;
 
-      const allowedQuick = new Set(["all","new","graded","raw","sealed","championship","vintage","trending"]);
+      const allowedQuick = new Set(["all","new","graded","raw","sealed","championship","ebay","vintage","trending"]);
       const quick = appContext.safeUrlFilterText(params.get("quick"), 24);
       appContext.activeQuickFilter = allowedQuick.has(quick) ? quick : "all";
 
@@ -1915,6 +1915,7 @@ function renderInventoryPage(scope = "inventory"){
           raw:"Raw",
           sealed:"Sealed",
           championship:"Championship",
+          ebay:"On eBay",
           vintage:"Vintage",
           trending:"Trending"
         };

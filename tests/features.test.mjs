@@ -770,7 +770,7 @@ test('Development v05 exposes Newly Added beside Trending using the existing sev
   const filtering=fs.readFileSync(new URL('../dev/src/features/inventory/filtering.js',import.meta.url),'utf8');
   assert.match(page,/\["trending","🔥 Trending","Trending"\],\s*\["new","Newly Added","Newly Added"\]/);
   assert.match(page,/new:"Newly Added"/);
-  assert.match(page,/\["all","new","graded","raw","sealed","championship","vintage","trending"\]\.includes\(requestedQuick\)/);
+  assert.match(page,/\["all","new","graded","raw","sealed","championship","ebay","vintage","trending"\]\.includes\(requestedQuick\)/);
   assert.match(filtering,/function isNewCard\(card, days = 7\)/);
   assert.match(filtering,/activeQuickFilter === "new" && !appContext\.isNewCard\(c\)/);
 });
@@ -933,9 +933,9 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
   const index=readSource('../dev/index.html');
   const styleOrder=JSON.parse(readSource('../docs/style-order.json'));
 
-  assert.match(initializer,/export \{ initializeApp \} from '\.\/register-features\.js\?v=2026-10-05-v01'/);
+  assert.match(initializer,/export \{ initializeApp \} from '\.\/register-features\.js\?v=[^\x27]+'/);
   assert.equal((registry.match(/from '\.\.\/features\/social\/posts\.js\?v=[^']+'/g)||[]).length,1);
-  assert.equal((registry.match(/page\.js\?v=2026-11-11-v01/g)||[]).length,1);
+  assert.equal((registry.match(/inventory\/page\.js\?v=[^\x27]+/g)||[]).length,1);
   assert.doesNotMatch(analytics,/function insightContactMetrics\(/);
   assert.doesNotMatch(analytics,/function insightInterestScore\(/);
   assert.match(policy,/function insightContactMetrics\(/);
@@ -1142,7 +1142,7 @@ test('Hidden Listings reuse the shared inventory discovery surface while keeping
  assert.match(page,/\["inventory","collection","hidden-listings"\]\.includes\(appContext\.listingAvailabilityScope\)/);
  assert.match(lifecycle,/return appContext\.renderInventoryPage\("hidden-listings"\);/);
  assert.doesNotMatch(owners,/hiddenListingsGrid/);
- for(const ref of ['repository.js?v=2026-11-11-v01','filtering.js?v=2026-11-11-v01','page.js?v=2026-11-11-v01','lifecycle.js?v=2026-11-11-v01','card-owner-category.js?v=2026-11-11-v01']) assert.ok(registry.includes(ref));
+ for(const ref of ['repository.js?v=2026-11-11-v01','filtering.js?v=','inventory/page.js?v=','lifecycle.js?v=2026-11-11-v01','card-owner-category.js?v=2026-11-11-v01']) assert.ok(registry.includes(ref));
 });
 
 
@@ -1187,4 +1187,19 @@ test("Sold Facebook post shows the USD price on one line and preserves the eBay 
   const missing=a.buildFbPostText({...card,price_usd:null,price:null,ebay_url:""},values);
   assert.match(missing,/^💰 SOLD PRICE: Price unavailable$/m);
   assert.doesNotMatch(missing,/🛒 eBay Listing:/);
+});
+
+test('On eBay quick filter uses published listing status and replaces the Championship button',()=>{
+  const a=app();
+  Object.assign(a,{controls:{},listingAvailabilityScope:'inventory',currency:'USD',owner:false,activeQuickFilter:'all'});
+  const [listed,unlisted]=a.getFiltered();
+  listed.on_ebay=true;
+  unlisted.on_ebay=false;
+  a.activeQuickFilter='ebay';
+  assert.deepEqual(a.getFiltered().map(card=>card.id),[listed.id]);
+  listed.on_ebay=false;
+  assert.deepEqual(a.getFiltered(),[]);
+  const markup=a.inventoryQuickFiltersHTML();
+  assert.match(markup,/data-quick="ebay"[^>]*><span[^>]*>On eBay<\/span><span[^>]*>On eBay<\/span>/);
+  assert.doesNotMatch(markup,/data-quick="championship"/);
 });

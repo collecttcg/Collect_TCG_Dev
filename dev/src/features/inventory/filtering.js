@@ -492,6 +492,7 @@ function getFiltered(){
       if(appContext.activeQuickFilter === "raw" && format !== "Raw") return false;
       if(appContext.activeQuickFilter === "sealed" && format !== "Sealed") return false;
       if(appContext.activeQuickFilter === "championship" && !appContext.isChampionshipSeries(c.series)) return false;
+      if(appContext.activeQuickFilter === "ebay" && c.on_ebay !== true) return false;
       if(appContext.activeQuickFilter === "new" && !appContext.isNewCard(c)) return false;
       if(appContext.activeQuickFilter === "vintage" && !(
         c.era === "Vintage" ||

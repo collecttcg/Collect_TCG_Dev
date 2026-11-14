@@ -15,6 +15,7 @@ function syncQuickFilterUI(){
         raw:"Raw",
         sealed:"Sealed",
         championship:"Championship",
+        ebay:"On eBay",
         vintage:"Vintage",
         trending:"Trending",
         new:"Newly Added"
@@ -29,7 +30,7 @@ function inventoryQuickFiltersHTML(){
       ["graded","Slabs","Slabs"],
       ["raw","Raw","Raw"],
       ["sealed","Sealed","Sealed"],
-      ["championship","Championship","Champ"],
+      ["ebay","On eBay","On eBay"],
       ["vintage","Vintage","Vintage"],
       ["trending","🔥 Trending","Trending"],
       ["new","Newly Added","Newly Added"]

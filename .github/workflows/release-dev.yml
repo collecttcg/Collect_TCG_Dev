@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-14-v03: validate the current Development release.
+# 2026-11-14-v04: validate the current Development release.
 on:
   workflow_dispatch:
   push:
@@ -30,9 +30,9 @@ jobs:
           node tools/generate-seo.mjs --self-test
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-14-v03
-          PREVIOUS_VERSION: 2026-11-14-v01
-          PREVIOUS_COMMIT: a9e2d7fd08aedd9c9b45596a5481be2b1d18b635
+          RELEASE_VERSION: 2026-11-14-v04
+          PREVIOUS_VERSION: 2026-11-14-v03
+          PREVIOUS_COMMIT: e23b55ff9b1fc400f50168835ab5d603c15a96ee
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -49,26 +49,26 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-14-v03-packages
+          name: Collect-TCG-Dev-2026-11-14-v04-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-14-v03-full.zip
-            release/Collect-TCG-Dev-2026-11-14-v01-to-2026-11-14-v03-patch.zip
+            release/Collect-TCG-Dev-2026-11-14-v04-full.zip
+            release/Collect-TCG-Dev-2026-11-14-v03-to-2026-11-14-v04-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-14-v03.txt'
+          MANIFEST='release-manifests/2026-11-14-v04.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-14-v03'
-            echo 'Previous version: 2026-11-14-v01'
+            echo 'Version: 2026-11-14-v04'
+            echo 'Previous version: 2026-11-14-v03'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: add Owner-only filename renaming to the private Photo Library.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-14-v03-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-14-v01-to-2026-11-14-v03-patch.zip'
-            echo 'SQL required: Yes. Versioned Owner-only Photo Library rename policy.'
+            echo 'Purpose: replace Championship with On eBay in desktop and mobile quick filters.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-14-v04-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-14-v03-to-2026-11-14-v04-patch.zip'
+            echo 'SQL required: No.'
             echo 'Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
             echo
@@ -77,6 +77,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-14-v03: record package validation'
+          git commit -m 'Development 2026-11-14-v04: record package validation'
           git pull --rebase origin main
           git push

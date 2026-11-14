@@ -10902,7 +10902,7 @@ body.light-mode .desktop-listing-currency-control select{
   }
 
   .listing-filter-tools #quickFilters .quick-filter[data-quick="trending"],
-  .listing-filter-tools #quickFilters .quick-filter[data-quick="championship"]{
+  .listing-filter-tools #quickFilters .quick-filter[data-quick="ebay"]{
     font-size:clamp(5.5px,1.55vw,7px) !important;
   }
 }
@@ -10922,7 +10922,7 @@ body.light-mode .desktop-listing-currency-control select{
   }
 
   .listing-filter-tools #quickFilters .quick-filter[data-quick="trending"],
-  .listing-filter-tools #quickFilters .quick-filter[data-quick="championship"]{
+  .listing-filter-tools #quickFilters .quick-filter[data-quick="ebay"]{
     font-size:5.35px !important;
   }
 }
