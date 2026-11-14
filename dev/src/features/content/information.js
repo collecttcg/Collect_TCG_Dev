@@ -17,7 +17,7 @@ function renderAboutPage(){
 
           <p>Please note that we do not operate a physical storefront and are not accepting consignment items at this time.</p>
 
-          <p>While we strive to keep our Facebook/Carousell posts up to date, pricing and availability may occasionally change. In the event of any discrepancy, please refer to our listings here for the latest information.</p>
+          <p>While we strive to keep our Facebook/Carousell/eBay posts up to date, pricing and availability may occasionally change. In the event of any discrepancy, please refer to our listings here for the latest information.</p>
         </div>
 
         <h3 class="about-subhead">Browse Our Collection</h3>
