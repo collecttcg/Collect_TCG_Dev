@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `e23b55ff9b1fc400f50168835ab5d603c15a96ee`.
-- Production latest non-baseline commit: `38cd267d9407a00edfdb19cf477ed4175431981f`.
+- Development latest non-baseline commit: `c73c5b88f56dce9d1c9993eadb87906924ea651b`.
+- Production latest non-baseline commit: `0ada2d141c1d1c8540f0dc9a14ae6fbf7db54de1`.
 - Production rollback ref: `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`.
-- Latest local release manifest: [`2026-11-14-v01`](release-manifests/2026-11-14-v01.txt) from `a9e2d7fd08aedd9c9b45596a5481be2b1d18b635`.
-- Latest local change: `e23b55ff9b1fc400f50168835ab5d603c15a96ee` · Dev 2026-11-14-v03: allow renaming private library photos.
+- Latest local release manifest: [`2026-11-14-v03`](release-manifests/2026-11-14-v03.txt) from `e23b55ff9b1fc400f50168835ab5d603c15a96ee`.
+- Latest local change: `c73c5b88f56dce9d1c9993eadb87906924ea651b` · Development 2026-11-14-v03: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
