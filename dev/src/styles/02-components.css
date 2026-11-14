@@ -13080,3 +13080,26 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
     align-self:start !important;
   }
 }
+
+/* Desktop filter parity: match currency typography and Custom Order height. */
+@media (min-width:992px){
+  #filterDrawerShell .filter-drawer-head strong,
+  #filterDrawerShell .overview-select-btn,
+  #filterDrawerShell .overview-select-btn span{
+    font-size:13px !important;
+    font-weight:800 !important;
+    letter-spacing:.04em !important;
+  }
+  #filterDrawerShell .overview-select-btn,
+  #filterDrawerShell .price-range-filter{
+    height:56px !important;
+    min-height:56px !important;
+    box-sizing:border-box !important;
+  }
+  #filterDrawerShell .filter-row > #filterEbayOnlyWrap{
+    width:max-content !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    justify-self:start !important;
+  }
+}
