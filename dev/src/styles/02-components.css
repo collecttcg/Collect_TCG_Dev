@@ -13081,25 +13081,47 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
   }
 }
 
-/* Desktop filter parity: match currency typography and Custom Order height. */
-@media (min-width:992px){
+/* Desktop filter controls share the same type scale and 50px height as
+   the Custom Order toolbar control; do not let legacy drawer rules enlarge them. */
+@media (min-width:1180px){
   #filterDrawerShell .filter-drawer-head strong,
   #filterDrawerShell .overview-select-btn,
   #filterDrawerShell .overview-select-btn span{
+    font-family:inherit !important;
     font-size:13px !important;
-    font-weight:800 !important;
+    font-weight:700 !important;
     letter-spacing:.04em !important;
+    line-height:1 !important;
   }
   #filterDrawerShell .overview-select-btn,
   #filterDrawerShell .price-range-filter{
-    height:56px !important;
-    min-height:56px !important;
+    height:50px !important;
+    min-height:50px !important;
+    max-height:50px !important;
     box-sizing:border-box !important;
+    padding-block:0 !important;
   }
   #filterDrawerShell .filter-row > #filterEbayOnlyWrap{
-    width:max-content !important;
+    display:inline-flex !important;
+    width:fit-content !important;
     min-width:0 !important;
     max-width:100% !important;
     justify-self:start !important;
+    align-self:center !important;
+  }
+  #filterDrawerShell #filterEbayOnlyWrap > input[type="checkbox"]{
+    appearance:checkbox !important;
+    -webkit-appearance:checkbox !important;
+    display:inline-block !important;
+    flex:0 0 18px !important;
+    width:18px !important;
+    min-width:18px !important;
+    max-width:18px !important;
+    height:18px !important;
+    min-height:18px !important;
+    max-height:18px !important;
+    padding:0 !important;
+    margin:0 !important;
+    box-sizing:border-box !important;
   }
 }
