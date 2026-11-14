@@ -1200,6 +1200,6 @@ test('On eBay quick filter uses published listing status and replaces the Champi
   listed.on_ebay=false;
   assert.deepEqual(a.getFiltered(),[]);
   const markup=a.inventoryQuickFiltersHTML();
-  assert.match(markup,/data-quick="ebay"[^>]*><span[^>]*>Listed on eBay<\/span><span[^>]*>On eBay<\/span>/);
+  assert.match(markup,/data-quick="ebay"[^>]*><span[^>]*>Listed on eBay<\/span><span[^>]*>Listed on eBay<\/span>/);
   assert.doesNotMatch(markup,/data-quick="championship"/);
 });

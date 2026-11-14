@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-15-v01: validate the current Development release.
+# 2026-11-15-v02: validate the current Development release.
 on:
   workflow_dispatch:
   push:
@@ -30,9 +30,9 @@ jobs:
           node tools/generate-seo.mjs --self-test
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-15-v01
-          PREVIOUS_VERSION: 2026-11-14-v04
-          PREVIOUS_COMMIT: 1566fdd208dccf54440fbe30cdfa139cf6958ea4
+          RELEASE_VERSION: 2026-11-15-v02
+          PREVIOUS_VERSION: 2026-11-15-v01
+          PREVIOUS_COMMIT: d0f70665d4f639258852ef4596a62524d06f6a43
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -49,25 +49,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-15-v01-packages
+          name: Collect-TCG-Dev-2026-11-15-v02-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-15-v01-full.zip
-            release/Collect-TCG-Dev-2026-11-14-v04-to-2026-11-15-v01-patch.zip
+            release/Collect-TCG-Dev-2026-11-15-v02-full.zip
+            release/Collect-TCG-Dev-2026-11-15-v01-to-2026-11-15-v02-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-15-v01.txt'
+          MANIFEST='release-manifests/2026-11-15-v02.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-15-v01'
-            echo 'Previous version: 2026-11-14-v04'
+            echo 'Version: 2026-11-15-v02'
+            echo 'Previous version: 2026-11-15-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: make eBay listings and official seller accounts easier to find in Inventory.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-15-v01-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-14-v04-to-2026-11-15-v01-patch.zip'
+            echo 'Purpose: remove the Inventory eBay callout and retain Listed on eBay on desktop and mobile.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-15-v02-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-15-v01-to-2026-11-15-v02-patch.zip'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: no interactive desktop/mobile/Safari browser test.'
@@ -77,6 +77,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-15-v01: record package validation'
+          git commit -m 'Development 2026-11-15-v02: record package validation'
           git pull --rebase origin main
           git push
