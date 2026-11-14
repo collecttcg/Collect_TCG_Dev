@@ -934,7 +934,7 @@ test('Development 2026-09-29-v09 legacy refactor keeps canonical module and CSS 
   const styleOrder=JSON.parse(readSource('../docs/style-order.json'));
 
   assert.match(initializer,/export \{ initializeApp \} from '\.\/register-features\.js\?v=2026-10-05-v01'/);
-  assert.equal((registry.match(/posts\.js\?v=2026-11-13-sold02/g)||[]).length,1);
+  assert.equal((registry.match(/from '\.\.\/features\/social\/posts\.js\?v=[^']+'/g)||[]).length,1);
   assert.equal((registry.match(/page\.js\?v=2026-11-11-v01/g)||[]).length,1);
   assert.doesNotMatch(analytics,/function insightContactMetrics\(/);
   assert.doesNotMatch(analytics,/function insightInterestScore\(/);
@@ -1161,13 +1161,30 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
 });
 
 test("Sold Facebook post shows the USD price on one line and preserves the eBay URL",()=>{
-  const posts=readSource('../dev/src/features/social/posts.js');
-  const ebay=readSource('../dev/src/features/social/posts-ebay-link.js');
-  assert.ok(posts.includes('const isSold=String(card.availability||card.status||"").trim().toLowerCase()==="sold"'));
-  assert.ok(posts.includes('const usdPrice=card.price_usd ?? card.price'));
-  assert.ok(posts.includes('💰 SOLD PRICE: ${soldPrice||"Price unavailable"}'));
-  assert.ok(posts.includes(': [priceDetailsLabel,"",websiteCardUrl]'));
-  assert.ok(ebay.includes('🛒 eBay Listing:'));
-  assert.ok(ebay.includes('const marker=post.indexOf('));
-  assert.ok(!ebay.includes('if(!websiteCardUrl || !post.includes(websiteCardUrl)) return post'));
+  const a=app();
+  const websiteUrl="https://example.com/cards/luffy";
+  const ebayUrl="https://www.ebay.com/itm/123456789012";
+  a.getCardShareUrl=()=>websiteUrl;
+  const card={id:"luffy",availability:"Sold",price_usd:1250,price:2000,ebay_url:ebayUrl};
+  const values={title:"Luffy",language:"en",templateMode:"detailed"};
+
+  const sold=a.buildFbPostText(card,values);
+  assert.match(sold,/^💰 SOLD PRICE: USD 1,250$/m);
+  assert.ok(sold.includes("🛒 eBay Listing:\n"+ebayUrl));
+  assert.ok(!sold.includes(websiteUrl));
+
+  const available=a.buildFbPostText({...card,availability:"Available"},values);
+  assert.ok(available.includes(websiteUrl));
+  assert.ok(available.includes(ebayUrl));
+  assert.doesNotMatch(available,/SOLD PRICE/);
+
+  const groupPost=a.buildFbPostText({...card,availability:"Available"},{...values,templateMode:"group"});
+  assert.match(groupPost,/Price & full details:/);
+  assert.match(groupPost,/Worldwide shipping available/);
+  assert.ok(groupPost.includes(websiteUrl));
+  assert.ok(groupPost.includes(ebayUrl));
+
+  const missing=a.buildFbPostText({...card,price_usd:null,price:null,ebay_url:""},values);
+  assert.match(missing,/^💰 SOLD PRICE: Price unavailable$/m);
+  assert.doesNotMatch(missing,/🛒 eBay Listing:/);
 });
