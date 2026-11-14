@@ -13084,16 +13084,19 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
 /* Desktop filter controls share 13px type and 50px height with Custom Order.
    Include 992–1179 CSS-pixel viewports (Retina / browser zoom). */
 @media (min-width:992px){
+  #desktopFilterToggleRow #sortByBtn,
+  #desktopFilterToggleRow #desktopFilterToggleBtn,
   #filterDrawerShell .filter-drawer-head strong,
-  #filterDrawerShell .overview-select-btn,
-  #filterDrawerShell .overview-select-btn span{
+  #filterDrawerShell .filter-row .overview-select-btn{
     font-family:inherit !important;
     font-size:13px !important;
     font-weight:700 !important;
     letter-spacing:.04em !important;
     line-height:1 !important;
   }
-  #filterDrawerShell .overview-select-btn,
+  #desktopFilterToggleRow #sortByBtn,
+  #desktopFilterToggleRow #desktopFilterToggleBtn,
+  #filterDrawerShell .filter-row .overview-select-btn,
   #filterDrawerShell .price-range-filter{
     height:50px !important;
     min-height:50px !important;
