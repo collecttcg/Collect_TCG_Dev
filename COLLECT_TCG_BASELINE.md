@@ -26,6 +26,13 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development Reviews release — 2026-11-15-v04
+
+- Previous Dev release: `2026-11-15-v03`. Source `e604639ff90bf15e57e7c481dae6706dfb1e48ed`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v04.txt).
+- Removed the eBay account dropdown and its event binding. eBay Seller Feedback shows one newest-first list across all seller accounts, with ten entries per page. Seller names, reputation totals, Collector Reviews, and Owner connection/sync controls are retained. No SQL or database changes.
+- Changed `dev/src/features/content/reviews.js`, its cache-version entry points, and the Development release workflow. The separate Dev SEO workflow now rebases before publishing generated pages to handle concurrent baseline commits.
+- All 87 tests and repository/release checks passed. The local pagination fixture covered 267 records across sellers, first/last and single-page states, empty/error handling, and public Owner-control visibility. Dev release `43715462716` verified and uploaded both ZIPs. Dev SEO `43715546596` passed on retry with the workflow fix. Dev Pages `43715567778` succeeded, and the deployed Reviews module and entry files matched the release. Interactive browser/Safari testing was not performed. Production remains `2026-11-15-v02`.
+
 ## Development Reviews release and Production promotion — 2026-11-15
 
 - Development `2026-11-15-v03`, previous `2026-11-15-v02`, source `1b92e890e98e21363cba8236b3ed74eb16c09f9e`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v03.txt). Development release workflow `43712762172` passed repository and SEO checks and verified both ZIPs. The pagination and OAuth routing fixtures passed.
