@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `ed32b7967c321ffbf3970435f0f8b3d526c902e1`.
+- Development latest non-baseline commit: `32ed3517dc8fb60fab6655a11f746fdad97dff95`.
 - Production latest non-baseline commit: `5e0f5c5cf40008618c1d3cb4a5112310067dd124`.
 - Production rollback ref: `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`.
 - Latest local release manifest: [`2026-11-15-v02`](release-manifests/2026-11-15-v02.txt) from `95bb2e07c8e12eaf272ce53fd987e275bfb2f1a1`.
-- Latest local change: `ed32b7967c321ffbf3970435f0f8b3d526c902e1` · Dev: preserve Reviews hash route after eBay OAuth callback.
+- Latest local change: `32ed3517dc8fb60fab6655a11f746fdad97dff95` · Dev: add five-account OAuth connections and feedback account filter.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
