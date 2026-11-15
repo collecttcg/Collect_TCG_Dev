@@ -442,6 +442,11 @@ async function renderReviewsPage(){
       console.warn("Development eBay feedback unavailable:",error);
     }
 
+    const ebayPositive=ebayFeedback.filter(item=>item.feedback_type==="positive").length;
+    const ebayNeutral=ebayFeedback.filter(item=>item.feedback_type==="neutral").length;
+    const ebayNegative=ebayFeedback.filter(item=>item.feedback_type==="negative").length;
+    const ebayRated=ebayPositive+ebayNeutral+ebayNegative;
+    const ebayPositivePercent=ebayRated?Math.round(100*ebayPositive/ebayRated):0;
     const summary=appContext.approvedReviewSummary();
     const pendingCount=appContext.ownerReviewSubmissions.filter(row=>String(row.status)==="pending").length;
 
@@ -462,27 +467,29 @@ async function renderReviewsPage(){
         </div>
       ` : ""}
 
-      <section class="review-summary-panel">
+      <section class="review-summary-panel" aria-label="eBay feedback and website reviews">
         <div class="review-summary-score">
-          <strong>${summary.count ? summary.average.toFixed(1) : "—"}</strong>
+          <strong>${ebayRated ? ebayPositivePercent+"%" : "—"}</strong>
           <div>
-            <div class="review-stars review-stars-large">${summary.count ? appContext.reviewStars(Math.round(summary.average)) : "☆☆☆☆☆"}</div>
-            <span>${summary.count} approved review${summary.count===1?"":"s"}</span>
+            <div style="font-weight:700">Positive eBay feedback</div>
+            <span>${ebayRated ? `${ebayPositive} positive · ${ebayNeutral} neutral · ${ebayNegative} negative` : "No eBay feedback imported yet"}</span>
+            <small style="display:block;margin-top:5px;color:var(--muted,#9ca3af)">eBay uses positive, neutral and negative feedback—not 5-star ratings.</small>
           </div>
         </div>
         <div class="review-summary-stat">
-          <strong>${summary.verified}</strong>
-          <span>Verified Buyer review${summary.verified===1?"":"s"}</span>
+          <strong>${summary.count ? summary.average.toFixed(1) : "—"}</strong>
+          <div class="review-stars" aria-label="Website review rating">${summary.count ? appContext.reviewStars(Math.round(summary.average)) : "☆☆☆☆☆"}</div>
+          <span>${summary.count} approved website review${summary.count===1?"":"s"}</span>
         </div>
         <div class="review-summary-trust">
           <strong>Review Protection</strong>
-          <span>Reviews are checked before publishing.</span>
+          <span>Website reviews are moderated before publishing. ${summary.verified} marked Verified Buyer.</span>
         </div>
       </section>
 
       <section class="reviews-list-panel" aria-label="eBay seller feedback" style="margin-bottom:18px">
         ${appContext.isOwnerMode() ? `<div style="padding:12px"><button type="button" class="btn-ghost" id="syncEbayFeedbackDevBtn">Sync eBay Feedback</button></div>` : ""}
-        <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Original eBay feedback from Collect TCG accounts 1–5. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
+        <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Imported seller feedback from Collect TCG eBay accounts. ${ebayRated ? `${ebayPositivePercent}% positive from ${ebayRated} imported ratings` : "Not yet synchronized"}. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
         <div class="reviews-list">
           ${ebayFeedbackError ? '<div class="reviews-empty">eBay feedback is temporarily unavailable.</div>' : ebayFeedback.length ? ebayFeedback.map(item=>`
             <article class="review-card">
