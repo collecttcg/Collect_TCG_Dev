@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay account-deletion endpoint — 2026-11-15 (validation pending)
+- Explicitly approved shared-Supabase deployment: isolated Edge Function `ebay-account-deletion-dev` version 1. Source: `supabase/functions/ebay-account-deletion-dev/index.ts`.
+- GET implements eBay SHA-256 challenge response only after secure `EBAY_DELETION_VERIFICATION_TOKEN` configuration. POST fails closed with 503 until signed notification validation and actual data deletion are implemented. **Do not register with eBay yet.**
+- No credentials configured; no feedback or notifications imported. Production frontend untouched. Deployment observed, end-to-end testing and release packaging pending.
+
 ## Current Development release — 2026-11-15-v02
 
 - Previous Development release: `2026-11-15-v01`. [Release manifest and ZIP checksums](release-manifests/2026-11-15-v02.txt).
