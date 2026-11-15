@@ -340,16 +340,16 @@ async function deleteReviewSubmission(id){
     await appContext.renderReviewsPage();
   }
 
-async function syncEbayFeedbackDev(){
+async function syncEbayFeedbackDev(seller){
     if(!appContext.requireOwner("sync eBay feedback")) return;
     const button=appContext.$("syncEbayFeedbackDevBtn");
     if(button){button.disabled=true;button.textContent="Syncing eBay feedback…";}
     try{
-      const {data,error}=await appContext.supabaseClient.functions.invoke("ebay-feedback-sync-dev",{body:{seller:"collect_tcg_1"}});
+      const {data,error}=await appContext.supabaseClient.functions.invoke("ebay-feedback-sync-dev",{body:seller?{seller}:{}});
       if(error) throw error;
-      const result=data?.results?.[0];
-      if(result?.status!=="success") throw new Error(result?.error||"eBay sync did not complete");
-      appContext.showToast(`eBay feedback sync complete: ${Number(result.records)||0} records processed`);
+      const results=Array.isArray(data?.results)?data.results:[];
+      const failed=results.filter(item=>item.status!=="success");
+      appContext.showToast(`${results.length-failed.length} account(s) synced; ${failed.length} failed`);
       await appContext.renderReviewsPage();
     }catch(error){
       console.error("Development eBay feedback sync error:",error);
@@ -359,8 +359,21 @@ async function syncEbayFeedbackDev(){
     }
   }
 
+async function connectEbayAccountDev(account){
+ if(!appContext.requireOwner("connect eBay account")) return;
+ try{
+ const {data,error}=await appContext.supabaseClient.functions.invoke("ebay-oauth-connect-dev",{body:{action:"connect",account}});
+ if(error||!data?.authorization_url) throw new Error(data?.error||"Connection unavailable");
+ const url=new URL(data.authorization_url);
+ if(url.origin!=="https://auth.ebay.com") throw new Error("Unexpected authorization URL");
+ window.location.assign(url.href);
+ }catch(error){console.error("eBay connection error",error);appContext.showToast("eBay connection unavailable. Check OAuth configuration.");}
+}
+
 function bindReviewPageEvents(){
     appContext.$("syncEbayFeedbackDevBtn")?.addEventListener("click",()=>appContext.syncEbayFeedbackDev());
+    appContext.view.querySelectorAll("[data-ebay-connect]").forEach(btn=>btn.addEventListener("click",()=>appContext.connectEbayAccountDev(btn.dataset.ebayConnect)));
+    appContext.$("ebayFeedbackAccountFilter")?.addEventListener("change",event=>{const account=event.target.value;appContext.view.querySelectorAll("[data-ebay-feedback-account]").forEach(card=>{card.hidden=Boolean(account)&&card.dataset.ebayFeedbackAccount!==account;});});
     appContext.$("writeReviewBtn")?.addEventListener("click",()=>{
       const panel=appContext.$("reviewSubmitPanel");
       if(!panel) return;
@@ -442,6 +455,12 @@ async function renderReviewsPage(){
       console.warn("Development eBay feedback unavailable:",error);
     }
 
+    const ebayAccounts=["collect_tcg_1","collect_tcg_2","collect_tcg_3","collect_tcg_4","collect_tcg_5"];
+    let ebayConnections=[];
+    if(appContext.isOwnerMode()){
+      try{const {data,error}=await appContext.supabaseClient.functions.invoke("ebay-oauth-connect-dev",{body:{action:"status"}});if(!error&&Array.isArray(data?.accounts))ebayConnections=data.accounts;}
+      catch(error){console.warn("eBay connection status unavailable",error);}
+    }
     const ebayPositive=ebayFeedback.filter(item=>item.feedback_type==="positive").length;
     const ebayNeutral=ebayFeedback.filter(item=>item.feedback_type==="neutral").length;
     const ebayNegative=ebayFeedback.filter(item=>item.feedback_type==="negative").length;
@@ -488,11 +507,12 @@ async function renderReviewsPage(){
       </section>
 
       <section class="reviews-list-panel" aria-label="eBay seller feedback" style="margin-bottom:18px">
-        ${appContext.isOwnerMode() ? `<div style="padding:12px"><button type="button" class="btn-ghost" id="syncEbayFeedbackDevBtn">Sync eBay Feedback</button></div>` : ""}
+        ${appContext.isOwnerMode() ? `<div style="padding:12px;display:grid;gap:10px"><div><strong>eBay Account Connections</strong> <button type="button" class="btn-ghost" id="syncEbayFeedbackDevBtn">Sync All Accounts</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:8px">${ebayAccounts.map(account=>{const connected=ebayConnections.find(row=>row.account===account)?.connected===true;return `<div style="border:1px solid #45464b;border-radius:10px;padding:10px;display:grid;gap:6px"><strong>${account}</strong><small>${connected?"Connected":"Not connected"}</small><button type="button" class="btn-ghost" data-ebay-connect="${account}">${connected?"Reconnect":"Connect"}</button></div>`;}).join("")}</div></div>` : ""}
         <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Imported seller feedback from Collect TCG eBay accounts. ${ebayRated ? `${ebayPositivePercent}% positive from ${ebayRated} imported ratings` : "Not yet synchronized"}. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
+        <div style="padding:0 12px 12px"><label for="ebayFeedbackAccountFilter">Account </label><select id="ebayFeedbackAccountFilter"><option value="">All accounts</option>${ebayAccounts.map(account=>`<option value="${account}">${account}</option>`).join("")}</select></div>
         <div class="reviews-list">
           ${ebayFeedbackError ? '<div class="reviews-empty">eBay feedback is temporarily unavailable.</div>' : ebayFeedback.length ? ebayFeedback.map(item=>`
-            <article class="review-card">
+            <article class="review-card" data-ebay-feedback-account="${appContext.escapeHtml(item.ebay_account)}">
               <div class="review-moderation-head"><strong>${appContext.escapeHtml(item.ebay_account)}</strong><span class="review-status">${appContext.escapeHtml(item.feedback_type.toUpperCase())} · eBay</span></div>
               <p>${appContext.escapeHtml(item.comment)}</p>
               <div class="review-moderation-meta"><span>${appContext.escapeHtml(appContext.reviewDateLabel(item.feedback_at))}</span></div>
@@ -628,5 +648,5 @@ async function renderReviewsPage(){
     appContext.applyOwnerMode();
   }
 
-  Object.assign(appContext,{reviewStars,reviewCountryLabel,reviewCountryOptions,reviewDateLabel,reviewRpcUnavailable,loadPublicReviews,loadOwnerReviewSubmissions,approvedReviewSummary,reviewPublicCardHtml,reviewModerationCardHtml,reviewSubmitErrorMessage,submitPublicReview,moderateReview,toggleReviewVerified,deleteReviewSubmission,syncEbayFeedbackDev,bindReviewPageEvents,renderReviewsPage});
+  Object.assign(appContext,{reviewStars,reviewCountryLabel,reviewCountryOptions,reviewDateLabel,reviewRpcUnavailable,loadPublicReviews,loadOwnerReviewSubmissions,approvedReviewSummary,reviewPublicCardHtml,reviewModerationCardHtml,reviewSubmitErrorMessage,submitPublicReview,moderateReview,toggleReviewVerified,deleteReviewSubmission,syncEbayFeedbackDev,connectEbayAccountDev,bindReviewPageEvents,renderReviewsPage});
 }
