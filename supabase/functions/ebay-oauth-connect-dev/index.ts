@@ -29,8 +29,8 @@ async function owner(req:Request){
  const {data:row,error:lookup}=await db().from("app_owners").select("user_id").eq("user_id",user.id).maybeSingle();
  return !lookup&&row?user.id:null;
 }
-const landing="https://collecttcg.github.io/Collect_TCG_Dev/#/reviews";
-const redirect=(result:string)=>Response.redirect(landing+"?ebay_connection="+encodeURIComponent(result),302);
+const landing="https://collecttcg.github.io/Collect_TCG_Dev/";
+const redirect=(result:string)=>Response.redirect(landing+"?ebay_connection="+encodeURIComponent(result)+"#/reviews",302);
 async function callback(url:URL){
  const state=url.searchParams.get("state")||"", code=url.searchParams.get("code")||"";
  if(!state||!code||url.searchParams.get("error"))return redirect("cancelled");
