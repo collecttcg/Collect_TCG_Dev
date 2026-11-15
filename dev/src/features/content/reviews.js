@@ -408,21 +408,20 @@ function reviewPagerHtml(listId,label){
       </nav>`;
   }
 
-function bindReviewPagination({listId,rows,cardHtml,emptyMessage,filter}){
+function bindReviewPagination({listId,rows,cardHtml,emptyMessage}){
     const list=appContext.$(listId);
     const pager=list.nextElementSibling;
     const previous=pager.querySelector("[data-review-previous]");
     const next=pager.querySelector("[data-review-next]");
     const status=pager.querySelector("[data-review-page-status]");
     let page=1;
-    let visibleRows=rows;
 
     function renderPage(){
-      const pageCount=Math.ceil(visibleRows.length/REVIEWS_PER_PAGE);
+      const pageCount=Math.ceil(rows.length/REVIEWS_PER_PAGE);
       const start=(page-1)*REVIEWS_PER_PAGE;
       list.innerHTML=pageCount
-        ? visibleRows.slice(start,start+REVIEWS_PER_PAGE).map(cardHtml).join("")
-        : `<div class="reviews-empty">${emptyMessage(filter?.value)}</div>`;
+        ? rows.slice(start,start+REVIEWS_PER_PAGE).map(cardHtml).join("")
+        : `<div class="reviews-empty">${emptyMessage}</div>`;
       pager.hidden=pageCount<=1;
       previous.disabled=page===1;
       next.disabled=page>=pageCount;
@@ -437,11 +436,6 @@ function bindReviewPagination({listId,rows,cardHtml,emptyMessage,filter}){
 
     previous.addEventListener("click",()=>changePage(-1));
     next.addEventListener("click",()=>changePage(1));
-    filter?.addEventListener("change",()=>{
-      page=1;
-      visibleRows=filter.value?rows.filter(row=>row.ebay_account===filter.value):rows;
-      renderPage();
-    });
     renderPage();
   }
 
@@ -583,7 +577,6 @@ async function renderReviewsPage(){
       <section class="reviews-list-panel" aria-label="eBay seller feedback" style="margin-bottom:18px">
 
         <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Imported seller feedback from Collect TCG eBay accounts. ${ebayRated ? `${ebayPositivePercent}% positive from ${ebayRated} imported ratings` : "Not yet synchronized"}. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
-        <div style="padding:0 12px 12px"><label for="ebayFeedbackAccountFilter">Account </label><select id="ebayFeedbackAccountFilter"><option value="">All accounts</option>${ebayAccounts.map(account=>`<option value="${account}">${account}</option>`).join("")}</select></div>
         <div class="reviews-list" id="ebayFeedbackList" tabindex="-1" aria-label="eBay seller feedback"></div>
         ${reviewPagerHtml("ebayFeedbackList","eBay seller feedback")}
       </section>
@@ -717,17 +710,15 @@ async function renderReviewsPage(){
       listId:"ebayFeedbackList",
       rows:ebayFeedback,
       cardHtml:ebayFeedbackCardHtml,
-      filter:appContext.$("ebayFeedbackAccountFilter"),
-      emptyMessage:account=>{
-        if(ebayFeedbackError) return "eBay feedback is temporarily unavailable.";
-        return account?"No synchronized eBay feedback for this account yet.":"No synchronized eBay seller feedback yet.";
-      }
+      emptyMessage:ebayFeedbackError
+        ?"eBay feedback is temporarily unavailable."
+        :"No synchronized eBay seller feedback yet."
     });
     bindReviewPagination({
       listId:"collectorReviewsList",
       rows:appContext.publicReviews,
       cardHtml:appContext.reviewPublicCardHtml,
-      emptyMessage:()=>appContext.reviewBackendState==="error"
+      emptyMessage:appContext.reviewBackendState==="error"
         ?"Collector reviews are temporarily unavailable."
         :"No approved reviews yet. Be the first to share your experience."
     });
