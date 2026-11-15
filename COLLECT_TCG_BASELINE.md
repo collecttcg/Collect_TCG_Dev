@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Production promotion of Dev navigation v07 — 2026-11-15
+
+- Development `2026-11-15-v07` was promoted to Production `2026-11-15-v04`. Desktop shows Reviews in the main row and Giveaway under More, and mobile retains its original layout. No SQL required.
+- Production release `43724799373` and Pages `43724833485` succeeded. Both ZIPs were integrity-checked, and rollback ref verified at `3585e4b7b05c815a117ec4d7b9755a2efaed0a58`.
+
 ## Development mobile navigation restoration — 2026-11-15-v07
 
 - Previous Dev release `2026-11-15-v06`. Source `020aa23bc087c3c7ffbd97e37dbfe97f688c428a`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v07.txt).
