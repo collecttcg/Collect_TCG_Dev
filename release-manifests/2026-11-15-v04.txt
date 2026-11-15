@@ -1,0 +1,12 @@
+Version: 2026-11-15-v04
+Previous version: 2026-11-15-v03
+Source commit: e604639ff90bf15e57e7c481dae6706dfb1e48ed
+Purpose: Remove the eBay feedback account dropdown and paginate one combined list.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v03-to-2026-11-15-v04-patch.zip
+SQL required for the Reviews frontend promotion: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: local pagination fixture; no interactive desktop, mobile, or Safari browser session.
+
+567929dba71fc27af8b2dcffaf2beaafc167f267a372d1e26c896a6593687299  release/Collect-TCG-Dev-2026-11-15-v04-full.zip
+f9e4dde28c123c77cd5df4b89c0ee4cfd8cfad65c2f291aab5af379de1279037  release/Collect-TCG-Dev-2026-11-15-v03-to-2026-11-15-v04-patch.zip
