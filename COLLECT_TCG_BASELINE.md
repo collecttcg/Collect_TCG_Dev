@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `e604639ff90bf15e57e7c481dae6706dfb1e48ed`.
+- Development latest non-baseline commit: `959e50da2195f9e1e012eed3f7b3060062868339`.
 - Production latest non-baseline commit: `28a13c67d0bcded8dcfb2704be54973646a8050c`.
 - Production rollback ref: `28a13c67d0bcded8dcfb2704be54973646a8050c`.
-- Latest local release manifest: [`2026-11-15-v03`](release-manifests/2026-11-15-v03.txt) from `1b92e890e98e21363cba8236b3ed74eb16c09f9e`.
-- Latest local change: `e604639ff90bf15e57e7c481dae6706dfb1e48ed` · Dev 2026-11-15-v04: remove eBay feedback account filter.
+- Latest local release manifest: [`2026-11-15-v04`](release-manifests/2026-11-15-v04.txt) from `e604639ff90bf15e57e7c481dae6706dfb1e48ed`.
+- Latest local change: `959e50da2195f9e1e012eed3f7b3060062868339` · Dev: publish refreshed SEO pages after baseline reconciliation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
