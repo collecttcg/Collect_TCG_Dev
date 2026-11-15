@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay feedback CORS fix — 2026-11-15 (validation pending)
+- Live Supabase function logs confirmed browser `OPTIONS` preflight requests returned HTTP 405 on `ebay-feedback-sync-dev` v2; database had 0 imported feedback rows. Updated function to return 204 with CORS headers for preflight and include CORS headers on JSON responses. Deployed Edge Function v3 ACTIVE, source commit `a2fbeebc96002101780ea705e5ea8342ab663f67`.
+- Owner JWT verification and service-role authorization remain unchanged. End-to-end browser retry and import still pending. Production frontend unchanged. No release packaging.
+
 ## Development eBay feedback Owner authorization fix — 2026-11-15 (validation pending)
 - User's first import test returned `Unauthorized` because v1 required exact service-role bearer. `ebay-feedback-sync-dev` v2 now accepts an authenticated Supabase user token only after `auth.getUser` validation and server-side `app_owners` membership lookup; service-role bearer remains accepted for trusted backend invocation. JWT gateway remains enabled.
 - Development Reviews module now exposes an Owner-only `Sync eBay Feedback` button invoking the function with the existing authenticated Supabase client for `collect_tcg_1`. Public visitors cannot invoke via the button. Deployed Edge Function v2 confirmed; website JS committed but not independently tested or packaged. End-to-end Owner import and UI tests pending. No Production promotion.
