@@ -26,6 +26,13 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development primary navigation — 2026-11-15-v06
+
+- Previous Dev release `2026-11-15-v05`. Source `653aba987b62863bb29801e1d02ce7e9205fa35f`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v06.txt).
+- Moved Reviews into the main desktop and mobile rows and moved Giveaway into More. Mobile keeps the logo, Inventory, Collection, Sold, and More, with Reviews added in a dedicated cell. More highlights on Giveaway, and Reviews still links to the clean URL. No SQL, database, or route authorization changes.
+- Updated the app shell, generated Reviews and card HTML, responsive navigation CSS, navigation active-state logic and cache references, and the Dev release workflow. All 87 tests passed. Desktop/mobile markup and JS active-state fixtures passed, including widths from 320 to 1920 px. Interactive browser and Safari testing were not performed.
+- Release `43723403183`, SEO refresh `43723403262`, and Pages `43723432573` succeeded. Both ZIPs passed integrity checks, and the served homepage, Reviews page, navigation JS, and CSS matched the release. Production remains `2026-11-15-v03`.
+
 ## Production promotion of Dev Reviews v05 — 2026-11-15
 
 - Development `2026-11-15-v05` was promoted to Production `2026-11-15-v03` for the Reviews frontend and SEO, including the account filter removal from Dev v04. Production release `43720319868`, SEO `43720319942`, and Pages `43720343524` succeeded. Rollback ref verified at `0c19b5af5fd7b3aa8eabe612c0af5b5de36ca3f1`.
