@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development five-account eBay OAuth — 2026-11-15 (configuration and validation pending)
+- Applied shared Supabase migration `dev_2026_11_15_v03_ebay_oauth_connections`: restricted, RLS-enabled Dev OAuth state and encrypted connection tables. Existing feedback and Production review tables unchanged.
+- Deployed `ebay-oauth-connect-dev` v2: verified Owner starts one-time state-bound OAuth, callback verifies exact eBay account with Trading GetUser, AES-GCM encrypts refresh token and stores ciphertext only, then redirects to Dev Reviews. Requires Supabase secrets `EBAY_RUNAME` and a base64 32-byte `EBAY_TOKEN_ENCRYPTION_KEY`; eBay RuName callback must point to the deployed function. These configurations are not confirmed.
+- Deployed `ebay-feedback-sync-dev` v4: per-account refresh-token use, retaining first-account legacy access-token fallback. Dev Reviews now shows account Connect/Reconnect, Sync All, and account filter. JS syntax parsed; Edge Functions bundled and deployed. OAuth live roundtrip, account linking, refresh, all-account sync, UI browser tests and scheduling are not tested/complete. No release packages or manifest. Production unchanged.
+
 ## Development Reviews eBay summary refinement — 2026-11-15 (validation pending)
 - Confirmed 25 imported eBay feedback records, all positive. Updated `dev/src/features/content/reviews.js` to show eBay positive percentage and sentiment counts in leading summary; website stars and average remain separately labeled. eBay sentiment is not misrepresented as five-star ratings.
 - Dev source committed `fb6d4cd87eead26ae29bc4067501122a603770df`. Browser and syntax execution not independently verified; no package/manifest created. Production unchanged.
