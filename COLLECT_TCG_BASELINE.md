@@ -26,6 +26,12 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development mobile navigation restoration — 2026-11-15-v07
+
+- Previous Dev release `2026-11-15-v06`. Source `020aa23bc087c3c7ffbd97e37dbfe97f688c428a`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v07.txt).
+- Restored the original mobile header, grid, and More menu order, with Reviews and Giveaway inside More. The desktop Reviews/Giveaway swap remains, including the compact desktop header. Updated the app shell, generated Reviews and card pages, responsive CSS, and Dev release workflow. No SQL or authorization changes.
+- All 87 tests passed. Compared the mobile markup and responsive rules with Dev v05 and verified the desktop destinations. Release `43724371726`, SEO `43724371714` and Pages `43724409792` succeeded. Both ZIPs passed integrity checks and the live homepage, Reviews page and CSS matched the release. No interactive browser or Safari testing. Production remains `2026-11-15-v03`.
+
 ## Development primary navigation — 2026-11-15-v06
 
 - Previous Dev release `2026-11-15-v05`. Source `653aba987b62863bb29801e1d02ce7e9205fa35f`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v06.txt).
