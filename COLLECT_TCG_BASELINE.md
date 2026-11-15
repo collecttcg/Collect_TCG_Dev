@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development Reviews pagination — 2026-11-15 (validation pending)
+- Public eBay Seller Feedback and Collector Reviews show ten entries per page with Previous and Next controls. The eBay account filter returns to page one and shows an account-specific empty state. eBay feedback is retrieved in ordered batches beyond the former 100-row cap so reputation totals cover the full imported list.
+- All 87 repository tests, reference/CSS checks, release contracts, SEO workflow guard and generator self-test passed locally. A fixture with 267 eBay entries and 21 Collector Reviews exercised page limits, account filtering, totals, empty/error handling, and public view. Browser desktop/mobile/Safari and live backend checks pending. No SQL or policy changes. No release manifest or packages for this change.
+
 ## Development eBay reputation emphasis — 2026-11-15 (validation pending)
 - Updated `dev/src/features/content/reviews.js` to highlight live imported eBay positive percentage in a green reputation panel, show prominent positive/neutral/negative counts, and retain the distinction from separate website five-star reviews. Responsive three-column counts and empty-feedback fallback included. Owner eBay connection controls moved below seller feedback into an Owner-only panel; public feedback filtering remains.
 - Source committed `e8eebea2d475cc1a1308d07a5fdaf2f5ce150856`; JS syntax parsed. Browser desktop/mobile and Safari UI not exercised; no release manifest, ZIPs or release validation. Production unchanged. No SQL required.

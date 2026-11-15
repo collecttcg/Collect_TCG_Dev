@@ -1,4 +1,7 @@
 /** Module: features/content/reviews. Shared dependencies are explicit on appContext. */
+const REVIEWS_PER_PAGE=10;
+const EBAY_FEEDBACK_BATCH_SIZE=250;
+
 export function register(appContext){
 function reviewStars(rating){
     const value=Math.max(1,Math.min(5,Number(rating)||1));
@@ -370,10 +373,81 @@ async function connectEbayAccountDev(account){
  }catch(error){console.error("eBay connection error",error);appContext.showToast("eBay connection unavailable. Check OAuth configuration.");}
 }
 
+async function loadEbayFeedback(){
+    const feedback=[];
+    for(let offset=0;;offset+=EBAY_FEEDBACK_BATCH_SIZE){
+      const {data,error}=await appContext.supabaseClient.from("ebay_feedback_dev")
+        .select("ebay_account,feedback_type,comment,feedback_at")
+        .order("feedback_at",{ascending:false})
+        .order("id",{ascending:false})
+        .range(offset,offset+EBAY_FEEDBACK_BATCH_SIZE-1);
+      if(error) throw error;
+      const batch=Array.isArray(data)?data:[];
+      feedback.push(...batch);
+      if(batch.length<EBAY_FEEDBACK_BATCH_SIZE) return feedback;
+    }
+  }
+
+function ebayFeedbackCardHtml(item){
+    return `
+      <article class="review-card">
+        <div class="review-moderation-head"><strong>${appContext.escapeHtml(item.ebay_account)}</strong><span class="review-status">${appContext.escapeHtml(item.feedback_type.toUpperCase())} · eBay</span></div>
+        <p>${appContext.escapeHtml(item.comment)}</p>
+        <div class="review-moderation-meta"><span>${appContext.escapeHtml(appContext.reviewDateLabel(item.feedback_at))}</span></div>
+      </article>`;
+  }
+
+function reviewPagerHtml(listId,label){
+    return `
+      <nav data-review-pagination aria-label="${label} pages">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:12px">
+          <button type="button" class="btn-ghost" data-review-previous aria-controls="${listId}" style="min-height:44px">Previous</button>
+          <span data-review-page-status aria-live="polite"></span>
+          <button type="button" class="btn-ghost" data-review-next aria-controls="${listId}" style="min-height:44px">Next</button>
+        </div>
+      </nav>`;
+  }
+
+function bindReviewPagination({listId,rows,cardHtml,emptyMessage,filter}){
+    const list=appContext.$(listId);
+    const pager=list.nextElementSibling;
+    const previous=pager.querySelector("[data-review-previous]");
+    const next=pager.querySelector("[data-review-next]");
+    const status=pager.querySelector("[data-review-page-status]");
+    let page=1;
+    let visibleRows=rows;
+
+    function renderPage(){
+      const pageCount=Math.ceil(visibleRows.length/REVIEWS_PER_PAGE);
+      const start=(page-1)*REVIEWS_PER_PAGE;
+      list.innerHTML=pageCount
+        ? visibleRows.slice(start,start+REVIEWS_PER_PAGE).map(cardHtml).join("")
+        : `<div class="reviews-empty">${emptyMessage(filter?.value)}</div>`;
+      pager.hidden=pageCount<=1;
+      previous.disabled=page===1;
+      next.disabled=page>=pageCount;
+      status.textContent=pageCount>1?`Page ${page} of ${pageCount}`:"";
+    }
+
+    function changePage(direction){
+      page+=direction;
+      renderPage();
+      list.focus();
+    }
+
+    previous.addEventListener("click",()=>changePage(-1));
+    next.addEventListener("click",()=>changePage(1));
+    filter?.addEventListener("change",()=>{
+      page=1;
+      visibleRows=filter.value?rows.filter(row=>row.ebay_account===filter.value):rows;
+      renderPage();
+    });
+    renderPage();
+  }
+
 function bindReviewPageEvents(){
     appContext.$("syncEbayFeedbackDevBtn")?.addEventListener("click",()=>appContext.syncEbayFeedbackDev());
     appContext.view.querySelectorAll("[data-ebay-connect]").forEach(btn=>btn.addEventListener("click",()=>appContext.connectEbayAccountDev(btn.dataset.ebayConnect)));
-    appContext.$("ebayFeedbackAccountFilter")?.addEventListener("change",event=>{const account=event.target.value;appContext.view.querySelectorAll("[data-ebay-feedback-account]").forEach(card=>{card.hidden=Boolean(account)&&card.dataset.ebayFeedbackAccount!==account;});});
     appContext.$("writeReviewBtn")?.addEventListener("click",()=>{
       const panel=appContext.$("reviewSubmitPanel");
       if(!panel) return;
@@ -445,11 +519,7 @@ async function renderReviewsPage(){
     let ebayFeedback=[];
     let ebayFeedbackError=false;
     try{
-      const {data,error}=await appContext.supabaseClient.from("ebay_feedback_dev")
-        .select("ebay_account,feedback_id,feedback_type,comment,feedback_at")
-        .order("feedback_at",{ascending:false}).limit(100);
-      if(error) throw error;
-      ebayFeedback=Array.isArray(data)?data:[];
+      ebayFeedback=await loadEbayFeedback();
     }catch(error){
       ebayFeedbackError=true;
       console.warn("Development eBay feedback unavailable:",error);
@@ -461,6 +531,8 @@ async function renderReviewsPage(){
       try{const {data,error}=await appContext.supabaseClient.functions.invoke("ebay-oauth-connect-dev",{body:{action:"status"}});if(!error&&Array.isArray(data?.accounts))ebayConnections=data.accounts;}
       catch(error){console.warn("eBay connection status unavailable",error);}
     }
+    if(appContext.currentRoute()!=="reviews") return;
+
     const ebayPositive=ebayFeedback.filter(item=>item.feedback_type==="positive").length;
     const ebayNeutral=ebayFeedback.filter(item=>item.feedback_type==="neutral").length;
     const ebayNegative=ebayFeedback.filter(item=>item.feedback_type==="negative").length;
@@ -512,14 +584,8 @@ async function renderReviewsPage(){
 
         <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Imported seller feedback from Collect TCG eBay accounts. ${ebayRated ? `${ebayPositivePercent}% positive from ${ebayRated} imported ratings` : "Not yet synchronized"}. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
         <div style="padding:0 12px 12px"><label for="ebayFeedbackAccountFilter">Account </label><select id="ebayFeedbackAccountFilter"><option value="">All accounts</option>${ebayAccounts.map(account=>`<option value="${account}">${account}</option>`).join("")}</select></div>
-        <div class="reviews-list">
-          ${ebayFeedbackError ? '<div class="reviews-empty">eBay feedback is temporarily unavailable.</div>' : ebayFeedback.length ? ebayFeedback.map(item=>`
-            <article class="review-card" data-ebay-feedback-account="${appContext.escapeHtml(item.ebay_account)}">
-              <div class="review-moderation-head"><strong>${appContext.escapeHtml(item.ebay_account)}</strong><span class="review-status">${appContext.escapeHtml(item.feedback_type.toUpperCase())} · eBay</span></div>
-              <p>${appContext.escapeHtml(item.comment)}</p>
-              <div class="review-moderation-meta"><span>${appContext.escapeHtml(appContext.reviewDateLabel(item.feedback_at))}</span></div>
-            </article>`).join("") : '<div class="reviews-empty">No synchronized eBay seller feedback yet. Account connections are pending.</div>'}
-        </div>
+        <div class="reviews-list" id="ebayFeedbackList" tabindex="-1" aria-label="eBay seller feedback"></div>
+        ${reviewPagerHtml("ebayFeedbackList","eBay seller feedback")}
       </section>
 
       <section class="reviews-list-panel owner-only" aria-label="Owner eBay account management" style="margin-bottom:18px">
@@ -535,11 +601,8 @@ async function renderReviewsPage(){
             <span>${summary.count}</span>
           </div>
 
-          <div class="reviews-list">
-            ${appContext.publicReviews.length
-              ? appContext.publicReviews.map(appContext.reviewPublicCardHtml).join("")
-              : `<div class="reviews-empty">No approved reviews yet. Be the first to share your experience.</div>`}
-          </div>
+          <div class="reviews-list" id="collectorReviewsList" tabindex="-1" aria-label="Collector reviews"></div>
+          ${reviewPagerHtml("collectorReviewsList","Collector review")}
         </section>
 
         <aside class="review-submit-panel" id="reviewSubmitPanel">
@@ -650,6 +713,24 @@ async function renderReviewsPage(){
       </section>
     `;
 
+    bindReviewPagination({
+      listId:"ebayFeedbackList",
+      rows:ebayFeedback,
+      cardHtml:ebayFeedbackCardHtml,
+      filter:appContext.$("ebayFeedbackAccountFilter"),
+      emptyMessage:account=>{
+        if(ebayFeedbackError) return "eBay feedback is temporarily unavailable.";
+        return account?"No synchronized eBay feedback for this account yet.":"No synchronized eBay seller feedback yet.";
+      }
+    });
+    bindReviewPagination({
+      listId:"collectorReviewsList",
+      rows:appContext.publicReviews,
+      cardHtml:appContext.reviewPublicCardHtml,
+      emptyMessage:()=>appContext.reviewBackendState==="error"
+        ?"Collector reviews are temporarily unavailable."
+        :"No approved reviews yet. Be the first to share your experience."
+    });
     appContext.bindReviewPageEvents();
     appContext.applyOwnerMode();
   }
