@@ -15,7 +15,7 @@ function shouldHighlightMore(route){
         "reserved",
         "showcase",
         "favorites",
-        "reviews",
+        "giveaway",
         "about",
         "recent",
         "contact",
@@ -32,6 +32,7 @@ function shouldHighlightMore(route){
 
     // Routes that genuinely live under More on the standard desktop/mobile header.
     const alwaysMore=new Set([
+      "giveaway",
       "recent",
       "about",
       "contact",
@@ -49,7 +50,7 @@ function shouldHighlightMore(route){
 
     if(
       window.matchMedia("(max-width:800px)").matches &&
-      ["reserved","showcase","giveaway","favorites"].includes(base)
+      ["reserved","showcase","favorites"].includes(base)
     ){
       return true;
     }

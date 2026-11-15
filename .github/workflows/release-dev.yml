@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-15-v05: validate the current Development release.
+# 2026-11-15-v06: validate the current Development release.
 on:
   workflow_dispatch:
   push:
@@ -30,9 +30,9 @@ jobs:
           node tools/generate-seo.mjs --self-test
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-15-v05
-          PREVIOUS_VERSION: 2026-11-15-v04
-          PREVIOUS_COMMIT: e604639ff90bf15e57e7c481dae6706dfb1e48ed
+          RELEASE_VERSION: 2026-11-15-v06
+          PREVIOUS_VERSION: 2026-11-15-v05
+          PREVIOUS_COMMIT: 6a3629f2447ab1db957d8078a76772b9bac6eac9
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -49,34 +49,34 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-15-v05-packages
+          name: Collect-TCG-Dev-2026-11-15-v06-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-15-v05-full.zip
-            release/Collect-TCG-Dev-2026-11-15-v04-to-2026-11-15-v05-patch.zip
+            release/Collect-TCG-Dev-2026-11-15-v06-full.zip
+            release/Collect-TCG-Dev-2026-11-15-v05-to-2026-11-15-v06-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-15-v05.txt'
+          MANIFEST='release-manifests/2026-11-15-v06.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-15-v05'
-            echo 'Previous version: 2026-11-15-v04'
+            echo 'Version: 2026-11-15-v06'
+            echo 'Previous version: 2026-11-15-v05'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Give Reviews a dedicated URL, searchable HTML and sitemap entry.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-15-v05-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-15-v04-to-2026-11-15-v05-patch.zip'
+            echo 'Purpose: Move Reviews into primary navigation and Giveaway into More on desktop and mobile.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-15-v06-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-15-v05-to-2026-11-15-v06-patch.zip'
             echo 'SQL required for the Reviews frontend promotion: No.'
             echo 'Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
-            echo 'Validation limitations: local route and SEO fixtures; no interactive desktop, mobile, or Safari browser session.'
+            echo 'Validation limitations: desktop and mobile navigation markup and active-state fixtures; no interactive browser or Safari session.'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-15-v05: record package validation'
+          git commit -m 'Development 2026-11-15-v06: record package validation'
           git pull --rebase origin main
           git push
