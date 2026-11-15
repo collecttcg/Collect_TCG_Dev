@@ -1,0 +1,12 @@
+Version: 2026-11-15-v07
+Previous version: 2026-11-15-v06
+Source commit: 020aa23bc087c3c7ffbd97e37dbfe97f688c428a
+Purpose: Restore the original mobile navigation and keep the desktop Reviews and Giveaway swap.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v07-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v06-to-2026-11-15-v07-patch.zip
+SQL required for the Reviews frontend promotion: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: desktop and mobile navigation markup and responsive CSS checks; no interactive browser or Safari session.
+
+940339f5112055bae6d11975997ec03a823406bddeb746370518a304d3d50fac  release/Collect-TCG-Dev-2026-11-15-v07-full.zip
+98a64a2bb2acd98acecef4fe0c62bbd873a254083a6244c2eea6759050f12baf  release/Collect-TCG-Dev-2026-11-15-v06-to-2026-11-15-v07-patch.zip
