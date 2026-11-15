@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development Reviews release and Production promotion — 2026-11-15
+
+- Development `2026-11-15-v03`, previous `2026-11-15-v02`, source `1b92e890e98e21363cba8236b3ed74eb16c09f9e`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v03.txt). Development release workflow `43712762172` passed repository and SEO checks and verified both ZIPs. The pagination and OAuth routing fixtures passed.
+- Production `2026-11-15-v02` promoted the Reviews frontend only. Production release `43712857967` and Pages `43712903625` succeeded, with rollback ref verified at `28a13c67d0bcded8dcfb2704be54973646a8050c`. This promotion reused the existing feedback cache and sync endpoints. No SQL or backend change for the frontend promotion.
+
 ## eBay Reviews Production promotion check — 2026-11-15
 - Deployed shared OAuth callback `ebay-oauth-connect-dev` v5. An authenticated Owner can bind the Production return path into the one-time OAuth state when initiating a Production connection. State validation precedes destination selection, and existing Dev grants and callback requests continue to target Dev. Local tests exercised cancellation, tampering, replay, destination allowlisting, and the Owner authorization boundary. A signed-in live eBay OAuth round trip was not exercised.
 - The Dev repository validation suite (87 tests, repository and CSS checks, release contracts), SEO workflow guard, and generator self-test passed at source `3c2e222e047137689d9a313453528b898a25fe31`.
