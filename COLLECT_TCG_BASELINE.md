@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## eBay Reviews Production promotion check — 2026-11-15
+- Deployed shared OAuth callback `ebay-oauth-connect-dev` v5. An authenticated Owner can bind the Production return path into the one-time OAuth state when initiating a Production connection. State validation precedes destination selection, and existing Dev grants and callback requests continue to target Dev. Local tests exercised cancellation, tampering, replay, destination allowlisting, and the Owner authorization boundary. A signed-in live eBay OAuth round trip was not exercised.
+- The Dev repository validation suite (87 tests, repository and CSS checks, release contracts), SEO workflow guard, and generator self-test passed at source `3c2e222e047137689d9a313453528b898a25fe31`.
+- Full Production promotion remains blocked. The active deletion endpoint v6 returns HTTP 503 for deletion notifications, and the feedback cache stores comment, feedback ID, and seller account without the comment author's account identifier. The deletion workflow and backfill must be verified before publishing stored eBay comments in Production. Production remained on `2026-11-15-v01`.
+
 ## Development weekly eBay seller feedback sync — 2026-11-15
 - Approved shared Supabase migrations `dev_2026_11_15_v04_ebay_feedback_weekly` and `dev_2026_11_15_v05_ebay_feedback_weekly_signatures` were applied. Active job `collect-tcg-ebay-feedback-weekly-dev` runs Mondays at 09:00 JST (00:00 GMT), with separate requests for enabled, OAuth-connected accounts.
 - `ebay-feedback-weekly-dev` v2 is active. The signing key stays in Vault. Requests use three-minute, seller-bound signatures, claimed once by the service-role-only RPC. The original token was rotated and its verifier disabled after the managed queue retained default grants.
