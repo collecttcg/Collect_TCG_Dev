@@ -1,0 +1,12 @@
+Version: 2026-11-15-v05
+Previous version: 2026-11-15-v04
+Source commit: 6a3629f2447ab1db957d8078a76772b9bac6eac9
+Purpose: Give Reviews a dedicated URL, searchable HTML and sitemap entry.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v04-to-2026-11-15-v05-patch.zip
+SQL required for the Reviews frontend promotion: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: local route and SEO fixtures; no interactive desktop, mobile, or Safari browser session.
+
+76e78c81b8cb7188b968020dcf8d99453faff8c1cfb4bb11875dd953b32d08c8  release/Collect-TCG-Dev-2026-11-15-v05-full.zip
+77afe42b998d3e4835c7cf7203dab1b5c72ba2875fcae17d9fa27eac9b1bf545  release/Collect-TCG-Dev-2026-11-15-v04-to-2026-11-15-v05-patch.zip
