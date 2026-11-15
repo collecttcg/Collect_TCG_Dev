@@ -1,0 +1,12 @@
+Version: 2026-11-15-v03
+Previous version: 2026-11-15-v02
+Source commit: 1b92e890e98e21363cba8236b3ed74eb16c09f9e
+Purpose: Validate the Reviews page promotion source: eBay reputation, account filtering, Owner controls and pagination.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v02-to-2026-11-15-v03-patch.zip
+SQL required for the Reviews frontend promotion: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: local pagination and OAuth route fixtures; no interactive Safari or signed-in eBay OAuth round trip.
+
+f2ee746a69ead40129522c9f1efc1c4d2e37f7d0ad40b9d454fbbd5ef8f4062a  release/Collect-TCG-Dev-2026-11-15-v03-full.zip
+5afe397e0565e9a375718520d5b1ca131c2f1a44f29d3e6d2496609e9d2444c8  release/Collect-TCG-Dev-2026-11-15-v02-to-2026-11-15-v03-patch.zip
