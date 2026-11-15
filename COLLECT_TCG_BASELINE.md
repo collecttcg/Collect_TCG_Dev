@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay reputation emphasis — 2026-11-15 (validation pending)
+- Updated `dev/src/features/content/reviews.js` to highlight live imported eBay positive percentage in a green reputation panel, show prominent positive/neutral/negative counts, and retain the distinction from separate website five-star reviews. Responsive three-column counts and empty-feedback fallback included. Owner eBay connection controls moved below seller feedback into an Owner-only panel; public feedback filtering remains.
+- Source committed `e8eebea2d475cc1a1308d07a5fdaf2f5ce150856`; JS syntax parsed. Browser desktop/mobile and Safari UI not exercised; no release manifest, ZIPs or release validation. Production unchanged. No SQL required.
+
 ## Development five-account eBay OAuth — 2026-11-15 (configuration and validation pending)
 - Applied shared Supabase migration `dev_2026_11_15_v03_ebay_oauth_connections`: restricted, RLS-enabled Dev OAuth state and encrypted connection tables. Existing feedback and Production review tables unchanged.
 - Deployed `ebay-oauth-connect-dev` v2: verified Owner starts one-time state-bound OAuth, callback verifies exact eBay account with Trading GetUser, AES-GCM encrypts refresh token and stores ciphertext only, then redirects to Dev Reviews. Requires Supabase secrets `EBAY_RUNAME` and a base64 32-byte `EBAY_TOKEN_ENCRYPTION_KEY`; eBay RuName callback must point to the deployed function. These configurations are not confirmed.
