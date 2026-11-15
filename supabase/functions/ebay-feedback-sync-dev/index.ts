@@ -6,18 +6,32 @@ const corsHeaders = {"Access-Control-Allow-Origin":"*","Access-Control-Allow-Hea
 const reply = (data: unknown, status=200) => new Response(JSON.stringify(data),{status,headers:{"content-type":"application/json","cache-control":"no-store",...corsHeaders}});
 const tag = (xml:string,name:string) => xml.split("<"+name+">")[1]?.split("</"+name+">")[0] ?? "";
 const decode = (s:string) => s.replace(/&#(x[0-9a-f]+|\d+);|&(?:amp|lt|gt|quot|apos);/gi,(m,n)=>n ? String.fromCodePoint(n[0].toLowerCase()==="x"?parseInt(n.slice(1),16):Number(n)) : ({"&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&apos;":"'"}[m]??m));
-async function accessToken():Promise<string>{
-  const id=Deno.env.get("EBAY_CLIENT_ID"), secret=Deno.env.get("EBAY_CLIENT_SECRET"), refresh=Deno.env.get("EBAY_USER_REFRESH_TOKEN");
-  if(id && secret && refresh){
-    const credentials=btoa(id+":"+secret);
-    const res=await fetch("https://api.ebay.com/identity/v1/oauth2/token",{method:"POST",headers:{"authorization":"Basic "+credentials,"content-type":"application/x-www-form-urlencoded"},body:new URLSearchParams({grant_type:"refresh_token",refresh_token:refresh,scope:"https://api.ebay.com/oauth/api_scope"})});
+async function accessToken(seller:string,db:ReturnType<typeof createClient>):Promise<string>{
+  const {data:connection,error}=await db.from("ebay_oauth_connections_dev").select("refresh_token_ciphertext").eq("ebay_account",seller).maybeSingle();
+  if(error)throw Error("Unable to load eBay account connection");
+  if(connection){
+    const raw=Deno.env.get("EBAY_TOKEN_ENCRYPTION_KEY")||"";
+    const bytes=Uint8Array.from(atob(raw),c=>c.charCodeAt(0));
+    if(bytes.length!==32)throw Error("eBay token encryption key unavailable");
+    const [ivText,cipherText]=connection.refresh_token_ciphertext.split(".");
+    const iv=Uint8Array.from(atob(ivText),c=>c.charCodeAt(0));
+    const cipher=Uint8Array.from(atob(cipherText),c=>c.charCodeAt(0));
+    const key=await crypto.subtle.importKey("raw",bytes,"AES-GCM",false,["decrypt"]);
+    const refresh=new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv},key,cipher));
+    const id=Deno.env.get("EBAY_CLIENT_ID"),secret=Deno.env.get("EBAY_CLIENT_SECRET");
+    if(!id||!secret)throw Error("eBay application credentials unavailable");
+    const res=await fetch("https://api.ebay.com/identity/v1/oauth2/token",{method:"POST",headers:{"authorization":"Basic "+btoa(id+":"+secret),"content-type":"application/x-www-form-urlencoded"},body:new URLSearchParams({grant_type:"refresh_token",refresh_token:refresh,scope:"https://api.ebay.com/oauth/api_scope"}),signal:AbortSignal.timeout(20000)});
+    if(!res.ok)throw Error("eBay token refresh failed: HTTP "+res.status);
     const result=await res.json();
-    if(!res.ok || !result.access_token) throw Error("eBay refresh failed: HTTP "+res.status);
+    if(!result.access_token)throw Error("eBay token refresh returned no access token");
     return result.access_token;
   }
-  const token=Deno.env.get("EBAY_USER_ACCESS_TOKEN");
-  if(!token) throw Error("No eBay user token configured");
-  return token;
+  // Preserve the existing manually configured first-account token during migration.
+  if(seller==="collect_tcg_1"){
+    const token=Deno.env.get("EBAY_USER_ACCESS_TOKEN");
+    if(token)return token;
+  }
+  throw Error("eBay account not connected");
 }
 async function fetchPage(seller:string,page:number,token:string){
   const xml=`<?xml version="1.0" encoding="utf-8"?><GetFeedbackRequest xmlns="urn:ebay:apis:eBLBaseComponents"><UserID>${seller}</UserID><FeedbackType>FeedbackReceivedAsSeller</FeedbackType><DetailLevel>ReturnAll</DetailLevel><Pagination><EntriesPerPage>100</EntriesPerPage><PageNumber>${page}</PageNumber></Pagination><Version>1423</Version></GetFeedbackRequest>`;
@@ -62,11 +76,10 @@ Deno.serve(async req=>{
   if(input.seller && !accounts.includes(input.seller as typeof accounts[number])) return reply({error:"Invalid seller"},400);
   const selected=input.seller?[input.seller]:[...accounts];
   const results=[];
-  let token:string;
-  try {token=await accessToken();} catch {return reply({error:"eBay authorization unavailable; check refresh/access token"},503);}
   for(const seller of selected){
     let imported=0;
     try {
+      const token=await accessToken(seller,db);
       const first=await fetchPage(seller,1,token);
       if(first.pages>100) throw Error("Too many pages; manual review required");
       for(let page=1;page<=first.pages;page++){
