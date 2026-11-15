@@ -17,6 +17,9 @@ Deno.serve(async (req: Request) => {
     const data = await res.text();
     const tag = (name: string) => data.match(new RegExp("<(?:\\w+:)?"+name+">([^<]*)</(?:\\w+:)?"+name+">"))?.[1] ?? null;
     const ack=tag("Ack"), count=tag("TotalNumberOfEntries"), pages=tag("TotalNumberOfPages");
-    return response({seller,http_status:res.status,ack,entries_page_1:count===null?null:Number(count),total_pages:pages===null?null:Number(pages),error_codes:[...data.matchAll(/<ErrorCode>([^<]+)<\/ErrorCode>/g)].map(m=>m[1]).slice(0,5)},res.ok?200:502);
+    const blocks=[...data.matchAll(/<FeedbackDetail>([\\s\\S]*?)<\\/FeedbackDetail>/g)].map(m=>m[1]);
+    const ratingCounts={positive:0,neutral:0,negative:0,other:0};
+    for(const block of blocks){const type=block.match(/<CommentType>([^<]+)<\\/CommentType>/)?.[1]?.toLowerCase(); if(type==="positive"||type==="neutral"||type==="negative") ratingCounts[type]++; else ratingCounts.other++;}
+    return response({seller,http_status:res.status,ack,entries_page_1:count===null?null:Number(count),total_pages:pages===null?null:Number(pages),feedback_details_returned:blocks.length,rating_counts_page_1:ratingCounts,error_codes:[...data.matchAll(/<ErrorCode>([^<]+)<\/ErrorCode>/g)].map(m=>m[1]).slice(0,5)},res.ok?200:502);
   } catch {return response({error:"eBay request failed or timed out"},502);}
 });
