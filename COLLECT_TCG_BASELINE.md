@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `20f257c6370fd6deb0f413709bc1ca3ff5f5ee5a`.
+- Development latest non-baseline commit: `eba3df84a59cf5636565d4765dc0cc694f20371c`.
 - Production latest non-baseline commit: `5e0f5c5cf40008618c1d3cb4a5112310067dd124`.
 - Production rollback ref: `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`.
 - Latest local release manifest: [`2026-11-15-v02`](release-manifests/2026-11-15-v02.txt) from `95bb2e07c8e12eaf272ce53fd987e275bfb2f1a1`.
-- Latest local change: `20f257c6370fd6deb0f413709bc1ca3ff5f5ee5a` · Fix parser in eBay feedback metadata probe.
+- Latest local change: `eba3df84a59cf5636565d4765dc0cc694f20371c` · Dev: implement service-role guarded eBay seller feedback import with deduplication.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
