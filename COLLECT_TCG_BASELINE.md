@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `6a3629f2447ab1db957d8078a76772b9bac6eac9`.
-- Production latest non-baseline commit: `28a13c67d0bcded8dcfb2704be54973646a8050c`.
-- Production rollback ref: `28a13c67d0bcded8dcfb2704be54973646a8050c`.
-- Latest local release manifest: [`2026-11-15-v04`](release-manifests/2026-11-15-v04.txt) from `e604639ff90bf15e57e7c481dae6706dfb1e48ed`.
-- Latest local change: `6a3629f2447ab1db957d8078a76772b9bac6eac9` · Dev 2026-11-15-v05: give Reviews a crawlable URL.
+- Development latest non-baseline commit: `653aba987b62863bb29801e1d02ce7e9205fa35f`.
+- Production latest non-baseline commit: `0c19b5af5fd7b3aa8eabe612c0af5b5de36ca3f1`.
+- Production rollback ref: `0c19b5af5fd7b3aa8eabe612c0af5b5de36ca3f1`.
+- Latest local release manifest: [`2026-11-15-v05`](release-manifests/2026-11-15-v05.txt) from `6a3629f2447ab1db957d8078a76772b9bac6eac9`.
+- Latest local change: `653aba987b62863bb29801e1d02ce7e9205fa35f` · Dev 2026-11-15-v06: put Reviews in the main navigation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
