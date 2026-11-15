@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay feedback API probe — 2026-11-15 (validation pending)
+- Deployed JWT-protected read-only Edge Function `ebay-feedback-probe-dev` version 1, source `supabase/functions/ebay-feedback-probe-dev/index.ts`. Uses securely configured `EBAY_USER_ACCESS_TOKEN` to request first-page seller feedback via Trading API `GetFeedback` for allowlisted `collect_tcg_1` through `collect_tcg_5`; returns only aggregate metadata, no raw comments or tokens.
+- User confirmed saving token in Supabase; value was not read. Deployment observed, but authenticated invocation and actual eBay feedback retrieval **not tested**. No DB writes, scheduled sync, or Production frontend changes. No release packages or manifest created.
+
 ## Development eBay account-deletion endpoint — 2026-11-15 (validation pending)
 - Explicitly approved shared-Supabase deployment: isolated Edge Function `ebay-account-deletion-dev` version 1. Source: `supabase/functions/ebay-account-deletion-dev/index.ts`.
 - GET implements eBay SHA-256 challenge response only after secure `EBAY_DELETION_VERIFICATION_TOKEN` configuration. POST fails closed with 503 until signed notification validation and actual data deletion are implemented. **Do not register with eBay yet.**
