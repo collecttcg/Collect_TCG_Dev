@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Production promotion of Dev Reviews v05 — 2026-11-15
+
+- Development `2026-11-15-v05` was promoted to Production `2026-11-15-v03` for the Reviews frontend and SEO, including the account filter removal from Dev v04. Production release `43720319868`, SEO `43720319942`, and Pages `43720343524` succeeded. Rollback ref verified at `0c19b5af5fd7b3aa8eabe612c0af5b5de36ca3f1`.
+- The Production Reviews page and sitemap were served and verified. No SQL was required. Interactive browser testing and Google indexing were not verified.
+
 ## Development clean Reviews URL — 2026-11-15-v05
 
 - Previous Dev release: `2026-11-15-v04`. Source `6a3629f2447ab1db957d8078a76772b9bac6eac9`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v05.txt).
