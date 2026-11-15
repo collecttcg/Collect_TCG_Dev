@@ -1,0 +1,12 @@
+Version: 2026-11-15-v06
+Previous version: 2026-11-15-v05
+Source commit: 653aba987b62863bb29801e1d02ce7e9205fa35f
+Purpose: Move Reviews into primary navigation and Giveaway into More on desktop and mobile.
+Full ZIP: Collect-TCG-Dev-2026-11-15-v06-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v05-to-2026-11-15-v06-patch.zip
+SQL required for the Reviews frontend promotion: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: desktop and mobile navigation markup and active-state fixtures; no interactive browser or Safari session.
+
+97e9cba7a3ad8aa54d380db746e09b9b1711cda27926df8d69999c190cefa657  release/Collect-TCG-Dev-2026-11-15-v06-full.zip
+ae79f98d3a636a3146de60395deb0ac56761cda9cb764c0919d86f4f5343b63a  release/Collect-TCG-Dev-2026-11-15-v05-to-2026-11-15-v06-patch.zip
