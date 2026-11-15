@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay feedback import — 2026-11-15 (validation pending)
+- Deployed `ebay-feedback-sync-dev` Edge Function v1 from `supabase/functions/ebay-feedback-sync-dev/index.ts`. Requires service-role bearer authorization and JWT gateway. Fetches seller feedback for allowlisted accounts 1–5, paginates, upserts into existing `public.ebay_feedback_dev` with account/feedback ID deduplication, and records per-account status. Uses `EBAY_USER_REFRESH_TOKEN` if configured, otherwise short-lived `EBAY_USER_ACCESS_TOKEN`.
+- Deployment confirmed. Invocation, actual imported rows, permissions for accounts 2–5, scheduled execution, refresh renewal and end-to-end UI verification not tested/configured. Shared feedback table held zero rows before this change. Production frontend untouched. No release manifest or packages.
+
 ## Development eBay feedback API probe — 2026-11-15 (validation pending)
 - Deployed JWT-protected read-only Edge Function `ebay-feedback-probe-dev` version 1, source `supabase/functions/ebay-feedback-probe-dev/index.ts`. Uses securely configured `EBAY_USER_ACCESS_TOKEN` to request first-page seller feedback via Trading API `GetFeedback` for allowlisted `collect_tcg_1` through `collect_tcg_5`; returns only aggregate metadata, no raw comments or tokens.
 - User confirmed saving token in Supabase; value was not read. Deployment observed, but authenticated invocation and actual eBay feedback retrieval **not tested**. No DB writes, scheduled sync, or Production frontend changes. No release packages or manifest created.
