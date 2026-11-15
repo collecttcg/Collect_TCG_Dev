@@ -26,10 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
-## Development weekly eBay seller feedback sync — 2026-11-15 (activation pending)
-- Prepared a weekly Supabase Cron migration and a scoped Edge Function wrapper. The proposed slot is Monday at 09:00 JST. The job selects only enabled accounts with encrypted OAuth connections and runs them separately. The scheduler credential is produced in Vault, and the existing Owner/manual sync function is retained.
-- Live metadata confirmed successful sync and connected OAuth for accounts 1 and 3, with 25 and 1 cached feedback entries respectively. Accounts 2, 4, and 5 were unconnected. Deployed sync and OAuth function versions were v6 and v4.
-- Wrapper syntax and mocked authorization, seller filtering, forwarding, and upstream failures were tested. The shared-project migration, Edge Function deployment, and live job verification are pending.
+## Development weekly eBay seller feedback sync — 2026-11-15
+- Approved shared Supabase migrations `dev_2026_11_15_v04_ebay_feedback_weekly` and `dev_2026_11_15_v05_ebay_feedback_weekly_signatures` were applied. Active job `collect-tcg-ebay-feedback-weekly-dev` runs Mondays at 09:00 JST (00:00 GMT), with separate requests for enabled, OAuth-connected accounts.
+- `ebay-feedback-weekly-dev` v2 is active. The signing key stays in Vault. Requests use three-minute, seller-bound signatures, claimed once by the service-role-only RPC. The original token was rotated and its verifier disabled after the managed queue retained default grants.
+- A manual execution of the exact scheduled command returned HTTP 204 and advanced the success timestamps for accounts 1 and 3. Replaying the signed requests returned HTTP 403. Verified the public and authenticated roles cannot execute the claim RPC. Accounts 2, 4 and 5 were unconnected. The first scheduled execution is pending.
+- Public Reviews and Owner/OAuth changes remain subject to the Development release gate. The eBay OAuth callback currently returns to Development, and the active account-deletion endpoint rejects notifications until verification is implemented. No Production promotion was applied.
 
 ## Development Reviews pagination — 2026-11-15 (validation pending)
 - Public eBay Seller Feedback and Collector Reviews show ten entries per page with Previous and Next controls. The eBay account filter returns to page one and shows an account-specific empty state. eBay feedback is retrieved in ordered batches beyond the former 100-row cap so reputation totals cover the full imported list.
