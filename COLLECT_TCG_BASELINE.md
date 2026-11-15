@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay feedback Owner authorization fix — 2026-11-15 (validation pending)
+- User's first import test returned `Unauthorized` because v1 required exact service-role bearer. `ebay-feedback-sync-dev` v2 now accepts an authenticated Supabase user token only after `auth.getUser` validation and server-side `app_owners` membership lookup; service-role bearer remains accepted for trusted backend invocation. JWT gateway remains enabled.
+- Development Reviews module now exposes an Owner-only `Sync eBay Feedback` button invoking the function with the existing authenticated Supabase client for `collect_tcg_1`. Public visitors cannot invoke via the button. Deployed Edge Function v2 confirmed; website JS committed but not independently tested or packaged. End-to-end Owner import and UI tests pending. No Production promotion.
+
 ## Development eBay feedback import — 2026-11-15 (validation pending)
 - Deployed `ebay-feedback-sync-dev` Edge Function v1 from `supabase/functions/ebay-feedback-sync-dev/index.ts`. Requires service-role bearer authorization and JWT gateway. Fetches seller feedback for allowlisted accounts 1–5, paginates, upserts into existing `public.ebay_feedback_dev` with account/feedback ID deduplication, and records per-account status. Uses `EBAY_USER_REFRESH_TOKEN` if configured, otherwise short-lived `EBAY_USER_ACCESS_TOKEN`.
 - Deployment confirmed. Invocation, actual imported rows, permissions for accounts 2–5, scheduled execution, refresh renewal and end-to-end UI verification not tested/configured. Shared feedback table held zero rows before this change. Production frontend untouched. No release manifest or packages.
