@@ -31,6 +31,7 @@ Last reconciled against GitHub: 2026-11-15
 - Previous Development release: `2026-11-15-v01`. [Release manifest and ZIP checksums](release-manifests/2026-11-15-v02.txt).
 - Removed the Inventory eBay callout and its styles. The quick-filter button reads “Listed on eBay” in desktop and mobile markup and continues to use `quick=ebay`.
 - All 87 tests, release contracts, CSS checks, SEO generator self-test, and both ZIP integrity checks passed. No SQL required. Interactive desktop, mobile, and Safari testing was not performed for this release.
+- Promoted to Production `2026-11-15-v01`. Pages served the new label. Production rollback-anchor advancement remains unconfirmed.
 
 ## Previous Development release — 2026-11-15-v01
 
