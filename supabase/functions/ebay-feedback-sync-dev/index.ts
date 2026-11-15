@@ -2,7 +2,8 @@
 // This function writes only to ebay_feedback_dev and its Dev sync status table.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const accounts = ["collect_tcg_1","collect_tcg_2","collect_tcg_3","collect_tcg_4","collect_tcg_5"] as const;
-const reply = (data: unknown, status=200) => new Response(JSON.stringify(data),{status,headers:{"content-type":"application/json","cache-control":"no-store"}});
+const corsHeaders = {"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS"};
+const reply = (data: unknown, status=200) => new Response(JSON.stringify(data),{status,headers:{"content-type":"application/json","cache-control":"no-store",...corsHeaders}});
 const tag = (xml:string,name:string) => xml.split("<"+name+">")[1]?.split("</"+name+">")[0] ?? "";
 const decode = (s:string) => s.replace(/&#(x[0-9a-f]+|\d+);|&(?:amp|lt|gt|quot|apos);/gi,(m,n)=>n ? String.fromCodePoint(n[0].toLowerCase()==="x"?parseInt(n.slice(1),16):Number(n)) : ({"&amp;":"&","&lt;":"<","&gt;":">","&quot;":'"',"&apos;":"'"}[m]??m));
 async function accessToken():Promise<string>{
@@ -35,6 +36,7 @@ async function fetchPage(seller:string,page:number,token:string){
   return {pages,records};
 }
 Deno.serve(async req=>{
+  if(req.method==="OPTIONS") return new Response(null,{status:204,headers:corsHeaders});
   if(req.method!=="POST") return reply({error:"POST required"},405);
   const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if(!serviceKey) return reply({error:"Server configuration unavailable"},503);
