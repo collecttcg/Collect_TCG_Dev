@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development Reviews eBay summary refinement — 2026-11-15 (validation pending)
+- Confirmed 25 imported eBay feedback records, all positive. Updated `dev/src/features/content/reviews.js` to show eBay positive percentage and sentiment counts in leading summary; website stars and average remain separately labeled. eBay sentiment is not misrepresented as five-star ratings.
+- Dev source committed `fb6d4cd87eead26ae29bc4067501122a603770df`. Browser and syntax execution not independently verified; no package/manifest created. Production unchanged.
+
 ## Development eBay feedback CORS fix — 2026-11-15 (validation pending)
 - Live Supabase function logs confirmed browser `OPTIONS` preflight requests returned HTTP 405 on `ebay-feedback-sync-dev` v2; database had 0 imported feedback rows. Updated function to return 204 with CORS headers for preflight and include CORS headers on JSON responses. Deployed Edge Function v3 ACTIVE, source commit `a2fbeebc96002101780ea705e5ea8342ab663f67`.
 - Owner JWT verification and service-role authorization remain unchanged. End-to-end browser retry and import still pending. Production frontend unchanged. No release packaging.
