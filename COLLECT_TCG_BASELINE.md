@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `dc1603315e5fa95c70f22462e926f62355b8c2e4`.
+- Development latest non-baseline commit: `172a9b2b60aeb152525589bb6c901c2b0324e1e5`.
 - Production latest non-baseline commit: `5e0f5c5cf40008618c1d3cb4a5112310067dd124`.
 - Production rollback ref: `e1047a76f9c6570bf9b6e2f8cd16b3431f2df355`.
 - Latest local release manifest: [`2026-11-15-v02`](release-manifests/2026-11-15-v02.txt) from `95bb2e07c8e12eaf272ce53fd987e275bfb2f1a1`.
-- Latest local change: `dc1603315e5fa95c70f22462e926f62355b8c2e4` · Development 2026-11-15-v02: record package validation.
+- Latest local change: `172a9b2b60aeb152525589bb6c901c2b0324e1e5` · Dev: scaffold fail-closed eBay account deletion challenge endpoint.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
