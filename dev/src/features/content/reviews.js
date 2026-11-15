@@ -340,7 +340,27 @@ async function deleteReviewSubmission(id){
     await appContext.renderReviewsPage();
   }
 
+async function syncEbayFeedbackDev(){
+    if(!appContext.requireOwner("sync eBay feedback")) return;
+    const button=appContext.$("syncEbayFeedbackDevBtn");
+    if(button){button.disabled=true;button.textContent="Syncing eBay feedback…";}
+    try{
+      const {data,error}=await appContext.supabaseClient.functions.invoke("ebay-feedback-sync-dev",{body:{seller:"collect_tcg_1"}});
+      if(error) throw error;
+      const result=data?.results?.[0];
+      if(result?.status!=="success") throw new Error(result?.error||"eBay sync did not complete");
+      appContext.showToast(`eBay feedback sync complete: ${Number(result.records)||0} records processed`);
+      await appContext.renderReviewsPage();
+    }catch(error){
+      console.error("Development eBay feedback sync error:",error);
+      appContext.showToast("eBay feedback sync failed. Check the Edge Function logs.");
+    }finally{
+      if(button){button.disabled=false;button.textContent="Sync eBay Feedback";}
+    }
+  }
+
 function bindReviewPageEvents(){
+    appContext.$("syncEbayFeedbackDevBtn")?.addEventListener("click",()=>appContext.syncEbayFeedbackDev());
     appContext.$("writeReviewBtn")?.addEventListener("click",()=>{
       const panel=appContext.$("reviewSubmitPanel");
       if(!panel) return;
@@ -461,6 +481,7 @@ async function renderReviewsPage(){
       </section>
 
       <section class="reviews-list-panel" aria-label="eBay seller feedback" style="margin-bottom:18px">
+        ${appContext.isOwnerMode() ? `<div style="padding:12px"><button type="button" class="btn-ghost" id="syncEbayFeedbackDevBtn">Sync eBay Feedback</button></div>` : ""}
         <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Original eBay feedback from Collect TCG accounts 1–5. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
         <div class="reviews-list">
           ${ebayFeedbackError ? '<div class="reviews-empty">eBay feedback is temporarily unavailable.</div>' : ebayFeedback.length ? ebayFeedback.map(item=>`
@@ -600,5 +621,5 @@ async function renderReviewsPage(){
     appContext.applyOwnerMode();
   }
 
-  Object.assign(appContext,{reviewStars,reviewCountryLabel,reviewCountryOptions,reviewDateLabel,reviewRpcUnavailable,loadPublicReviews,loadOwnerReviewSubmissions,approvedReviewSummary,reviewPublicCardHtml,reviewModerationCardHtml,reviewSubmitErrorMessage,submitPublicReview,moderateReview,toggleReviewVerified,deleteReviewSubmission,bindReviewPageEvents,renderReviewsPage});
+  Object.assign(appContext,{reviewStars,reviewCountryLabel,reviewCountryOptions,reviewDateLabel,reviewRpcUnavailable,loadPublicReviews,loadOwnerReviewSubmissions,approvedReviewSummary,reviewPublicCardHtml,reviewModerationCardHtml,reviewSubmitErrorMessage,submitPublicReview,moderateReview,toggleReviewVerified,deleteReviewSubmission,syncEbayFeedbackDev,bindReviewPageEvents,renderReviewsPage});
 }
