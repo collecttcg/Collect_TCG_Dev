@@ -26,6 +26,13 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development clean Reviews URL — 2026-11-15-v05
+
+- Previous Dev release: `2026-11-15-v04`. Source `6a3629f2447ab1db957d8078a76772b9bac6eac9`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v05.txt).
+- Reviews is served at `/Collect_TCG_Dev/dev/reviews/` with its own canonical URL, title, description, Open Graph metadata, HTML heading and summary, navigation links, and sitemap entry. Existing `#/reviews` links continue to load the existing Reviews module. The Dev page retains noindex. No review-star markup, database changes, or Production changes.
+- Updated the SEO generator, review HTML and sitemap, app shell and router entry points, and Dev workflows. All 87 tests passed. Route fixtures covered clean and legacy entry, other hash navigation, and card and home compatibility. SEO self-tests passed in both modes. Interactive browser and Safari sessions were not run.
+- Development release `43717636532` verified and uploaded both ZIPs. SEO refresh `43717636589` and Pages `43717679766` completed successfully. HTTP asset checks matched the deployed Reviews HTML, sitemap, and routing modules. Production remains `2026-11-15-v02`.
+
 ## Development Reviews release — 2026-11-15-v04
 
 - Previous Dev release: `2026-11-15-v03`. Source `e604639ff90bf15e57e7c481dae6706dfb1e48ed`. [Manifest and ZIP checksums](release-manifests/2026-11-15-v04.txt).
