@@ -414,6 +414,8 @@ function currentRoute(){
     );
     if(seoCardId) return `card/${seoCardId}`;
 
+    if(document.querySelector('meta[name="collect-tcg-reviews-page"]')) return "reviews";
+
     return "home";
   }
 

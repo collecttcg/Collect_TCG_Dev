@@ -190,6 +190,33 @@ function renderCardPage(indexHtml,card,slug){
   return {html,url};
 }
 
+function renderReviewsPage(indexHtml){
+  const appBase=new URL(path.relative(root,config.outputDir).split(path.sep).filter(Boolean).map(part=>part+'/').join(''),config.publicBase);
+  const url=new URL('reviews/',appBase).toString();
+  const title='Collect TCG Reviews | Malaysia & Singapore';
+  const description='Read eBay seller feedback and collector reviews for Collect TCG MY & SG, a trading card seller serving Malaysia and Singapore.';
+  const image=new URL('assets/shop-logo.png',appBase).toString();
+  const block=[
+    SEO_START,
+    `<meta name="collect-tcg-site-base" content="${escapeHtml(config.publicBase)}">`,
+    '<meta name="collect-tcg-reviews-page" content="true">',
+    `<meta name="robots" content="${escapeHtml(config.robotsMeta)}">`,
+    `<meta name="description" content="${escapeHtml(description)}">`,
+    `<link rel="canonical" href="${escapeHtml(url)}">`,
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="Collect TCG MY &amp; SG">',
+    `<meta property="og:title" content="${escapeHtml(title)}">`,
+    `<meta property="og:description" content="${escapeHtml(description)}">`,
+    `<meta property="og:url" content="${escapeHtml(url)}">`,
+    `<meta property="og:image" content="${escapeHtml(image)}">`,
+    SEO_END
+  ].join('\n');
+  const html=replaceSeoMeta(indexHtml,block,title)
+    .replace(/<base\s[^>]*>/i,`<base href="${escapeHtml(appBase.pathname)}">`)
+    .replace('<div id="view"></div>',`<div id="view"><section class="page-head review-page-head"><div><h1>Collect TCG Reviews</h1><p>${escapeHtml(description)}</p></div></section></div>`);
+  return {html,url};
+}
+
 function privateRouteMetadataBlock(cardId){
   const title='Private Card | Collect TCG MY & SG';
   const tags=[
@@ -359,7 +386,11 @@ async function generate(){
   await fs.rm(cardsDir,{recursive:true,force:true});
   await fs.mkdir(cardsDir,{recursive:true});
 
-  const urls=[config.publicBase];
+  const reviews=renderReviewsPage(indexHtml);
+  const reviewsDir=path.join(config.outputDir,'reviews');
+  await fs.mkdir(reviewsDir,{recursive:true});
+  await fs.writeFile(path.join(reviewsDir,'index.html'),reviews.html,'utf8');
+  const urls=[config.publicBase,reviews.url];
   const usedSlugs=new Set();
   const allocateSlug=(preferred)=>{
     const base=slugPart(preferred)||'card';
@@ -432,6 +463,13 @@ function runSelfTest(){
   }
   if(!privateRendered.html.includes('noindex,nofollow,noarchive')) throw new Error('Private route noindex guard missing');
   if(!privateRendered.html.includes(`content="${card.id}"`)) throw new Error('Private route card ID missing');
+  const reviews=renderReviewsPage('<!doctype html><html><head><title>X</title></head><body><div id="view"></div></body></html>');
+  for(const fragment of ['collect-tcg-reviews-page','<h1>Collect TCG Reviews</h1>',`rel="canonical" href="${reviews.url}"`,`content="${config.robotsMeta}"`]){
+    if(!reviews.html.includes(fragment)) throw new Error(`Reviews render self-test missing ${fragment}`);
+  }
+  if(!reviews.url.endsWith(mode==='dev'?'/dev/reviews/':'/reviews/')) throw new Error('Reviews canonical path is incorrect');
+  if(!reviews.html.includes(`<base href="${new URL('../',reviews.url).pathname}">`)) throw new Error('Reviews asset base is incorrect');
+  if(reviews.html.includes('AggregateRating')) throw new Error('Reviews page cannot use seller stars as product ratings');
   process.stdout.write('SEO generator self-test passed.\n');
 }
 
