@@ -486,28 +486,30 @@ async function renderReviewsPage(){
         </div>
       ` : ""}
 
-      <section class="review-summary-panel" aria-label="eBay feedback and website reviews">
-        <div class="review-summary-score">
-          <strong>${ebayRated ? ebayPositivePercent+"%" : "—"}</strong>
-          <div>
-            <div style="font-weight:700">Positive eBay feedback</div>
-            <span>${ebayRated ? `${ebayPositive} positive · ${ebayNeutral} neutral · ${ebayNegative} negative` : "No eBay feedback imported yet"}</span>
-            <small style="display:block;margin-top:5px;color:var(--muted,#9ca3af)">eBay uses positive, neutral and negative feedback—not 5-star ratings.</small>
-          </div>
+      <section aria-label="eBay seller feedback reputation" style="background:linear-gradient(135deg,#17251e,#171b22 58%);border:1px solid #365442;border-radius:18px;padding:clamp(18px,3vw,30px);margin-bottom:18px;color:#f0fdf4">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px">
+          <strong style="color:#86efac;letter-spacing:.05em;font-size:.85rem">✓ COLLECT TCG · EBAY SELLER FEEDBACK</strong>
+          <span style="border:1px solid #477d5a;border-radius:999px;padding:5px 12px;color:#bbf7d0;font-size:.8rem">Imported from eBay</span>
         </div>
-        <div class="review-summary-stat">
-          <strong>${summary.count ? summary.average.toFixed(1) : "—"}</strong>
-          <div class="review-stars" aria-label="Website review rating">${summary.count ? appContext.reviewStars(Math.round(summary.average)) : "☆☆☆☆☆"}</div>
-          <span>${summary.count} approved website review${summary.count===1?"":"s"}</span>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-bottom:18px">
+          <strong style="font-size:clamp(3.2rem,8vw,5rem);line-height:1;color:#4ade80;font-variant-numeric:tabular-nums">${ebayRated?ebayPositivePercent+"%":"—"}</strong>
+          <div><strong style="font-size:clamp(1.3rem,3vw,1.8rem);display:block">Positive Feedback</strong><span style="color:#cbd5d1;font-size:.9rem">Across ${new Set(ebayFeedback.map(item=>item.ebay_account)).size} eBay account(s) with imported feedback</span></div>
         </div>
-        <div class="review-summary-trust">
-          <strong>Review Protection</strong>
-          <span>Website reviews are moderated before publishing. ${summary.verified} marked Verified Buyer.</span>
+        <div role="img" aria-label="${ebayRated?ebayPositivePercent+" percent positive feedback":"No feedback yet"}" style="height:10px;background:#343c39;border-radius:999px;overflow:hidden;margin-bottom:16px"><div style="height:100%;width:${ebayPositivePercent}%;background:#4ade80;border-radius:999px"></div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,2vw,12px)">
+          <div style="background:#232b28;border-radius:12px;padding:clamp(10px,2vw,18px);text-align:center"><strong style="display:block;font-size:clamp(1.5rem,4vw,2.3rem);color:#4ade80">${ebayPositive}</strong><span style="color:#d1d5db;font-size:.85rem">👍 Positive</span></div>
+          <div style="background:#232b28;border-radius:12px;padding:clamp(10px,2vw,18px);text-align:center"><strong style="display:block;font-size:clamp(1.5rem,4vw,2.3rem);color:#f3f4f6">${ebayNeutral}</strong><span style="color:#d1d5db;font-size:.85rem">Neutral</span></div>
+          <div style="background:#232b28;border-radius:12px;padding:clamp(10px,2vw,18px);text-align:center"><strong style="display:block;font-size:clamp(1.5rem,4vw,2.3rem);color:#fca5a5">${ebayNegative}</strong><span style="color:#d1d5db;font-size:.85rem">Negative</span></div>
         </div>
+        <small style="display:block;margin-top:14px;color:#b7c2bc">Based on ${ebayRated} imported eBay seller feedback rating(s). eBay feedback uses positive, neutral and negative ratings, not five-star ratings.</small>
+      </section>
+      <section class="review-summary-panel" aria-label="Website reviews">
+        <div class="review-summary-stat"><strong>${summary.count?summary.average.toFixed(1):"—"}</strong><div class="review-stars" aria-label="Website review rating">${summary.count?appContext.reviewStars(Math.round(summary.average)):"☆☆☆☆☆"}</div><span>${summary.count} approved website review${summary.count===1?"":"s"}</span></div>
+        <div class="review-summary-trust"><strong>Review Protection</strong><span>Website reviews are moderated before publishing. ${summary.verified} marked Verified Buyer.</span></div>
       </section>
 
       <section class="reviews-list-panel" aria-label="eBay seller feedback" style="margin-bottom:18px">
-        ${appContext.isOwnerMode() ? `<div style="padding:12px;display:grid;gap:10px"><div><strong>eBay Account Connections</strong> <button type="button" class="btn-ghost" id="syncEbayFeedbackDevBtn">Sync All Accounts</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:8px">${ebayAccounts.map(account=>{const connected=ebayConnections.find(row=>row.account===account)?.connected===true;return `<div style="border:1px solid #45464b;border-radius:10px;padding:10px;display:grid;gap:6px"><strong>${account}</strong><small>${connected?"Connected":"Not connected"}</small><button type="button" class="btn-ghost" data-ebay-connect="${account}">${connected?"Reconnect":"Connect"}</button></div>`;}).join("")}</div></div>` : ""}
+
         <div class="reviews-section-head"><div><h3>eBay Seller Feedback</h3><p>Imported seller feedback from Collect TCG eBay accounts. ${ebayRated ? `${ebayPositivePercent}% positive from ${ebayRated} imported ratings` : "Not yet synchronized"}. Separate from website reviews.</p></div><span>${ebayFeedback.length}</span></div>
         <div style="padding:0 12px 12px"><label for="ebayFeedbackAccountFilter">Account </label><select id="ebayFeedbackAccountFilter"><option value="">All accounts</option>${ebayAccounts.map(account=>`<option value="${account}">${account}</option>`).join("")}</select></div>
         <div class="reviews-list">
@@ -518,6 +520,10 @@ async function renderReviewsPage(){
               <div class="review-moderation-meta"><span>${appContext.escapeHtml(appContext.reviewDateLabel(item.feedback_at))}</span></div>
             </article>`).join("") : '<div class="reviews-empty">No synchronized eBay seller feedback yet. Account connections are pending.</div>'}
         </div>
+      </section>
+
+      <section class="reviews-list-panel owner-only" aria-label="Owner eBay account management" style="margin-bottom:18px">
+        ${appContext.isOwnerMode() ? `<div style="padding:12px;display:grid;gap:10px"><div><strong>eBay Account Connections</strong> <button type="button" class="btn-ghost" id="syncEbayFeedbackDevBtn">Sync All Accounts</button></div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:8px">${ebayAccounts.map(account=>{const connected=ebayConnections.find(row=>row.account===account)?.connected===true;return `<div style="border:1px solid #45464b;border-radius:10px;padding:10px;display:grid;gap:6px"><strong>${account}</strong><small>${connected?"Connected":"Not connected"}</small><button type="button" class="btn-ghost" data-ebay-connect="${account}">${connected?"Reconnect":"Connect"}</button></div>`;}).join("")}</div></div>` : ""}
       </section>
 
       <div class="reviews-public-layout">
