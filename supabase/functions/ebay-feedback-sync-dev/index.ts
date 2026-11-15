@@ -1,4 +1,4 @@
-// Dev-only eBay feedback synchronization. Invoke with service-role Authorization bearer.
+// Dev-only eBay feedback synchronization. Invoke with verified Owner JWT or service-role Authorization bearer.
 // This function writes only to ebay_feedback_dev and its Dev sync status table.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const accounts = ["collect_tcg_1","collect_tcg_2","collect_tcg_3","collect_tcg_4","collect_tcg_5"] as const;
@@ -37,7 +37,23 @@ async function fetchPage(seller:string,page:number,token:string){
 Deno.serve(async req=>{
   if(req.method!=="POST") return reply({error:"POST required"},405);
   const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if(!serviceKey || req.headers.get("authorization")!=="Bearer "+serviceKey) return reply({error:"Unauthorized"},401);
+  if(!serviceKey) return reply({error:"Server configuration unavailable"},503);
+  const authorization=req.headers.get("authorization")||"";
+  const bearer=authorization.startsWith("Bearer ")?authorization.slice(7):"";
+  let authorized=bearer===serviceKey;
+  if(!authorized && bearer){
+    const publicKey=Deno.env.get("SUPABASE_ANON_KEY");
+    if(publicKey){
+      const userClient=createClient(Deno.env.get("SUPABASE_URL")!,publicKey,{auth:{persistSession:false}});
+      const {data:{user},error:authError}=await userClient.auth.getUser(bearer);
+      if(!authError && user){
+        const adminClient=createClient(Deno.env.get("SUPABASE_URL")!,serviceKey,{auth:{persistSession:false}});
+        const {data:owner,error:ownerError}=await adminClient.from("app_owners").select("user_id").eq("user_id",user.id).maybeSingle();
+        authorized=!ownerError && Boolean(owner);
+      }
+    }
+  }
+  if(!authorized) return reply({error:"Owner authorization required"},403);
   const db=createClient(Deno.env.get("SUPABASE_URL")!,serviceKey,{auth:{persistSession:false}});
   let input:{seller?:string}={};
   try { input=await req.json(); } catch {return reply({error:"JSON body required"},400);}
