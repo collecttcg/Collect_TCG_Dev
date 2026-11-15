@@ -63,7 +63,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./src/styles/01-foundation.css?v=2026-09-29-v09">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<link rel="stylesheet" href="./src/styles/02-components.css?v=2026-11-13-safari-fix01&ui=2026-11-15-v06">
+<link rel="stylesheet" href="./src/styles/02-components.css?v=2026-11-13-safari-fix01&ui=2026-11-15-v07">
 
 <!-- V47: Home Recently Added now uses the shared home-storefront-grid layout (same as High Value / Vintage / Recently Sold). -->
   <!-- v49: Inventory grouped catalogue uses no per-page selector or pagination. -->
@@ -184,7 +184,6 @@
       <a href="#/collection" data-route="collection" class="collection-primary-nav mobile-primary-nav"><span class="ic">◆</span> <span>Collection</span><span class="nav-count collection-nav-count" id="collectionNavCount">0</span></a>
       <a href="#/home" class="mobile-nav-logo" aria-label="Collect TCG Home"><img src="./assets/shop-logo.png" alt="Collect TCG MY &amp; SG"></a>
       <a href="#/sold" data-route="sold" class="status-primary-nav mobile-primary-nav"><span class="ic">✓</span> <span>Sold</span><span class="nav-count" id="soldNavCount">0</span></a>
-      <a href="/Collect_TCG_Dev/dev/reviews/" data-route="reviews" class="mobile-primary-nav"><span>Reviews</span></a>
       <a href="#/reserved" data-route="reserved" class="status-primary-nav desktop-primary-mobile-hidden"><span class="ic">◷</span> <span>Reserved</span><span class="nav-count" id="reservedNavCount">0</span></a>
       <a href="#/showcase" data-route="showcase" class="desktop-primary-mobile-hidden"><span class="ic">▶</span> Showcase</a>
       <a href="#/favorites" data-route="favorites" class="desktop-primary-mobile-hidden"><span class="ic">♡</span> Favorite</a>
@@ -195,8 +194,9 @@
         <div class="mobile-more-links">
           <a href="#/reserved" data-route="reserved"><span class="ic">◷</span> Reserved</a>
           <a href="#/showcase" data-route="showcase"><span class="ic">▶</span> Showcase</a>
-          <a href="#/favorites" data-route="favorites"><span class="ic">♡</span> Favorite</a>
           <a href="#/giveaway" data-route="giveaway"><span class="ic">★</span> Giveaway</a>
+          <a href="#/favorites" data-route="favorites"><span class="ic">♡</span> Favorite</a>
+          <a href="/Collect_TCG_Dev/dev/reviews/" data-route="reviews" class="reviews-more-nav"><span class="ic">☆</span> Reviews</a>
           <a href="#/about" data-route="about"><span class="ic">◎</span> About Us</a>
           <a href="#/contact" data-route="contact"><span class="ic">✉</span> Contact</a>
           <a href="#/recent" data-route="recent" class="mobile-more-recent"><span class="ic">↻</span> Recently Viewed</a>
@@ -210,6 +210,7 @@
           <button class="mobile-header-theme-toggle mobile-more-theme-toggle" id="mobileHeaderThemeToggle" type="button" aria-label="Switch to light mode" title="Light mode"><span class="ic" aria-hidden="true">☀</span><span class="mobile-theme-label">Light mode</span></button>
         </div>
       </div>
+      <a href="/Collect_TCG_Dev/dev/reviews/" data-route="reviews" class="reviews-desktop-nav"><span class="ic">☆</span> Reviews</a>
       <a href="#/insights" data-route="insights" class="owner-only"><span class="ic">◔</span> Insights</a>
       <a href="#/fb-tools" data-route="fb-tools" class="owner-only"><span class="ic">ƒ</span> Post Generator Tools</a>
       <a href="#/quality" data-route="quality" class="owner-only"><span class="ic">✓</span> Data Quality</a>

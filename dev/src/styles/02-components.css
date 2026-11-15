@@ -313,6 +313,17 @@
   }
 }
 
+@media (min-width:801px) and (max-width:1179px){
+  body .shell .sidebar nav#mainnav > a.reviews-desktop-nav{
+    display:flex !important;
+    order:7 !important;
+  }
+
+  #mobileMoreMenu .reviews-more-nav{
+    display:none !important;
+  }
+}
+
 /* Tight desktop width just above the mobile breakpoint. */
 @media (min-width:801px) and (max-width:1399px){
   nav.mainnav > a[data-route="giveaway"]{
@@ -8904,7 +8915,7 @@ body.light-mode .desktop-listing-currency-control select{
     z-index:1200 !important;
   }
 
-  /* One row: Inventory / Collection / Logo / Sold / Reviews / More. */
+  /* One real five-column row: Inventory / Collection / Logo / Sold / More. */
   body .shell .sidebar nav#mainnav{
     position:relative !important;
     inset:auto !important;
@@ -8915,7 +8926,7 @@ body.light-mode .desktop-listing-currency-control select{
     margin:0 !important;
     padding:0 !important;
     display:grid !important;
-    grid-template-columns:minmax(0,1.5fr) minmax(0,1.5fr) 58px repeat(3,minmax(0,1fr)) !important;
+    grid-template-columns:minmax(0,1.05fr) minmax(0,1.18fr) 58px minmax(0,.72fr) minmax(0,.82fr) !important;
     grid-template-rows:72px !important;
     gap:4px !important;
     align-items:center !important;
@@ -8936,7 +8947,6 @@ body.light-mode .desktop-listing-currency-control select{
   body .shell .sidebar nav#mainnav > a[data-route="collection"],
   body .shell .sidebar nav#mainnav > a.mobile-nav-logo,
   body .shell .sidebar nav#mainnav > a[data-route="sold"],
-  body .shell .sidebar nav#mainnav > a[data-route="reviews"],
   body .shell .sidebar nav#mainnav > #mobileMoreToggle{
     display:flex !important;
     position:relative !important;
@@ -8973,8 +8983,7 @@ body.light-mode .desktop-listing-currency-control select{
   body .shell .sidebar nav#mainnav > a[data-route="collection"]{ grid-column:2 !important; }
   body .shell .sidebar nav#mainnav > a.mobile-nav-logo{ grid-column:3 !important; }
   body .shell .sidebar nav#mainnav > a[data-route="sold"]{ grid-column:4 !important; }
-  body .shell .sidebar nav#mainnav > a[data-route="reviews"]{ grid-column:5 !important; }
-  body .shell .sidebar nav#mainnav > #mobileMoreToggle{ grid-column:6 !important; }
+  body .shell .sidebar nav#mainnav > #mobileMoreToggle{ grid-column:5 !important; }
 
   /* The logo is its own grid cell, so labels can never sit underneath it. */
   body .shell .sidebar nav#mainnav > a.mobile-nav-logo{
@@ -9191,7 +9200,7 @@ body.light-mode .desktop-listing-currency-control select{
   }
 
   body .shell .sidebar nav#mainnav{
-    grid-template-columns:minmax(0,1.5fr) minmax(0,1.5fr) 54px repeat(3,minmax(0,1fr)) !important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.12fr) 54px minmax(0,.68fr) minmax(0,.78fr) !important;
     gap:2px !important;
   }
 
@@ -9208,7 +9217,6 @@ body.light-mode .desktop-listing-currency-control select{
   body .shell .sidebar nav#mainnav > a[data-route="inventory"],
   body .shell .sidebar nav#mainnav > a[data-route="collection"],
   body .shell .sidebar nav#mainnav > a[data-route="sold"],
-  body .shell .sidebar nav#mainnav > a[data-route="reviews"],
   body .shell .sidebar nav#mainnav > #mobileMoreToggle{
     padding-inline:1px !important;
     font-size:8px !important;
@@ -9230,10 +9238,14 @@ body.light-mode .desktop-listing-currency-control select{
    ========================================================== */
 @media (max-width:800px){
 
-  /* Keep equal total navigation space on either side of the logo. */
+  /* True geometric center: equal-width navigation columns on both sides. */
   body .shell .sidebar nav#mainnav{
     grid-template-columns:
-      minmax(0,1.5fr) minmax(0,1.5fr) 60px repeat(3,minmax(0,1fr)) !important;
+      minmax(0,1fr)
+      minmax(0,1fr)
+      60px
+      minmax(0,1fr)
+      minmax(0,1fr) !important;
     gap:4px !important;
   }
 
@@ -9259,7 +9271,6 @@ body.light-mode .desktop-listing-currency-control select{
   body .shell .sidebar nav#mainnav > a[data-route="inventory"],
   body .shell .sidebar nav#mainnav > a[data-route="collection"],
   body .shell .sidebar nav#mainnav > a[data-route="sold"],
-  body .shell .sidebar nav#mainnav > a[data-route="reviews"],
   body .shell .sidebar nav#mainnav > #mobileMoreToggle{
     padding-inline:2px !important;
     font-size:clamp(8.2px,2.25vw,9.7px) !important;
@@ -9344,7 +9355,11 @@ body.light-mode .desktop-listing-currency-control select{
 @media (max-width:380px){
   body .shell .sidebar nav#mainnav{
     grid-template-columns:
-      minmax(0,1.5fr) minmax(0,1.5fr) 56px repeat(3,minmax(0,1fr)) !important;
+      minmax(0,1fr)
+      minmax(0,1fr)
+      56px
+      minmax(0,1fr)
+      minmax(0,1fr) !important;
     gap:2px !important;
   }
 
@@ -9361,7 +9376,6 @@ body.light-mode .desktop-listing-currency-control select{
   body .shell .sidebar nav#mainnav > a[data-route="inventory"],
   body .shell .sidebar nav#mainnav > a[data-route="collection"],
   body .shell .sidebar nav#mainnav > a[data-route="sold"],
-  body .shell .sidebar nav#mainnav > a[data-route="reviews"],
   body .shell .sidebar nav#mainnav > #mobileMoreToggle{
     font-size:7.8px !important;
   }
