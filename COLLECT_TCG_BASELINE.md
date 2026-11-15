@@ -26,6 +26,11 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development weekly eBay seller feedback sync — 2026-11-15 (activation pending)
+- Prepared a weekly Supabase Cron migration and a scoped Edge Function wrapper. The proposed slot is Monday at 09:00 JST. The job selects only enabled accounts with encrypted OAuth connections and runs them separately. The scheduler credential is produced in Vault, and the existing Owner/manual sync function is retained.
+- Live metadata confirmed successful sync and connected OAuth for accounts 1 and 3, with 25 and 1 cached feedback entries respectively. Accounts 2, 4, and 5 were unconnected. Deployed sync and OAuth function versions were v6 and v4.
+- Wrapper syntax and mocked authorization, seller filtering, forwarding, and upstream failures were tested. The shared-project migration, Edge Function deployment, and live job verification are pending.
+
 ## Development Reviews pagination — 2026-11-15 (validation pending)
 - Public eBay Seller Feedback and Collector Reviews show ten entries per page with Previous and Next controls. The eBay account filter returns to page one and shows an account-specific empty state. eBay feedback is retrieved in ordered batches beyond the former 100-row cap so reputation totals cover the full imported list.
 - All 87 repository tests, reference/CSS checks, release contracts, SEO workflow guard and generator self-test passed locally. A fixture with 267 eBay entries and 21 Collector Reviews exercised page limits, account filtering, totals, empty/error handling, and public view. Browser desktop/mobile/Safari and live backend checks pending. No SQL or policy changes. No release manifest or packages for this change.
