@@ -73,8 +73,13 @@ Last reconciled against GitHub: 2026-11-15
 - The Dev repository validation suite (87 tests, repository and CSS checks, release contracts), SEO workflow guard, and generator self-test passed at source `3c2e222e047137689d9a313453528b898a25fe31`.
 - Full Production promotion remains blocked. The active deletion endpoint v6 returns HTTP 503 for deletion notifications, and the feedback cache stores comment, feedback ID, and seller account without the comment author's account identifier. The deletion workflow and backfill must be verified before publishing stored eBay comments in Production. Production remained on `2026-11-15-v01`.
 
+## Daily eBay seller feedback sync — 2026-11-16
+
+- The shared background job `collect-tcg-ebay-feedback-weekly-dev` now runs daily at 09:00 JST (00:00 GMT) via applied migration `dev_2026_11_16_v01_ebay_feedback_daily`. It retains its existing job name and signed command. The same eBay feedback cache supplies Dev and Production Reviews. No website deployment or Supabase Edge Function change was required.
+- Confirmed the active daily schedule and identical job command. A manual run of the exact scheduled command returned HTTP 204 and advanced the success timestamps for accounts 1, 2, 3 and 5 at 17:23 JST. Account 4 is unconnected. The first timer-triggered daily run is due November 17 at 09:00 JST.
+
 ## Development weekly eBay seller feedback sync — 2026-11-15
-- Approved shared Supabase migrations `dev_2026_11_15_v04_ebay_feedback_weekly` and `dev_2026_11_15_v05_ebay_feedback_weekly_signatures` were applied. Active job `collect-tcg-ebay-feedback-weekly-dev` runs Mondays at 09:00 JST (00:00 GMT), with separate requests for enabled, OAuth-connected accounts.
+- Approved shared Supabase migrations `dev_2026_11_15_v04_ebay_feedback_weekly` and `dev_2026_11_15_v05_ebay_feedback_weekly_signatures` were applied. Active job `collect-tcg-ebay-feedback-weekly-dev` was initially scheduled for Mondays at 09:00 JST (00:00 GMT), with separate requests for enabled, OAuth-connected accounts.
 - `ebay-feedback-weekly-dev` v2 is active. The signing key stays in Vault. Requests use three-minute, seller-bound signatures, claimed once by the service-role-only RPC. The original token was rotated and its verifier disabled after the managed queue retained default grants.
 - A manual execution of the exact scheduled command returned HTTP 204 and advanced the success timestamps for accounts 1 and 3. Replaying the signed requests returned HTTP 403. Verified the public and authenticated roles cannot execute the claim RPC. Accounts 2, 4 and 5 were unconnected. The first scheduled execution is pending.
 - Public Reviews and Owner/OAuth changes remain subject to the Development release gate. The eBay OAuth callback currently returns to Development, and the active account-deletion endpoint rejects notifications until verification is implemented. No Production promotion was applied.
