@@ -26,6 +26,10 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Production promotion of Owner filter persistence — 2026-11-19
+
+- Development `2026-11-19-v01` promoted to Production `2026-11-19-v01`, replacing Production `2026-11-15-v04`. Production release `44447284661` passed code, SEO, package integrity and deployed-file checks. Rollback ref verified at `c65d68cd4c81f63b0182f6483fe3b37553a2914b`. No SQL required. Production uses its own localStorage preference key.
+
 ## Development Owner filter persistence — 2026-11-19-v01
 
 - Previous Dev release `2026-11-15-v07`. Source `9e1095cc981299d4d0cb83fa76c831d44c7a8daf`. [Manifest and ZIP checksums](release-manifests/2026-11-19-v01.txt).
