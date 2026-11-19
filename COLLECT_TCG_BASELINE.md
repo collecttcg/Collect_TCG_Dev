@@ -26,6 +26,14 @@ Last reconciled against GitHub: 2026-11-15
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development Owner filter persistence — 2026-11-19-v01
+
+- Previous Dev release `2026-11-15-v07`. Source `9e1095cc981299d4d0cb83fa76c831d44c7a8daf`. [Manifest and ZIP checksums](release-manifests/2026-11-19-v01.txt).
+- The Card Owner filter is saved in browser localStorage using a Dev-specific key and restored after refresh. All Owners and Clear All remove the preference; Clear All resets it before the inventory redraw. Public filtering remains gated by Owner Mode and private metadata authorization is retained. No SQL or backend changes.
+- Updated the owner-category module, cache entry points, generated Reviews/card pages and release workflow. Adjusted the existing Hidden Listings import assertion to permit the changed cache version.
+- All 87 tests, repository/CSS/release checks and SEO self-test passed. The lifecycle fixture exercised fresh registration, selection, refresh, All Owners, Clear All ordering, invalid values, unavailable storage and public-view isolation. Refactoring reviewed: a localized setter keeps in-memory and stored selections consistent.
+- Development Release `44446686359` and SEO `44446686402` succeeded, both ZIPs were created and integrity-checked, and the live homepage, application entry modules and owner-filter module matched the release source. Interactive desktop/mobile/Safari sessions were not performed. Production remains `2026-11-15-v04`.
+
 ## Production promotion of Dev navigation v07 — 2026-11-15
 
 - Development `2026-11-15-v07` was promoted to Production `2026-11-15-v04`. Desktop shows Reviews in the main row and Giveaway under More, and mobile retains its original layout. No SQL required.
