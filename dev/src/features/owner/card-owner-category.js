@@ -122,7 +122,25 @@ export function register(appContext){
   appContext.loadCards=async function(...args){ const loaded=await originalLoadCards(...args); if(loaded) await loadOwnerCategoriesIntoCards(); return loaded; };
 
   const originalGetFiltered=appContext.getFiltered;
-  appContext.ownerCategoryFilter="";
+  const ownerFilterStorageKey="collect-tcg-dev-owner-category-filter";
+  try{
+    appContext.ownerCategoryFilter=sanitizeOwnerCategory(appContext.localStorage.getItem(ownerFilterStorageKey));
+  }catch{
+    appContext.ownerCategoryFilter="";
+  }
+
+  function setOwnerCategoryFilter(value){
+    appContext.ownerCategoryFilter=sanitizeOwnerCategory(value);
+    try{
+      if(appContext.ownerCategoryFilter){
+        appContext.localStorage.setItem(ownerFilterStorageKey,appContext.ownerCategoryFilter);
+      }else{
+        appContext.localStorage.removeItem(ownerFilterStorageKey);
+      }
+    }catch{
+      // Keep filtering usable when browser storage is unavailable.
+    }
+  }
   appContext.getFiltered=function(...args){
     const list=originalGetFiltered(...args);
     const category=appContext.isOwnerMode() ? sanitizeOwnerCategory(appContext.ownerCategoryFilter) : "";
@@ -148,9 +166,13 @@ export function register(appContext){
     const wrap=appContext.$("filterOwnerCategoryWrap"),btn=appContext.$("filterOwnerCategoryBtn"),menu=appContext.$("filterOwnerCategoryMenu");
     if(!wrap || !btn || !menu) return;
     btn.addEventListener("click",event=>{ event.stopPropagation(); menu.hidden=!menu.hidden; wrap.classList.toggle("menu-open",!menu.hidden); });
-    menu.addEventListener("click",event=>{ const option=event.target.closest("[data-owner-category]"); if(!option) return; appContext.ownerCategoryFilter=sanitizeOwnerCategory(option.dataset.ownerCategory||""); appContext.renderInventoryPage(scope); });
+    menu.addEventListener("click",event=>{ const option=event.target.closest("[data-owner-category]"); if(!option) return; setOwnerCategoryFilter(option.dataset.ownerCategory||""); appContext.renderInventoryPage(scope); });
     document.addEventListener("click",event=>{ if(!wrap.contains(event.target)){ menu.hidden=true; wrap.classList.remove("menu-open"); } },{once:true});
-    appContext.$("clearAllFiltersBtn")?.addEventListener("click",()=>{ appContext.ownerCategoryFilter=""; },{once:true});
+    appContext.$("clearAllFiltersBtn")?.addEventListener("click",()=>{
+      setOwnerCategoryFilter("");
+      btn.querySelector("span").textContent="All Owners";
+      appContext.$("filterOwnerCategory").value="";
+    },{capture:true,once:true});
   }
 
   const originalRenderInventoryPage=appContext.renderInventoryPage;

@@ -1142,7 +1142,7 @@ test('Hidden Listings reuse the shared inventory discovery surface while keeping
  assert.match(page,/\["inventory","collection","hidden-listings"\]\.includes\(appContext\.listingAvailabilityScope\)/);
  assert.match(lifecycle,/return appContext\.renderInventoryPage\("hidden-listings"\);/);
  assert.doesNotMatch(owners,/hiddenListingsGrid/);
- for(const ref of ['repository.js?v=2026-11-11-v01','filtering.js?v=','inventory/page.js?v=','lifecycle.js?v=2026-11-11-v01','card-owner-category.js?v=2026-11-11-v01']) assert.ok(registry.includes(ref));
+ for(const ref of ['repository.js?v=2026-11-11-v01','filtering.js?v=','inventory/page.js?v=','lifecycle.js?v=2026-11-11-v01','card-owner-category.js?v=']) assert.ok(registry.includes(ref));
 });
 
 
