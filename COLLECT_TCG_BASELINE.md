@@ -4,7 +4,7 @@
 ## GitHub state
 
 - Development latest non-baseline commit: `ce22de2a52ea14dfd1f9f7f5970f60b2bfa0c97c`.
-- Production latest non-baseline commit: `c65d68cd4c81f63b0182f6483fe3b37553a2914b`.
+- Production latest non-baseline commit: `28f1a8eb52105a0c9ca6a2343bac86e8179cd7ee`.
 - Production rollback ref: `c65d68cd4c81f63b0182f6483fe3b37553a2914b`.
 - Latest local release manifest: [`2026-11-19-v01`](release-manifests/2026-11-19-v01.txt) from `9e1095cc981299d4d0cb83fa76c831d44c7a8daf`.
 - Latest local change: `ce22de2a52ea14dfd1f9f7f5970f60b2bfa0c97c` · chore: refresh Development SEO card pages [skip ci].
