@@ -1,0 +1,12 @@
+Version: 2026-11-19-v01
+Previous version: 2026-11-15-v07
+Source commit: 9e1095cc981299d4d0cb83fa76c831d44c7a8daf
+Purpose: Persist the Owner category filter across refreshes and clear its saved value with All Owners or Clear All.
+Full ZIP: Collect-TCG-Dev-2026-11-19-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-15-v07-to-2026-11-19-v01-patch.zip
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Owner filter lifecycle fixture; no interactive desktop, mobile or Safari session.
+
+eb4b47d55a1ba562805b70124e4d51d2081bfbd4358c0b3b25c8d8bddad9d47f  release/Collect-TCG-Dev-2026-11-19-v01-full.zip
+03072412ce6994ac8cadcbd53c3ab60cec75a86a38c2befc2bddb92f1df6374d  release/Collect-TCG-Dev-2026-11-15-v07-to-2026-11-19-v01-patch.zip
