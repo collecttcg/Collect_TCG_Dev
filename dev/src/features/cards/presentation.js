@@ -140,7 +140,7 @@ export function initialize(appContext,runtime){
     "Magic: The Gathering",
     "One Piece Card Game",
     "One Piece From Tv Animation",
-    "One Piece Hyper Battle",
+    "One Piece Carddass Hyper Battle",
     "One Piece OnePy Berry Match",
     "One Piece Visual Adventure",
     "Pokémon",

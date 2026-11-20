@@ -31,7 +31,7 @@ function dbToCard(row){
       name: (row.name || "").toUpperCase(),
       card_code: row.card_code || "",
       year: row.year == null ? "" : String(row.year),
-      game: row.game === "One Piece" ? "One Piece Card Game" : (row.game || ""),
+      game: row.game === "One Piece Hyper Battle" ? "One Piece Carddass Hyper Battle" : (row.game === "One Piece" ? "One Piece Card Game" : (row.game || "")),
       language: row.language || "",
       language_details: String(row.language_details||"").trim(),
       era: appContext.normalizeStoredLabel(row.era || ""),
@@ -85,7 +85,8 @@ function cardToDb(card){
       name: (card.name || "").toUpperCase(),
       card_code: (card.card_code || "").trim().toUpperCase(),
       year: appContext.normalizeYearValue(card.year) || null,
-      game: card.game,
+      // Keep the shared database compatible during the Dev-only category rename.
+      game: card.game === "One Piece Carddass Hyper Battle" ? "One Piece Hyper Battle" : card.game,
       language: card.language || "",
       ...(appContext.languageDetailsSupported!==false ? {
         language_details: String(card.language_details||"").trim().slice(0,120)

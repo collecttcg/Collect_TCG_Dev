@@ -79,7 +79,8 @@ function listingScopeMeta(scope){
   }
 
 function normalizeFilterValue(value){
-    return String(value ?? "").trim().toLowerCase();
+    const normalized=String(value ?? "").trim().toLowerCase();
+    return normalized==="one piece hyper battle" ? "one piece carddass hyper battle" : normalized;
   }
 
 

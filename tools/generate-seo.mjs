@@ -405,6 +405,9 @@ async function generate(){
     return unique;
   };
   for(const card of liveCards){
+    if(mode==='dev' && card.game==='One Piece Hyper Battle'){
+      card.game='One Piece Carddass Hyper Battle';
+    }
     const previous=state.cards?.[card.id]?.slug;
     const slug=allocateSlug(previous||cardSlug(card));
     nextState.cards[card.id]={slug};
