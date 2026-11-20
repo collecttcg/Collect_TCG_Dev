@@ -1,0 +1,12 @@
+Version: 2026-11-20-v01
+Previous version: 2026-11-19-v01
+Source commit: 2df3cdac7b5432fb48350fcc2c64fcda74114d9b
+Purpose: Rename the Hyper Battle category throughout Dev with legacy data and filter compatibility.
+Full ZIP: Collect-TCG-Dev-2026-11-20-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-19-v01-to-2026-11-20-v01-patch.zip
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Category conversion and saved-link fixtures; no interactive desktop, mobile or Safari session.
+
+cdc691d881e8271efb32ef6bda0b1f726e60ad150465a476e0b5e291af12c884  release/Collect-TCG-Dev-2026-11-20-v01-full.zip
+9f5962ac81a44be183201eb1a03318ed1e6fe17a1b549f477a10ad10cd59e3de  release/Collect-TCG-Dev-2026-11-19-v01-to-2026-11-20-v01-patch.zip
