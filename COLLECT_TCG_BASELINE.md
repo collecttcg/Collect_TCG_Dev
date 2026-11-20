@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `7eabc9c28ea3ba9806718d65c990a668addf50ec`.
+- Development latest non-baseline commit: `cc6fc148d2465b6fd183de3d01805148fd4fdfc4`.
 - Production latest non-baseline commit: `28f1a8eb52105a0c9ca6a2343bac86e8179cd7ee`.
 - Production rollback ref: `c65d68cd4c81f63b0182f6483fe3b37553a2914b`.
-- Latest local release manifest: [`2026-11-20-v01`](release-manifests/2026-11-20-v01.txt) from `2df3cdac7b5432fb48350fcc2c64fcda74114d9b`.
-- Latest local change: `7eabc9c28ea3ba9806718d65c990a668addf50ec` · Development 2026-11-20-v02: package category rename with compatible ordering.
+- Latest local release manifest: [`2026-11-20-v02`](release-manifests/2026-11-20-v02.txt) from `7eabc9c28ea3ba9806718d65c990a668addf50ec`.
+- Latest local change: `cc6fc148d2465b6fd183de3d01805148fd4fdfc4` · Development 2026-11-20-v02: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
