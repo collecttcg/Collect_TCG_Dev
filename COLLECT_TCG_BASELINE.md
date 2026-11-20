@@ -12,7 +12,7 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
-Last reconciled against GitHub: 2026-11-15
+Last reconciled against GitHub: 2026-11-20
 
 ## Repositories
 - Production: `collecttcg/Collect_TCG`
@@ -25,6 +25,17 @@ Last reconciled against GitHub: 2026-11-15
 - `V210` is the final legacy `V###` release.
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
+
+## Development Carddass category rename — 2026-11-20-v02
+
+- Current Dev release `2026-11-20-v02`, previous packaged Dev release `2026-11-20-v01`; the task began from `2026-11-19-v01`. Final release source `7eabc9c28ea3ba9806718d65c990a668addf50ec`. [Manifest and ZIP checksums](release-manifests/2026-11-20-v02.txt). The earlier v01 manifest is retained unchanged; v02 corrects the shared category-order key compatibility found during final review.
+- Dev displays **One Piece Carddass Hyper Battle** for existing cards stored as **One Piece Hyper Battle**, and offers the new name in Add/Edit choices. Both names match category filters and search. Shared database card writes retain the legacy game value, and normalized category-order keys retain `one piece hyper battle`, so Dev saves/reorders remain compatible with Production. No shared database rename, SQL, migration, RLS, permissions or Edge Function changes were applied.
+- Changed catalogue mapping, card presentation choices, inventory normalization/search, module/cache entry points, Dev-only SEO generation and release workflow. Regenerated Dev card/Reviews pages, sitemap and stable slug records. All 425 existing public slugs common to the prior and refreshed catalogue were unchanged. The generator refreshed the current public catalogue, including newly registered cards.
+- Tested: all 87 feature tests; 81 JavaScript/import/structure checks; CSS and release contracts; SEO workflow guard and generator self-test; card read/write/new-entry compatibility; legacy/new filter/search aliases; preserved inventory/collection order keys. Owner/public guards remain unchanged and existing boundary tests passed. No live database mutation was used for validation.
+- Development Release `44682709570` succeeded, including full and patch ZIP creation, integrity checks, upload and immutable manifest. SEO refresh `44682633794` succeeded. Pages `44682745038` deployed successfully. HTTP checks confirmed the live Dev homepage, main/registry, catalogue, choices, filtering modules and a renamed generated card page exactly matched committed content.
+- Interactive desktop/mobile and Safari sessions were not performed. The longer category label is shared across responsive layouts without a layout redesign.
+- Production main was rechecked at `f042ea7a7d66a357c3bafd3e14b8b1af1723d28f`, still `2026-11-19-v01`; Production was not edited, promoted or opened for live testing. Its previously verified rollback ref remains `c65d68cd4c81f63b0182f6483fe3b37553a2914b`.
+- Both ZIPs are in [the release artifact](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44682709570/artifacts/14605436182), with GitHub's 30-day retention.
 
 ## Production promotion of Owner filter persistence — 2026-11-19
 
