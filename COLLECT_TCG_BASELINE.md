@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `e8e58cbc384592a9ae4a8d626d419fa7602ca1e7`.
+- Development latest non-baseline commit: `2df3cdac7b5432fb48350fcc2c64fcda74114d9b`.
 - Production latest non-baseline commit: `28f1a8eb52105a0c9ca6a2343bac86e8179cd7ee`.
 - Production rollback ref: `c65d68cd4c81f63b0182f6483fe3b37553a2914b`.
 - Latest local release manifest: [`2026-11-19-v01`](release-manifests/2026-11-19-v01.txt) from `9e1095cc981299d4d0cb83fa76c831d44c7a8daf`.
-- Latest local change: `e8e58cbc384592a9ae4a8d626d419fa7602ca1e7` · Dev: rename One Piece Carddass Hyper Battle with shared-data compatibility.
+- Latest local change: `2df3cdac7b5432fb48350fcc2c64fcda74114d9b` · Development 2026-11-20-v01: validate and package Carddass category rename.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
