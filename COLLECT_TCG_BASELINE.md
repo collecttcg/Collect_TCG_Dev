@@ -26,6 +26,12 @@ Last reconciled against GitHub: 2026-11-20
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Production promotion of Carddass category rename — 2026-11-20
+
+- Validated Dev `2026-11-20-v02` (source `7eabc9c28ea3ba9806718d65c990a668addf50ec`) promoted to Production `2026-11-20-v01`, replacing `2026-11-19-v01`. Existing cards, Add/Edit choices, filters/search and generated Production metadata use **One Piece Carddass Hyper Battle** with legacy stored values and category-order keys retained. No SQL or backend changes.
+- Independent Production checks included 350 filter/sort scenarios, category/lifecycle/save/search/order fixtures, syntax/import/structure, CSS, SEO and Owner/public contracts. All 426 existing Production public card URLs were preserved. Release `44683597737`, Pages `44683652910` and retried SEO `44683597828` passed. Live files matched source, both ZIPs passed integrity checks, and rollback ref advanced to `9691c20819996d34197a08361d1ed72183b0b236`. Interactive desktop/mobile/Safari sessions were not performed.
+- [Production manifest](https://github.com/collecttcg/Collect_TCG/blob/main/release-manifests/2026-11-20-v01.txt) and [full/patch ZIP artifact](https://github.com/collecttcg/Collect_TCG/actions/runs/44683597737/artifacts/14605298517). Dev-only infrastructure and Production-specific behavior were preserved.
+
 ## Development Carddass category rename — 2026-11-20-v02
 
 - Current Dev release `2026-11-20-v02`, previous packaged Dev release `2026-11-20-v01`; the task began from `2026-11-19-v01`. Final release source `7eabc9c28ea3ba9806718d65c990a668addf50ec`. [Manifest and ZIP checksums](release-manifests/2026-11-20-v02.txt). The earlier v01 manifest is retained unchanged; v02 corrects the shared category-order key compatibility found during final review.
