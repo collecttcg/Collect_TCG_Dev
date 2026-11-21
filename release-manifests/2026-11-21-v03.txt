@@ -1,0 +1,13 @@
+Version: 2026-11-21-v03
+Previous version: 2026-11-21-v02
+Source commit: fbf3679d8ca7c11a2071811f787cc1428b702976
+Purpose: Improve catalogue discovery with a crawlable Carddass Hyper Battle collection and specific homepage metadata.
+Full ZIP: Collect-TCG-Dev-2026-11-21-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-21-v02-to-2026-11-21-v03-patch.zip
+Changed files: Homepage, SEO generator and workflows, generated collection/card/Reviews pages and sitemap, and baseline.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+01e8960a418b5b770de4ad8000f7e98ac61ab3fe6e8feb12b8fb60fe72da2186  release/Collect-TCG-Dev-2026-11-21-v03-full.zip
+c13add0d83733d536e7ca6c142bfe1d99734de1d633a7e694c3b4719370a5b04  release/Collect-TCG-Dev-2026-11-21-v02-to-2026-11-21-v03-patch.zip
