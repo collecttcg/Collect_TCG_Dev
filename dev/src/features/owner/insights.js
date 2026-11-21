@@ -968,6 +968,8 @@ async function renderInsightsPage(){
                         : "Country unknown";
                       const device=latest?.device_type==="desktop"?"PC":latest?.device_type==="mobile"?"Mobile":"Device unknown";
 
+                      const source=latest?.source_type==="Direct"?"Direct / no referrer":latest?.source_type||"Source unknown";
+
                       return `<button type="button"
                                       class="insights-recent-qualified-item"
                                       data-insights-open-card="${appContext.escapeHtml(card.id)}"
@@ -980,7 +982,7 @@ async function renderInsightsPage(){
                         <span class="insights-recent-qualified-copy">
                           <strong>${appContext.escapeHtml(card.name||"Untitled card")}</strong>
                           ${meta ? `<small>${appContext.escapeHtml(meta)}</small>` : ""}
-                          <span>${appContext.escapeHtml(appContext.insightRecentViewTimeLabel(row.viewed_at))} · ${appContext.escapeHtml(country)} · ${appContext.escapeHtml(device)}</span>
+                          <span>${appContext.escapeHtml(appContext.insightRecentViewTimeLabel(row.viewed_at))} · ${appContext.escapeHtml(country)} · ${appContext.escapeHtml(device)} · ${appContext.escapeHtml(source)}</span>
                         </span>
                         <span class="insights-recent-qualified-stats">
                           <strong>${views.toLocaleString()}</strong>
@@ -1623,10 +1625,15 @@ async function renderInsightsPage(){
         appContext.fetchOverviewPhotoInsights(startDate,endDate),
         appContext.fetchRecentQualifiedCardViews(startDate,endDate,selectedStatus,selectedGame,20),
         appContext.fetchCountryCardViewInsights(startDate,endDate),
-        Promise.resolve().then(()=>appContext.supabaseClient.rpc("get_recent_qualified_card_view_latest_context",{
-          p_start:startDate.toISOString(),p_end:endDate.toISOString(),
-          p_status:selectedStatus||null,p_game:selectedGame||null,p_limit:20
-        })).catch(error=>{console.warn("Latest card-view context unavailable:",error);return {data:[]};}),
+        Promise.resolve().then(async()=>{
+          const args={
+            p_start:startDate.toISOString(),p_end:endDate.toISOString(),
+            p_status:selectedStatus||null,p_game:selectedGame||null,p_limit:20
+          };
+          const result=await appContext.supabaseClient.rpc("get_recent_qualified_card_view_latest_source_context",args);
+          if(!result.error) return result;
+          return appContext.supabaseClient.rpc("get_recent_qualified_card_view_latest_context",args);
+        }).catch(error=>{console.warn("Latest card-view context unavailable:",error);return {data:[]};}),
         appContext.fetchGiveawayPerformance(startDate,endDate),
         previousRange?appContext.fetchInsights(previousRange.start,previousRange.end,{silent:true}):Promise.resolve([]),
         appContext.fetchCardEngagementInsights(startDate,endDate),

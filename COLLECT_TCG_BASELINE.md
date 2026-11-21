@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development work in progress — Recently Viewed Cards traffic source
+
+- Prepared an Owner Insights source label and a separate shared Supabase migration. Existing qualified views retain unknown source, and the UI falls back to the existing country and device data before migration. No shared migration or Production change applied.
+
+
 Last reconciled against GitHub: 2026-11-20
 
 ## Development collection SEO — 2026-11-21
