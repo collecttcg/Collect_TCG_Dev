@@ -16,6 +16,8 @@ Last reconciled against GitHub: 2026-11-20
 
 ## Development collection SEO — 2026-11-21
 
+- Development `2026-11-21-v03` replaces `2026-11-21-v02`. The release manifest records repository validation, the SEO checks and both integrity-checked ZIPs. HTTP checks confirmed the deployed Dev homepage title and collection link, the collection page with 245 card links, and the sitemap entry. [Manifest and ZIP checksums](release-manifests/2026-11-21-v03.txt).
+
 - Added a crawlable One Piece Carddass Hyper Battle landing page from the existing public SEO catalogue. The homepage links to it and uses more specific title and description metadata for One Piece, Gundam, Malaysia and Singapore. Stable card slugs and existing public/private routing are retained.
 - The Dev SEO refresh committed a collection page with 245 card links and a sitemap entry. Local generator syntax checks, Dev and Production-mode generator self-tests, and mocked Dev generation passed. Mock catalogue fixtures covered legacy category names, preserved slugs, and exclusion of hidden, archived and unrelated cards. Dev retains noindex. No SQL, authorization, analytics or Production changes. Interactive desktop, mobile and Safari testing were not performed.
 - Refactoring review kept collection generation in the existing SEO pipeline. No broader refactoring was warranted.
