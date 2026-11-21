@@ -14,6 +14,11 @@ This section records GitHub state. The release manifest and workflow results det
 
 Last reconciled against GitHub: 2026-11-20
 
+## Development eBay inventory listing checker — 2026-11-21
+
+- Commit `698df559a280bbfae240d940ee9acc6a25a53e27` adds the dry-run-by-default, service-role-only checker at `supabase/functions/ebay-listing-check-dev/index.ts`. It uses eBay Trading API status and exact item ID, and guards updates against concurrent edits to card notes.
+- Local syntax and status/notes fixtures passed. Live eBay and scheduled execution remain unverified. Function deployment, scheduling, shared inventory changes and release packages are pending. No SQL or RLS changes were applied.
+
 ## Production promotion of eBay title format — 2026-11-21
 
 - Production `2026-11-21-v01` replaces `2026-11-20-v01` and promotes Development `2026-11-21-v01` (source `6a8697ff33333f77da439456943eee75bc6f208a`). Generated eBay titles use game, set/series, year, card name and card number. Condition and language remain in listing details. Exact card numbers receive space within the 80-character limit.
