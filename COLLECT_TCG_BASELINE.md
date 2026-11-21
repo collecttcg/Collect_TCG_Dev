@@ -14,10 +14,12 @@ This section records GitHub state. The release manifest and workflow results det
 
 Last reconciled against GitHub: 2026-11-20
 
-## Development eBay inventory listing checker — 2026-11-21
+## Development eBay inventory listing checker — 2026-11-21-v02
 
-- Commit `698df559a280bbfae240d940ee9acc6a25a53e27` adds the dry-run-by-default, service-role-only checker at `supabase/functions/ebay-listing-check-dev/index.ts`. It uses eBay Trading API status and exact item ID, and guards updates against concurrent edits to card notes.
-- Local syntax and status/notes fixtures passed. Live eBay and scheduled execution remain unverified. Function deployment, scheduling, shared inventory changes and release packages are pending. No SQL or RLS changes were applied.
+- Development release `2026-11-21-v02` replaces `2026-11-21-v01`, source `9ea66c401649779ad7ca12d7f0c03e2d43040cfa`. Changed the Edge Function source and release workflow. eBay Trading API GetItem confirms the exact listing ID and closed status. The default request is read-only, and writes require explicit apply mode and authenticated scheduler or service-role access.
+- Development dry run returned HTTP 200, checked 128 IDs, and confirmed 31 ended listings with zero errors and writes. Syntax, status, notes, and authorization fixtures passed. Release run 44905414904 passed and integrity-checked both ZIPs. Backend work required no interactive UI changes.
+- After explicit approval, the shared Production job was activated for 09:30 JST daily. The first manual apply removed 31 links, and a second dry run checked the remaining 97 IDs with zero ended listings or errors. The schedule and auth SQL were applied separately to the shared project, with no card schema or RLS changes. Disable the schedule via `cron.unschedule('collect-tcg-ebay-inventory-daily')` to stop automatic cleanup. The first timer-triggered run remains pending.
+- [Manifest](release-manifests/2026-11-21-v02.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44905414904/artifacts/14707267695).
 
 ## Production promotion of eBay title format — 2026-11-21
 
