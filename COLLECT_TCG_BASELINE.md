@@ -14,6 +14,12 @@ This section records GitHub state. The release manifest and workflow results det
 
 Last reconciled against GitHub: 2026-11-20
 
+## Development collection SEO — 2026-11-21
+
+- Added a crawlable One Piece Carddass Hyper Battle landing page from the existing public SEO catalogue. The homepage links to it and uses more specific title and description metadata for One Piece, Gundam, Malaysia and Singapore. Stable card slugs and existing public/private routing are retained.
+- The Dev SEO refresh committed a collection page with 245 card links and a sitemap entry. Local generator syntax checks, Dev and Production-mode generator self-tests, and mocked Dev generation passed. Mock catalogue fixtures covered legacy category names, preserved slugs, and exclusion of hidden, archived and unrelated cards. Dev retains noindex. No SQL, authorization, analytics or Production changes. Interactive desktop, mobile and Safari testing were not performed.
+- Refactoring review kept collection generation in the existing SEO pipeline. No broader refactoring was warranted.
+
 ## Development eBay inventory listing checker — 2026-11-21-v02
 
 - Development release `2026-11-21-v02` replaces `2026-11-21-v01`, source `9ea66c401649779ad7ca12d7f0c03e2d43040cfa`. Changed the Edge Function source and release workflow. eBay Trading API GetItem confirms the exact listing ID and closed status. The default request is read-only, and writes require explicit apply mode and authenticated scheduler or service-role access.
