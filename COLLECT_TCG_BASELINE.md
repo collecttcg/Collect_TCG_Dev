@@ -26,6 +26,12 @@ Last reconciled against GitHub: 2026-11-20
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Shared catalogue series abbreviations — 2026-11-21
+
+- Reviewed all 458 `public.cards` rows and applied a count-guarded data update to 165 rows across 13 Series / Collection values. Converted spelled-out stage ordinals from First through Seventh to 1st through 7th, including comma-separated series. Existing names and numeric values outside that mapping were retained.
+- Verified the post-update distribution against the full pre-update catalogue and the exact mapping. The 121 former First Stage entries joined one existing 1st Stage entry. The normal card update history trigger was active. The shared catalogue supplies Dev and Production.
+- No schema, RLS, frontend, or release package changes. Generated static SEO pages and interactive website views were not verified as part of this data edit.
+
 ## Development eBay title search terms — 2026-11-21-v01
 
 - Development `2026-11-21-v01` replaces `2026-11-20-v02`. The eBay generator builds titles in game, set/series, year, card name, and card number order. Condition and language remain in item specifics and the description. The 80-character budget favors complete words and preserves the exact card number when shortening a long name. No SQL, Supabase, RLS or permission changes.
