@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `ad064d5d6cf7a968f8a60d79e57dfa12c48038d1`.
+- Development latest non-baseline commit: `f9ee377d39ff9597daee11f58b29a851ff3cdcf1`.
 - Production latest non-baseline commit: `d35d8d733455224dd197c36879244770df89ce9d`.
 - Production rollback ref: `d35d8d733455224dd197c36879244770df89ce9d`.
 - Latest local release manifest: [`2026-11-21-v02`](release-manifests/2026-11-21-v02.txt) from `9ea66c401649779ad7ca12d7f0c03e2d43040cfa`.
-- Latest local change: `ad064d5d6cf7a968f8a60d79e57dfa12c48038d1` · Development 2026-11-21-v02: record package validation.
+- Latest local change: `f9ee377d39ff9597daee11f58b29a851ff3cdcf1` · Add crawlable Carddass Hyper Battle collection and refine homepage SEO.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
