@@ -27,6 +27,10 @@ const config=mode==='production'
       robotsTxt:'User-agent: *\nDisallow: /\nSitemap: https://collecttcg.github.io/Collect_TCG_Dev/sitemap.xml\n'
     };
 
+const appBase=new URL(mode==='dev'?'dev/':'',config.publicBase);
+const hyperBattlePath='collections/one-piece-carddass-hyper-battle/';
+const hyperBattleName='One Piece Carddass Hyper Battle';
+
 const SEO_START='<!-- SEO_PHASE1_META_START -->';
 const SEO_END='<!-- SEO_PHASE1_META_END -->';
 
@@ -172,7 +176,7 @@ function replaceSeoMeta(html,block,title){
   if(!/<base\s/i.test(next)){
     next=next.replace(/<head>/i,`<head>\n<base href="${escapeHtml(config.sitePath)}">`);
   }
-  return next;
+  return next.replace(/\n[^\S\n]*<p class="seo-collection-link">[^\n]*<\/p>/,'');
 }
 
 function noscriptSnapshot(card,url){
@@ -191,7 +195,6 @@ function renderCardPage(indexHtml,card,slug){
 }
 
 function renderReviewsPage(indexHtml){
-  const appBase=new URL(path.relative(root,config.outputDir).split(path.sep).filter(Boolean).map(part=>part+'/').join(''),config.publicBase);
   const url=new URL('reviews/',appBase).toString();
   const title='Collect TCG Reviews | Malaysia & Singapore';
   const description='Read eBay seller feedback and collector reviews for Collect TCG MY & SG, a trading card seller serving Malaysia and Singapore.';
@@ -214,6 +217,46 @@ function renderReviewsPage(indexHtml){
   const html=replaceSeoMeta(indexHtml,block,title)
     .replace(/<base\s[^>]*>/i,`<base href="${escapeHtml(appBase.pathname)}">`)
     .replace('<div id="view"></div>',`<div id="view"><section class="page-head review-page-head"><div><h1>Collect TCG Reviews</h1><p>${escapeHtml(description)}</p></div></section></div>`);
+  return {html,url};
+}
+
+function renderHyperBattlePage(cards){
+  const url=new URL(hyperBattlePath,appBase).href;
+  const title=`${hyperBattleName} Cards | Collect TCG MY & SG`;
+  const description='Browse vintage One Piece Carddass Hyper Battle cards, including raw and graded singles, from Collect TCG Malaysia and Singapore.';
+  const links=cards.map(({card,slug})=>{
+    const href=new URL(`cards/${slug}/`,appBase).href;
+    const label=[card.name,card.card_code,gradeLabel(card)].filter(Boolean).join(' · ');
+    const details=[card.year,card.series,card.availability].filter(Boolean).join(' · ');
+    return `    <li><a href="${escapeHtml(href)}">${escapeHtml(label)}</a>${details?` <small>${escapeHtml(details)}</small>`:''}</li>`;
+  }).join('\n');
+  const robots=cards.length?config.robotsMeta:'noindex,nofollow,noarchive';
+  const html=`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}">
+  <meta name="robots" content="${robots}">
+  <link rel="canonical" href="${escapeHtml(url)}">
+  <style>
+    body { margin: 0 auto; max-width: 46rem; padding: 1.5rem; font: 1rem/1.6 system-ui, sans-serif; color: #171717; }
+    h1 { line-height: 1.15; }
+    li { margin-block: .6rem; }
+    small { display: block; color: #555; }
+  </style>
+</head>
+<body>
+  <nav aria-label="Collect TCG"><a href="${escapeHtml(appBase.href)}">Collect TCG MY &amp; SG</a></nav>
+  <main>
+    <h1>${hyperBattleName}</h1>
+    <p>${description}</p>
+    ${links?`<ul>\n${links}\n    </ul>`:'<p>No cards are currently listed in this collection.</p>'}
+  </main>
+</body>
+</html>
+`;
   return {html,url};
 }
 
@@ -404,6 +447,7 @@ async function generate(){
     usedSlugs.add(unique);
     return unique;
   };
+  const hyperBattleCards=[];
   for(const card of liveCards){
     if(mode==='dev' && card.game==='One Piece Hyper Battle'){
       card.game='One Piece Carddass Hyper Battle';
@@ -416,7 +460,14 @@ async function generate(){
     await fs.mkdir(dir,{recursive:true});
     await fs.writeFile(path.join(dir,'index.html'),rendered.html,'utf8');
     urls.push(rendered.url);
+    if([hyperBattleName,'One Piece Hyper Battle'].includes(card.game)) hyperBattleCards.push({card,slug});
   }
+
+  const collection=renderHyperBattlePage(hyperBattleCards);
+  const collectionDir=path.join(config.outputDir,hyperBattlePath);
+  await fs.mkdir(collectionDir,{recursive:true});
+  await fs.writeFile(path.join(collectionDir,'index.html'),collection.html,'utf8');
+  if(hyperBattleCards.length) urls.push(collection.url);
 
   const ownerRoutes={version:1,cards:{}};
   for(const route of privateRoutes){
@@ -473,6 +524,17 @@ function runSelfTest(){
   if(!reviews.url.endsWith(mode==='dev'?'/dev/reviews/':'/reviews/')) throw new Error('Reviews canonical path is incorrect');
   if(!reviews.html.includes(`<base href="${new URL('../',reviews.url).pathname}">`)) throw new Error('Reviews asset base is incorrect');
   if(reviews.html.includes('AggregateRating')) throw new Error('Reviews page cannot use seller stars as product ratings');
+  const collection=renderHyperBattlePage([{card,slug}]);
+  if(!collection.html.includes(`href="${new URL(`cards/${slug}/`,appBase)}"`) ||
+     !collection.html.includes('LUFFY &amp; NAMI') ||
+     !collection.html.includes(`content="${config.robotsMeta}"`) ||
+     !collection.html.includes(`rel="canonical" href="${collection.url}"`)){
+    throw new Error('Collection page metadata or public card link is incorrect');
+  }
+  const emptyCollection=renderHyperBattlePage([]);
+  if(!emptyCollection.html.includes('noindex,nofollow,noarchive') || emptyCollection.html.includes('<ul>')){
+    throw new Error('Empty collection must be noindex and omit the card list');
+  }
   process.stdout.write('SEO generator self-test passed.\n');
 }
 
