@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `6a8697ff33333f77da439456943eee75bc6f208a`.
-- Production latest non-baseline commit: `763c08f10b183650b350280913f801f46b0b857e`.
-- Production rollback ref: `9691c20819996d34197a08361d1ed72183b0b236`.
-- Latest local release manifest: [`2026-11-20-v02`](release-manifests/2026-11-20-v02.txt) from `7eabc9c28ea3ba9806718d65c990a668addf50ec`.
-- Latest local change: `6a8697ff33333f77da439456943eee75bc6f208a` · Development 2026-11-21-v01: prioritize eBay title search terms.
+- Development latest non-baseline commit: `1e88bb10194dd84b1dc8b8ced914bcd548546754`.
+- Production latest non-baseline commit: `8e02ec3c8e7f218797b39433a5d6743410a484cc`.
+- Production rollback ref: `8e02ec3c8e7f218797b39433a5d6743410a484cc`.
+- Latest local release manifest: [`2026-11-21-v01`](release-manifests/2026-11-21-v01.txt) from `6a8697ff33333f77da439456943eee75bc6f208a`.
+- Latest local change: `1e88bb10194dd84b1dc8b8ced914bcd548546754` · chore: refresh Development SEO card pages [skip ci].
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
