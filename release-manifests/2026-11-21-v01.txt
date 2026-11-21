@@ -1,0 +1,13 @@
+Version: 2026-11-21-v01
+Previous version: 2026-11-20-v02
+Source commit: 6a8697ff33333f77da439456943eee75bc6f208a
+Purpose: Prioritize game, set, year and card identifiers in generated eBay titles.
+Full ZIP: Collect-TCG-Dev-2026-11-21-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-20-v02-to-2026-11-21-v01-patch.zip
+Changed files: dev/src/features/social/posts-marketplace.js, posts.js, dev/src/app/register-features.js, dev/src/main.js, dev/index.html, tests/features.test.mjs, .github/workflows/release-dev.yml.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Generated-title fixtures; no interactive desktop, mobile or Safari session.
+
+eb446d7bb0a464fefe1f96460a6ad9f2e6cd35bff6e8afe3a67605dfef37e6ab  release/Collect-TCG-Dev-2026-11-21-v01-full.zip
+a745580576d31203bb851074e5afec559e43b31c72be920313f014d75d263496  release/Collect-TCG-Dev-2026-11-20-v02-to-2026-11-21-v01-patch.zip
