@@ -1,0 +1,13 @@
+Version: 2026-11-21-v02
+Previous version: 2026-11-21-v01
+Source commit: 9ea66c401649779ad7ca12d7f0c03e2d43040cfa
+Purpose: Clear confirmed ended eBay listing links from the shared inventory daily.
+Full ZIP: Collect-TCG-Dev-2026-11-21-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-21-v01-to-2026-11-21-v02-patch.zip
+Changed files: Edge Function source, release workflow and baseline.
+SQL required: Yes; shared inventory schedule and scheduler authentication applied separately.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Live Edge Function API and data path validated separately; no interactive UI changes.
+
+84fa78179b4b29b6749f5f52119c987ce646c882d519a134039bf8e7f9d8d8d5  release/Collect-TCG-Dev-2026-11-21-v02-full.zip
+833f0f037b70a3109d2fc7b3cf706ee74f33b1236ca8bb9535c0ca5363c85981  release/Collect-TCG-Dev-2026-11-21-v01-to-2026-11-21-v02-patch.zip
