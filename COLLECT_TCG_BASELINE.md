@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Qualified card view traffic source — shared Supabase migration
+
+- Applied and verified `dev_2026_11_22_v01_qualified_card_view_source` with explicit approval. It adds a nullable source category and separate writer and Owner-only reader RPCs. Existing writer and reader RPCs remain available and table RLS remains enabled.
+- A rolled-back SQL fixture verified source capture and normalization, country and device context, deduplication, Owner exclusion, and non-Owner read denial. A follow-up query found no persisted source fixtures. The frontend remains on the [Development branch](https://github.com/collecttcg/Collect_TCG_Dev/tree/insights-card-view-source). Deployment, browser checks and release packaging are pending.
+
+
 Last reconciled against GitHub: 2026-11-20
 
 ## Development collection SEO — 2026-11-21
