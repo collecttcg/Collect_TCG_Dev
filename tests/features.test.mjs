@@ -960,7 +960,15 @@ test("Development 2026-09-29-v10 Post Generator titles start with the game categ
  const card={id:"game-first-title",game:"One Piece Card Game",year:"2024",series:"Championship",name:"Monkey D. Luffy",card_code:"P-001",era:"Championship",language:"English",format:"Graded",availability:"Available",grading:[{company:"PSA",grade:"10",pop_count:12}]};
  assert.match(a.defaultFbPostTitle(card),/^WTS ONE PIECE【PSA 10】/);
  assert.match(a.singleCardCopyTitle(card),/^ONE PIECE · /);
- assert.match(a.ebayListingTitle(card),/^ONE PIECE /);
+ assert.equal(a.ebayListingTitle(card),"ONE PIECE Championship 2024 Monkey D. Luffy P-001");
+ assert.equal(a.ebayListingTitle({...card,year:null,series:"",card_code:""}),"ONE PIECE Monkey D. Luffy");
+ const longName="CS 23 WINNER COMPLETE LAW KID HAWKINS KILLER DRAKE CAPONE";
+ const longTitle=a.ebayListingTitle({...card,year:2023,name:longName});
+ assert.equal(longTitle,"ONE PIECE Championship 2023 CS 23 WINNER COMPLETE LAW KID HAWKINS KILLER P-001");
+ assert.ok(longTitle.length<=80);
+ assert.equal(a.ebayListingTitle(null),"");
+ assert.match(a.ebayItemSpecifics(card),/Language: English/);
+ assert.match(a.ebayItemSpecifics(card),/Grade: PSA 10/);
  assert.match(a.defaultCarousellProductDetails(card),/^ONE PIECE 【PSA 10】/);
  const prefs={listTitle:"TEST",dropLimit:3,hashtags:"#tcg",language:"en"};
  
