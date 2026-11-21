@@ -52,12 +52,7 @@ async function accessToken(seller:string,db:ReturnType<typeof createClient>):Pro
 }
 
 async function listingEnded(id: string, token: string) {
-  const body = `<GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">
-    <ItemID>${id}</ItemID>
-    <OutputSelector>Ack</OutputSelector>
-    <OutputSelector>Item.ItemID</OutputSelector>
-    <OutputSelector>Item.SellingStatus.ListingStatus</OutputSelector>
-  </GetItemRequest>`;
+  const body = `<?xml version="1.0" encoding="utf-8"?><GetItemRequest xmlns="urn:ebay:apis:eBLBaseComponents"><ItemID>${id}</ItemID><OutputSelector>Ack</OutputSelector><OutputSelector>Errors</OutputSelector><OutputSelector>Item.ItemID</OutputSelector><OutputSelector>Item.SellingStatus.ListingStatus</OutputSelector><Version>1423</Version></GetItemRequest>`;
   const response = await fetch("https://api.ebay.com/ws/api.dll", {
     method: "POST",
     headers: {
@@ -70,10 +65,10 @@ async function listingEnded(id: string, token: string) {
     body,
     signal: AbortSignal.timeout(8000),
   });
-  if (!response.ok) throw Error("eBay listing lookup failed");
+  if (!response.ok) throw Error("HTTP_" + response.status);
   const xml = await response.text();
   if (!["Success", "Warning"].includes(tag(xml, "Ack")) || tag(tag(xml, "Item"), "ItemID") !== id) {
-    throw Error("eBay listing status unavailable");
+    throw Error("EBAY_" + (tag(xml, "ErrorCode").match(/^\d+$/)?.[0] ?? (tag(xml, "Ack") ? "ITEM_MISSING" : "ACK_MISSING")));
   }
   return isEnded(xml, id);
 }
@@ -83,8 +78,12 @@ Deno.serve(async request => {
   const url = Deno.env.get("SUPABASE_URL");
   if (!key || !url) return new Response(null, { status: 503 });
   if (request.method !== "POST") return new Response(null, { status: 405 });
+  const db = createClient(url, key, { auth: { persistSession: false } });
   if (request.headers.get("authorization") !== `Bearer ${key}`) {
-    return new Response(null, { status: 403 });
+    const secret = request.headers.get("x-inventory-schedule-key");
+    if (!secret) return new Response(null, { status: 403 });
+    const { data, error } = await db.rpc("verify_ebay_inventory_schedule_key", { candidate: secret });
+    if (error || data !== true) return new Response(null, { status: 403 });
   }
   const input = await request.json().catch(() => null);
   if (!input || typeof input !== "object" || Array.isArray(input) ||
@@ -92,7 +91,6 @@ Deno.serve(async request => {
     return new Response(null, { status: 400 });
   }
 
-  const db = createClient(url, key, { auth: { persistSession: false } });
   try {
     const rows: { id: string; notes: string }[] = [];
     for (let offset = 0;; offset += 250) {
@@ -108,6 +106,7 @@ Deno.serve(async request => {
     })))];
     const ended = new Set<string>();
     let lookupErrors = 0;
+    const reasons: Record<string, number> = {};
     if (ids.length) {
       const token = await accessToken("collect_tcg_1", db);
       let cursor = 0;
@@ -116,8 +115,10 @@ Deno.serve(async request => {
           const id = ids[cursor++];
           try {
             if (await listingEnded(id, token)) ended.add(id);
-          } catch {
+          } catch (error) {
             lookupErrors++;
+            const reason = error instanceof Error && /^(?:HTTP_\d+|EBAY_[A-Z_\d]+)$/.test(error.message) ? error.message : "REQUEST_FAILED";
+            reasons[reason] = (reasons[reason] ?? 0) + 1;
           }
         }
       }));
@@ -137,7 +138,7 @@ Deno.serve(async request => {
       if (error) writeErrors++;
       else updated += data.length;
     }
-    return Response.json({ checked: ids.length, ended: ended.size, matchingCards, updated, lookupErrors, writeErrors },
+    return Response.json({ checked: ids.length, ended: ended.size, matchingCards, updated, lookupErrors, reasons, writeErrors },
       { status: writeErrors ? 502 : 200 });
   } catch (error) {
     console.error(error instanceof Error ? error.message : "eBay listing check failed");
