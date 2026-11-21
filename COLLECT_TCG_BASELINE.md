@@ -26,6 +26,13 @@ Last reconciled against GitHub: 2026-11-20
 - Current releases use `YYYY-MM-DD-vNN`; Development and Production counters are independent.
 - Historical release manifests are immutable.
 
+## Development eBay title search terms — 2026-11-21-v01
+
+- Development `2026-11-21-v01` replaces `2026-11-20-v02`. The eBay generator builds titles in game, set/series, year, card name, and card number order. Condition and language remain in item specifics and the description. The 80-character budget favors complete words and preserves the exact card number when shortening a long name. No SQL, Supabase, RLS or permission changes.
+- Changed the marketplace generator, its cache references through the Dev homepage and feature registration, the existing title regression fixture, and release packaging workflow. SEO refresh regenerated the Dev pages using the new entry version. Refactoring review found no further change warranted.
+- Syntax and title fixtures passed, including missing values, long names, and retained language and grade specifics. `npm run validate`, the SEO checks and refresh `44878593375`, and the full and patch ZIP integrity checks passed. Release `44878593854` succeeded on retry after an overlapping main update rejected the initial manifest push. Dev Pages `44878688019` succeeded. Interactive desktop, mobile and Safari sessions were not performed.
+- [Manifest and ZIP checksums](release-manifests/2026-11-21-v01.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44878593854/artifacts/14697038167).
+
 ## Production promotion of Carddass category rename — 2026-11-20
 
 - Validated Dev `2026-11-20-v02` (source `7eabc9c28ea3ba9806718d65c990a668addf50ec`) promoted to Production `2026-11-20-v01`, replacing `2026-11-19-v01`. Existing cards, Add/Edit choices, filters/search and generated Production metadata use **One Piece Carddass Hyper Battle** with legacy stored values and category-order keys retained. No SQL or backend changes.
