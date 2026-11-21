@@ -495,27 +495,41 @@ async function sendQualifiedCardViewEvent(card,token){
         }
       }
 
-      // Prefer the country-aware Development RPC. If its migration has not
-      // been applied yet, fall back to the existing Qualified View RPC.
+      // Attach only the coarse source category to newly recorded qualified views.
+      let sourceRecorded=false;
       try{
-        const {error:countryAwareError}=await appContext.supabaseClient.rpc("record_qualified_card_view_event_with_country",{
+        const {data,error}=await appContext.supabaseClient.rpc("record_qualified_card_view_event_with_source",{
           p_card_id:cardId,
           p_visitor_id:visitorId,
-          p_country_code:countryCode||null
+          p_country_code:countryCode||null,
+          p_source_type:appContext.currentVisitorTrafficSource()
         });
-        if(countryAwareError){
-          await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
-            p_card_id:cardId,
-            p_visitor_id:visitorId
-          });
-        }
-      }catch{
+        sourceRecorded=!error && data===true;
+      }catch{}
+
+      // Prefer the country-aware Development RPC. If its migration has not
+      // been applied yet, fall back to the existing Qualified View RPC.
+      if(!sourceRecorded){
         try{
-          await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
+          const {error:countryAwareError}=await appContext.supabaseClient.rpc("record_qualified_card_view_event_with_country",{
             p_card_id:cardId,
-            p_visitor_id:visitorId
+            p_visitor_id:visitorId,
+            p_country_code:countryCode||null
           });
-        }catch{}
+          if(countryAwareError){
+            await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
+              p_card_id:cardId,
+              p_visitor_id:visitorId
+            });
+          }
+        }catch{
+          try{
+            await appContext.supabaseClient.rpc("record_qualified_card_view_event",{
+              p_card_id:cardId,
+              p_visitor_id:visitorId
+            });
+          }catch{}
+        }
       }
 
       // Record a coarse device category for this specific qualified card view.
