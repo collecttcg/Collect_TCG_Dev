@@ -1,0 +1,13 @@
+Version: 2026-11-22-v03
+Previous version: 2026-11-22-v02
+Source commit: 18df244e30d32e222f065a64dce420e1d8a459d4
+Purpose: Prefix eBay listing titles for cards marked Vintage.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v02-to-2026-11-22-v03-patch.zip
+Changed files: eBay title generator, cache entry points, title fixtures and release workflow.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+b4a1084a76b3d4ee783f5a7ac97395c59f724fd29ed12f1db3bfbe193d2c0386  release/Collect-TCG-Dev-2026-11-22-v03-full.zip
+e1da4e680f0e3fcce1c80ff2833e19b754ab763998c516d45f9b5769ca1e1d46  release/Collect-TCG-Dev-2026-11-22-v02-to-2026-11-22-v03-patch.zip
