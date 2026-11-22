@@ -1,0 +1,13 @@
+Version: 2026-11-22-v09
+Previous version: 2026-11-22-v08
+Source commit: 479fcc015ac102939c044bc45355467ea15f49ed
+Purpose: Sort the Facebook eBay picker, post and first-photo ZIP by year, oldest first.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v09-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v08-to-2026-11-22-v09-patch.zip
+Changed files: Facebook eBay generator, cache entry points, ordering fixture and release workflow.
+SQL required: No.
+Validation: npm run validate; Facebook eBay selection, ordering, copy and ZIP fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+64fe6fa67a3329fd358a78ea9d5d40ad6b23ede111284f32bd0531b868298973  release/Collect-TCG-Dev-2026-11-22-v09-full.zip
+dcadbedd6aae8f17a4b043059fa08f195f3595514430a4105522ca4ac2bc5a01  release/Collect-TCG-Dev-2026-11-22-v08-to-2026-11-22-v09-patch.zip
