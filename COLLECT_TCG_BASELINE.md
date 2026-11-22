@@ -89,6 +89,11 @@ Last reconciled against GitHub: 2026-11-20
 - The Dev SEO refresh committed a collection page with 245 card links and a sitemap entry. Local generator syntax checks, Dev and Production-mode generator self-tests, and mocked Dev generation passed. Mock catalogue fixtures covered legacy category names, preserved slugs, and exclusion of hidden, archived and unrelated cards. Dev retains noindex. No SQL, authorization, analytics or Production changes. Interactive desktop, mobile and Safari testing were not performed.
 - Refactoring review kept collection generation in the existing SEO pipeline. No broader refactoring was warranted.
 
+## Development eBay cleanup inventory scope — 2026-11-23
+
+- Cleanup now checks only live Available cards and rechecks both fields before removing an ended link. The local fixture exercised Sold, Reserved, Collection and Draft exclusions, a card sold during lookup, the empty path, and unauthorized requests.
+- No SQL required. The shared scheduled Edge Function remains on its existing deployed version pending explicit Production authorization. Read-only history inspection did not identify original eBay URLs for current Sold cards missing an eBay listing line. No records were restored.
+
 ## Development eBay inventory listing checker — 2026-11-21-v02
 
 - Development release `2026-11-21-v02` replaces `2026-11-21-v01`, source `9ea66c401649779ad7ca12d7f0c03e2d43040cfa`. Changed the Edge Function source and release workflow. eBay Trading API GetItem confirms the exact listing ID and closed status. The default request is read-only, and writes require explicit apply mode and authenticated scheduler or service-role access.
