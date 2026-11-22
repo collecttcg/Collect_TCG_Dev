@@ -179,7 +179,7 @@ function fieldsTemplate(p){
             The clean original and the watermarked version are saved separately in owner-protected metadata, while only the selected version is shown publicly.
             You can save a card with the watermark, edit it later, choose <strong>Original</strong>, and save again without re-uploading the photo.
             Images that were already permanently watermarked before this reversible system was installed cannot be restored unless you upload the original clean file once.
-            Use <strong>Hide PSA info</strong> on a photo to place two fixed black privacy rectangles over the PSA barcode / certificate-number areas. <strong>Undo hide</strong> is available during the current Add/Edit session until Save. Use ↺ / ↻ on any photo to rotate it 90° left or right. Rotation updates the clean original for this listing, and if that photo is currently watermarked the watermark is regenerated in the correct orientation. Drag pictures to change their order; the first picture is the listing thumbnail.
+            Use <strong>Hide PSA info</strong> on a photo to place two fixed black privacy rectangles over the PSA barcode / certificate-number areas. <strong>Undo hide</strong> is available during the current Add/Edit session until Save. Use ↺ / ↻ on any photo to rotate it 90° left or right. Rotation updates the clean original for this listing, and if that photo is currently watermarked the watermark is regenerated in the correct orientation. Use <strong>Move watermark</strong> to reposition the banner on a photo. Drag pictures to change their order; the first picture is the listing thumbnail.
           </div>
         </div>
       </div>
@@ -412,6 +412,8 @@ function wireImageControls(p, formState){
       });
     }
 
+    const watermarkPositions=Array(formState.images.length).fill(null);
+
     let dragIndex = null;
     let pointerDragIndex = null;
 
@@ -423,9 +425,11 @@ function wireImageControls(p, formState){
     }
 
     function moveImage(from, to){
+      if(formState.processingImages) return;
       if(from === to || from == null || to == null) return;
       if(from < 0 || to < 0 || from >= formState.images.length || to >= formState.images.length) return;
 
+      moveParallelArray(watermarkPositions,from,to);
       moveParallelArray(formState.images,from,to);
       moveParallelArray(formState.imageCleanSources,from,to);
       moveParallelArray(formState.imageWatermarkedSources,from,to);
@@ -437,6 +441,8 @@ function wireImageControls(p, formState){
     }
 
     function removeImageAt(index){
+      if(formState.processingImages) return;
+      watermarkPositions.splice(index,1);
       formState.images.splice(index,1);
       formState.imageCleanSources.splice(index,1);
       formState.imageWatermarkedSources.splice(index,1);
@@ -453,7 +459,7 @@ function wireImageControls(p, formState){
       });
     }
 
-    async function setImageWatermark(index,mode,silent=false){
+    async function setImageWatermark(index,mode,silent=false,position=watermarkPositions[index]){
       if(!appContext.requireOwner("change image watermark")) return;
       if(!appContext.cardImageVariantsSupported){
         appContext.showToast("Run the reversible watermark migration first");
@@ -483,9 +489,10 @@ function wireImageControls(p, formState){
           if(!silent) appContext.showToast("Original version selected");
         }else{
           const rendered=normalizedMode==="website"
-            ? await appContext.applyWebsiteWatermarkToCardImageSource(cleanSource,1800,0.94)
-            : await appContext.applyWatermarkToCardImageSource(cleanSource,1800,0.94);
+            ? await appContext.applyWebsiteWatermarkToCardImageSource(cleanSource,1800,0.94,position)
+            : await appContext.applyWatermarkToCardImageSource(cleanSource,1800,0.94,position);
 
+          watermarkPositions[index]=position;
           formState.imageWatermarkedSources[index]=rendered;
           formState.images[index]=rendered;
           formState.imageWatermarkStates[index]=true;
@@ -501,7 +508,7 @@ function wireImageControls(p, formState){
         }
       }catch(error){
         console.warn("Could not change image watermark:",error);
-        if(!silent) appContext.showToast("Could not switch the watermark for this photo.");
+        if(!silent || position) appContext.showToast("Could not update the watermark for this photo.");
       }finally{
         formState.processingImages=Math.max(0,Number(formState.processingImages||0)-1);
         refreshPreview();
@@ -545,8 +552,8 @@ function wireImageControls(p, formState){
 
         if(wasWatermarked){
           const refreshed=watermarkMode==="website"
-            ? await appContext.applyWebsiteWatermarkToCardImageSource(nextClean,1800,0.94)
-            : await appContext.applyWatermarkToCardImageSource(nextClean,1800,0.94);
+            ? await appContext.applyWebsiteWatermarkToCardImageSource(nextClean,1800,0.94,watermarkPositions[index])
+            : await appContext.applyWatermarkToCardImageSource(nextClean,1800,0.94,watermarkPositions[index]);
           formState.imageWatermarkedSources[index]=refreshed;
           formState.images[index]=refreshed;
           formState.imageWatermarkStates[index]=true;
@@ -594,8 +601,8 @@ function wireImageControls(p, formState){
 
         if(wasWatermarked){
           const rotatedWatermarked=watermarkMode==="website"
-            ? await appContext.applyWebsiteWatermarkToCardImageSource(rotatedClean,1800,0.94)
-            : await appContext.applyWatermarkToCardImageSource(rotatedClean,1800,0.94);
+            ? await appContext.applyWebsiteWatermarkToCardImageSource(rotatedClean,1800,0.94,watermarkPositions[index])
+            : await appContext.applyWatermarkToCardImageSource(rotatedClean,1800,0.94,watermarkPositions[index]);
           formState.imageWatermarkedSources[index]=rotatedWatermarked;
           formState.images[index]=rotatedWatermarked;
           formState.imageWatermarkStates[index]=true;
@@ -696,6 +703,114 @@ function wireImageControls(p, formState){
     websiteOnlyAllBtn?.addEventListener("click",()=>setAllImagesWatermark("website"));
     originalAllBtn?.addEventListener("click",()=>setAllImagesWatermark("original"));
 
+    function enableWatermarkPlacement(box,index,mode){
+      const img=box.querySelector("img");
+      const button=box.querySelector("[data-move-watermark]");
+      const guide=document.createElement("button");
+      guide.type="button";
+      guide.hidden=true;
+      guide.setAttribute("aria-label","Drag watermark or use arrow keys, then press Enter to apply");
+      guide.textContent="Drag watermark";
+      Object.assign(guide.style,{
+        position:"absolute",zIndex:"4",touchAction:"none",cursor:"move",
+        border:"2px dashed #f5ce67",background:"rgba(0,0,0,.55)",color:"white",
+        margin:"0",padding:"0",fontSize:"11px"
+      });
+      box.appendChild(guide);
+
+      let position, drag;
+      function layout(){
+        const scale=Math.min(img.clientWidth/img.naturalWidth,img.clientHeight/img.naturalHeight);
+        const width=img.naturalWidth*scale;
+        const height=img.naturalHeight*scale;
+        const bounds=appContext.websiteWatermarkBounds(
+          {width:img.naturalWidth,height:img.naturalHeight},position
+        );
+        return {
+          left:img.offsetLeft+(img.clientWidth-width)/2+bounds.x*scale,
+          top:img.offsetTop+(img.clientHeight-height)/2+bounds.y*scale,
+          width:bounds.width*scale,height:bounds.height*scale,
+          travelX:width-bounds.width*scale,travelY:height-bounds.height*scale
+        };
+      }
+
+      function showGuide(){
+        const {left,top,width,height}=layout();
+        Object.assign(guide.style,{left:left+"px",top:top+"px",width:width+"px",height:height+"px"});
+      }
+
+      function applyPosition(){
+        guide.hidden=true;
+        button.textContent="Move watermark";
+        if(formState.processingImages) return;
+        setImageWatermark(index,mode,true,position);
+      }
+
+      button.addEventListener("click",()=>{
+        if(!appContext.requireOwner("move image watermark") || formState.processingImages || !img.naturalWidth) return;
+        if(!guide.hidden){
+          guide.hidden=true;
+          button.textContent="Move watermark";
+          return;
+        }
+        const {x,y,width,height}=appContext.websiteWatermarkBounds(
+          {width:img.naturalWidth,height:img.naturalHeight},watermarkPositions[index]
+        );
+        position={x:x/Math.max(1,img.naturalWidth-width),y:y/Math.max(1,img.naturalHeight-height)};
+        showGuide();
+        guide.hidden=false;
+        button.textContent="Cancel move";
+        guide.focus({preventScroll:true});
+      });
+
+      guide.addEventListener("pointerdown",event=>{
+        if(event.button!==0 || drag) return;
+        event.preventDefault();
+        guide.setPointerCapture(event.pointerId);
+        drag={id:event.pointerId,x:event.clientX,y:event.clientY,start:position,moved:false};
+      });
+      guide.addEventListener("pointermove",event=>{
+        if(drag?.id!==event.pointerId) return;
+        const {travelX,travelY}=layout();
+        const clamp=value=>Math.max(0,Math.min(1,value));
+        position={
+          x:clamp(drag.start.x+(event.clientX-drag.x)/Math.max(1,travelX)),
+          y:clamp(drag.start.y+(event.clientY-drag.y)/Math.max(1,travelY))
+        };
+        drag.moved=true;
+        showGuide();
+      });
+      guide.addEventListener("pointerup",event=>{
+        if(drag?.id!==event.pointerId) return;
+        const {moved}=drag;
+        drag=null;
+        if(moved) applyPosition();
+      });
+      guide.addEventListener("lostpointercapture",()=>{
+        if(!drag) return;
+        position=drag.start;
+        drag=null;
+        showGuide();
+      });
+      guide.addEventListener("keydown",event=>{
+        const steps={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+        if(event.key==="Escape" || event.key==="Enter"){
+          event.preventDefault();
+          if(event.key==="Enter") applyPosition();
+          else button.click();
+          return;
+        }
+        const step=steps[event.key];
+        if(!step) return;
+        event.preventDefault();
+        position={
+          x:Math.max(0,Math.min(1,position.x+step[0]*0.025)),
+          y:Math.max(0,Math.min(1,position.y+step[1]*0.025))
+        };
+        showGuide();
+      });
+    }
+
     function refreshPreview(){
       preview.innerHTML = "";
       if(!formState.images.length){
@@ -755,6 +870,8 @@ function wireImageControls(p, formState){
               Original
             </button>
 
+            ${state && cleanAvailable ? `<button type="button" class="image-preview-watermark-btn" data-move-watermark>Move watermark</button>` : ""}
+
             <span class="image-preview-action-divider" aria-hidden="true"></span>
 
             <button type="button"
@@ -793,6 +910,8 @@ function wireImageControls(p, formState){
 
           <button type="button" class="image-remove" title="Remove image">×</button>`;
 
+        if(state && cleanAvailable) enableWatermarkPlacement(box,index,watermarkMode);
+
         box.querySelector(".image-remove").addEventListener("pointerdown", e=>e.stopPropagation());
         box.querySelector(".image-remove").addEventListener("click", e=>{
           e.stopPropagation();
@@ -803,7 +922,7 @@ function wireImageControls(p, formState){
           btn.addEventListener("pointerdown",e=>e.stopPropagation());
           btn.addEventListener("click",async e=>{
             e.stopPropagation();
-            if(btn.disabled) return;
+            if(btn.disabled || formState.processingImages) return;
             await setImageWatermark(index,btn.dataset.previewWatermark||"original");
           });
         });
@@ -922,6 +1041,7 @@ function wireImageControls(p, formState){
           formState.imageVariantKeys.push(appContext.newCardImageVariantKey());
           formState.imageWatermarkStates.push(false);
           formState.imageWatermarkModes.push("original");
+          watermarkPositions.push(null);
           formState.imagePrivacyUndoSources.push(autoHide ? originalClean : null);
           added++;
         }
@@ -982,6 +1102,7 @@ function wireImageControls(p, formState){
         formState.imageVariantKeys.push(appContext.newCardImageVariantKey());
         formState.imageWatermarkStates.push(false);
         formState.imageWatermarkModes.push("original");
+        watermarkPositions.push(null);
         formState.imagePrivacyUndoSources.push(autoHide ? originalClean : null);
         urlInput.value = "";
         refreshPreview();

@@ -195,10 +195,7 @@ function drawWebsiteWatermarkCta(ctx,banner,bannerX,bannerY,scale){
     ctx.restore();
   }
 
-function drawWebsiteWatermark(ctx, canvas, banner){
-    const watermarkUrl=appContext.CARD_WATERMARK_URL;
-    if(!watermarkUrl || !banner) return;
-
+function websiteWatermarkBounds(canvas,position){
     // The complete user-approved 1113×242 artwork is rendered as one layer.
     // Only the QR interior is regenerated so the destination remains functional.
     const sourceW=1113;
@@ -220,9 +217,21 @@ function drawWebsiteWatermark(ctx, canvas, banner){
       Math.max(280,Math.min(widthTarget,responsiveWidthTarget,heightCappedWidth))
     );
     const bannerHeight=Math.round(bannerWidth*sourceH/sourceW);
-    const bannerX=Math.round((canvas.width-bannerWidth)/2);
-    const bannerY=Math.max(margin,Math.round(canvas.height-margin-bannerHeight));
-    const scale=bannerWidth/sourceW;
+    const maxX=Math.max(0,canvas.width-bannerWidth);
+    const maxY=Math.max(0,canvas.height-bannerHeight);
+    return {
+      x:position ? Math.round(maxX*Math.max(0,Math.min(1,position.x))) : Math.round(maxX/2),
+      y:position ? Math.round(maxY*Math.max(0,Math.min(1,position.y))) : Math.max(margin,maxY-margin),
+      width:bannerWidth,
+      height:bannerHeight
+    };
+  }
+
+function drawWebsiteWatermark(ctx,canvas,banner,position){
+    const watermarkUrl=appContext.CARD_WATERMARK_URL;
+    if(!watermarkUrl || !banner) return;
+    const {x:bannerX,y:bannerY,width:bannerWidth,height:bannerHeight}=websiteWatermarkBounds(canvas,position);
+    const scale=bannerWidth/1113;
 
     ctx.save();
     ctx.imageSmoothingEnabled=true;
@@ -245,7 +254,7 @@ function drawWebsiteWatermark(ctx, canvas, banner){
     ctx.restore();
   }
 
-function drawWatermark(ctx, canvas, logo, banner){
+function drawWatermark(ctx, canvas, logo, banner, position){
     // The watermark logo is preprocessed into a transparent canvas so its white background is removed.
 
     const margin = Math.max(12, Math.round(Math.min(canvas.width, canvas.height) * 0.024));
@@ -293,7 +302,7 @@ function drawWatermark(ctx, canvas, logo, banner){
     ctx.drawImage(logo, x, y, targetWidth, targetHeight);
     ctx.restore();
 
-    appContext.drawWebsiteWatermark(ctx, canvas, banner);
+    appContext.drawWebsiteWatermark(ctx, canvas, banner, position);
 
   }
 
@@ -405,7 +414,7 @@ async function renderSoldDownloadBlob(src, card, maxDim = 2400, quality = 0.96){
     return appContext.canvasToBlob(canvas, quality, "image/jpeg");
   }
 
-async function renderCardImage(img, maxDim = 1800, quality = 0.94, applyWatermark = false){
+async function renderCardImage(img, maxDim = 1800, quality = 0.94, applyWatermark = false, position){
     let w = img.naturalWidth || img.width;
     let h = img.naturalHeight || img.height;
     if(!w || !h) throw new Error("invalid image dimensions");
@@ -437,13 +446,13 @@ async function renderCardImage(img, maxDim = 1800, quality = 0.94, applyWatermar
 
       if(applyWatermark==="website"){
         const banner = await appContext.loadWebsiteWatermarkBanner();
-        appContext.drawWebsiteWatermark(ctx, canvas, banner);
+        appContext.drawWebsiteWatermark(ctx, canvas, banner, position);
       }else{
         const [logo,banner] = await Promise.all([
           appContext.loadWatermarkLogo(),
           appContext.loadWebsiteWatermarkBanner()
         ]);
-        appContext.drawWatermark(ctx, canvas, logo, banner);
+        appContext.drawWatermark(ctx, canvas, logo, banner, position);
       }
     }
 
@@ -575,7 +584,7 @@ async function resizeImageFile(file, maxDim = 1800, quality = 0.94, applyWaterma
     return appContext.renderCardImage(img, maxDim, quality, applyWatermark);
   }
 
-async function processCardImageUrl(url, maxDim = 1800, quality = 0.94, applyWatermark = false){
+async function processCardImageUrl(url, maxDim = 1800, quality = 0.94, applyWatermark = false, position){
     if(!appContext.requireOwner("process card image URL")) throw new Error("Owner login required");
 
     let parsed;
@@ -613,32 +622,32 @@ async function processCardImageUrl(url, maxDim = 1800, quality = 0.94, applyWate
         image.onerror = ()=>reject(new Error("decode failed"));
         image.src = objectUrl;
       });
-      return await appContext.renderCardImage(img,maxDim,quality,applyWatermark);
+      return await appContext.renderCardImage(img,maxDim,quality,applyWatermark,position);
     }finally{
       URL.revokeObjectURL(objectUrl);
     }
   }
 
-async function applyWatermarkToCardImageSource(source, maxDim = 1800, quality = 0.94){
+async function applyWatermarkToCardImageSource(source, maxDim = 1800, quality = 0.94, position){
     if(!appContext.requireOwner("apply image watermark")) throw new Error("Owner login required");
 
     if(appContext.isPendingCardImage(source)){
       const img=await appContext.loadImageFromDataUrl(source);
-      return appContext.renderCardImage(img,maxDim,quality,true);
+      return appContext.renderCardImage(img,maxDim,quality,true,position);
     }
 
-    return appContext.processCardImageUrl(source,maxDim,quality,true);
+    return appContext.processCardImageUrl(source,maxDim,quality,true,position);
   }
 
-async function applyWebsiteWatermarkToCardImageSource(source, maxDim = 1800, quality = 0.94){
+async function applyWebsiteWatermarkToCardImageSource(source, maxDim = 1800, quality = 0.94, position){
     if(!appContext.requireOwner("apply website watermark")) throw new Error("Owner login required");
 
     if(appContext.isPendingCardImage(source)){
       const img=await appContext.loadImageFromDataUrl(source);
-      return appContext.renderCardImage(img,maxDim,quality,"website");
+      return appContext.renderCardImage(img,maxDim,quality,"website",position);
     }
 
-    return appContext.processCardImageUrl(source,maxDim,quality,"website");
+    return appContext.processCardImageUrl(source,maxDim,quality,"website",position);
   }
 
 async function watermarkImageUrl(url, maxDim = 1800, quality = 0.94){
@@ -986,7 +995,7 @@ function setupCardImageRecovery(){
     },true);
   }
 
-  Object.assign(appContext,{isNearWhiteBackgroundPixel,createTransparentWatermarkLogo,loadWatermarkLogo,loadWebsiteWatermarkBanner,drawWebsiteWatermarkCta,drawWebsiteWatermark,drawWatermark,shouldApplySoldDownloadWatermark,drawSoldDownloadWatermark,canvasToBlob,loadImageElementFromSource,renderSoldDownloadBlob,renderCardImage,renderWatermarkedImage,rotateCardImageSource,loadImageFromDataUrl,normalizedImageMime,imageExtensionMatchesMime,verifyImageDecodes,validateOwnerImageFile,resizeImageFile,processCardImageUrl,applyWatermarkToCardImageSource,applyWebsiteWatermarkToCardImageSource,watermarkImageUrl,applyPsaPrivacyMaskToCardImageSource,isPendingCardImage,dataUrlToImageBlob,cardStorageExtensionForMime,uploadPendingCardImage,removeCardStoragePaths,cardStoragePathFromUrl,prepareCardImagesForStorage,cleanupRemovedCardStorageImages,cardImageStorageErrorText,setupCardImageRecovery});
+  Object.assign(appContext,{isNearWhiteBackgroundPixel,createTransparentWatermarkLogo,loadWatermarkLogo,loadWebsiteWatermarkBanner,drawWebsiteWatermarkCta,websiteWatermarkBounds,drawWebsiteWatermark,drawWatermark,shouldApplySoldDownloadWatermark,drawSoldDownloadWatermark,canvasToBlob,loadImageElementFromSource,renderSoldDownloadBlob,renderCardImage,renderWatermarkedImage,rotateCardImageSource,loadImageFromDataUrl,normalizedImageMime,imageExtensionMatchesMime,verifyImageDecodes,validateOwnerImageFile,resizeImageFile,processCardImageUrl,applyWatermarkToCardImageSource,applyWebsiteWatermarkToCardImageSource,watermarkImageUrl,applyPsaPrivacyMaskToCardImageSource,isPendingCardImage,dataUrlToImageBlob,cardStorageExtensionForMime,uploadPendingCardImage,removeCardStoragePaths,cardStoragePathFromUrl,prepareCardImagesForStorage,cleanupRemovedCardStorageImages,cardImageStorageErrorText,setupCardImageRecovery});
 }
 
 /** State and event initialization; called in preserved startup order. */
