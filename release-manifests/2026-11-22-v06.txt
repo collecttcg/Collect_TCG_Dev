@@ -1,0 +1,13 @@
+Version: 2026-11-22-v06
+Previous version: 2026-11-22-v05
+Source commit: 205665b10dddd85ad33192bd12533510416e9e24
+Purpose: Keep Vintage and prioritize the card name and number in long eBay titles.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v06-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v05-to-2026-11-22-v06-patch.zip
+Changed files: eBay title generator, cache entry points, fixtures and release workflow.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+989f8586344c6630ea95417ca97a4e48966a953b5f00bfecb91f5d0f8a97fce4  release/Collect-TCG-Dev-2026-11-22-v06-full.zip
+6fe6583233a23dce9a23395776736eba4850964afffb66b707d445af186d3a24  release/Collect-TCG-Dev-2026-11-22-v05-to-2026-11-22-v06-patch.zip
