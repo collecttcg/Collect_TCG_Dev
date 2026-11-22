@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Vintage eBay titles — 2026-11-22-v03
+
+- Replaces Development `2026-11-22-v02`. The eBay title generator prefixes cards marked Vintage with `Vintage`. The title remains within 80 characters and retains ordinary card numbers when shortening long vintage titles. No SQL required.
+- Repository and SEO checks and title fixtures passed. The deployed generator matched the release. Interactive browser checks were not performed. Refactoring review found no further change warranted.
+- [Manifest](release-manifests/2026-11-22-v03.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44982210363/artifacts/14738585286).
+
+
 ## Development movable watermark — 2026-11-22-v02
 
 - Replaces Development `2026-11-22-v01`. The Owner Add/Edit editor can reposition the CTA/QR banner per photo in either watermark mode. It renders the new position from the clean photo and saves it through the existing image-variant path. Placement coordinates are held for the current edit session, while the saved position is part of the image. The separate logo overlay retains its existing placement. No SQL required.
