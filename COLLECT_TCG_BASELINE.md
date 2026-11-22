@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook eBay listing year order — 2026-11-22-v09
+
+- Replaces Development `2026-11-22-v08`. The Owner card picker displays the saved year and sorts oldest first. Year ranges use the starting year and undated listings appear last. The preview, copied post and numbered first-photo ZIP use the same order regardless of selection order or filters.
+- Repository validation, Owner-gate and ordering fixtures, SEO checks and both package integrity checks passed. The deployed entry and generator import chain matched the release. Interactive desktop, mobile and Safari checks were not performed. No SQL or Edge Function changes required.
+- [Manifest](release-manifests/2026-11-22-v09.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45011985575/artifacts/14750615140).
+
 ## Development AI scanner accuracy — 2026-11-22-v08
 
 - Replaces Development `2026-11-22-v07`. Owner Add Card scans a higher-detail first photo and an optional scan-only close-up/back photo. Inventory matching checks game, series, language and year. Ambiguity requires owner confirmation before inventory enrichment or price research. Error printings are not assumed from the model name. No SQL required.
