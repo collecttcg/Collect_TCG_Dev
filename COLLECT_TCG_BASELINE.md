@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Sold eBay URLs recovered from order report
+
+- Restored 22 verified links on live Sold cards from the seller-provided eBay Orders Report. Replaced the `eBay listing: yes` placeholders with exact item URLs and preserved other notes and existing links. This was a shared data correction with no migration, website release, or schedule change.
+
+
 ## Shared daily eBay cleanup — 2026-11-23
 
 - Development `2026-11-23-v01` replaces `2026-11-22-v10`. The [Development manifest](https://github.com/collecttcg/Collect_TCG_Dev/blob/main/release-manifests/2026-11-23-v01.txt) records validation and both verified ZIPs.
