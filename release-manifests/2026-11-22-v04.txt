@@ -1,0 +1,13 @@
+Version: 2026-11-22-v04
+Previous version: 2026-11-22-v03
+Source commit: d2bca8db6e0946aa445942d7e59951a3cd5fdcdb
+Purpose: Remove brackets from the pre-errata error prefix in Owner forms and eBay titles.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v03-to-2026-11-22-v04-patch.zip
+Changed files: Owner Add/Edit forms, shared title formatting, eBay generator, cache entry points, fixtures and release workflow.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+452993f80c3fa580a454073a9b33d0cbc3906ce75672233368eb4cc580383794  release/Collect-TCG-Dev-2026-11-22-v04-full.zip
+9539fc9947c456f18ef6bbd92fb1f39f2c24c57f4f80162d416610206729923c  release/Collect-TCG-Dev-2026-11-22-v03-to-2026-11-22-v04-patch.zip
