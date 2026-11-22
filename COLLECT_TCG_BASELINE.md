@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook eBay multi-owner filtering — 2026-11-22-v10
+
+- Replaces Development `2026-11-22-v09`. The Owner-only Facebook eBay card picker accepts multiple owners and an Unassigned option. Clearing all owner checkboxes shows every owner. Era narrows the chosen owners, and filtering preserves selected cards and oldest-first post and photo ZIP order.
+- Development repository, CSS, SEO and feature checks passed. Both packages passed integrity checks. Deployed entry, generator import chain and stylesheet matched the release. Interactive desktop, mobile and Safari checks were unavailable. No SQL or Edge Function change.
+- [Manifest](release-manifests/2026-11-22-v10.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45013860984/artifacts/14751007641).
+
 ## Development Facebook eBay listing year order — 2026-11-22-v09
 
 - Replaces Development `2026-11-22-v08`. The Owner card picker displays the saved year and sorts oldest first. Year ranges use the starting year and undated listings appear last. The preview, copied post and numbered first-photo ZIP use the same order regardless of selection order or filters.
