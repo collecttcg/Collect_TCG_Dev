@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook Post · eBay Listings — 2026-11-22-v07
+
+- Replaces Development `2026-11-22-v06`. The Owner-only Facebook tools mode supports multi-selection with Owner and Era filters for available live cards with valid saved eBay URLs. It copies a numbered Facebook post and uses the existing ZIP helper to download each first photo in selection order. No SQL required.
+- Repository, SEO and feature fixtures passed, including Owner gating and partial photo failure handling. The deployed generator matched the release. Interactive browser checks were not performed.
+- [Manifest](release-manifests/2026-11-22-v07.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44985369575/artifacts/14739995219).
+
+
 ## Development eBay title fitting — 2026-11-22-v06
 
 - Replaces Development `2026-11-22-v05`. Titles up to 80 characters retain their complete text. Overlong titles preserve applicable Vintage and ERROR labels, prioritize the card name and number, and shorten catalogue labels first. CARDDASS is optional under space pressure. An exceptionally long card number may be clipped when it cannot fit with reserved labels.
