@@ -206,7 +206,8 @@ async function downloadCarousellGiveawayImagesZip(giveaway,progressCallback){
 function ebayListingTitle(card){
     if(!card) return "";
     const clean = value => String(value ?? "").trim().replace(/\s+/g, " ");
-    const prefix = [appContext.fbGameLabel(card), card.series, card.year].map(clean).filter(Boolean).join(" ");
+    const vintage = appContext.normalizeFilterValue(card.era) === "vintage" ? "Vintage" : "";
+    const prefix = [vintage, appContext.fbGameLabel(card), card.series, card.year].map(clean).filter(Boolean).join(" ");
     const name = clean(card.name);
     const code = clean(card.card_code);
     const title = [prefix, name, code].filter(Boolean).join(" ");
@@ -215,7 +216,11 @@ function ebayListingTitle(card){
 
     // Keep the card number searchable when shortening a long card name.
     const nameLimit = limit - prefix.length - code.length - Number(Boolean(prefix)) - Number(Boolean(code));
-    if(nameLimit <= 0) return title.slice(0, limit).trim();
+    if(nameLimit <= 0){
+      if(!vintage || !code || code.length >= limit-vintage.length) return title.slice(0, limit).trim();
+      const prefixLimit = limit - code.length - 1;
+      return prefix.slice(0, prefixLimit).trimEnd() + " " + code;
+    }
     const clippedName = name.slice(0, nameLimit);
     const shortName = /\S/.test(name[nameLimit] || "") && /\S$/.test(clippedName)
       ? clippedName.replace(/\s+\S+$/, "")

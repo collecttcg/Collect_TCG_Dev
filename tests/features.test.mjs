@@ -966,6 +966,13 @@ test("Development 2026-09-29-v10 Post Generator titles start with the game categ
  const longTitle=a.ebayListingTitle({...card,year:2023,name:longName});
  assert.equal(longTitle,"ONE PIECE Championship 2023 CS 23 WINNER COMPLETE LAW KID HAWKINS KILLER P-001");
  assert.ok(longTitle.length<=80);
+ const vintageCard={...card,era:"Vintage",game:"One Piece Carddass Hyper Battle",series:"Grand Line Compilation 1",year:2001,name:"VIVI",card_code:"C411"};
+ assert.equal(a.ebayListingTitle(vintageCard),"Vintage ONE PIECE CARDDASS HYPER BATTLE Grand Line Compilation 1 2001 VIVI C411");
+ for(const series of [vintageCard.series,"A very long series name ".repeat(5)]){
+   const vintageTitle=a.ebayListingTitle({...vintageCard,series,name:longName});
+   assert.match(vintageTitle,/^Vintage .* C411$/);
+   assert.ok(vintageTitle.length<=80);
+ }
  assert.equal(a.ebayListingTitle(null),"");
  assert.match(a.ebayItemSpecifics(card),/Language: English/);
  assert.match(a.ebayItemSpecifics(card),/Grade: PSA 10/);
