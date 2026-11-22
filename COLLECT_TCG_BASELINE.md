@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `479fcc015ac102939c044bc45355467ea15f49ed`.
+- Development latest non-baseline commit: `4590f519635ff9427286fea05ca5dc4fea2310a5`.
 - Production latest non-baseline commit: `a2985302f010c87ff403ce47eefdc7fb3ca9bd55`.
 - Production rollback ref: `a2985302f010c87ff403ce47eefdc7fb3ca9bd55`.
-- Latest local release manifest: [`2026-11-22-v08`](release-manifests/2026-11-22-v08.txt) from `4fb06598b30bdcbbee88814e4193c7691d57afdd`.
-- Latest local change: `479fcc015ac102939c044bc45355467ea15f49ed` · Release Development 2026-11-22-v09 Facebook eBay year order.
+- Latest local release manifest: [`2026-11-22-v09`](release-manifests/2026-11-22-v09.txt) from `479fcc015ac102939c044bc45355467ea15f49ed`.
+- Latest local change: `4590f519635ff9427286fea05ca5dc4fea2310a5` · Development 2026-11-22-v09: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
