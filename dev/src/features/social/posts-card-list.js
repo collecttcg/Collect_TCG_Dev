@@ -459,7 +459,7 @@ async function ensureJsZip(){
     return appContext.jsZipLoadPromise;
   }
 
-async function downloadCardListFirstImagesZip(cardsForZip, progressCallback){
+async function downloadCardListFirstImagesZip(cardsForZip, progressCallback, {filePrefix="Collect-TCG-Card-List",reportMissing=false}={}){
     const ZipCtor = await appContext.ensureJsZip();
     const zip = new ZipCtor();
     const usedNames = new Set();
@@ -469,7 +469,10 @@ async function downloadCardListFirstImagesZip(cardsForZip, progressCallback){
     for(let i=0;i<cardsForZip.length;i++){
       const card = cardsForZip[i];
       const firstImage = appContext.getImages(card)[0];
-      if(!firstImage) continue;
+      if(!firstImage){
+        if(reportMissing) failedCards.push({id:card.id,name:card.name,reason:"No first photo"});
+        continue;
+      }
 
       try{
         const soldWatermark = appContext.shouldApplySoldDownloadWatermark(card);
@@ -519,7 +522,7 @@ async function downloadCardListFirstImagesZip(cardsForZip, progressCallback){
     const href = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = href;
-    a.download = `Collect-TCG-Card-List-${new Date().toISOString().slice(0,10)}.zip`;
+    a.download = `${filePrefix}-${new Date().toISOString().slice(0,10)}.zip`;
     a.rel = "noopener";
     document.body.appendChild(a);
     a.click();

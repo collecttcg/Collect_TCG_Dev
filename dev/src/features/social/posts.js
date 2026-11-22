@@ -1,7 +1,8 @@
 /** 2026-09-29-v10: Post Generator coordinator. */
 import { registerGiveawayPosts } from './posts-giveaway.js?v=2026-09-29-v09';
 import { registerMarketplacePosts } from './posts-marketplace.js?v=2026-11-22-v06';
-import { registerCardListPosts } from './posts-card-list.js?v=2026-11-05-v04';
+import { registerCardListPosts } from './posts-card-list.js?v=2026-11-22-v07';
+import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-22-v07';
 export function register(appContext){
 function compactGeneratedPostSpacing(value){
     const lines=String(value||"")
@@ -433,7 +434,7 @@ function postGeneratorCardPricePreview(card){
 
 function currentFacebookToolMode(){
     const mode=appContext.currentHashParams().get("mode");
-    return ["single","nfs","list","giveaway","winner","carousell","ebay"].includes(mode) ? mode : "single";
+    return ["single","nfs","list","giveaway","winner","carousell","ebay","facebook-ebay"].includes(mode) ? mode : "single";
   }
 
 function facebookToolsHeaderHTML(mode){
@@ -444,6 +445,7 @@ function facebookToolsHeaderHTML(mode){
       giveaway:"Create a reusable Facebook giveaway post from your giveaway template.",
       winner:"Create a winner-announcement post from your saved Past Winners.",
       carousell:"Create a ready-to-copy Carousell listing description from your card inventory.",
+      "facebook-ebay":"Create a Facebook post from selected cards listed on eBay.",
       ebay:"Create an eBay-ready title, item specifics and listing description from one inventory card, with its listing photos ready to download."
     };
 
@@ -513,6 +515,11 @@ function facebookToolsHeaderHTML(mode){
 
         <a href="#/fb-tools?mode=ebay" class="fb-tools-switch ${mode==="ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="ebay" ? "true" : "false"}"><span class="fb-tools-switch-icon">e</span><span><strong>eBay Listing</strong><small>Choose one card · title · item specifics · description · image ZIP</small></span></a>
 
+        <a href="#/fb-tools?mode=facebook-ebay" class="fb-tools-switch ${mode==="facebook-ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="facebook-ebay" ? "true" : "false"}">
+          <span class="fb-tools-switch-icon">f</span>
+          <span><strong>Facebook Post · eBay Listings</strong><small>Owner and era filters · first photos ZIP</small></span>
+        </a>
+
         <a href="#/fb-tools?mode=carousell"
            class="fb-tools-switch ${mode==="carousell" ? "active" : ""}"
            role="tab"
@@ -542,6 +549,8 @@ function renderFacebookToolsPage(){
       appContext.renderGiveawayWinnerPostGeneratorPage();
     }else if(mode==="carousell"){
       appContext.renderCarousellPostGeneratorPage();
+    }else if(mode==="facebook-ebay"){
+      appContext.renderFacebookEbayListingsPage();
     }else if(mode==="ebay"){
       appContext.renderEbayListingGeneratorPage();
     }else{
@@ -1026,6 +1035,7 @@ function renderFbPostGeneratorPage(nfsMode=false){
   registerGiveawayPosts(appContext);
   registerMarketplacePosts(appContext);
   registerCardListPosts(appContext);
+  registerFacebookEbayPosts(appContext);
 }
 
 /** State and event initialization; called in preserved startup order. */
