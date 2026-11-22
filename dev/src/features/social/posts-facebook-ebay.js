@@ -8,8 +8,9 @@ export function registerFacebookEbayPosts(appContext){
       card,
       url:appContext.normalizeEbayListingUrl(card.ebay_url),
       owner:card._owner_category || "",
-      era:appContext.normalizeFilterValue(card.era)
-    })).filter(entry=>entry.url);
+      era:appContext.normalizeFilterValue(card.era),
+      startYear:Number(String(card.year ?? "").trim().match(/^(\d{4})(?:\s*[-–—]\s*\d{4})?$/)?.[1] ?? 10000)
+    })).filter(entry=>entry.url).sort((a,b)=>a.startYear-b.startYear);
   }
 
   function buildFacebookEbayListingsPost(entries){
@@ -36,7 +37,8 @@ export function registerFacebookEbayPosts(appContext){
   function renderFacebookEbayListingsPage(){
     if(!appContext.requireOwner("open Facebook eBay listings generator")) return;
     const entries=facebookEbayListingEntries(appContext.cards);
-    const selected=new Map();
+    const selected=new Set();
+    const selectedEntries=()=>entries.filter(({card})=>selected.has(String(card.id)));
     const esc=appContext.escapeHtml;
     const choices=values=>[...new Set(values)].sort((a,b)=>a.localeCompare(b));
     const options=values=>values.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join("");
@@ -86,7 +88,7 @@ export function registerFacebookEbayPosts(appContext){
     function updatePost(){
       const hiddenCount=selected.size-filtered.filter(({card})=>selected.has(String(card.id))).length;
       get("[data-count]").textContent=`${selected.size} selected${hiddenCount ? ` · ${hiddenCount} outside current filters` : ""}`;
-      output.value=buildFacebookEbayListingsPost([...selected.values()]);
+      output.value=buildFacebookEbayListingsPost(selectedEntries());
       copy.disabled=!selected.size;
       get("[data-clear]").disabled=!selected.size;
       zip.disabled=!selected.size || downloading;
@@ -103,7 +105,7 @@ export function registerFacebookEbayPosts(appContext){
         return `<label class="fb-card-list-picker-row ${selected.has(id) ? "selected" : ""}">
           <input type="checkbox" value="${esc(id)}" ${selected.has(id) ? "checked" : ""}>
           <span class="fb-card-list-picker-thumb">${photo ? `<img src="${esc(photo)}" loading="lazy" alt="">` : "No photo"}</span>
-          <span class="fb-card-list-picker-copy"><strong>${esc(card.name || "Untitled card")}</strong><small>${esc([card.card_code,card.series,card.era].filter(Boolean).join(" · "))}</small></span>
+          <span class="fb-card-list-picker-copy"><strong>${esc(card.name || "Untitled card")}</strong><small>${esc([card.card_code,card.series,card.year,card.era].filter(Boolean).join(" · "))}</small></span>
         </label>`;
       }).join("") || '<p class="hint">No available cards with eBay links match these filters.</p>';
       get("[data-select]").disabled=!filtered.length;
@@ -115,15 +117,14 @@ export function registerFacebookEbayPosts(appContext){
     picker.addEventListener("change",event=>{
       const input=event.target.closest('input[type="checkbox"]');
       if(!input) return;
-      const entry=filtered.find(({card})=>String(card.id)===input.value);
-      if(!entry) return;
-      if(input.checked) selected.set(input.value,entry);
+      if(!filtered.some(({card})=>String(card.id)===input.value)) return;
+      if(input.checked) selected.add(input.value);
       else selected.delete(input.value);
       input.closest(".fb-card-list-picker-row")?.classList.toggle("selected",input.checked);
       updatePost();
     });
     get("[data-select]").addEventListener("click",()=>{
-      filtered.forEach(entry=>selected.set(String(entry.card.id),entry));
+      filtered.forEach(({card})=>selected.add(String(card.id)));
       updatePicker();
     });
     get("[data-clear]").addEventListener("click",()=>{
@@ -136,7 +137,7 @@ export function registerFacebookEbayPosts(appContext){
     });
     zip.addEventListener("click",async()=>{
       if(downloading || !selected.size || !appContext.requireOwner("download Facebook eBay listing photos")) return;
-      const cards=[...selected.values()].map(({card})=>card);
+      const cards=selectedEntries().map(({card})=>card);
       downloading=true;
       updatePost();
       status.textContent="Preparing ZIP…";
