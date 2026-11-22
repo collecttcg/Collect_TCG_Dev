@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development pre-errata / error titles — 2026-11-22-v04
+
+- Replaces Development `2026-11-22-v03`. Owner Add/Edit recognizes bracketed and plain prefixes, saves `PRE ERRATA ERROR` without brackets and clears the prefix when unchecked. The eBay generator formats previously saved bracketed prefixes without requiring a card edit. The catalogue was not bulk rewritten. No SQL required.
+- Repository and SEO checks, owner name round-trip and eBay title fixtures, full and patch ZIP integrity, and deployed-file comparisons passed. Interactive browser checks were not performed. Refactoring shared prefix handling between the editor and the generator.
+- [Manifest](release-manifests/2026-11-22-v04.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44982577741/artifacts/14738636080).
+
+
 ## Development Vintage eBay titles — 2026-11-22-v03
 
 - Replaces Development `2026-11-22-v02`. The eBay title generator prefixes cards marked Vintage with `Vintage`. The title remains within 80 characters and retains ordinary card numbers when shortening long vintage titles. No SQL required.
