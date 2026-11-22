@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development error card titles — 2026-11-22-v05
+
+- Replaces Development `2026-11-22-v04`. Owner Add/Edit and the eBay title generator use `ERROR` for error cards. Both previous prefix formats remain recognized, and unchecking the editor checkbox clears the prefix. No catalogue rewrite or SQL required.
+- Repository, SEO and title checks passed, and the deployed editor and utility matched the release. Both package ZIPs were integrity-checked. Interactive browser checks were not performed. The existing shared formatter was reused.
+- [Manifest](release-manifests/2026-11-22-v05.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44982833402/artifacts/14738213631).
+
+
 ## Development pre-errata / error titles — 2026-11-22-v04
 
 - Replaces Development `2026-11-22-v03`. Owner Add/Edit recognizes bracketed and plain prefixes, saves `PRE ERRATA ERROR` without brackets and clears the prefix when unchecked. The eBay generator formats previously saved bracketed prefixes without requiring a card edit. The catalogue was not bulk rewritten. No SQL required.
