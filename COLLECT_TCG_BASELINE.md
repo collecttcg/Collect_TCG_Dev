@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Shared daily eBay cleanup — 2026-11-23
+
+- Development `2026-11-23-v01` replaces `2026-11-22-v10`. The [Development manifest](https://github.com/collecttcg/Collect_TCG_Dev/blob/main/release-manifests/2026-11-23-v01.txt) records validation and both verified ZIPs.
+- With explicit approval, deployed shared `ebay-listing-check` v2 (previous v1). Verified ACTIVE status and an exact match with the validated Development source. The 09:30 JST schedule uses that function. No SQL, RLS, schedule or website deployment was required. No live scan was run after deployment. Backend rollback is redeployment of v1 source from Production `429abcc2b361d351c080b91b0d80483c402d16a5`.
+- Read-only review found 34 Sold cards without an eBay listing line. Available card edit history contained no original links for those cards, and no Sold records were modified for recovery.
+
+
 ## Development Facebook eBay multi-owner filtering — 2026-11-22-v10
 
 - Replaces Development `2026-11-22-v09`. The Owner-only Facebook eBay card picker accepts multiple owners and an Unassigned option. Clearing all owner checkboxes shows every owner. Era narrows the chosen owners, and filtering preserves selected cards and oldest-first post and photo ZIP order.
@@ -92,7 +99,7 @@ Last reconciled against GitHub: 2026-11-20
 ## Development eBay cleanup inventory scope — 2026-11-23
 
 - Cleanup now checks only live Available cards and rechecks both fields before removing an ended link. The local fixture exercised Sold, Reserved, Collection and Draft exclusions, a card sold during lookup, the empty path, and unauthorized requests.
-- No SQL required. The shared scheduled Edge Function remains on its existing deployed version pending explicit Production authorization. Read-only history inspection did not identify original eBay URLs for current Sold cards missing an eBay listing line. No records were restored.
+- No SQL required. The shared scheduled Edge Function was deployed separately with explicit Production authorization as described above. Read-only history inspection did not identify original eBay URLs for current Sold cards missing an eBay listing line. No records were restored.
 
 ## Development eBay inventory listing checker — 2026-11-21-v02
 
