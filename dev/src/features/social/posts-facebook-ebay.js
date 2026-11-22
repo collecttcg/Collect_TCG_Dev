@@ -41,15 +41,21 @@ export function registerFacebookEbayPosts(appContext){
     const selectedEntries=()=>entries.filter(({card})=>selected.has(String(card.id)));
     const esc=appContext.escapeHtml;
     const choices=values=>[...new Set(values)].sort((a,b)=>a.localeCompare(b));
+    const ownerChoices=choices(entries.map(entry=>entry.owner).filter(Boolean));
     const options=values=>values.map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join("");
     appContext.view.innerHTML=`
       <div class="fb-card-list-layout" id="facebookEbayListings">
         <section class="panel fb-card-list-controls">
           <h3>Select cards</h3>
           <div class="fb-card-list-filter-row">
-            <label class="field">Owner
-              <select data-owner><option value="">All owners</option><option value="unassigned">Unassigned</option>${options(choices(entries.map(entry=>entry.owner).filter(Boolean)))}</select>
-            </label>
+            <fieldset class="fb-ebay-owner-filter" data-owners aria-describedby="fbEbayOwnerHelp">
+              <legend>Owners</legend>
+              <p class="hint" id="fbEbayOwnerHelp">Leave all unchecked to show every owner.</p>
+              <div class="fb-ebay-owner-options">
+                <label><input type="checkbox" value=""> Unassigned</label>
+                ${ownerChoices.map(owner=>`<label><input type="checkbox" value="${esc(owner)}"> ${esc(owner)}</label>`).join("")}
+              </div>
+            </fieldset>
             <label class="field">Era
               <select data-era><option value="">All eras</option>${options(choices(entries.map(({card})=>String(card.era || "").trim()).filter(Boolean)))}</select>
             </label>
@@ -75,7 +81,7 @@ export function registerFacebookEbayPosts(appContext){
       </div>`;
     const root=appContext.view.querySelector("#facebookEbayListings");
     const get=selector=>root.querySelector(selector);
-    const owner=get("[data-owner]");
+    const owners=get("[data-owners]");
     const era=get("[data-era]");
     const picker=get("[data-picker]");
     const output=get("[data-post]");
@@ -95,9 +101,11 @@ export function registerFacebookEbayPosts(appContext){
     }
 
     function updatePicker(){
+      const selectedOwners=new Set(Array.from(owners.querySelectorAll("input:checked"),input=>input.value));
+      const selectedEra=appContext.normalizeFilterValue(era.value);
       filtered=entries.filter(entry=>
-        (!owner.value || (entry.owner || "unassigned")===owner.value) &&
-        (!era.value || entry.era===appContext.normalizeFilterValue(era.value))
+        (!selectedOwners.size || selectedOwners.has(entry.owner)) &&
+        (!selectedEra || entry.era===selectedEra)
       );
       picker.innerHTML=filtered.map(({card})=>{
         const id=String(card.id);
@@ -112,7 +120,7 @@ export function registerFacebookEbayPosts(appContext){
       updatePost();
     }
 
-    owner.addEventListener("change",updatePicker);
+    owners.addEventListener("change",updatePicker);
     era.addEventListener("change",updatePicker);
     picker.addEventListener("change",event=>{
       const input=event.target.closest('input[type="checkbox"]');

@@ -2,7 +2,7 @@
 import { registerGiveawayPosts } from './posts-giveaway.js?v=2026-09-29-v09';
 import { registerMarketplacePosts } from './posts-marketplace.js?v=2026-11-22-v06';
 import { registerCardListPosts } from './posts-card-list.js?v=2026-11-22-v07';
-import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-22-v09';
+import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-22-v10';
 export function register(appContext){
 function compactGeneratedPostSpacing(value){
     const lines=String(value||"")

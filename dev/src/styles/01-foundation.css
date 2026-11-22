@@ -3513,6 +3513,40 @@
     margin-bottom:8px;
   }
 
+  .fb-ebay-owner-filter{
+    grid-column:1 / -1;
+    min-inline-size:0;
+    margin:0;
+    padding:0;
+    border:0;
+  }
+
+  .fb-ebay-owner-filter .hint{
+    margin:3px 0 2px;
+  }
+
+  .fb-ebay-owner-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 12px;
+  }
+
+  .fb-ebay-owner-options label{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    min-height:44px;
+    overflow-wrap:anywhere;
+    cursor:pointer;
+  }
+
+  .fb-ebay-owner-options input{
+    flex:0 0 auto;
+    width:16px;
+    height:16px;
+    margin:0;
+  }
+
   .fb-card-list-bulk-actions{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
