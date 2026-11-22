@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development AI scanner accuracy — 2026-11-22-v08
+
+- Replaces Development `2026-11-22-v07`. Owner Add Card scans a higher-detail first photo and an optional scan-only close-up/back photo. Inventory matching checks game, series, language and year. Ambiguity requires owner confirmation before inventory enrichment or price research. Error printings are not assumed from the model name. No SQL required.
+- The dedicated `scan-card-ai-dev` Edge Function v20 was deployed, source-verified and returned 401 on an unauthenticated request. Development checks, synthetic identification/pricing fixtures, mocked single/paired image requests, ZIP integrity and deployed-file checks passed. Real-photo accuracy and interactive browser checks were not measured.
+- [Manifest](release-manifests/2026-11-22-v08.txt) and [full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44992916655/artifacts/14742252672).
+
+
 ## Development Facebook Post · eBay Listings — 2026-11-22-v07
 
 - Replaces Development `2026-11-22-v06`. The Owner-only Facebook tools mode supports multi-selection with Owner and Era filters for available live cards with valid saved eBay URLs. It copies a numbered Facebook post and uses the existing ZIP helper to download each first photo in selection order. No SQL required.
