@@ -1,0 +1,13 @@
+Version: 2026-11-22-v05
+Previous version: 2026-11-22-v04
+Source commit: 022016a7694756c45f6c33f3e9cd4e4f95adee0d
+Purpose: Use ERROR as the sole error card prefix in Owner forms and eBay titles.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v04-to-2026-11-22-v05-patch.zip
+Changed files: Owner Add/Edit forms, shared title formatting, eBay generator, cache entry points, fixtures and release workflow.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+681e1866b3b6cfb2268344824c76a03de7d8c57ccc1aa191bbf3ef93d4603809  release/Collect-TCG-Dev-2026-11-22-v05-full.zip
+7a605229f617616a3e04fead6bffd1157715117c32a6154372a399f59137bff9  release/Collect-TCG-Dev-2026-11-22-v04-to-2026-11-22-v05-patch.zip
