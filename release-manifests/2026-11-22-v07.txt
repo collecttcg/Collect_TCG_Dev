@@ -1,0 +1,13 @@
+Version: 2026-11-22-v07
+Previous version: 2026-11-22-v06
+Source commit: a48bb8bd98012bc4b76b217cb5f1b816b2134206
+Purpose: Add the Owner Facebook Post · eBay Listings generator.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v07-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v06-to-2026-11-22-v07-patch.zip
+Changed files: Facebook eBay generator, tool routing, shared first-photo ZIP helper, cache entry points, fixtures and release workflow.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+b347e47a44b78bb644ae6d9f3d529a92d002e34bcd7d70f794cdf0e6888c7dfa  release/Collect-TCG-Dev-2026-11-22-v07-full.zip
+66bb87cc27cfffadb042c3c93db0ad367cb7032f782fb05eb6ec01200bff7a5a  release/Collect-TCG-Dev-2026-11-22-v06-to-2026-11-22-v07-patch.zip
