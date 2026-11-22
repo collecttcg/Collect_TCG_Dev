@@ -178,6 +178,7 @@ function renderAddPage(){
         }
       }
     });
+    return formState;
   }
 
   Object.assign(appContext,{renderAddPage});

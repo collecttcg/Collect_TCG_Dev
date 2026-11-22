@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   extractCardCode, extractPsaCert, extractGradingCompany, extractGrade, extractYear, extractLanguage, extractGame, extractPsaLabelName,
-  resolveCreateWorker, findExistingCardByCode, buildCardScanResult, buildInventoryPriceRecommendation, buildMarketSearches, normalizeAiScanResult, normalizeAiMarketPrice
+  resolveCreateWorker, findExistingCardByCode, buildCardScanResult, buildInventoryPriceRecommendation, buildMarketSearches, normalizeAiScanResult, normalizeAiMarketPrice, resolveScanInventoryMatch
 } from '../dev/src/features/owner/card-scanner.js';
 
 test('card scanner extracts ONE PIECE card numbers from OCR variants',()=>{
@@ -98,4 +98,28 @@ test('scanner metadata helpers stay conservative',()=>{
 
 test('Tesseract createWorker resolver supports named and default ESM exports',()=>{
   const named=()=>{}; const fallback=()=>{}; assert.equal(resolveCreateWorker({createWorker:named}),named); assert.equal(resolveCreateWorker({default:{createWorker:fallback}}),fallback); assert.equal(resolveCreateWorker({default:{}}),null);
+});
+
+test("identification uses compatible inventory evidence and asks before choosing an error variant",()=>{
+  const corrected={id:"corrected",card_code:"C06",name:"ZORO",game:"One Piece Hyper Battle",series:"1st Stage",language:"JP",year:1999};
+  const errata={...corrected,id:"errata",name:"ERROR ZORO"};
+  const modern={...corrected,id:"modern",game:"One Piece Card Game",language:"ENG",year:2024};
+  const detected={card_code:"c06",game:"One Piece Carddass Hyper Battle",series:"First Stage",language:"Japanese",year:"1999"};
+  assert.equal(resolveScanInventoryMatch([modern,corrected],detected).matched_card,corrected);
+  const ambiguous=resolveScanInventoryMatch([modern,corrected,errata],detected);
+  assert.equal(ambiguous.matched_card,null);
+  assert.deepEqual(ambiguous.match_candidates.map(card=>card.id),["corrected","errata"]);
+  assert.equal(resolveScanInventoryMatch([errata],detected).matched_card,null);
+  assert.equal(resolveScanInventoryMatch([modern],detected).match_conflict,true);
+  const scan=normalizeAiScanResult({...detected,name:"[PRE ERRATA] [ERROR] ZORO",format:"Graded",grading_company:"PSA",cert:"C06"},[errata]);
+  assert.equal(scan.name,"ZORO");
+  assert.equal(scan.cert,"");
+});
+
+test("scanner inventory pricing excludes wrong printing, language and grade",()=>{
+  const exact={card_code:"C06",name:"ERROR ZORO",game:"One Piece Hyper Battle",series:"1st Stage",language:"JP",year:1999,format:"Graded",grading:[{company:"PSA",grade:"9"}],price_myr:500};
+  const wrong=[{...exact,name:"ZORO",price_myr:100},{...exact,language:"ENG",price_myr:200},{...exact,grading:[{company:"PSA",grade:"8"}],price_myr:400}];
+  const scan={...exact,game:"One Piece Carddass Hyper Battle",company:"PSA",grade:"9"};
+  assert.equal(buildInventoryPriceRecommendation([...wrong,exact],scan).myr,500);
+  assert.equal(buildInventoryPriceRecommendation(wrong,scan),null);
 });
