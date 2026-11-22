@@ -208,7 +208,7 @@ function ebayListingTitle(card){
     const clean = value => String(value ?? "").trim().replace(/\s+/g, " ");
     const vintage = appContext.normalizeFilterValue(card.era) === "vintage" ? "Vintage" : "";
     const prefix = [vintage, appContext.fbGameLabel(card), card.series, card.year].map(clean).filter(Boolean).join(" ");
-    const name = clean(card.name);
+    const name = clean(appContext.formatPreErrataErrorName(card.name));
     const code = clean(card.card_code);
     const title = [prefix, name, code].filter(Boolean).join(" ");
     const limit = 80;

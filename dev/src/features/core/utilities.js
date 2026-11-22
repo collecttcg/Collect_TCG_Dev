@@ -1,5 +1,18 @@
 /** Module: features/core/utilities. Shared dependencies are explicit on appContext. */
 export function register(appContext){
+const preErrataErrorPrefix = /^(?:(?:\[PRE ERRATA\]\s*\[ERROR\]\s*|PRE ERRATA ERROR(?:\s+|$)))+/i;
+
+function hasPreErrataErrorPrefix(name){
+    return preErrataErrorPrefix.test(String(name??"").trimStart());
+  }
+
+function formatPreErrataErrorName(name, enabled=hasPreErrataErrorPrefix(name)){
+    const value=String(name??"");
+    if(!enabled && !hasPreErrataErrorPrefix(value)) return value;
+    const baseName=value.trimStart().replace(preErrataErrorPrefix,"");
+    return enabled ? ["PRE ERRATA ERROR",baseName].filter(Boolean).join(" ") : baseName;
+  }
+
 function rawConditionShortLabel(condition){
     const value=String(condition||"").trim();
     if(!value) return "";
@@ -126,7 +139,7 @@ function publishedSeoCardUrl(card){
     return slug ? appContext.seoCardUrl(card,slug) : "";
   }
 
-  Object.assign(appContext,{rawConditionShortLabel,rawConditionFilterLabel,safeCardId,seoSlugPart,seoCardSlug,siteRootUrl,seoCardUrl,loadSeoCardSlugMap,loadOwnerCardRouteSlugMap,publishedSeoCardUrl});
+  Object.assign(appContext,{hasPreErrataErrorPrefix,formatPreErrataErrorName,rawConditionShortLabel,rawConditionFilterLabel,safeCardId,seoSlugPart,seoCardSlug,siteRootUrl,seoCardUrl,loadSeoCardSlugMap,loadOwnerCardRouteSlugMap,publishedSeoCardUrl});
 }
 
 /** State and event initialization; called in preserved startup order. */

@@ -191,7 +191,7 @@ function fieldsTemplate(p){
       <div class="field">
         <label class="psa-image-privacy-toggle" for="${p}PreErrataError">
           <input type="checkbox" id="${p}PreErrataError">
-          <span><strong>Pre-errata / error card</strong><small>When checked, the saved card title starts with [PRE ERRATA] [ERROR]. Uncheck to remove both tags.</small></span>
+          <span><strong>Pre-errata / error card</strong><small>When checked, the saved card title starts with PRE ERRATA ERROR. Uncheck to remove both tags.</small></span>
         </label>
       </div>
       <div class="field-row">
@@ -1672,19 +1672,19 @@ function wireAutoCapitalization(p){
 function wirePreErrataError(p){
     const nameInput=appContext.$(p + "Name");
     const errorToggle=appContext.$(p + "PreErrataError");
-    if(!nameInput || !errorToggle || errorToggle.dataset.titleToggleWired) return;
+    if(!nameInput || !errorToggle) return;
+    errorToggle.checked=appContext.hasPreErrataErrorPrefix(nameInput.value);
+    nameInput.value=appContext.formatPreErrataErrorName(nameInput.value);
+    if(errorToggle.dataset.titleToggleWired) return;
     errorToggle.dataset.titleToggleWired="1";
-    errorToggle.checked=/^\[PRE ERRATA\]\s*\[ERROR\]\s*/i.test(nameInput.value);
     errorToggle.addEventListener("change",()=>{
-      const baseName=nameInput.value.replace(/^(?:\[PRE ERRATA\]\s*\[ERROR\]\s*)+/i,"").trimStart();
-      nameInput.value=(errorToggle.checked ? "[PRE ERRATA] [ERROR] " : "")+baseName;
+      nameInput.value=appContext.formatPreErrataErrorName(nameInput.value,errorToggle.checked);
     });
   }
 
 function populateFields(p, card){
     appContext.wireAutoCapitalization(p);
     const storedName=String(card?.name||"");
-    const errorPrefix=/^\[PRE ERRATA\]\s*\[ERROR\]\s*/i;
     const nameInput=appContext.$(p + "Name");
     nameInput.value=storedName;
     appContext.wirePreErrataError(p);
@@ -1714,7 +1714,7 @@ function populateFields(p, card){
 function collectFields(p, id, formState){
     return {
       id: id || appContext.uid(),
-      name: (appContext.$(p + "PreErrataError")?.checked ? "[PRE ERRATA] [ERROR] " : "") + appContext.$(p + "Name").value.trim().replace(/^(?:\[PRE ERRATA\]\s*\[ERROR\]\s*)+/i,"").toUpperCase(),
+      name: appContext.formatPreErrataErrorName(appContext.$(p + "Name").value.trim(), Boolean(appContext.$(p + "PreErrataError")?.checked)).toUpperCase(),
       card_code: appContext.$(p + "CardCode").value.trim().toUpperCase(),
       year: appContext.normalizeYearValue(appContext.$(p + "Year").value),
       game: appContext.$(p + "Game").value.trim(),

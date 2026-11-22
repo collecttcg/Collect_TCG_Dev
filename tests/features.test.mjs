@@ -1166,13 +1166,27 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   const registry=readSource('../dev/src/app/register-features.js');
   assert.match(forms,/id="\$\{p\}PreErrataError"/);
   assert.match(forms,/nameInput\.value=storedName/);
-  assert.match(forms,/errorToggle\.checked=\/\^/);
   assert.match(forms,/errorToggle\.addEventListener\("change"/);
   assert.match(forms,/wirePreErrataError,populateFields/);
   assert.match(readSource("../dev/src/features/owner/add.js"),/else appContext\.wirePreErrataError\("add"\)/);
-  assert.match(forms,/\[PRE ERRATA\] \[ERROR\]/);
   assert.match(forms,/PreErrataError"\)\?\.checked/);
   assert.match(registry,/forms\.js\?v=[^\x27]+/);
+  const a=app();
+  const name={value:"[PRE ERRATA] [ERROR] ZORO"};
+  const toggle={dataset:{},addEventListener(type,listener){this.change=listener;}};
+  a.$=id=>id==="editName" ? name : id==="editPreErrataError" ? toggle : {value:""};
+  a.wirePreErrataError("edit");
+  assert.equal(toggle.checked,true);
+  assert.equal(name.value,"PRE ERRATA ERROR ZORO");
+  assert.equal(a.collectFields("edit","card",{images:[],grading:[]}).name,"PRE ERRATA ERROR ZORO");
+  toggle.checked=false;
+  toggle.change();
+  assert.equal(name.value,"ZORO");
+  name.value="PRE ERRATA ERROR ZORO";
+  a.wirePreErrataError("edit");
+  assert.equal(toggle.checked,true);
+  assert.equal(a.ebayListingTitle({game:"One Piece Card Game",name:"[PRE ERRATA] [ERROR] ZORO",card_code:"C06",era:"Vintage"}),"Vintage ONE PIECE PRE ERRATA ERROR ZORO C06");
+  assert.equal(a.ebayListingTitle({name:"[PROMO] ZORO"}),"[PROMO] ZORO");
 });
 
 test("Sold Facebook post shows the USD price on one line and preserves the eBay URL",()=>{
