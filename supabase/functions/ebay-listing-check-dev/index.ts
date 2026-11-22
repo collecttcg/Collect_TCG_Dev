@@ -95,6 +95,7 @@ Deno.serve(async request => {
     const rows: { id: string; notes: string }[] = [];
     for (let offset = 0;; offset += 250) {
       const { data, error } = await db.from("cards").select("id,notes")
+        .eq("availability", "Available").eq("lifecycle_status", "live")
         .ilike("notes", "%eBay listing:%").order("id").range(offset, offset + 249);
       if (error) throw Error("Inventory read failed");
       rows.push(...data);
@@ -132,9 +133,10 @@ Deno.serve(async request => {
       if (notes === row.notes) continue;
       matchingCards++;
       if (input.apply !== true) continue;
-      // An Owner edit or relisting that changed the notes wins over the scan.
+      // Skip cards that left Inventory or whose notes changed during the scan.
       const { data, error } = await db.from("cards").update({ notes })
-        .eq("id", row.id).eq("notes", row.notes).select("id");
+        .eq("id", row.id).eq("notes", row.notes)
+        .eq("availability", "Available").eq("lifecycle_status", "live").select("id");
       if (error) writeErrors++;
       else updated += data.length;
     }
