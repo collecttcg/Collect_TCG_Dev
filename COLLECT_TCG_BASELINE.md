@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development eBay title fitting — 2026-11-22-v06
+
+- Replaces Development `2026-11-22-v05`. Titles up to 80 characters retain their complete text. Overlong titles preserve applicable Vintage and ERROR labels, prioritize the card name and number, and shorten catalogue labels first. CARDDASS is optional under space pressure. An exceptionally long card number may be clipped when it cannot fit with reserved labels.
+- JavaScript, character-budget fixtures, retained contracts and SEO checks passed. Pages deployment succeeded and the live entry and generator matched. No SQL required. Browser interactions were not tested.
+- [Manifest](release-manifests/2026-11-22-v06.txt) and [integrity-checked full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44984151681/artifacts/14738537962).
+
+
 ## Development error card titles — 2026-11-22-v05
 
 - Replaces Development `2026-11-22-v04`. Owner Add/Edit and the eBay title generator use `ERROR` for error cards. Both previous prefix formats remain recognized, and unchecking the editor checkbox clears the prefix. No catalogue rewrite or SQL required.
