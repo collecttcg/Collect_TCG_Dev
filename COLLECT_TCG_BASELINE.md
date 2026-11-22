@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `f95649f81133f917950dbc018cbba786998bf236`.
+- Development latest non-baseline commit: `18df244e30d32e222f065a64dce420e1d8a459d4`.
 - Production latest non-baseline commit: `fae891da787b293eece9ec2b3896ae7411ef71b9`.
 - Production rollback ref: `fae891da787b293eece9ec2b3896ae7411ef71b9`.
 - Latest local release manifest: [`2026-11-22-v02`](release-manifests/2026-11-22-v02.txt) from `b0185b16649c450bc900aa5f23cf56723db039c6`.
-- Latest local change: `f95649f81133f917950dbc018cbba786998bf236` · Development 2026-11-22-v02: record package validation.
+- Latest local change: `18df244e30d32e222f065a64dce420e1d8a459d4` · Release Development 2026-11-22-v03 Vintage eBay titles.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
