@@ -1,0 +1,13 @@
+Version: 2026-11-22-v08
+Previous version: 2026-11-22-v07
+Source commit: 4fb06598b30bdcbbee88814e4193c7691d57afdd
+Purpose: Improve Development AI scanner image input, variant matching and pricing safeguards.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v08-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v07-to-2026-11-22-v08-patch.zip
+Changed files: Owner Add and scanner modules, Development Edge Function, cache entry points, tests and release workflow.
+SQL required: No. Development scanner Edge Function deployment required.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+d90be3635271166a9f75b33fb015fb3aefa0b84271aaeb242d3046318cb14a30  release/Collect-TCG-Dev-2026-11-22-v08-full.zip
+9962498d1ae86320af62c556600c023e423b855ca83451fab5652fe401ba1bf8  release/Collect-TCG-Dev-2026-11-22-v07-to-2026-11-22-v08-patch.zip
