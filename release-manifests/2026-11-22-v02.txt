@@ -1,0 +1,13 @@
+Version: 2026-11-22-v02
+Previous version: 2026-11-22-v01
+Source commit: b0185b16649c450bc900aa5f23cf56723db039c6
+Purpose: Let Owners move the CTA and QR watermark banner independently on each photo.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v01-to-2026-11-22-v02-patch.zip
+Changed files: Owner Add/Edit photo controls, watermark renderer, cache entry points and release workflow.
+SQL required: No.
+Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+2df3f6175717812e489d36c8a4d58e50ff7c95509c9bac14e1d7423e323e0208  release/Collect-TCG-Dev-2026-11-22-v02-full.zip
+811cab4334f0930f99d02414f0919c9d6931007c2e9642b5ef7540c805aa686d  release/Collect-TCG-Dev-2026-11-22-v01-to-2026-11-22-v02-patch.zip
