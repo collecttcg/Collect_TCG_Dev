@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Sold eBay URLs recovered from order report
 
-- Restored 22 verified links on live Sold cards from the seller-provided eBay Orders Report. Replaced the `eBay listing: yes` placeholders with exact item URLs and preserved other notes and existing links. This was a shared data correction with no migration, website release, or schedule change.
+- Restored 22 verified links on live Sold cards from the seller-provided eBay Orders Report. Replaced the `eBay listing: yes` placeholders with exact item URLs and preserved other notes and existing links. A second review included rows with blank payment dates and restored 31 more verified links, including C04 Luffy, C08 Roronoa Zoro and C27 Mohji, for a total of 53. This was a shared data correction with no migration, website release, or schedule change.
 
 
 ## Shared daily eBay cleanup — 2026-11-23
