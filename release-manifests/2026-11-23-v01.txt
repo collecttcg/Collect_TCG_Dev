@@ -1,0 +1,13 @@
+Version: 2026-11-23-v01
+Previous version: 2026-11-22-v10
+Source commit: a6302ec1d9fce52dc82dbb93053eb2409368903d
+Purpose: Limit scheduled eBay link cleanup to live Available cards.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v10-to-2026-11-23-v01-patch.zip
+Changed files: Dev eBay listing checker, regression fixture, baseline and release workflow.
+SQL required: No.
+Validation: npm run validate; eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Shared Edge Function deployment and live eBay lookups were not performed.
+
+c6460e20b17877636a62fe3f343400f13463e8f49c8d83db5cf603712d410fe0  release/Collect-TCG-Dev-2026-11-23-v01-full.zip
+6bcf3b326912d654a1471e88d4e9ca789c18f973118151d95bc9bdcf80d0ebf5  release/Collect-TCG-Dev-2026-11-22-v10-to-2026-11-23-v01-patch.zip
