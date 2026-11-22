@@ -12,6 +12,13 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development movable watermark — 2026-11-22-v02
+
+- Replaces Development `2026-11-22-v01`. The Owner Add/Edit editor can reposition the CTA/QR banner per photo in either watermark mode. It renders the new position from the clean photo and saves it through the existing image-variant path. Placement coordinates are held for the current edit session, while the saved position is part of the image. The separate logo overlay retains its existing placement. No SQL required.
+- Repository and SEO checks passed, along with mocked canvas and save preparation checks. The deployed homepage and changed modules matched the release. Desktop, mobile and Safari interactions were not tested. Refactoring review consolidated banner geometry between the renderer and placement guide.
+- [Manifest](release-manifests/2026-11-22-v02.txt) and [integrity-checked full and patch ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/44973647647/artifacts/14734687700).
+
+
 ## Qualified card view traffic source — shared Supabase migration
 
 - Applied and verified `dev_2026_11_22_v01_qualified_card_view_source` with explicit approval. It adds a nullable source category and separate writer and Owner-only reader RPCs. Existing writer and reader RPCs remain available and table RLS remains enabled.
