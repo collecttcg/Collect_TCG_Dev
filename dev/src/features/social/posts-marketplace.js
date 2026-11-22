@@ -207,25 +207,58 @@ function ebayListingTitle(card){
     if(!card) return "";
     const clean = value => String(value ?? "").trim().replace(/\s+/g, " ");
     const vintage = appContext.normalizeFilterValue(card.era) === "vintage" ? "Vintage" : "";
-    const prefix = [vintage, appContext.fbGameLabel(card), card.series, card.year].map(clean).filter(Boolean).join(" ");
-    const name = clean(appContext.formatPreErrataErrorName(card.name));
-    const code = clean(card.card_code);
-    const title = [prefix, name, code].filter(Boolean).join(" ");
+    let game = clean(appContext.fbGameLabel(card));
+    let series = clean(card.series);
+    const year = clean(card.year);
+    const formattedName = clean(appContext.formatPreErrataErrorName(card.name));
+    const errorLabel = /^ERROR(?: |$)/.test(formattedName) ? "ERROR" : "";
+    let name = errorLabel ? formattedName.slice(errorLabel.length).trimStart() : formattedName;
+    let code = clean(card.card_code);
     const limit = 80;
-    if(title.length <= limit) return title;
+    const join = (...parts) => parts.filter(Boolean).join(" ");
+    const title = () => join(vintage, game, series, year, errorLabel, name, code);
+    const available = (...parts) => limit - join(...parts).length - Number(parts.some(Boolean));
+    const clip = (value, budget) => value.slice(0, Math.max(0, budget)).replace(/[\uD800-\uDBFF]$/, "").trimEnd();
+    const wholeWords = (value, budget) => {
+      if(value.length <= budget) return value;
+      const prefix = clip(value, budget);
+      return /\S/.test(value[budget] || "") && !value.slice(0, budget).endsWith(" ")
+        ? prefix.slice(0, Math.max(0, prefix.lastIndexOf(" ")))
+        : prefix;
+    };
 
-    // Keep the card number searchable when shortening a long card name.
-    const nameLimit = limit - prefix.length - code.length - Number(Boolean(prefix)) - Number(Boolean(code));
-    if(nameLimit <= 0){
-      if(!vintage || !code || code.length >= limit-vintage.length) return title.slice(0, limit).trim();
-      const prefixLimit = limit - code.length - 1;
-      return prefix.slice(0, prefixLimit).trimEnd() + " " + code;
+    if(title().length <= limit) return title();
+
+    // Shorten catalogue labels before sacrificing the name or card number.
+    game = game.replace(/\bCARDDASS\b/gi, "").replace(/\s+/g, " ").trim();
+    if(title().length <= limit) return title();
+
+    const shortSeries = series.replace(/\bCompilation\b/gi, "Comp.")
+      .replace(/\bAnniversary\b/gi, "Anniv.");
+    const seriesBudget = available(vintage, game, year, errorLabel, name, code);
+    if(seriesBudget >= 0){
+      series = wholeWords(shortSeries, seriesBudget);
+      return title();
     }
-    const clippedName = name.slice(0, nameLimit);
-    const shortName = /\S/.test(name[nameLimit] || "") && /\S$/.test(clippedName)
-      ? clippedName.replace(/\s+\S+$/, "")
-      : clippedName.trimEnd();
-    return [prefix, shortName, code].filter(Boolean).join(" ");
+    series = "";
+
+    const gameBudget = available(vintage, year, errorLabel, name, code);
+    const shortGame = wholeWords(game, gameBudget);
+    if(shortGame){
+      game = shortGame;
+      return title();
+    }
+
+    const nameBudget = available(vintage, game, year, errorLabel, code);
+    if(nameBudget > 0){
+      name = wholeWords(name, nameBudget) || clip(name, nameBudget);
+      return title();
+    }
+
+    // Malformed or unusually long metadata can exhaust even the reserved space.
+    code = clip(code, available(vintage, errorLabel));
+    name = wholeWords(name, available(vintage, errorLabel, code));
+    return join(vintage, errorLabel, name, code);
   }
 
 function ebayItemSpecifics(card){

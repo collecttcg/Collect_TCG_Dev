@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-22-v05 — Simplify error card titles.
+# 2026-11-22-v06 — Prioritize essential eBay title terms.
 on:
   workflow_dispatch:
   push:
@@ -34,9 +34,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-22-v05
-          PREVIOUS_VERSION: 2026-11-22-v04
-          PREVIOUS_COMMIT: d2bca8db6e0946aa445942d7e59951a3cd5fdcdb
+          RELEASE_VERSION: 2026-11-22-v06
+          PREVIOUS_VERSION: 2026-11-22-v05
+          PREVIOUS_COMMIT: 022016a7694756c45f6c33f3e9cd4e4f95adee0d
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -53,26 +53,26 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-22-v05-packages
+          name: Collect-TCG-Dev-2026-11-22-v06-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-22-v05-full.zip
-            release/Collect-TCG-Dev-2026-11-22-v04-to-2026-11-22-v05-patch.zip
+            release/Collect-TCG-Dev-2026-11-22-v06-full.zip
+            release/Collect-TCG-Dev-2026-11-22-v05-to-2026-11-22-v06-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-22-v05.txt'
+          MANIFEST='release-manifests/2026-11-22-v06.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-22-v05'
-            echo 'Previous version: 2026-11-22-v04'
+            echo 'Version: 2026-11-22-v06'
+            echo 'Previous version: 2026-11-22-v05'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Use ERROR as the sole error card prefix in Owner forms and eBay titles.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-22-v05-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-22-v04-to-2026-11-22-v05-patch.zip'
-            echo 'Changed files: Owner Add/Edit forms, shared title formatting, eBay generator, cache entry points, fixtures and release workflow.'
+            echo 'Purpose: Keep Vintage and prioritize the card name and number in long eBay titles.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-22-v06-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-22-v05-to-2026-11-22-v06-patch.zip'
+            echo 'Changed files: eBay title generator, cache entry points, fixtures and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari checks were not performed.'
@@ -82,6 +82,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-22-v05: record package validation'
+          git commit -m 'Development 2026-11-22-v06: record package validation'
           git pull --rebase origin main
           git push

@@ -964,7 +964,7 @@ test("Development 2026-09-29-v10 Post Generator titles start with the game categ
  assert.equal(a.ebayListingTitle({...card,year:null,series:"",card_code:""}),"ONE PIECE Monkey D. Luffy");
  const longName="CS 23 WINNER COMPLETE LAW KID HAWKINS KILLER DRAKE CAPONE";
  const longTitle=a.ebayListingTitle({...card,year:2023,name:longName});
- assert.equal(longTitle,"ONE PIECE Championship 2023 CS 23 WINNER COMPLETE LAW KID HAWKINS KILLER P-001");
+ assert.equal(longTitle,"ONE PIECE 2023 CS 23 WINNER COMPLETE LAW KID HAWKINS KILLER DRAKE CAPONE P-001");
  assert.ok(longTitle.length<=80);
  const vintageCard={...card,era:"Vintage",game:"One Piece Carddass Hyper Battle",series:"Grand Line Compilation 1",year:2001,name:"VIVI",card_code:"C411"};
  assert.equal(a.ebayListingTitle(vintageCard),"Vintage ONE PIECE CARDDASS HYPER BATTLE Grand Line Compilation 1 2001 VIVI C411");
@@ -973,6 +973,10 @@ test("Development 2026-09-29-v10 Post Generator titles start with the game categ
    assert.match(vintageTitle,/^Vintage .* C411$/);
    assert.ok(vintageTitle.length<=80);
  }
+ const tightVintage=a.ebayListingTitle({...vintageCard,name:"ERROR NEFERTARI VIVI"});
+ assert.equal(tightVintage,"Vintage ONE PIECE HYPER BATTLE Grand Line Comp. 1 2001 ERROR NEFERTARI VIVI C411");
+ const tightCode=a.ebayListingTitle({...vintageCard,game:"An exceptionally long game ".repeat(4),card_code:"X".repeat(83)});
+ assert.equal(tightCode,"Vintage "+"X".repeat(72));
  assert.equal(a.ebayListingTitle(null),"");
  assert.match(a.ebayItemSpecifics(card),/Language: English/);
  assert.match(a.ebayItemSpecifics(card),/Grade: PSA 10/);
