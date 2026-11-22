@@ -191,7 +191,7 @@ function fieldsTemplate(p){
       <div class="field">
         <label class="psa-image-privacy-toggle" for="${p}PreErrataError">
           <input type="checkbox" id="${p}PreErrataError">
-          <span><strong>Pre-errata / error card</strong><small>When checked, the saved card title starts with PRE ERRATA ERROR. Uncheck to remove both tags.</small></span>
+          <span><strong>Error card</strong><small>When checked, the saved card title starts with ERROR. Uncheck to remove the prefix.</small></span>
         </label>
       </div>
       <div class="field-row">

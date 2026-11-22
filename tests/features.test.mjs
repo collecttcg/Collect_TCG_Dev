@@ -1177,15 +1177,18 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   a.$=id=>id==="editName" ? name : id==="editPreErrataError" ? toggle : {value:""};
   a.wirePreErrataError("edit");
   assert.equal(toggle.checked,true);
-  assert.equal(name.value,"PRE ERRATA ERROR ZORO");
-  assert.equal(a.collectFields("edit","card",{images:[],grading:[]}).name,"PRE ERRATA ERROR ZORO");
+  assert.equal(name.value,"ERROR ZORO");
+  assert.equal(a.collectFields("edit","card",{images:[],grading:[]}).name,"ERROR ZORO");
   toggle.checked=false;
   toggle.change();
   assert.equal(name.value,"ZORO");
   name.value="PRE ERRATA ERROR ZORO";
   a.wirePreErrataError("edit");
   assert.equal(toggle.checked,true);
-  assert.equal(a.ebayListingTitle({game:"One Piece Card Game",name:"[PRE ERRATA] [ERROR] ZORO",card_code:"C06",era:"Vintage"}),"Vintage ONE PIECE PRE ERRATA ERROR ZORO C06");
+  assert.equal(name.value,"ERROR ZORO");
+  a.wirePreErrataError("edit");
+  assert.equal(toggle.checked,true);
+  assert.equal(a.ebayListingTitle({game:"One Piece Card Game",name:"[PRE ERRATA] [ERROR] ZORO",card_code:"C06",era:"Vintage"}),"Vintage ONE PIECE ERROR ZORO C06");
   assert.equal(a.ebayListingTitle({name:"[PROMO] ZORO"}),"[PROMO] ZORO");
 });
 
