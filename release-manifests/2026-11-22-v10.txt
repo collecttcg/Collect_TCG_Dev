@@ -1,0 +1,13 @@
+Version: 2026-11-22-v10
+Previous version: 2026-11-22-v09
+Source commit: 18eccca9ef8fcb05831cc4a99b9a377305ea414c
+Purpose: Allow any combination of owners and unassigned listings in the Facebook eBay picker.
+Full ZIP: Collect-TCG-Dev-2026-11-22-v10-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-22-v09-to-2026-11-22-v10-patch.zip
+Changed files: Facebook eBay generator, scoped checkbox styles, cache entry points, filter fixture and release workflow.
+SQL required: No.
+Validation: npm run validate; Facebook eBay selection, ordering, copy and ZIP fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari checks were not performed.
+
+b6bae2ec6eb9c1b6c76e9da984a3d75719a5dcad5c6f903d64cff18840ef4929  release/Collect-TCG-Dev-2026-11-22-v10-full.zip
+f396f1b285f7b6c682b53bc629fd4d1d348b1f018c7e729b009db1d211fa909d  release/Collect-TCG-Dev-2026-11-22-v09-to-2026-11-22-v10-patch.zip
