@@ -1,0 +1,13 @@
+Version: 2026-11-23-v13
+Previous version: 2026-11-23-v04
+Source commit: ba97198f8c6c3be124c592729ef11412942b990e
+Purpose: Fill Sold rows, preserve Facebook post listing links, and include earlier title and SOLD ribbon updates.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v13-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v13-patch.zip
+Changed files: Sold pagination, Facebook post generator, PNG asset, listing CSS, download renderer, cache references, regression fixtures and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari listing/download checks were not exercised by CI.
+
+142228d3f0ec7f5082e6a058f08317ccdacb30db3d5ffa63a1a07455a0255512  release/Collect-TCG-Dev-2026-11-23-v13-full.zip
+9f67c5bf2800cfbab8e6c4f990c65e48eb92a8b58da6f9723cc272489d3f2cf3  release/Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v13-patch.zip
