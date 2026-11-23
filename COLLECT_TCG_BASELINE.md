@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Inventory toolbar — 2026-11-23-v19
+
+- Removed Copy Filtered Link in v18 and removed Inventory Export Collage and Inventory QR in v19, including the mobile Inventory collage control. Desktop and mobile Rearrange Inventory and Collection's collage export remain available. Updated Inventory shell and controller, cache references, regression test and release workflow.
+- All 89 tests, release contracts and both v19 ZIP integrity checks passed. Interactive browser and Pages deployment checks were not performed. No SQL required. [Manifest](release-manifests/2026-11-23-v19.txt).
+
 ## Inventory pagination controls — 2026-11-23-v17
 
 - Restored the shared pagination mounts and scroll guard on Inventory. The listing-shell fixture exercised Inventory, Sold and Collection. Live browser testing was performed on Production. No SQL required. [Release manifest](release-manifests/2026-11-23-v17.txt).
