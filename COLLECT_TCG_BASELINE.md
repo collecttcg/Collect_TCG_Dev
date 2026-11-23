@@ -12,9 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
-## Development SOLD download ribbon — validation pending
+## Development SOLD listing and download ribbon — validation pending
 
 - The supplied transparent PNG replaces the generated SOLD ribbon on the shared image-download renderer. The top-left ribbon scales to the lesser of 51.5% of image width and 38.5% of image height. Existing Sold eligibility remains in force.
+- Sold listing thumbnails and the details gallery now render the same PNG through the existing status corners. The stylesheet and asset path were checked locally.
 - Local syntax and mocked export checks passed for Sold, Reserved and Available cards and for the manual sample dimensions, square and tall photos. No SQL required. Release manifest, ZIP packaging, deployed UI and browser downloads were not yet verified.
 
 
