@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development eBay social links — 2026-11-23-v15
+
+- Replaces `2026-11-23-v14`. The desktop social strip and mobile page footer show five eBay account links in Contact-page order alongside Instagram and Facebook. The change is limited to `dev/index.html` and the release workflow. No SQL required.
+- The 89 repository tests, link markup checks, SEO checks and ZIP integrity checks passed. Interactive desktop, mobile and Safari rendering and Pages deployment were not independently verified. [Release manifest](release-manifests/2026-11-23-v15.txt).
+
 ## Development desktop toolbar — 2026-11-23-v14
 
 - Replaces `2026-11-23-v13`. Desktop Sort and Filters use the same toolbar height as Currency. Updated `dev/src/styles/02-components.css` and its cache reference in `dev/index.html`.
