@@ -1,5 +1,12 @@
-/** Inventory pagination extracted from page.js. No visual or routing behavior changes. */
-export function createInventoryPagination(appContext,{draw,getFilterSignature,scrollToListingStart}){
+/** Align a preferred page size with complete grid rows. */
+export function fullRowPageSize(preferred, tracks){
+  const columns=tracks.trim().split(/\s+/);
+  if(!columns.every(track=>/^\d+(?:\.\d+)?px$/.test(track))) return preferred;
+  const count=columns.filter(track=>parseFloat(track)>0).length;
+  return count>1 ? Math.max(1,Math.round(preferred/count))*count : preferred;
+}
+
+export function createInventoryPagination(appContext,{draw,getFilterSignature,scrollToListingStart,getPageSize=()=>appContext.listingPerPage}){
   let filterSignature=null;
   let firstDraw=true;
 
@@ -25,10 +32,10 @@ export function createInventoryPagination(appContext,{draw,getFilterSignature,sc
     return items;
   }
 
-  function html(totalItems){
-    const totalPages=Math.max(1,Math.ceil(totalItems/appContext.listingPerPage));
-    const start=totalItems?((appContext.listingCurrentPage-1)*appContext.listingPerPage)+1:0;
-    const end=totalItems?Math.min(appContext.listingCurrentPage*appContext.listingPerPage,totalItems):0;
+  function html(totalItems,pageSize){
+    const totalPages=Math.max(1,Math.ceil(totalItems/pageSize));
+    const start=totalItems?((appContext.listingCurrentPage-1)*pageSize)+1:0;
+    const end=totalItems?Math.min(appContext.listingCurrentPage*pageSize,totalItems):0;
     return `<nav class="listing-pagination" aria-label="Listing pages">
       <div class="listing-pagination-summary"><strong>Showing ${start.toLocaleString()}–${end.toLocaleString()}</strong> of ${totalItems.toLocaleString()} listings · Page ${appContext.listingCurrentPage.toLocaleString()} of ${totalPages.toLocaleString()}</div>
       <div class="listing-pagination-pages">
@@ -42,12 +49,13 @@ export function createInventoryPagination(appContext,{draw,getFilterSignature,sc
   }
 
   function render(totalItems){
-    const totalPages=Math.max(1,Math.ceil(totalItems/appContext.listingPerPage));
+    const pageSize=getPageSize();
+    const totalPages=Math.max(1,Math.ceil(totalItems/pageSize));
     appContext.listingCurrentPage=Math.min(Math.max(1,appContext.listingCurrentPage),totalPages);
     ["listingPaginationTop","listingPaginationBottom"].forEach(id=>{
       const mount=appContext.$(id);if(!mount)return;
-      mount.hidden=totalItems<=appContext.listingPerPage;
-      mount.innerHTML=totalItems>appContext.listingPerPage?html(totalItems):"";
+      mount.hidden=totalItems<=pageSize;
+      mount.innerHTML=totalItems>pageSize?html(totalItems,pageSize):"";
     });
   }
 
@@ -65,7 +73,7 @@ export function createInventoryPagination(appContext,{draw,getFilterSignature,sc
   function handleClick(event){
     const button=event.target.closest(".listing-page-btn");
     if(!button||button.disabled)return;
-    const totalPages=Math.max(1,Math.ceil(appContext.getFiltered().length/appContext.listingPerPage));
+    const totalPages=Math.max(1,Math.ceil(appContext.getFiltered().length/getPageSize()));
     let next=appContext.listingCurrentPage;
     if(button.dataset.pageDirection==="prev")next=Math.max(1,next-1);
     else if(button.dataset.pageDirection==="next")next=Math.min(totalPages,next+1);
