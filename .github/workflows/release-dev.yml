@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v06 — Match manual SOLD ribbon size.
+# 2026-11-23-v07 — Adapt SOLD ribbon to photo proportions.
 on:
   workflow_dispatch:
   push:
@@ -39,9 +39,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-23-v06
-          PREVIOUS_VERSION: 2026-11-23-v05
-          PREVIOUS_COMMIT: f44ecf5fde09399096197d23b246f9c19f8dc71d
+          RELEASE_VERSION: 2026-11-23-v07
+          PREVIOUS_VERSION: 2026-11-23-v04
+          PREVIOUS_COMMIT: 680fcd48baa34500861531d6d7a155f184a85c26
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -58,26 +58,26 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-23-v06-packages
+          name: Collect-TCG-Dev-2026-11-23-v07-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-23-v06-full.zip
-            release/Collect-TCG-Dev-2026-11-23-v05-to-2026-11-23-v06-patch.zip
+            release/Collect-TCG-Dev-2026-11-23-v07-full.zip
+            release/Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v07-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-23-v06.txt'
+          MANIFEST='release-manifests/2026-11-23-v07.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-23-v06'
-            echo 'Previous version: 2026-11-23-v05'
+            echo 'Version: 2026-11-23-v07'
+            echo 'Previous version: 2026-11-23-v04'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Match the SOLD ribbon proportion in the supplied manual samples.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v06-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v05-to-2026-11-23-v06-patch.zip'
-            echo 'Changed files: Sold download renderer, cache entry points, regression fixture and release workflow.'
+            echo 'Purpose: Apply the supplied transparent SOLD ribbon, sized to fit portrait and landscape photos.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v07-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v07-patch.zip'
+            echo 'Changed files: PNG asset, sold download renderer, cache entry points, regression fixture and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari downloads were not exercised by CI.'
@@ -87,6 +87,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-23-v06: record package validation'
+          git commit -m 'Development 2026-11-23-v07: record package validation'
           git pull --rebase origin main
           git push
