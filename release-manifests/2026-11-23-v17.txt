@@ -1,0 +1,13 @@
+Version: 2026-11-23-v17
+Previous version: 2026-11-23-v16
+Source commit: a7c63f35976421db79fae0d90eb78a1fcac98043
+Purpose: Render the shared pagination bars on Inventory.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v17-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v16-to-2026-11-23-v17-patch.zip
+Changed files: Inventory shell, app cache references, release workflow and generated SEO output.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+542d047daea30fe315f84228de2c794299e3f5e9f3cd9fe3de1cf554e12f23d0  release/Collect-TCG-Dev-2026-11-23-v17-full.zip
+17303a420fd3d608da5a764d1874b046d2ccb614807f32f3c9ed40d47f317061  release/Collect-TCG-Dev-2026-11-23-v16-to-2026-11-23-v17-patch.zip
