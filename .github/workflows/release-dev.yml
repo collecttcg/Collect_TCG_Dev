@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v02 — Facebook first-photo collage export.
+# 2026-11-23-v03 — Larger Facebook collage numbers.
 on:
   workflow_dispatch:
   push:
@@ -37,9 +37,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-23-v02
-          PREVIOUS_VERSION: 2026-11-23-v01
-          PREVIOUS_COMMIT: a6302ec1d9fce52dc82dbb93053eb2409368903d
+          RELEASE_VERSION: 2026-11-23-v03
+          PREVIOUS_VERSION: 2026-11-23-v02
+          PREVIOUS_COMMIT: 7a6ded611f911ad0b00c7b5d437c8ad289e12160
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -56,26 +56,26 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-23-v02-packages
+          name: Collect-TCG-Dev-2026-11-23-v03-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-23-v02-full.zip
-            release/Collect-TCG-Dev-2026-11-23-v01-to-2026-11-23-v02-patch.zip
+            release/Collect-TCG-Dev-2026-11-23-v03-full.zip
+            release/Collect-TCG-Dev-2026-11-23-v02-to-2026-11-23-v03-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-23-v02.txt'
+          MANIFEST='release-manifests/2026-11-23-v03.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-23-v02'
-            echo 'Previous version: 2026-11-23-v01'
+            echo 'Version: 2026-11-23-v03'
+            echo 'Previous version: 2026-11-23-v02'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Limit the Facebook eBay photo ZIP to 25 images with ordered, numbered first-photo collages.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v02-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v01-to-2026-11-23-v02-patch.zip'
-            echo 'Changed files: Facebook eBay generator, shared photo ZIP generator, cache entry points, regression fixture and release workflow.'
+            echo 'Purpose: Increase Facebook collage listing-number size and reserve space below each photo.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v03-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v02-to-2026-11-23-v03-patch.zip'
+            echo 'Changed files: Shared collage renderer, cache entry points, label-size regression fixture and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari export were not exercised by CI.'
@@ -85,6 +85,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-23-v02: record package validation'
+          git commit -m 'Development 2026-11-23-v03: record package validation'
           git pull --rebase origin main
           git push
