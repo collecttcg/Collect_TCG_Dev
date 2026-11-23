@@ -1,8 +1,8 @@
 /** 2026-09-29-v10: Post Generator coordinator. */
 import { registerGiveawayPosts } from './posts-giveaway.js?v=2026-09-29-v09';
 import { registerMarketplacePosts } from './posts-marketplace.js?v=2026-11-22-v06';
-import { registerCardListPosts } from './posts-card-list.js?v=2026-11-22-v07';
-import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-22-v10';
+import { registerCardListPosts } from './posts-card-list.js?v=2026-11-23-v02';
+import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-23-v02';
 export function register(appContext){
 function compactGeneratedPostSpacing(value){
     const lines=String(value||"")
@@ -517,7 +517,7 @@ function facebookToolsHeaderHTML(mode){
 
         <a href="#/fb-tools?mode=facebook-ebay" class="fb-tools-switch ${mode==="facebook-ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="facebook-ebay" ? "true" : "false"}">
           <span class="fb-tools-switch-icon">f</span>
-          <span><strong>Facebook Post · eBay Listings</strong><small>Owner and era filters · first photos ZIP</small></span>
+          <span><strong>Facebook Post · eBay Listings</strong><small>Owner and era filters · Facebook photo ZIP</small></span>
         </a>
 
         <a href="#/fb-tools?mode=carousell"
