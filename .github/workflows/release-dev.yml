@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v01 — Limit eBay cleanup to live inventory.
+# 2026-11-23-v02 — Facebook first-photo collage export.
 on:
   workflow_dispatch:
   push:
@@ -37,9 +37,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-23-v01
-          PREVIOUS_VERSION: 2026-11-22-v10
-          PREVIOUS_COMMIT: 18eccca9ef8fcb05831cc4a99b9a377305ea414c
+          RELEASE_VERSION: 2026-11-23-v02
+          PREVIOUS_VERSION: 2026-11-23-v01
+          PREVIOUS_COMMIT: a6302ec1d9fce52dc82dbb93053eb2409368903d
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -56,35 +56,35 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-23-v01-packages
+          name: Collect-TCG-Dev-2026-11-23-v02-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-23-v01-full.zip
-            release/Collect-TCG-Dev-2026-11-22-v10-to-2026-11-23-v01-patch.zip
+            release/Collect-TCG-Dev-2026-11-23-v02-full.zip
+            release/Collect-TCG-Dev-2026-11-23-v01-to-2026-11-23-v02-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-23-v01.txt'
+          MANIFEST='release-manifests/2026-11-23-v02.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-23-v01'
-            echo 'Previous version: 2026-11-22-v10'
+            echo 'Version: 2026-11-23-v02'
+            echo 'Previous version: 2026-11-23-v01'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Limit scheduled eBay link cleanup to live Available cards.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v01-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-22-v10-to-2026-11-23-v01-patch.zip'
-            echo 'Changed files: Dev eBay listing checker, regression fixture, baseline and release workflow.'
+            echo 'Purpose: Limit the Facebook eBay photo ZIP to 25 images with ordered, numbered first-photo collages.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v02-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v01-to-2026-11-23-v02-patch.zip'
+            echo 'Changed files: Facebook eBay generator, shared photo ZIP generator, cache entry points, regression fixture and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
-            echo 'Validation limitations: Shared Edge Function deployment and live eBay lookups were not performed.'
+            echo 'Validation limitations: Interactive desktop, mobile and Safari export were not exercised by CI.'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-23-v01: record package validation'
+          git commit -m 'Development 2026-11-23-v02: record package validation'
           git pull --rebase origin main
           git push
