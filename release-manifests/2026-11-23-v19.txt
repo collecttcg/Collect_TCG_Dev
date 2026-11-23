@@ -1,0 +1,13 @@
+Version: 2026-11-23-v19
+Previous version: 2026-11-23-v18
+Source commit: aaa4fed8a1ae0b4869ad34076c034d819dfa479b
+Purpose: Remove Inventory Export Collage and Inventory QR, following the Copy Filtered Link removal.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v19-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v18-to-2026-11-23-v19-patch.zip
+Changed files: Inventory shell and page controller, cache references and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+30f69fd888b258cd0c081b24b9057c8ad8dcb10db63234b72a9b1514d06b0380  release/Collect-TCG-Dev-2026-11-23-v19-full.zip
+9d3934c569a9042d44566a83ef75e0e95dd24654d03517c9168521e7e6f0d146  release/Collect-TCG-Dev-2026-11-23-v18-to-2026-11-23-v19-patch.zip
