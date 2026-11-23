@@ -367,13 +367,13 @@ function inventoryPageHTML(scopeMeta,scope){
       <div class="pill-filter-summary active-filter-result-bridge" id="pillFilterSummary" hidden></div>
 
       <span id="inventoryMobileCompactResultCount" hidden>0</span>
-      ${!["inventory","collection"].includes(scope) ? `
+      ${!isCollection ? `
         <div class="listing-pagination-shell listing-pagination-top" id="listingPaginationTop" hidden></div>
       ` : ""}
 
       <div id="invGrid" aria-busy="true">${appContext.inventorySkeletonHTML(8)}</div>
 
-      ${!["inventory","collection"].includes(scope) ? `
+      ${!isCollection ? `
         <div class="listing-pagination-shell listing-pagination-bottom" id="listingPaginationBottom" hidden></div>
         <div class="listing-pagination-viewport-guard" id="listingPaginationViewportGuard" aria-hidden="true"></div>
       ` : ""}
