@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `ba97198f8c6c3be124c592729ef11412942b990e`.
-- Production latest non-baseline commit: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
+- Development latest non-baseline commit: `25be68142adf087b0eb747ccc1d6a83ca0531b40`.
+- Production latest non-baseline commit: `399ccbc8ef59f91a17f1319e16b3988015a40d9a`.
 - Production rollback ref: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
-- Latest local release manifest: [`2026-11-23-v04`](release-manifests/2026-11-23-v04.txt) from `680fcd48baa34500861531d6d7a155f184a85c26`.
-- Latest local change: `ba97198f8c6c3be124c592729ef11412942b990e` · Fix stale watermark cache assertion and validate release.
+- Latest local release manifest: [`2026-11-23-v13`](release-manifests/2026-11-23-v13.txt) from `ba97198f8c6c3be124c592729ef11412942b990e`.
+- Latest local change: `25be68142adf087b0eb747ccc1d6a83ca0531b40` · chore: refresh Development SEO card pages [skip ci].
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
