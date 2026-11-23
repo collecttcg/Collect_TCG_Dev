@@ -311,8 +311,7 @@ function shouldApplySoldDownloadWatermark(card){
   }
 
 async function drawSoldDownloadWatermark(ctx, canvas){
-    const shortSide = Math.min(canvas.width, canvas.height);
-    const ribbonSize = Math.min(shortSide, Math.max(150, Math.min(520, Math.round(shortSide * 0.42))));
+    const ribbonSize = Math.min(canvas.width, Math.round(canvas.height * 0.385));
     if(!appContext.soldDownloadRibbonPromise){
       appContext.soldDownloadRibbonPromise = new Promise((resolve,reject)=>{
         const ribbon = new Image();

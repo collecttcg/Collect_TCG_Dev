@@ -30,5 +30,11 @@ await context.renderSoldDownloadBlob('photo',{availability:'Sold'});
 assert.equal(loaded,1);
 assert.equal(draws.length,6);
 assert.deepEqual(draws[3].slice(1,7),[0,0,548,548,0,0]);
-assert.equal(draws[3][7],420*548/412);
+assert.equal(draws[3][7],578*548/412);
 assert.deepEqual(draws[3],draws[5]);
+
+for(const [width,height,size] of [[1800,1385,533],[960,1280,493],[1350,1800,693]]){
+  await context.drawSoldDownloadWatermark(canvasContext,{width,height});
+  assert.equal(draws.at(-1)[7],size*548/412);
+}
+assert.equal(loaded,1);
