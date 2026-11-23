@@ -1200,7 +1200,7 @@ test('Owner pre-errata/error checkbox round-trips through Add/Edit card name wit
   assert.equal(a.ebayListingTitle({name:"[PROMO] ZORO"}),"[PROMO] ZORO");
 });
 
-test("Sold Facebook post shows the USD price on one line and preserves the eBay URL",()=>{
+test("Sold Facebook post shows the USD price and preserves both listing URLs",()=>{
   const a=app();
   const websiteUrl="https://example.com/cards/luffy";
   const ebayUrl="https://www.ebay.com/itm/123456789012";
@@ -1211,7 +1211,7 @@ test("Sold Facebook post shows the USD price on one line and preserves the eBay 
   const sold=a.buildFbPostText(card,values);
   assert.match(sold,/^💰 SOLD PRICE: USD 1,250$/m);
   assert.ok(sold.includes("🛒 eBay Listing:\n"+ebayUrl));
-  assert.ok(!sold.includes(websiteUrl));
+  assert.ok(sold.includes("🔗 Card on Collect TCG:\n"+websiteUrl));
 
   const available=a.buildFbPostText({...card,availability:"Available"},values);
   assert.ok(available.includes(websiteUrl));
@@ -1227,6 +1227,7 @@ test("Sold Facebook post shows the USD price on one line and preserves the eBay 
   const missing=a.buildFbPostText({...card,price_usd:null,price:null,ebay_url:""},values);
   assert.match(missing,/^💰 SOLD PRICE: Price unavailable$/m);
   assert.doesNotMatch(missing,/🛒 eBay Listing:/);
+  assert.ok(missing.includes(websiteUrl));
 });
 
 test('On eBay quick filter uses published listing status and replaces the Championship button',()=>{
