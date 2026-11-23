@@ -442,7 +442,7 @@ async function fetchOwnerPrivateMeta(cardId){
 
     if(error){
       console.error("Private metadata read error:",error);
-      return {tags:[],notes:""};
+      return {tags:[],notes:"",failed:true};
     }
 
     return {
