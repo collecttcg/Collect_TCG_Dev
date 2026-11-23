@@ -1,5 +1,5 @@
 import { createInventoryPagination, fullRowPageSize } from './pagination.js?v=2026-11-23-v11';
-import { registerInventoryShell } from './page-shell.js?v=2026-11-15-v02';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v16';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
@@ -12,9 +12,8 @@ function renderInventoryPage(scope = "inventory"){
     appContext.listingAvailabilityScope = appContext.isInventoryRoute(scope) ? scope : "inventory";
 
     const listingParams=appContext.currentHashParams();
-    if(["inventory","collection"].includes(appContext.listingAvailabilityScope)){
-      // Grouped catalogue views are one continuous collapsible page.
-      // Old per/page URL values are intentionally ignored.
+    if(appContext.listingAvailabilityScope==="collection"){
+      // Collection remains a continuous page.
       appContext.listingPerPage=appContext.getSavedListingPerPage();
       appContext.listingCurrentPage=1;
     }else{
@@ -796,11 +795,12 @@ function renderInventoryPage(scope = "inventory"){
       }).join("");
     }
 
+    const fillsGridRows=["inventory","sold"].includes(appContext.listingAvailabilityScope);
     let inventoryPagination=null;
     let lastPageSize=appContext.listingPerPage;
     function listingPageSize(){
       const preferred=appContext.listingPerPage;
-      if(appContext.listingAvailabilityScope!=="sold") return preferred;
+      if(!fillsGridRows || collectionRearrangeMode) return preferred;
       const grid=appContext.$("invGrid");
       if(!grid || grid.classList.contains("compact-list")) return preferred;
       const style=getComputedStyle(grid);
@@ -870,11 +870,8 @@ function renderInventoryPage(scope = "inventory"){
         grid.classList.add("gold-card-stripes");
       }
 
-      if(["collection","inventory"].includes(appContext.listingAvailabilityScope)){
-        // Catalogue views remain continuous so discovery filters never split
-        // a selected game across pagination pages. Inventory and Collection
-        // both use the game-browser + continuous-grid layout, temporarily
-        // restoring grouped headers only while an owner is rearranging.
+      if(appContext.listingAvailabilityScope==="collection" || collectionRearrangeMode){
+        // Rearranging requires the entire catalogue so cards can move across page boundaries.
         appContext.listingCurrentPage=1;
         ["listingPaginationTop","listingPaginationBottom"].forEach(id=>{
           const mount=appContext.$(id);
@@ -1677,7 +1674,7 @@ function renderInventoryPage(scope = "inventory"){
       const mobileNow=appContext.isMobileInventoryLayout();
       const pageSize=listingPageSize();
       if(mobileNow===lastMobileInventoryLayout && pageSize===lastPageSize) return;
-      if(appContext.listingAvailabilityScope==="sold" && pageSize!==lastPageSize){
+      if(fillsGridRows && !collectionRearrangeMode && pageSize!==lastPageSize){
         const firstIndex=(appContext.listingCurrentPage-1)*lastPageSize;
         appContext.listingCurrentPage=Math.floor(firstIndex/pageSize)+1;
         appContext.updateListingUrlFromControls();
