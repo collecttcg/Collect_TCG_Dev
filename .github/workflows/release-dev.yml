@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v11 — Fill Sold grid rows and validate pending updates.
+# 2026-11-23-v12 — Validate Sold grid and Facebook listing links.
 on:
   workflow_dispatch:
   push:
@@ -39,7 +39,7 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-23-v11
+          RELEASE_VERSION: 2026-11-23-v12
           PREVIOUS_VERSION: 2026-11-23-v04
           PREVIOUS_COMMIT: 680fcd48baa34500861531d6d7a155f184a85c26
         run: |
@@ -58,25 +58,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-23-v11-packages
+          name: Collect-TCG-Dev-2026-11-23-v12-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-23-v11-full.zip
-            release/Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v11-patch.zip
+            release/Collect-TCG-Dev-2026-11-23-v12-full.zip
+            release/Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v12-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-23-v11.txt'
+          MANIFEST='release-manifests/2026-11-23-v12.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-23-v11'
+            echo 'Version: 2026-11-23-v12'
             echo 'Previous version: 2026-11-23-v04'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Fill complete Sold grid rows and include validated SOLD ribbon and Facebook title changes.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v11-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v11-patch.zip'
+            echo 'Purpose: Fill Sold rows, preserve Facebook post listing links, and include earlier title and SOLD ribbon updates.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v12-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v04-to-2026-11-23-v12-patch.zip'
             echo 'Changed files: Sold pagination, Facebook post generator, PNG asset, listing CSS, download renderer, cache references, regression fixtures and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
@@ -87,6 +87,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-23-v11: record package validation'
+          git commit -m 'Development 2026-11-23-v12: record package validation'
           git pull --rebase origin main
           git push
