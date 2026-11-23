@@ -1,0 +1,13 @@
+Version: 2026-11-23-v20
+Previous version: 2026-11-23-v19
+Source commit: c3cfef9e1ad35cbe584b0834ff92689532ec1f01
+Purpose: Remove the standalone collection link while retaining the collection page and sitemap.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v20-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v19-to-2026-11-23-v20-patch.zip
+Changed files: Development index and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+da936cbfc4659f03de88e01d19f88603f5192bdefa0a4bef4f72dcf540520e01  release/Collect-TCG-Dev-2026-11-23-v20-full.zip
+08ad7038d306beef5d96fbe03d1178262892304754374ae2ace5351c1ff7fcd1  release/Collect-TCG-Dev-2026-11-23-v19-to-2026-11-23-v20-patch.zip
