@@ -468,6 +468,8 @@ async function addFirstPhotoCollages(zip,cards,limit,progressCallback,failedCard
       const columns=Math.ceil(Math.sqrt(end-start));
       const rows=Math.ceil((end-start)/columns);
       const tile=Math.min(640,Math.floor(2048/Math.max(columns,rows)));
+      const numberSize=Math.min(54,Math.round(tile*0.12));
+      const numberHeight=numberSize+24;
       const canvas=document.createElement("canvas");
       canvas.width=columns*tile;
       canvas.height=rows*tile;
@@ -487,11 +489,12 @@ async function addFirstPhotoCollages(zip,cards,limit,progressCallback,failedCard
           try{
             if(!photo) throw new Error("No first photo");
             asset=await appContext.loadImageForCollectionCollage(photo);
-            appContext.collectionCollageDrawImageContain(ctx,asset.img,x+8,y+8,tile-16,tile-40);
+            appContext.collectionCollageDrawImageContain(ctx,asset.img,x+8,y+8,tile-16,tile-numberHeight-8);
             ctx.fillStyle="#ffffff";
-            ctx.font="bold 20px sans-serif";
+            ctx.font=`bold ${numberSize}px sans-serif`;
             ctx.textAlign="center";
-            ctx.fillText(String(index+1),x+tile/2,y+tile-12);
+            ctx.textBaseline="middle";
+            ctx.fillText(String(index+1),x+tile/2,y+tile-numberHeight/2);
             added++;
           }catch(error){
             failedCards.push({id:card.id,name:card.name,reason:error.message || "Image could not be read"});
