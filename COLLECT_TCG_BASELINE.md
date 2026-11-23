@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `ca60715b4c94b1b2f37928e08e1ae5e73b741dff`.
+- Development latest non-baseline commit: `ba97198f8c6c3be124c592729ef11412942b990e`.
 - Production latest non-baseline commit: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
 - Production rollback ref: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
 - Latest local release manifest: [`2026-11-23-v04`](release-manifests/2026-11-23-v04.txt) from `680fcd48baa34500861531d6d7a155f184a85c26`.
-- Latest local change: `ca60715b4c94b1b2f37928e08e1ae5e73b741dff` · Restore website links alongside Facebook Sold prices.
+- Latest local change: `ba97198f8c6c3be124c592729ef11412942b990e` · Fix stale watermark cache assertion and validate release.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
