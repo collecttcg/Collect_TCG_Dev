@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook single-card titles
+
+- Sold post titles use SOLD; available posts retain WTS. Condition and era labels precede the game. Saved titles with the previous layout are normalized for the preview and copy actions.
+- The separate album title is limited to 65 characters, abbreviates long names, removes duplicated card codes when shortening, and preserves the identifying tail and card code. Focused title checks passed. No SQL required.
+
+
 ## Development SOLD listing and download ribbon — validation pending
 
 - The supplied transparent PNG replaces the generated SOLD ribbon on the shared image-download renderer. The top-left ribbon scales to the lesser of 51.5% of image width and 38.5% of image height. Existing Sold eligibility remains in force.
