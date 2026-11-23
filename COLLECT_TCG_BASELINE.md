@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development larger Facebook collage numbers — 2026-11-23-v03
+
+- Replaces `2026-11-23-v02`. Facebook collage listing numbers grew from 20px to up to 54px, scaled for smaller tiles, with space reserved beneath each photo for the label.
+- Repository validation, collage label-size and ZIP fixtures, SEO checks, and both ZIP integrity checks passed. No SQL required. Interactive desktop, mobile and Safari exports were not tested. [Manifest](release-manifests/2026-11-23-v03.txt).
+
+
 ## Development Facebook eBay first-photo collages — 2026-11-23-v02
 
 - Replaces Development `2026-11-23-v01`. The Owner Facebook eBay generator exports at most 25 images. Selections up to 25 retain individual first photos. Larger selections group first photos into numbered JPEG collages in Facebook post order. Missing photos are counted and skipped.
