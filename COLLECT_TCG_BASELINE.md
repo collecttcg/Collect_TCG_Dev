@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development private Facebook listing URLs — 2026-11-23-v04
+
+- Replaces `2026-11-23-v03`. Owner Add/Edit includes an optional Facebook listing URL, read and written through `card_owner_private.notes`. Clearing the field removes the URL, and ordinary private notes are preserved. No public card data or SQL migration changed. Existing owner-only RLS and disabled anonymous SELECT were verified.
+- Repository, URL round-trip and privacy fixtures, SEO checks and both ZIP integrity checks passed. Live authenticated saves and interactive desktop, mobile and Safari were not tested. [Manifest](release-manifests/2026-11-23-v04.txt).
+
+
 ## Development larger Facebook collage numbers — 2026-11-23-v03
 
 - Replaces `2026-11-23-v02`. Facebook collage listing numbers grew from 20px to up to 54px, scaled for smaller tiles, with space reserved beneath each photo for the label.
