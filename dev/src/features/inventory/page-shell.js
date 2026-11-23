@@ -115,6 +115,14 @@ function inventoryPageHTML(scopeMeta,scope){
             </button>
           ` : ""}
 
+          ${scope==="inventory" && appContext.canManageCollectionOrder() ? `
+            <button type="button"
+                    class="btn-ghost collection-rearrange-btn"
+                    id="inventoryRearrangeBtn"
+                    title="Rearrange Inventory game categories and cards">
+              ⇅ Rearrange Inventory
+            </button>
+          ` : ""}
         </div>
       </div>
 
