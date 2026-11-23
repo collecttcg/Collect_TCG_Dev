@@ -1,5 +1,5 @@
 import { createInventoryPagination, fullRowPageSize } from './pagination.js?v=2026-11-23-v11';
-import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v17';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v18';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
@@ -1892,26 +1892,6 @@ function renderInventoryPage(scope = "inventory"){
 
         draw();
       });
-    });
-
-    appContext.$("copyFilterLinkBtn")?.addEventListener("click", async ()=>{
-      appContext.updateListingUrlFromControls();
-      const url = location.href;
-      try{
-        await navigator.clipboard.writeText(url);
-        appContext.showToast("Filtered link copied");
-      }catch{
-        const input = document.createElement("textarea");
-        input.value = url;
-        input.setAttribute("readonly","");
-        input.style.position = "fixed";
-        input.style.opacity = "0";
-        document.body.appendChild(input);
-        input.select();
-        document.execCommand("copy");
-        input.remove();
-        appContext.showToast("Filtered link copied");
-      }
     });
 
     function syncPillFilterSummary(){
