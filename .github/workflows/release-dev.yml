@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v19 — Simplify Inventory toolbar.
+# 2026-11-23-v19 — Simplify Inventory toolbar and update its regression check.
 on:
   workflow_dispatch:
   push:
