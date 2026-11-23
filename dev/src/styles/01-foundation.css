@@ -1429,20 +1429,20 @@
   }
 
   .status-corner-sold{
-    background:#f52b22;
+    clip-path:none;
+    -webkit-clip-path:none;
+    filter:none;
   }
 
   .status-corner-sold::before{
-    content:"SOLD";
-    color:#fff;
-    top:30%;
-    left:4%;
-    width:66%;
-    font-size:clamp(10px, 22cqw, 33px);
-    letter-spacing:clamp(.05px, .38cqw, .7px);
-    text-shadow:
-      0 4px 5px rgba(0,0,0,.48),
-      0 1px 2px rgba(0,0,0,.36);
+    content:"";
+    inset:0 auto auto 0;
+    width:133%;
+    height:133%;
+    transform:none;
+    background:url("../../assets/sold-download-ribbon.png") no-repeat left top;
+    /* Keep the red section the size of the status corner and include its shadow. */
+    background-size:147.81% 197.08%;
   }
 
   .status-corner-reserved{
@@ -1494,14 +1494,6 @@
   }
   /* Small-card safeguard: labels scale with the ribbon and stay fully visible. */
   @container (max-width: 105px){
-    .status-corner-sold::before{
-      top:31%;
-      left:5%;
-      width:64%;
-      font-size:20cqw;
-      letter-spacing:.18cqw;
-    }
-
     .status-corner-reserved::before{
       top:31%;
       left:1%;
@@ -1512,14 +1504,6 @@
   }
 
   @container (max-width: 75px){
-    .status-corner-sold::before{
-      top:32%;
-      left:6%;
-      width:62%;
-      font-size:18cqw;
-      letter-spacing:.1cqw;
-    }
-
     .status-corner-reserved::before{
       top:32%;
       left:2%;
@@ -12551,23 +12535,6 @@ body.light-mode .sticky-mobile-results-action small{
 @media(max-width:800px){
   .thumb-wrap .status-corner-reserved::before,
   .thumb-placeholder .status-corner-reserved::before{
-    top:27% !important;
-    left:-1% !important;
-    width:79% !important;
-    font-size:clamp(9px, 18.5cqw, 28px) !important;
-    letter-spacing:clamp(0px, .05cqw, .2px) !important;
-  }
-}
-
-
-/* =========================================================
-   MOBILE LISTING OVERVIEW — SOLD OVERLAY TEXT BIGGER
-   Match the Reserved mobile readability improvement.
-   Desktop and download watermark are unchanged.
-   ========================================================= */
-@media(max-width:800px){
-  .thumb-wrap .status-corner-sold::before,
-  .thumb-placeholder .status-corner-sold::before{
     top:27% !important;
     left:-1% !important;
     width:79% !important;
