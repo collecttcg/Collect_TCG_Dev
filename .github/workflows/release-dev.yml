@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v15 — Show five eBay accounts in responsive social links.
+# 2026-11-23-v16 — Paginate Inventory with full grid rows.
 on:
   workflow_dispatch:
   push:
@@ -39,9 +39,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-23-v15
-          PREVIOUS_VERSION: 2026-11-23-v14
-          PREVIOUS_COMMIT: 46cd20394a5fda257e7366436c88daf7f28b01fb
+          RELEASE_VERSION: 2026-11-23-v16
+          PREVIOUS_VERSION: 2026-11-23-v15
+          PREVIOUS_COMMIT: 8f12de4d3086ba768343ef2fa9563a2fb4923c6f
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -58,26 +58,26 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-23-v15-packages
+          name: Collect-TCG-Dev-2026-11-23-v16-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-23-v15-full.zip
-            release/Collect-TCG-Dev-2026-11-23-v14-to-2026-11-23-v15-patch.zip
+            release/Collect-TCG-Dev-2026-11-23-v16-full.zip
+            release/Collect-TCG-Dev-2026-11-23-v15-to-2026-11-23-v16-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-23-v15.txt'
+          MANIFEST='release-manifests/2026-11-23-v16.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-23-v15'
-            echo 'Previous version: 2026-11-23-v14'
+            echo 'Version: 2026-11-23-v16'
+            echo 'Previous version: 2026-11-23-v15'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Replace Carousell in the desktop social strip and mobile footer with eBay accounts 1–5.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v15-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v14-to-2026-11-23-v15-patch.zip'
-            echo 'Changed files: Desktop social strip and mobile footer in dev/index.html, and release workflow.'
+            echo 'Purpose: Paginate Inventory using the existing Sold full-row grid behavior.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v16-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v15-to-2026-11-23-v16-patch.zip'
+            echo 'Changed files: Inventory page and shell, listing URL routing, cache references and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
@@ -87,6 +87,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-23-v15: record package validation'
+          git commit -m 'Development 2026-11-23-v16: record package validation'
           git pull --rebase origin main
           git push
