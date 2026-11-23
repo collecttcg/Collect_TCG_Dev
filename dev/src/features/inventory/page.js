@@ -1,5 +1,5 @@
 import { createInventoryPagination, fullRowPageSize } from './pagination.js?v=2026-11-23-v11';
-import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v18';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v19';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
@@ -1086,9 +1086,6 @@ function renderInventoryPage(scope = "inventory"){
     appContext.$("inventoryMobileOwnerBtn")?.addEventListener("click",handleCollectionRearrangeButton);
     appContext.$("collectionExportCollageBtn")?.addEventListener("click",appContext.openCollectionCollageSettingsModal);
     appContext.$("collectionMobileCollageBtn")?.addEventListener("click",appContext.openCollectionCollageSettingsModal);
-    appContext.$("inventoryExportCollageBtn")?.addEventListener("click",appContext.openCollectionCollageSettingsModal);
-    appContext.$("inventoryMobileCollageBtn")?.addEventListener("click",appContext.openCollectionCollageSettingsModal);
-    appContext.$("inventoryQrDownloadBtn")?.addEventListener("click",appContext.downloadInventoryQrImage);
     [appContext.$("collectionMobileOwnerLogoutBtn"),appContext.$("inventoryMobileOwnerLogoutBtn")].filter(Boolean).forEach(btn=>{
       btn.addEventListener("click",async()=>{
         if(collectionRearrangeMode) await finishCollectionRearrangeMode(false);
