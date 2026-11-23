@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Inventory pagination controls — 2026-11-23-v17
+
+- Restored the shared pagination mounts and scroll guard on Inventory. The listing-shell fixture exercised Inventory, Sold and Collection. Live browser testing was performed on Production. No SQL required. [Release manifest](release-manifests/2026-11-23-v17.txt).
+
 ## Development Inventory pagination — 2026-11-23-v16
 
 - Replaces `2026-11-23-v15`. Inventory uses the Sold full-row page sizing and both desktop and mobile per-page controls, with the selected page and preference in the URL. Compact mode uses the unadjusted preference. Collection and Owner rearrange mode stay continuous. No SQL required.
