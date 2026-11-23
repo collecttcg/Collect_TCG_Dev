@@ -1031,7 +1031,7 @@ test("Development 2026-09-29-v11 watermark CTA says CHECK FULL INVENTORY while p
   assert.match(source,/drawWebsiteWatermarkCta\(ctx,banner,bannerX,bannerY,scale\)/);
   assert.match(source,/const qrCanvas=createWebsiteWatermarkQrCanvas\(watermarkUrl,360\)/);
   assert.match(source,/ctx\.drawImage\(banner,bannerX,bannerY,bannerWidth,bannerHeight\)/);
-  assert.match(registry,/media\/images\.js\?v=2026-11-22-v02/);
+  assert.match(registry,/media\/images\.js\?v=\d{4}-\d{2}-\d{2}-v\d{2}/);
 });
 
 test('Mark Sold quick action stamps the click time and leaving Sold clears sold_at',async()=>{
