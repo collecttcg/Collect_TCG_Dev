@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `3fd10ccc41dd595079fc87009a2b265f230ab67c`.
+- Development latest non-baseline commit: `1b386ca4aca1a5c11b07736b1c05684c9ecf6538`.
 - Production latest non-baseline commit: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
 - Production rollback ref: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
 - Latest local release manifest: [`2026-11-23-v04`](release-manifests/2026-11-23-v04.txt) from `680fcd48baa34500861531d6d7a155f184a85c26`.
-- Latest local change: `3fd10ccc41dd595079fc87009a2b265f230ab67c` · Optimize Facebook album titles and move condition labels to the front.
+- Latest local change: `1b386ca4aca1a5c11b07736b1c05684c9ecf6538` · Finalize compact Facebook album titles.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
