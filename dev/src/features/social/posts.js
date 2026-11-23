@@ -329,7 +329,7 @@ function singleCardCopyTitle(card){
     const shortName=name.replace(/\bKOREAN\s*\/\s*CHINESE\b/gi,"KR/CN")
       .replace(/\bPROMOS?\b/gi,"")
       .replace(/\bCARD CHAMPIONSHIP\b/gi,"CHAMPIONSHIP")
-      .replace(/\s+/g," ").trim();
+      .split(/\s+/).filter(word=>word && word.toUpperCase()!==code.toUpperCase()).join(" ");
     const compact=join([game,shortName,code]);
     if(compact.length<=limit) return compact;
     const identity=join([shortName,code]);
