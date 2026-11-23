@@ -958,7 +958,7 @@ test("Development 2026-09-29-v10 Post Generator titles start with the game categ
  a.getWebsiteShareUrl=()=>"https://example.test/#/inventory";
  a.collectSocialPostLines=()=>[];
  const card={id:"game-first-title",game:"One Piece Card Game",year:"2024",series:"Championship",name:"Monkey D. Luffy",card_code:"P-001",era:"Championship",language:"English",format:"Graded",availability:"Available",grading:[{company:"PSA",grade:"10",pop_count:12}]};
- assert.match(a.defaultFbPostTitle(card),/^WTS ONE PIECE【PSA 10】/);
+ assert.match(a.defaultFbPostTitle(card),/^WTS 【PSA 10】/);
  assert.match(a.singleCardCopyTitle(card),/^ONE PIECE · /);
  assert.equal(a.ebayListingTitle(card),"ONE PIECE Championship 2024 Monkey D. Luffy P-001");
  assert.equal(a.ebayListingTitle({...card,year:null,series:"",card_code:""}),"ONE PIECE Monkey D. Luffy");
@@ -998,12 +998,16 @@ test("Development 2026-09-30-v03 shows Raw condition in shared card details info
   assert.equal((details.match(/<div class="detail-label">Condition<\/div>/g)||[]).length,1);
 });
 
-test("Development 2026-09-30-v02 puts WTS first in Generate Post Details title",()=>{
+test("Single-card Facebook posts put status and labels first",()=>{
   const a=app();
   a.fbFormatLabel=()=>"DMG";
   a.postPopLabel=()=>"";
   const card={id:"wts-first-title",game:"One Piece Hyper Battle",year:"2001",series:"Grand Box DX",name:"Ace",card_code:"C531",era:"Vintage",language:"Japanese",format:"Raw",availability:"Available"};
-  assert.equal(a.defaultFbPostTitle(card),"WTS ONE PIECE HYPER BATTLE【DMG】【VINTAGE】 2001 CARDDASS GRAND BOX DX ACE C531");
+  assert.equal(a.defaultFbPostTitle(card),"WTS 【DMG】【VINTAGE】 ONE PIECE HYPER BATTLE 2001 CARDDASS GRAND BOX DX ACE C531");
+  assert.match(a.defaultFbPostTitle({...card,availability:"Sold"}),/^SOLD 【DMG】【VINTAGE】/);
+  const album=a.singleCardCopyTitle({...card,name:"KOREAN/CHINESE PROMOS DON!! CARD CHAMPIONSHIP WORLD FINAL LUFFY",card_code:"DON!!"});
+  assert.ok(album.length<=65);
+  assert.match(album,/WORLD FINAL LUFFY · DON!!$/);
 });
 
 test("Development 2026-09-29-v12 restores only Card List title order while Card Drop stays Game-first",()=>{
