@@ -511,7 +511,7 @@ function updateListingUrlFromControls(){
       params.set("quick", appContext.activeQuickFilter);
     }
 
-    if(!["inventory","collection"].includes(route)){
+    if(route!=="collection"){
       params.set("per",String(appContext.listingPerPage));
       if(appContext.listingCurrentPage>1) params.set("page",String(appContext.listingCurrentPage));
     }
