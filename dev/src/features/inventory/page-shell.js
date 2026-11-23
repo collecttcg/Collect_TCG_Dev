@@ -137,10 +137,6 @@ function inventoryPageHTML(scopeMeta,scope){
             </button>
           ` : ""}
 
-          <button type="button" class="copy-filter-link-btn" id="copyFilterLinkBtn" title="Copy a link to these filters">
-            <span class="copy-filter-link-desktop">Copy Filtered Link</span>
-            <span class="copy-filter-link-mobile">Copy Filter Link</span>
-          </button>
         </div>
       </div>
 
