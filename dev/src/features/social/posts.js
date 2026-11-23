@@ -284,6 +284,16 @@ function fbGameLabel(card){
     return game.toUpperCase();
   }
 
+function isSoldFacebookListing(card){
+    return appContext.normalizeFilterValue(card.availability || card.status || "") === "sold";
+  }
+
+function facebookTitleForStatus(card,title){
+    const value=String(title||"").trim();
+    if(!isSoldFacebookListing(card)) return value;
+    return ["SOLD",value.replace(/^(?:WTS|SOLD)\b\s*/i,"")].filter(Boolean).join(" ");
+  }
+
 function defaultFbPostTitle(card){
     if(!card) return "";
     const game=appContext.fbGameLabel(card);
@@ -294,7 +304,8 @@ function defaultFbPostTitle(card){
       card.name || "",
       card.card_code || ""
     ].filter(Boolean);
-    const salesLead=`${game ? `WTS ${game}` : "WTS"}【${appContext.fbFormatLabel(card)}】${appContext.postPopLabel(card)}${appContext.postEraLabel(card)}`;
+    const status=isSoldFacebookListing(card) ? "SOLD" : "WTS";
+    const salesLead=`${game ? `${status} ${game}` : status}【${appContext.fbFormatLabel(card)}】${appContext.postPopLabel(card)}${appContext.postEraLabel(card)}`;
 
     return [salesLead,...parts].filter(Boolean).join(" ").replace(/\s+/g," ").trim().toUpperCase();
   }
@@ -325,9 +336,9 @@ function buildFbPostText(card, values){
 
     const divider = "━━━━━━━━━━━━━━━━━━━━━━━━";
     const text=appContext.postLocale(values.language);
-    const title = String(values.title || appContext.defaultFbPostTitle(card)).trim();
+    const title = facebookTitleForStatus(card,values.title || appContext.defaultFbPostTitle(card));
     const websiteCardUrl = appContext.getCardShareUrl(card.id);
-    const isSold=String(card.availability||card.status||"").trim().toLowerCase()==="sold";
+    const isSold=isSoldFacebookListing(card);
     const usdPrice=card.price_usd ?? card.price;
     const soldPrice=isSold && appContext.hasListedPrice(usdPrice)
       ? `USD ${Number(usdPrice).toLocaleString("en-US",{maximumFractionDigits:2})}`
@@ -875,9 +886,8 @@ function renderFbPostGeneratorPage(nfsMode=false){
       const meta = perCardMeta[selectedCard.id] || {};
       const normalDefaultTitle=appContext.defaultFbPostTitle(selectedCard);
       const nfsDefaultTitle=`${appContext.fbGameLabel(selectedCard)} COLLECTION SHOWCASE【NFS】${String(selectedCard.name||"").toUpperCase()}${selectedCard.card_code ? ` · ${String(selectedCard.card_code).toUpperCase()}` : ""}`.trim();
-      titleInput.value = String(
-        meta.title || (nfsMode ? nfsDefaultTitle : normalDefaultTitle)
-      ).slice(0,300);
+      const savedTitle=meta.title || (nfsMode ? nfsDefaultTitle : normalDefaultTitle);
+      titleInput.value=(nfsMode ? String(savedTitle) : facebookTitleForStatus(selectedCard,savedTitle)).slice(0,300);
 
       hashtagsInput.value = prefs.hashtags === appContext.FB_POST_DEFAULTS.hashtags
         ? appContext.defaultFbHashtags(selectedCard)
@@ -934,7 +944,7 @@ function renderFbPostGeneratorPage(nfsMode=false){
     });
 
     copyTitleBtn.addEventListener("click", ()=>{
-      appContext.copyPlainText(titleInput.value, "Facebook title copied");
+      appContext.copyPlainText(nfsMode || !selectedCard ? titleInput.value : facebookTitleForStatus(selectedCard,titleInput.value), "Facebook title copied");
     });
 
     copyPostBtn.addEventListener("click", ()=>{
