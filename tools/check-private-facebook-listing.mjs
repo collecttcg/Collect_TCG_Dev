@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import { register as registerForms } from '../dev/src/features/owner/forms.js';
+import { register as registerCatalogue } from '../dev/src/services/catalogue.js';
+
+const context={};
+registerForms(context);
+registerCatalogue(context);
+const url='https://www.facebook.com/groups/collectors/posts/12345/';
+const notes='Internal stock note\nKeep this line too';
+const combined=context.ownerNotesWithFacebookListing(notes,url);
+assert.deepEqual(context.splitFacebookListingNote(combined),{notes,url});
+assert.deepEqual(context.splitFacebookListingNote(notes),{notes,url:''});
+assert.equal(context.ownerNotesWithFacebookListing(notes,''),notes);
+assert.throws(()=>context.ownerNotesWithFacebookListing(notes,'https://facebook.com.example.org/'),/Facebook listing URL/);
+assert.throws(()=>context.ownerNotesWithFacebookListing(notes,'http://facebook.com/'),/Facebook listing URL/);
+assert.throws(()=>context.ownerNotesWithFacebookListing('x'.repeat(2000),url),/2,000-character/);
+assert.doesNotMatch(context.cardPublicColumns('id,name,notes'),/facebook|private/i);
+context.requireOwner=()=>false;
+assert.deepEqual(await context.fetchOwnerPrivateMeta('test'),{tags:[],notes:''});
+console.log('Private Facebook listing URL round trip, removal, validation and public column checks passed.');
