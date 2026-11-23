@@ -1,5 +1,5 @@
 import { createInventoryPagination, fullRowPageSize } from './pagination.js?v=2026-11-23-v11';
-import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v16';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v17';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
