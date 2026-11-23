@@ -1,0 +1,13 @@
+Version: 2026-11-23-v04
+Previous version: 2026-11-23-v03
+Source commit: 680fcd48baa34500861531d6d7a155f184a85c26
+Purpose: Save private Facebook listing URLs in the Owner add and edit forms.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v03-to-2026-11-23-v04-patch.zip
+Changed files: Owner forms and editor, private metadata service, cache entry points, regression fixture and release workflow.
+SQL required: No.
+Validation: npm run validate; private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive browser and live authenticated saves were not exercised by CI.
+
+3e2a18ba3a410c1b9b3051802c3a9a67a656bfbcc5b9df9cc0b041a472d4b958  release/Collect-TCG-Dev-2026-11-23-v04-full.zip
+d73857274c130a6791b0244dc41405fd0f42e722133192616d12e7a4cc3cd0e0  release/Collect-TCG-Dev-2026-11-23-v03-to-2026-11-23-v04-patch.zip
