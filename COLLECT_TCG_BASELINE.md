@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Inventory pagination — 2026-11-23-v16
+
+- Replaces `2026-11-23-v15`. Inventory uses the Sold full-row page sizing and both desktop and mobile per-page controls, with the selected page and preference in the URL. Compact mode uses the unadjusted preference. Collection and Owner rearrange mode stay continuous. No SQL required.
+- Changed the Inventory page and shell, routing, cache references and release workflow. Repository validation, focused page slicing and URL checks, and both ZIP integrity checks passed. Browser and Pages deployment checks were not independently exercised. [Manifest](release-manifests/2026-11-23-v16.txt).
+
 ## Development eBay social links — 2026-11-23-v15
 
 - Replaces `2026-11-23-v14`. The desktop social strip and mobile page footer show five eBay account links in Contact-page order alongside Instagram and Facebook. The change is limited to `dev/index.html` and the release workflow. No SQL required.
