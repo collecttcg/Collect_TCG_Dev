@@ -1,0 +1,13 @@
+Version: 2026-11-23-v16
+Previous version: 2026-11-23-v15
+Source commit: e5f4a410c38a66ca3ceed9e415b9213412393076
+Purpose: Paginate Inventory using the existing Sold full-row grid behavior.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v16-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v15-to-2026-11-23-v16-patch.zip
+Changed files: Inventory page and shell, listing URL routing, cache references and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+d67fc025ed9d5dfe85fe5bfa62638806113d13903596c7dc6e710ee097c9a9a6  release/Collect-TCG-Dev-2026-11-23-v16-full.zip
+d5d24d5220fcbd678ae55987840ab6dbda15bdb3d07f5e3120d37f9701dd3ec3  release/Collect-TCG-Dev-2026-11-23-v15-to-2026-11-23-v16-patch.zip
