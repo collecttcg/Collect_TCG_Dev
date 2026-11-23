@@ -13092,7 +13092,7 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
   }
 }
 
-/* Desktop filter controls share 11px type and 40px height with Custom Order.
+/* Desktop toolbar controls share the currency control height.
    Include 992–1179 CSS-pixel viewports (Retina / browser zoom). */
 @media (min-width:992px){
   #desktopFilterToggleRow #sortByBtn,
@@ -13105,8 +13105,20 @@ body.light-mode .modal.card-details-modal .detail-ebay-cta small{color:#6d737a;}
     letter-spacing:.04em !important;
     line-height:1 !important;
   }
+  #desktopFilterToggleRow .desktop-inline-search input,
   #desktopFilterToggleRow #sortByBtn,
   #desktopFilterToggleRow #desktopFilterToggleBtn,
+  #desktopFilterToggleRow .desktop-listing-currency-control,
+  #desktopFilterToggleRow .desktop-filter-add-card{
+    height:var(--listing-toolbar-h, 42px) !important;
+    min-height:var(--listing-toolbar-h, 42px) !important;
+    max-height:var(--listing-toolbar-h, 42px) !important;
+    box-sizing:border-box !important;
+  }
+  #desktopFilterToggleRow #sortByBtn,
+  #desktopFilterToggleRow #desktopFilterToggleBtn{
+    padding-block:0 !important;
+  }
   #filterDrawerShell .filter-row .overview-select-btn{
     height:40px !important;
     min-height:40px !important;
