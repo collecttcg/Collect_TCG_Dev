@@ -12,17 +12,23 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development full Sold rows, SOLD ribbon and Facebook links — 2026-11-23-v13
+
+- Replaces `2026-11-23-v04`. Sold grid pagination fills complete rows on intermediate pages. The single-card Facebook post keeps the Collect TCG URL beneath the sold price and includes the saved eBay URL when present. This release also validates the 65-character album-title rule, new post headers, and shared SOLD ribbon on listing photos and downloads.
+- Focused paging and link checks, repository validation, SEO checks and both ZIP integrity checks passed. No SQL required. Interactive browser checks were not performed. [Manifest](release-manifests/2026-11-23-v13.txt).
+
+
 ## Development Facebook single-card titles
 
 - Sold post titles use SOLD; available posts retain WTS. Condition and era labels precede the game. Saved titles with the previous layout are normalized for the preview and copy actions.
 - The separate album title is limited to 65 characters, abbreviates long names, removes duplicated card codes when shortening, and preserves the identifying tail and card code. Focused title checks passed. No SQL required.
 
 
-## Development SOLD listing and download ribbon — validation pending
+## Development SOLD listing and download ribbon — initial implementation
 
 - The supplied transparent PNG replaces the generated SOLD ribbon on the shared image-download renderer. The top-left ribbon scales to the lesser of 51.5% of image width and 38.5% of image height. Existing Sold eligibility remains in force.
 - Sold listing thumbnails and the details gallery now render the same PNG through the existing status corners. The stylesheet and asset path were checked locally.
-- Local syntax and mocked export checks passed for Sold, Reserved and Available cards and for the manual sample dimensions, square and tall photos. No SQL required. Release manifest, ZIP packaging, deployed UI and browser downloads were not yet verified.
+- Local syntax and mocked export checks passed for Sold, Reserved and Available cards and for the manual sample dimensions, square and tall photos. No SQL required. Release manifest and ZIP packaging were subsequently validated in 2026-11-23-v13. Interactive browser downloads were not tested.
 
 
 ## Development private Facebook listing URLs — 2026-11-23-v04
