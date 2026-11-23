@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v07 — Adapt SOLD ribbon to photo proportions.
+# 2026-11-23-v07 — Validate aspect-aware SOLD download overlay.
 on:
   workflow_dispatch:
   push:
