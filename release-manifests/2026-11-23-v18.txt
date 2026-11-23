@@ -1,0 +1,13 @@
+Version: 2026-11-23-v18
+Previous version: 2026-11-23-v17
+Source commit: 22d257dee1e61e346c03e7a4c24abe2b1ad4fdd4
+Purpose: Remove Copy Filtered Link from the listing toolbar.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v18-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v17-to-2026-11-23-v18-patch.zip
+Changed files: Inventory shell and page controller, cache references and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+f481ceaebc457b92a8d0ebbc8a9e398c67f3d638322cfadd11d48923c2b22b25  release/Collect-TCG-Dev-2026-11-23-v18-full.zip
+cdc6e0e8933c2cb89e6aa45c08292655ef7716132b7af90324ec6902e9791738  release/Collect-TCG-Dev-2026-11-23-v17-to-2026-11-23-v18-patch.zip
