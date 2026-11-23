@@ -339,6 +339,11 @@ function fieldsTemplate(p){
           <div class="hint">Up to 12 tags. These are never included in public card data.</div>
         </div>
         <div class="field">
+          ${appContext.ownerPrivateSupported ? `<label for="${p}FacebookListingUrl">Facebook listing URL</label>
+          <input type="url" id="${p}FacebookListingUrl" maxlength="2000" placeholder="https://www.facebook.com/…">
+          <div class="hint">Visible only to owners editing this listing.</div>` : ""}
+        </div>
+        <div class="field">
           <label for="${p}OwnerNotes">Private owner notes</label>
           <textarea id="${p}OwnerNotes" maxlength="2000" placeholder="Internal notes only"></textarea>
         </div>
@@ -1711,6 +1716,31 @@ function populateFields(p, card){
     appContext.$(p + "Notes").value = card ? appContext.stripPriceNegotiabilityMarker(card.notes || "") : "";
   }
 
+const facebookListingNote=/^Facebook listing URL: (https:\/\/[^\s]+)$/m;
+
+function splitFacebookListingNote(value){
+    const notes=String(value||"");
+    const match=notes.match(facebookListingNote);
+    return match ? {url:match[1],notes:notes.replace(/\n?Facebook listing URL: https:\/\/[^\s]+$/m,"").trim()}
+      : {url:"",notes};
+  }
+
+function ownerNotesWithFacebookListing(notes,value){
+    const url=String(value||"").trim();
+    if(!url) return appContext.sanitizeOwnerPrivateNotes(notes);
+    let parsed;
+    try{ parsed=new URL(url); }catch{ throw new Error("Enter a valid Facebook listing URL."); }
+    const host=parsed.hostname;
+    if(parsed.protocol!=="https:" || parsed.username || parsed.password ||
+      !(host==="facebook.com" || host.endsWith(".facebook.com") || host==="fb.com" || host==="fb.me" || host==="fb.watch")){
+      throw new Error("Enter a Facebook listing URL that starts with https://.");
+    }
+    const combined=[String(notes||"").trim(),`Facebook listing URL: ${parsed.href}`].filter(Boolean).join("\n");
+    const sanitized=appContext.sanitizeOwnerPrivateNotes(combined);
+    if(sanitized!==combined) throw new Error("Shorten the Facebook URL or private notes to fit the 2,000-character limit.");
+    return sanitized;
+  }
+
 function collectFields(p, id, formState){
     return {
       id: id || appContext.uid(),
@@ -1759,11 +1789,11 @@ function collectFields(p, id, formState){
         pop_updated_at: g.pop_updated_at || null
       })),
       _owner_tags: appContext.sanitizeOwnerTags(appContext.$(p + "OwnerTags")?.value || ""),
-      _owner_notes: appContext.sanitizeOwnerPrivateNotes(appContext.$(p + "OwnerNotes")?.value || "")
+      _owner_notes: ownerNotesWithFacebookListing(appContext.$(p + "OwnerNotes")?.value, appContext.$(p + "FacebookListingUrl")?.value)
     };
   }
 
-  Object.assign(appContext,{wireGameCombobox,normalizeYearValue,isValidYearValue,normalizePriceNegotiability,priceNegotiabilityFromNotes,stripPriceNegotiabilityMarker,notesWithPriceNegotiability,fieldsTemplate,wireImageControls,gradingRowHTML,wireGradingControls,validMyrFxRates,readCachedMyrFxRates,saveCachedMyrFxRates,fetchCurrentMyrFxRates,fxRateDateLabel,roundConvertedCardPrice,convertedPriceValue,applyMyrConversionToFields,updateFxRateStatus,wireAutoCurrencyConversion,ensureMyrConversionBeforeSave,wireAvailabilityPriceState,invalidFieldLabel,reportFirstInvalidField,wireSoldDateField,wireAutoCapitalization,wirePreErrataError,populateFields,collectFields});
+  Object.assign(appContext,{wireGameCombobox,normalizeYearValue,isValidYearValue,normalizePriceNegotiability,priceNegotiabilityFromNotes,stripPriceNegotiabilityMarker,notesWithPriceNegotiability,fieldsTemplate,wireImageControls,gradingRowHTML,wireGradingControls,validMyrFxRates,readCachedMyrFxRates,saveCachedMyrFxRates,fetchCurrentMyrFxRates,fxRateDateLabel,roundConvertedCardPrice,convertedPriceValue,applyMyrConversionToFields,updateFxRateStatus,wireAutoCurrencyConversion,ensureMyrConversionBeforeSave,wireAvailabilityPriceState,invalidFieldLabel,reportFirstInvalidField,wireSoldDateField,wireAutoCapitalization,wirePreErrataError,populateFields,collectFields,splitFacebookListingNote,ownerNotesWithFacebookListing});
 }
 
 /** State and event initialization; called in preserved startup order. */
