@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `7b0571cdcb759f409f3632f1ef388515288c1bf7`.
+- Development latest non-baseline commit: `f1644558ab04028f88a5b1b356b80d4553c5f28f`.
 - Production latest non-baseline commit: `726c739aeb688ad77bb9ecba2cbf76eef21bbeb2`.
 - Production rollback ref: `726c739aeb688ad77bb9ecba2cbf76eef21bbeb2`.
 - Latest local release manifest: [`2026-11-23-v03`](release-manifests/2026-11-23-v03.txt) from `cdbd03e39137836573ef5f5d377f643fdbaae8b4`.
-- Latest local change: `7b0571cdcb759f409f3632f1ef388515288c1bf7` · Add private Facebook listing URL in Development.
+- Latest local change: `f1644558ab04028f88a5b1b356b80d4553c5f28f` · Test private Facebook URL round-trip and validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
