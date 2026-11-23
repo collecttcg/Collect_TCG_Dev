@@ -74,7 +74,7 @@ export function registerFacebookEbayPosts(appContext){
           </label>
           <div class="fb-card-list-bulk-actions">
             <button type="button" class="btn-gold" data-copy>Copy post</button>
-            <button type="button" class="btn-ghost" data-zip>Download first photos ZIP</button>
+            <button type="button" class="btn-ghost" data-zip>Download Facebook photo ZIP</button>
           </div>
           <p data-status class="hint" aria-live="polite"></p>
         </section>
@@ -152,9 +152,10 @@ export function registerFacebookEbayPosts(appContext){
       try{
         const result=await appContext.downloadCardListFirstImagesZip(cards,null,{
           filePrefix:"Collect-TCG-Facebook-eBay-Listings",
-          reportMissing:true
+          reportMissing:true,
+          maxImages:25
         });
-        status.textContent=`Downloaded ${result.added} of ${cards.length} first photos.`;
+        status.textContent=`Downloaded ${result.imageCount} image${result.imageCount===1 ? "" : "s"} covering ${result.added} of ${cards.length} listings.`;
       }catch(error){
         status.textContent=error.message || "Could not create photo ZIP.";
       }finally{
