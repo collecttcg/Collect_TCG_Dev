@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `46cd20394a5fda257e7366436c88daf7f28b01fb`.
-- Production latest non-baseline commit: `399ccbc8ef59f91a17f1319e16b3988015a40d9a`.
-- Production rollback ref: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
-- Latest local release manifest: [`2026-11-23-v13`](release-manifests/2026-11-23-v13.txt) from `ba97198f8c6c3be124c592729ef11412942b990e`.
-- Latest local change: `46cd20394a5fda257e7366436c88daf7f28b01fb` · Match desktop listing toolbar control heights.
+- Development latest non-baseline commit: `8f12de4d3086ba768343ef2fa9563a2fb4923c6f`.
+- Production latest non-baseline commit: `0491b87345558b054de902d9e9e899397c6b6c04`.
+- Production rollback ref: `0491b87345558b054de902d9e9e899397c6b6c04`.
+- Latest local release manifest: [`2026-11-23-v14`](release-manifests/2026-11-23-v14.txt) from `46cd20394a5fda257e7366436c88daf7f28b01fb`.
+- Latest local change: `8f12de4d3086ba768343ef2fa9563a2fb4923c6f` · Package Development 2026-11-23-v15 eBay social links.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
