@@ -223,14 +223,15 @@ test('owner save flows distinguish an unsaved card from non-critical post-save w
  assert.doesNotMatch(editor,/Card saved; a follow-up step failed/);
 });
 
-test('the owner can download the standalone Inventory QR from the Inventory page',()=>{
+test('Inventory toolbar omits retired buttons and keeps rearrange',()=>{
  const source=path=>fs.readFileSync(new URL(path,import.meta.url),'utf8');
  const details=source('../dev/src/features/cards/details.js');
  const inventory=inventoryPageSource();
  assert.match(details,/async function downloadInventoryQrImage\(\)/);
  assert.match(details,/Collect-TCG-Inventory-QR\.png/);
- assert.match(inventory,/id="inventoryQrDownloadBtn"/);
- assert.match(inventory,/inventoryQrDownloadBtn"\)\?\.addEventListener\("click",appContext\.downloadInventoryQrImage\)/);
+ assert.doesNotMatch(inventory,/inventoryQrDownloadBtn|inventoryExportCollageBtn|inventoryMobileCollageBtn|copyFilterLinkBtn/);
+ assert.match(inventory,/id="inventoryRearrangeBtn"/);
+ assert.match(inventory,/id="collectionExportCollageBtn"/);
 });
 
 test('buyer contact makes worldwide shipping a clear option alongside MY/SG COD',()=>{
