@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `dd4ef8319f81a65b17040801145c84c5e27330f6`.
-- Production latest non-baseline commit: `76e0bc3391248bac3ae9138baeff73da5e9b7102`.
-- Production rollback ref: `0a709cabaf16374f97ef0ae5de4da1d70a758efc`.
+- Development latest non-baseline commit: `0ea28dda8ce11f06bbbffc9b23b91ce7017380e6`.
+- Production latest non-baseline commit: `93e2db1c73c6fd3f0d0e6636299e1bb79b38fa97`.
+- Production rollback ref: `dd1f0913474c95d1efae8dd7398bf88462afe955`.
 - Latest local release manifest: [`2026-11-23-v20`](release-manifests/2026-11-23-v20.txt) from `c3cfef9e1ad35cbe584b0834ff92689532ec1f01`.
-- Latest local change: `dd4ef8319f81a65b17040801145c84c5e27330f6` · Development 2026-11-23-v20: record package validation.
+- Latest local change: `0ea28dda8ce11f06bbbffc9b23b91ce7017380e6` · chore: refresh Development SEO card pages [skip ci].
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
