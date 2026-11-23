@@ -81,7 +81,7 @@ function inventoryPageHTML(scopeMeta,scope){
         </div>
 
         <div class="inventory-display-tools ${isCollection ? "collection-display-tools" : ""}">
-          ${!isCollection && scope!=="inventory" ? `
+          ${!isCollection ? `
             <label class="listing-per-page-control" title="Choose how many listings are shown on each page.">
               <span>Show</span>
               <select id="listingPerPageSelect" aria-label="Listings per page">
@@ -337,7 +337,7 @@ function inventoryPageHTML(scopeMeta,scope){
             </div>
           ` : ""}
 
-          ${!isCollection && scope!=="inventory" ? `
+          ${!isCollection ? `
             <label class="mobile-cards-per-page-control" for="mobileListingPerPageSelect">
               <span>
                 <strong>Cards per page</strong>
