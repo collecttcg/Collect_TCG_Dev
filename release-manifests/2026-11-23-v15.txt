@@ -1,0 +1,13 @@
+Version: 2026-11-23-v15
+Previous version: 2026-11-23-v14
+Source commit: 8f12de4d3086ba768343ef2fa9563a2fb4923c6f
+Purpose: Replace Carousell in the desktop social strip and mobile footer with eBay accounts 1–5.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v15-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v14-to-2026-11-23-v15-patch.zip
+Changed files: Desktop social strip and mobile footer in dev/index.html, and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+b817b57ef6270c04956a07399d159669073fc386948d817083fa9e0f101d4849  release/Collect-TCG-Dev-2026-11-23-v15-full.zip
+06f7e97408c52cfb508e653cc7c3954c0d2af60cf9b86806270796e4c9c0d0ed  release/Collect-TCG-Dev-2026-11-23-v14-to-2026-11-23-v15-patch.zip
