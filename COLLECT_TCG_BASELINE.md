@@ -12,6 +12,12 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development SOLD download ribbon — validation pending
+
+- The supplied transparent PNG replaces the generated SOLD ribbon on the shared image-download renderer. The top-left ribbon scales to the lesser of 51.5% of image width and 38.5% of image height. Existing Sold eligibility remains in force.
+- Local syntax and mocked export checks passed for Sold, Reserved and Available cards and for the manual sample dimensions, square and tall photos. No SQL required. Release manifest, ZIP packaging, deployed UI and browser downloads were not yet verified.
+
+
 ## Development private Facebook listing URLs — 2026-11-23-v04
 
 - Replaces `2026-11-23-v03`. Owner Add/Edit includes an optional Facebook listing URL, read and written through `card_owner_private.notes`. Clearing the field removes the URL, and ordinary private notes are preserved. No public card data or SQL migration changed. Existing owner-only RLS and disabled anonymous SELECT were verified.
