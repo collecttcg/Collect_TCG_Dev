@@ -49,7 +49,14 @@ async function openEditModal(card){
     appContext.$("editFieldsMount").innerHTML = appContext.fieldsTemplate("edit");
     appContext.populateFields("edit", card);
     if(appContext.$("editOwnerTags")) appContext.$("editOwnerTags").value=privateMeta.tags.join(", ");
-    if(appContext.$("editOwnerNotes")) appContext.$("editOwnerNotes").value=privateMeta.notes;
+    const facebook=appContext.splitFacebookListingNote(privateMeta.notes);
+    const facebookField=appContext.$("editFacebookListingUrl");
+    if(facebookField){
+      facebookField.value=facebook.url;
+      facebookField.disabled=Boolean(privateMeta.failed);
+    }
+    appContext.editFormState.privateMetaReadFailed=Boolean(privateMeta.failed);
+    if(appContext.$("editOwnerNotes")) appContext.$("editOwnerNotes").value=facebook.notes;
     const currentImages=appContext.getImages(card).slice();
     const mappedVariants=currentImages.map(image=>{
       const stored=storedImageVariants.find(v=>
@@ -226,8 +233,8 @@ appContext.editForm.addEventListener("submit", async (e)=>{
         }
       }
 
-      let privateMetaSaved=true;
-      if(appContext.ownerPrivateSupported){
+      let privateMetaSaved=!appContext.editFormState.privateMetaReadFailed;
+      if(appContext.ownerPrivateSupported && privateMetaSaved){
         postSaveStep="saving private owner information";
         privateMetaSaved=await appContext.saveOwnerPrivateMeta(id,data._owner_tags,data._owner_notes);
       }
