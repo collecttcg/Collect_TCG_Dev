@@ -459,14 +459,73 @@ async function ensureJsZip(){
     return appContext.jsZipLoadPromise;
   }
 
-async function downloadCardListFirstImagesZip(cardsForZip, progressCallback, {filePrefix="Collect-TCG-Card-List",reportMissing=false}={}){
+async function addFirstPhotoCollages(zip,cards,limit,progressCallback,failedCards){
+    const batchSize=Math.ceil(cards.length/limit);
+    let added=0;
+    let imageCount=0;
+    for(let start=0;start<cards.length;start+=batchSize){
+      const end=Math.min(start+batchSize,cards.length);
+      const columns=Math.ceil(Math.sqrt(end-start));
+      const rows=Math.ceil((end-start)/columns);
+      const tile=Math.min(640,Math.floor(2048/Math.max(columns,rows)));
+      const canvas=document.createElement("canvas");
+      canvas.width=columns*tile;
+      canvas.height=rows*tile;
+      const ctx=canvas.getContext("2d");
+      if(!ctx) throw new Error("Could not create collage canvas");
+      ctx.fillStyle="#15171b";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      const before=added;
+      try{
+        for(let index=start;index<end;index++){
+          const card=cards[index];
+          const slot=index-start;
+          const x=(slot%columns)*tile;
+          const y=Math.floor(slot/columns)*tile;
+          const photo=appContext.getImages(card)[0];
+          let asset;
+          try{
+            if(!photo) throw new Error("No first photo");
+            asset=await appContext.loadImageForCollectionCollage(photo);
+            appContext.collectionCollageDrawImageContain(ctx,asset.img,x+8,y+8,tile-16,tile-40);
+            ctx.fillStyle="#ffffff";
+            ctx.font="bold 20px sans-serif";
+            ctx.textAlign="center";
+            ctx.fillText(String(index+1),x+tile/2,y+tile-12);
+            added++;
+          }catch(error){
+            failedCards.push({id:card.id,name:card.name,reason:error.message || "Image could not be read"});
+          }finally{
+            asset?.cleanup();
+          }
+          progressCallback?.(index+1,cards.length,added,failedCards.length);
+        }
+        if(added>before){
+          const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",0.92));
+          if(!blob) throw new Error("Could not encode collage");
+          imageCount++;
+          const number=String(imageCount).padStart(2,"0");
+          zip.file(`${number} - Listings ${start+1}-${end}.jpg`,blob);
+        }
+      }finally{
+        canvas.width=0;
+        canvas.height=0;
+      }
+    }
+    return {added,imageCount};
+  }
+
+async function downloadCardListFirstImagesZip(cardsForZip, progressCallback, {filePrefix="Collect-TCG-Card-List",reportMissing=false,maxImages=Infinity}={}){
     const ZipCtor = await appContext.ensureJsZip();
     const zip = new ZipCtor();
     const usedNames = new Set();
     const failedCards = [];
     let added = 0;
+    let imageCount = 0;
 
-    for(let i=0;i<cardsForZip.length;i++){
+    if(cardsForZip.length>maxImages){
+      ({added,imageCount}=await addFirstPhotoCollages(zip,cardsForZip,maxImages,progressCallback,failedCards));
+    }else for(let i=0;i<cardsForZip.length;i++){
       const card = cardsForZip[i];
       const firstImage = appContext.getImages(card)[0];
       if(!firstImage){
@@ -491,6 +550,7 @@ async function downloadCardListFirstImagesZip(cardsForZip, progressCallback, {fi
         usedNames.add(name);
         zip.file(name,blob);
         added++;
+        imageCount++;
       }catch(err){
         failedCards.push({
           id:card?.id || "",
@@ -528,7 +588,7 @@ async function downloadCardListFirstImagesZip(cardsForZip, progressCallback, {fi
     a.click();
     a.remove();
     setTimeout(()=>URL.revokeObjectURL(href),1500);
-    return {added, failed:failedCards};
+    return {added,imageCount,failed:failedCards};
   }
 
 function renderFbCardListGeneratorPage(){
