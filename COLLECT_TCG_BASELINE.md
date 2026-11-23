@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development collection footer cleanup — 2026-11-23-v20
+
+- Removed the standalone Carddass Hyper Battle link from the app shell. The collection page and sitemap entry remain. Development CI, SEO checks and both ZIP integrity checks passed. No SQL required. Interactive browser rendering was not tested. [Manifest](release-manifests/2026-11-23-v20.txt).
+
 ## Development Inventory toolbar — 2026-11-23-v19
 
 - Removed Copy Filtered Link in v18 and removed Inventory Export Collage and Inventory QR in v19, including the mobile Inventory collage control. Desktop and mobile Rearrange Inventory and Collection's collage export remain available. Updated Inventory shell and controller, cache references, regression test and release workflow.
