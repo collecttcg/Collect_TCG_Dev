@@ -310,48 +310,25 @@ function shouldApplySoldDownloadWatermark(card){
     return appContext.canonicalAvailability(card?.availability) === "Sold";
   }
 
-function drawSoldDownloadWatermark(ctx, canvas){
+async function drawSoldDownloadWatermark(ctx, canvas){
     const shortSide = Math.min(canvas.width, canvas.height);
-    const triangleSize = Math.max(150, Math.min(520, Math.round(shortSide * 0.42)));
-    const center = triangleSize * 0.33;
-    const maxTextWidth = triangleSize * 0.70;
-
-    ctx.save();
-
-    ctx.shadowColor = "rgba(0,0,0,0.34)";
-    ctx.shadowBlur = Math.max(10, Math.round(triangleSize * 0.045));
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = Math.max(4, Math.round(triangleSize * 0.02));
-
-    ctx.fillStyle = "#ef4444";
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(triangleSize, 0);
-    ctx.lineTo(0, triangleSize);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.shadowColor = "transparent";
-    ctx.translate(center, center);
-    ctx.rotate(-Math.PI / 4);
-
-    let fontSize = Math.max(22, Math.min(76, Math.round(triangleSize * 0.19)));
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#ffffff";
-
-    const applyFont = ()=>{
-      ctx.font = `900 ${fontSize}px Inter, Arial, sans-serif`;
-    };
-
-    applyFont();
-    while(fontSize > 12 && ctx.measureText("SOLD").width > maxTextWidth){
-      fontSize -= 1;
-      applyFont();
+    const ribbonSize = Math.min(shortSide, Math.max(150, Math.min(520, Math.round(shortSide * 0.42))));
+    if(!appContext.soldDownloadRibbonPromise){
+      appContext.soldDownloadRibbonPromise = new Promise((resolve,reject)=>{
+        const ribbon = new Image();
+        ribbon.onload = ()=>resolve(ribbon);
+        ribbon.onerror = ()=>{
+          appContext.soldDownloadRibbonPromise = null;
+          reject(new Error("SOLD ribbon unavailable"));
+        };
+        ribbon.src = new URL("../../../assets/sold-download-ribbon.png", import.meta.url).href;
+      });
     }
-
-    ctx.fillText("SOLD", 0, 0, maxTextWidth);
-    ctx.restore();
+    const ribbon = await appContext.soldDownloadRibbonPromise;
+    // The red ribbon spans roughly 412 pixels. Include the full shadow in the crop.
+    const cropSize = 548;
+    const drawSize = ribbonSize * cropSize / 412;
+    ctx.drawImage(ribbon, 0, 0, cropSize, cropSize, 0, 0, drawSize, drawSize);
   }
 
 function canvasToBlob(canvas, quality = 0.96, type = "image/jpeg"){
@@ -408,7 +385,7 @@ async function renderSoldDownloadBlob(src, card, maxDim = 2400, quality = 0.96){
     ctx.drawImage(img, 0, 0, w, h);
 
     if(appContext.shouldApplySoldDownloadWatermark(card)){
-      appContext.drawSoldDownloadWatermark(ctx, canvas);
+      await appContext.drawSoldDownloadWatermark(ctx, canvas);
     }
 
     return appContext.canvasToBlob(canvas, quality, "image/jpeg");
