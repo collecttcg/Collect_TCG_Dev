@@ -375,7 +375,6 @@ function buildFbPostText(card, values){
     const soldPrice=isSold && appContext.hasListedPrice(usdPrice)
       ? `USD ${Number(usdPrice).toLocaleString("en-US",{maximumFractionDigits:2})}`
       : "";
-    const priceDetailsLabel=isSold?"💰 Sold Price:":appContext.facebookGroupSalesCopy(values.language).price;
     const carousellShopUrl = appContext.safeHttpUrl(values.carousellShopUrl);
     const instagramUrl = appContext.safeHttpUrl(values.instagramUrl);
     const hashtags = normalizePostHashtags(values.hashtags || appContext.defaultFbHashtags(card));
@@ -386,8 +385,8 @@ function buildFbPostText(card, values){
       title,
       "",
       ...(isSold
-        ? [`💰 SOLD PRICE: ${soldPrice||"Price unavailable"}`]
-        : [priceDetailsLabel,"",websiteCardUrl]),
+        ? [`💰 SOLD PRICE: ${soldPrice||"Price unavailable"}`,"","🔗 Card on Collect TCG:",websiteCardUrl]
+        : [groupCopy.price,"",websiteCardUrl]),
       "",
       divider,
       "",
