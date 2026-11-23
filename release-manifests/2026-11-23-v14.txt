@@ -1,0 +1,13 @@
+Version: 2026-11-23-v14
+Previous version: 2026-11-23-v13
+Source commit: 46cd20394a5fda257e7366436c88daf7f28b01fb
+Purpose: Match Sort and Filters to the Currency, Search and Add Card control heights.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v14-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v13-to-2026-11-23-v14-patch.zip
+Changed files: Toolbar CSS, stylesheet cache reference and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari listing/download checks were not exercised by CI.
+
+57ca7ba9aa5c63826dce52b4fbe65aaca4ce35bcaceeb374d730b0854eb3bcb6  release/Collect-TCG-Dev-2026-11-23-v14-full.zip
+ef05faf1bae6ee0bfe08264f50708453aa74b2a7e34ab19bb9a7a55eb802a023  release/Collect-TCG-Dev-2026-11-23-v13-to-2026-11-23-v14-patch.zip
