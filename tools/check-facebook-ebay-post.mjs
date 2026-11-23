@@ -113,10 +113,11 @@ assert.equal(partial.added,1);
 assert.equal(partial.failed[0].reason,'No first photo');
 await assert.rejects(a.downloadCardListFirstImagesZip([{...zoro,images:[]}],null,{reportMissing:true}),/None of the 1 first images/);
 const labels=[];
+const labelFonts=new Set();
 let disposed=0;
 a.loadImageForCollectionCollage=async url=>({img:{url,width:300,height:400},cleanup(){disposed++;}});
 globalThis.document.createElement=tag=>tag==='canvas'
-  ? {getContext:()=>({fillRect(){},drawImage(){},fillText(n){labels.push(Number(n));}}),
+  ? {getContext:()=>({fillRect(){},drawImage(){},fillText(n){labels.push(Number(n));labelFonts.add(this.font);}}),
      toBlob(callback){callback(new Blob([],{type:'image/jpeg'}));}}
   : {click(){filename=this.download;},remove(){}};
 const many=Array.from({length:154},(_,index)=>card(index+20,'Listing','Zakwan'));
@@ -129,6 +130,7 @@ assert.equal(zipEntries.length,22);
 assert.match(zipEntries[0],/^01 - Listings 1-7\.jpg$/);
 assert.match(zipEntries.at(-1),/^22 - Listings 148-154\.jpg$/);
 assert.deepEqual(labels,Array.from({length:154},(_,index)=>index+1).filter(n=>n!==6));
+assert.deepEqual([...labelFonts],['bold 54px sans-serif']);
 assert.equal(disposed,153);
 assert.equal(collages.failed.length,1);
 element('[data-clear]').click();
