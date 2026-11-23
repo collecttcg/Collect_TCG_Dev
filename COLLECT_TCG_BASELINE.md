@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `22d257dee1e61e346c03e7a4c24abe2b1ad4fdd4`.
+- Development latest non-baseline commit: `01a644ee8559a46e0a5c7f9eb7f1b610eba343b3`.
 - Production latest non-baseline commit: `0a709cabaf16374f97ef0ae5de4da1d70a758efc`.
 - Production rollback ref: `0a709cabaf16374f97ef0ae5de4da1d70a758efc`.
-- Latest local release manifest: [`2026-11-23-v17`](release-manifests/2026-11-23-v17.txt) from `a7c63f35976421db79fae0d90eb78a1fcac98043`.
-- Latest local change: `22d257dee1e61e346c03e7a4c24abe2b1ad4fdd4` · Remove Copy Filtered Link: release-dev.yml.
+- Latest local release manifest: [`2026-11-23-v18`](release-manifests/2026-11-23-v18.txt) from `22d257dee1e61e346c03e7a4c24abe2b1ad4fdd4`.
+- Latest local change: `01a644ee8559a46e0a5c7f9eb7f1b610eba343b3` · Simplify Inventory toolbar: release-dev.yml.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
