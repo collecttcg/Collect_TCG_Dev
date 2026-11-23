@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `9a51e4d86e2df84c1fec49292a022d56191765a9`.
+- Development latest non-baseline commit: `0819c1f31cf96622d430c097b2fadb39a8b29b98`.
 - Production latest non-baseline commit: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
 - Production rollback ref: `0ba1f844be9c64b149acaa63e3f1a11bdcc6ad42`.
 - Latest local release manifest: [`2026-11-23-v04`](release-manifests/2026-11-23-v04.txt) from `680fcd48baa34500861531d6d7a155f184a85c26`.
-- Latest local change: `9a51e4d86e2df84c1fec49292a022d56191765a9` · Adapt SOLD ribbon size to photo width and height.
+- Latest local change: `0819c1f31cf96622d430c097b2fadb39a8b29b98` · Run Development SOLD ribbon release validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
