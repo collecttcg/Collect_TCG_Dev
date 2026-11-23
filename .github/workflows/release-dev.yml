@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-23-v14 — Match desktop listing toolbar control heights.
+# 2026-11-23-v15 — Show five eBay accounts in responsive social links.
 on:
   workflow_dispatch:
   push:
@@ -39,9 +39,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-23-v14
-          PREVIOUS_VERSION: 2026-11-23-v13
-          PREVIOUS_COMMIT: ba97198f8c6c3be124c592729ef11412942b990e
+          RELEASE_VERSION: 2026-11-23-v15
+          PREVIOUS_VERSION: 2026-11-23-v14
+          PREVIOUS_COMMIT: 46cd20394a5fda257e7366436c88daf7f28b01fb
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -58,35 +58,35 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-23-v14-packages
+          name: Collect-TCG-Dev-2026-11-23-v15-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-23-v14-full.zip
-            release/Collect-TCG-Dev-2026-11-23-v13-to-2026-11-23-v14-patch.zip
+            release/Collect-TCG-Dev-2026-11-23-v15-full.zip
+            release/Collect-TCG-Dev-2026-11-23-v14-to-2026-11-23-v15-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-23-v14.txt'
+          MANIFEST='release-manifests/2026-11-23-v15.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-23-v14'
-            echo 'Previous version: 2026-11-23-v13'
+            echo 'Version: 2026-11-23-v15'
+            echo 'Previous version: 2026-11-23-v14'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Match Sort and Filters to the Currency, Search and Add Card control heights.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v14-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v13-to-2026-11-23-v14-patch.zip'
-            echo 'Changed files: Toolbar CSS, stylesheet cache reference and release workflow.'
+            echo 'Purpose: Replace Carousell in the desktop social strip and mobile footer with eBay accounts 1–5.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-23-v15-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v14-to-2026-11-23-v15-patch.zip'
+            echo 'Changed files: Desktop social strip and mobile footer in dev/index.html, and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
-            echo 'Validation limitations: Interactive desktop, mobile and Safari listing/download checks were not exercised by CI.'
+            echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
             echo
             cat release/checksums.txt
           } > "$MANIFEST"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-23-v14: record package validation'
+          git commit -m 'Development 2026-11-23-v15: record package validation'
           git pull --rebase origin main
           git push
