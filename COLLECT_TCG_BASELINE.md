@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development desktop toolbar — 2026-11-23-v14
+
+- Replaces `2026-11-23-v13`. Desktop Sort and Filters use the same toolbar height as Currency. Updated `dev/src/styles/02-components.css` and its cache reference in `dev/index.html`.
+- The CSS check passed and both release ZIPs passed integrity checks. Browser rendering was not exercised. No SQL or migrations. [Release manifest](release-manifests/2026-11-23-v14.txt).
+
 ## Development full Sold rows, SOLD ribbon and Facebook links — 2026-11-23-v13
 
 - Replaces `2026-11-23-v04`. Sold grid pagination fills complete rows on intermediate pages. The single-card Facebook post keeps the Collect TCG URL beneath the sold price and includes the saved eBay URL when present. This release also validates the 65-character album-title rule, new post headers, and shared SOLD ribbon on listing photos and downloads.
