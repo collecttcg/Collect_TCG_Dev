@@ -1,0 +1,13 @@
+Version: 2026-11-23-v03
+Previous version: 2026-11-23-v02
+Source commit: cdbd03e39137836573ef5f5d377f643fdbaae8b4
+Purpose: Increase Facebook collage listing-number size and reserve space below each photo.
+Full ZIP: Collect-TCG-Dev-2026-11-23-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v02-to-2026-11-23-v03-patch.zip
+Changed files: Shared collage renderer, cache entry points, label-size regression fixture and release workflow.
+SQL required: No.
+Validation: npm run validate; eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari export were not exercised by CI.
+
+d741564d0fc08555552c1e6a005154c95d877e6d7e2acfd83ad5c9b8ae4b8e41  release/Collect-TCG-Dev-2026-11-23-v03-full.zip
+93e3dcef15f4e3db1dbf12c7234aa2489e17d523a7d7ecce7cd3c9915002b193  release/Collect-TCG-Dev-2026-11-23-v02-to-2026-11-23-v03-patch.zip
