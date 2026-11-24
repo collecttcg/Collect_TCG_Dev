@@ -1,0 +1,13 @@
+Version: 2026-11-24-v01
+Previous version: 2026-11-23-v20
+Source commit: 642c5b8ea145f82e535a1da10e063cb7ca6e8162
+Purpose: Use 3-by-3 Facebook eBay collages with centered partial rows and retain the 25-image cap.
+Full ZIP: Collect-TCG-Dev-2026-11-24-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-23-v20-to-2026-11-24-v01-patch.zip
+Changed files: Card List collage renderer, ZIP regression fixture, app cache references and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+58a960848422599941ca37b6c94f7d048b226fbd25113157dd90821ae6a78f72  release/Collect-TCG-Dev-2026-11-24-v01-full.zip
+facf32267076e95884271f386a8547143e61c4bfe2af23c06657487d145022bf  release/Collect-TCG-Dev-2026-11-23-v20-to-2026-11-24-v01-patch.zip
