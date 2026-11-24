@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook eBay 3×3 collages — 2026-11-24-v01
+
+- Replaces `2026-11-23-v20`. Collage exports fill nine photos in post order and center the final partial row. Over 225 selections use larger batches to preserve the 25-file cap. Small selections retain individual first photos.
+- Development CI, ordered ZIP fixture and both archive integrity checks passed. Interactive exports and live deployment were not independently tested. No SQL required. [Manifest](release-manifests/2026-11-24-v01.txt).
+
 ## Development collection footer cleanup — 2026-11-23-v20
 
 - Removed the standalone Carddass Hyper Battle link from the app shell. The collection page and sitemap entry remain. Development CI, SEO checks and both ZIP integrity checks passed. No SQL required. Interactive browser rendering was not tested. [Manifest](release-manifests/2026-11-23-v20.txt).
