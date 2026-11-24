@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-24-v01 — Fill Facebook eBay collages with nine photos.
+# 2026-11-24-v01 — Fill Facebook eBay collages with nine photos and verify batch ranges.
 on:
   workflow_dispatch:
   push:
@@ -77,7 +77,7 @@ jobs:
             echo 'Purpose: Use 3-by-3 Facebook eBay collages with centered partial rows and retain the 25-image cap.'
             echo 'Full ZIP: Collect-TCG-Dev-2026-11-24-v01-full.zip'
             echo 'Patch ZIP: Collect-TCG-Dev-2026-11-23-v20-to-2026-11-24-v01-patch.zip'
-            echo 'Changed files: Card List collage renderer, app cache references and release workflow.'
+            echo 'Changed files: Card List collage renderer, ZIP regression fixture, app cache references and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
