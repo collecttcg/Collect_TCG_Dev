@@ -460,7 +460,7 @@ async function ensureJsZip(){
   }
 
 async function addFirstPhotoCollages(zip,cards,limit,progressCallback,failedCards){
-    const batchSize=Math.ceil(cards.length/limit);
+    const batchSize=Math.max(9,Math.ceil(cards.length/limit));
     let added=0;
     let imageCount=0;
     for(let start=0;start<cards.length;start+=batchSize){
@@ -482,8 +482,10 @@ async function addFirstPhotoCollages(zip,cards,limit,progressCallback,failedCard
         for(let index=start;index<end;index++){
           const card=cards[index];
           const slot=index-start;
-          const x=(slot%columns)*tile;
-          const y=Math.floor(slot/columns)*tile;
+          const row=Math.floor(slot/columns);
+          const rowSize=Math.min(columns,end-start-row*columns);
+          const x=((columns-rowSize)/2+slot%columns)*tile;
+          const y=row*tile;
           const photo=appContext.getImages(card)[0];
           let asset;
           try{
