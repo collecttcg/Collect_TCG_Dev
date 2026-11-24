@@ -1,0 +1,13 @@
+Version: 2026-11-24-v02
+Previous version: 2026-11-24-v01
+Source commit: 4334e0969374abf321e19910caf9f9f1ca0c6bf2
+Purpose: Show loading status before Inventory counts resolve, expose quick-filter state and enforce three source exclusions.
+Full ZIP: Collect-TCG-Dev-2026-11-24-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-24-v01-to-2026-11-24-v02-patch.zip
+Changed files: Inventory shell and controller, app entry points and cache references, release contracts, baseline and release workflow.
+SQL required: No.
+Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+55e872ac956dace983f85b681aecb8ddfea9e2ec6fb2758678ede8336c1d2500  release/Collect-TCG-Dev-2026-11-24-v02-full.zip
+e9b41ec7f58b169c6811c1a1b062a4482327cd36e92bbd1344e0d0473f38a28c  release/Collect-TCG-Dev-2026-11-24-v01-to-2026-11-24-v02-patch.zip
