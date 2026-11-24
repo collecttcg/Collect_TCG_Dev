@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `642c5b8ea145f82e535a1da10e063cb7ca6e8162`.
+- Development latest non-baseline commit: `8c65e01205ae8bca2470b5b6e61d37566a4643bf`.
 - Production latest non-baseline commit: `93e2db1c73c6fd3f0d0e6636299e1bb79b38fa97`.
 - Production rollback ref: `dd1f0913474c95d1efae8dd7398bf88462afe955`.
-- Latest local release manifest: [`2026-11-23-v20`](release-manifests/2026-11-23-v20.txt) from `c3cfef9e1ad35cbe584b0834ff92689532ec1f01`.
-- Latest local change: `642c5b8ea145f82e535a1da10e063cb7ca6e8162` · Validate nine-photo collage batch ranges.
+- Latest local release manifest: [`2026-11-24-v01`](release-manifests/2026-11-24-v01.txt) from `642c5b8ea145f82e535a1da10e063cb7ca6e8162`.
+- Latest local change: `8c65e01205ae8bca2470b5b6e61d37566a4643bf` · Development 2026-11-24-v01: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
