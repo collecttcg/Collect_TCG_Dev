@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Inventory feedback and release checks — 2026-11-24-v02
+
+- Inventory displays a loading message before its first filtered count. Quick filters expose the selected state to assistive technology. Three release exclusions now fail on forbidden text and read errors. No SQL or backend changes. Validation and packaging evidence is recorded by the [release workflow](.github/workflows/release-dev.yml) and its immutable manifest on success.
+
 ## Development Facebook eBay 3×3 collages — 2026-11-24-v01
 
 - Replaces `2026-11-23-v20`. Collage exports fill nine photos in post order and center the final partial row. Over 225 selections use larger batches to preserve the 25-file cap. Small selections retain individual first photos.

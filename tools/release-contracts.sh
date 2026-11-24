@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+require_absent() {
+  local pattern=$1 status
+  shift
+  if grep -F -- "$pattern" "$@" > /dev/null; then
+    echo "Unexpected retained source text: $pattern" >&2
+    return 1
+  else
+    status=$?
+    if (( status != 1 )); then return "$status"; fi
+  fi
+}
+
 # Runtime registration and output are exercised by the feature tests in npm run validate.
 echo "== Validate Phase 2B1 discovery migration =="
 set -euo pipefail
@@ -34,7 +46,7 @@ grep -Fq 'history.pushState(state,"",cleanUrl.pathname+cleanUrl.search+cleanUrl.
 grep -q 'state.collectTcgSpaCardId=id' dev/src/app/routing.js
 grep -q 'window.addEventListener("popstate", appContext.router)' dev/src/app/routing.js
 grep -q 'history.back()' dev/src/features/cards/details.js
-! grep -q 'location.assign(clean)' dev/src/app/routing.js
+require_absent 'location.assign(clean)' dev/src/app/routing.js
 grep -q 'meta\[name="collect-tcg-card-id"\]' dev/src/app/routing.js
 test "$(grep -o 'appContext.isLiveLifecycle(card)' dev/src/features/social/posts*.js | wc -l | tr -d ' ')" -ge "2"
 grep -Fq 'appContext.isLiveLifecycle(card) && appContext.cardMatchesListingScope' dev/src/features/media/collage.js
@@ -121,7 +133,7 @@ echo "== Validate Beta v08 card details and eBay images =="
 set -euo pipefail
 node --check dev/src/features/cards/details.js
 node --check dev/src/features/social/posts.js
-! grep -q 'class="details-desktop-contact-socials"' dev/src/features/cards/details.js
+require_absent 'class="details-desktop-contact-socials"' dev/src/features/cards/details.js
 grep -q 'class="detail-buy-cta"' dev/src/features/cards/details.js
 grep -q 'detailsContactSocialLinksHtml("details-buy-social-links")' dev/src/features/cards/details.js
 grep -q 'id="ebayDownloadImages"' dev/src/features/social/posts*.js
@@ -136,7 +148,7 @@ grep -q 'function facebookGroupSalesFooterLines' dev/src/features/social/posts*.
 grep -q 'Group-friendly (short)' dev/src/features/social/posts*.js
 grep -q 'Detailed listing' dev/src/features/social/posts*.js
 grep -Fq 'Price & full details:' dev/src/features/social/posts*.js
-! grep -Fq 'groupFriendly ? groupCopy.price : text.priceRefer' dev/src/features/social/posts*.js
+require_absent 'groupFriendly ? groupCopy.price : text.priceRefer' dev/src/features/social/posts*.js
 grep -Fq 'Worldwide shipping available' dev/src/features/social/posts*.js
 grep -Fq 'more photos / video' dev/src/features/social/posts*.js
 grep -q '<option value="detailed" selected>Detailed listing</option>' dev/src/features/social/posts*.js

@@ -4,7 +4,9 @@ function syncQuickFilterUI(){
     const wrap = appContext.$("quickFilters");
     if(!wrap) return;
     wrap.querySelectorAll(".quick-filter").forEach(btn=>{
-      btn.classList.toggle("active", btn.dataset.quick === appContext.activeQuickFilter);
+      const selected = btn.dataset.quick === appContext.activeQuickFilter;
+      btn.classList.toggle("active", selected);
+      btn.setAttribute("aria-pressed", String(selected));
     });
 
     const activeLabel=appContext.$("desktopQuickFiltersActive");
@@ -35,7 +37,7 @@ function inventoryQuickFiltersHTML(){
       ["trending","🔥 Trending","Trending"],
       ["new","Newly Added","Newly Added"]
     ].map(([value,desktopLabel,mobileLabel])=>
-      `<button type="button" class="quick-filter" data-quick="${value}"><span class="quick-filter-label-desktop">${desktopLabel}</span><span class="quick-filter-label-mobile">${mobileLabel}</span></button>`
+      `<button type="button" class="quick-filter" data-quick="${value}" aria-pressed="${value === appContext.activeQuickFilter}"><span class="quick-filter-label-desktop">${desktopLabel}</span><span class="quick-filter-label-mobile">${mobileLabel}</span></button>`
     ).join("");
   }
 
@@ -76,7 +78,7 @@ function inventoryPageHTML(scopeMeta,scope){
         </div>
 
         <div class="inventory-toolbar-context">
-          <span class="inventory-result-count" aria-live="polite"><strong id="inventoryResultCount">0</strong> results</span>
+          <span class="inventory-result-count" aria-live="polite"><strong id="inventoryResultCount">Loading listings…</strong><span id="inventoryResultLabel" hidden> results</span></span>
           ${appContext.getRecentlyViewedCards().length ? `<a href="#/recent" class="inventory-recent-link">Recently Viewed</a>` : ""}
         </div>
 
@@ -364,8 +366,8 @@ function inventoryPageHTML(scopeMeta,scope){
 
       <div class="sticky-mobile-results-bar" id="stickyMobileResultsBar" aria-label="Results controls">
         <div class="sticky-mobile-results-count">
-          <strong id="stickyMobileResultCount">0</strong>
-          <span>Cards</span>
+          <strong id="stickyMobileResultCount">Loading listings…</strong>
+          <span id="stickyMobileResultLabel" hidden>Cards</span>
         </div>
 
         <button type="button" class="sticky-mobile-results-action" id="stickyMobileSortBtn" aria-expanded="false">

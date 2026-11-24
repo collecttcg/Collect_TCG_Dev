@@ -1,5 +1,5 @@
 import { createInventoryPagination, fullRowPageSize } from './pagination.js?v=2026-11-23-v11';
-import { registerInventoryShell } from './page-shell.js?v=2026-11-23-v19';
+import { registerInventoryShell } from './page-shell.js?v=2026-11-24-v02';
 /** 2026-09-29-v09: inventory interaction controller. */
 export function register(appContext){
   registerInventoryShell(appContext);
@@ -832,6 +832,10 @@ function renderInventoryPage(scope = "inventory"){
       if(mobileResultCount) mobileResultCount.textContent=String(list.length);
       const desktopResultCount=appContext.$("inventoryResultCount");
       if(desktopResultCount) desktopResultCount.textContent=list.length.toLocaleString();
+      for(const id of ["inventoryResultLabel","stickyMobileResultLabel"]){
+        const label=appContext.$(id);
+        if(label) label.hidden=false;
+      }
       const compactMobileResultCount=appContext.$("inventoryMobileCompactResultCount");
       if(compactMobileResultCount) compactMobileResultCount.textContent=list.length.toLocaleString();
       const footerResultCount=appContext.$("mobileFilterFooterResultCount");
