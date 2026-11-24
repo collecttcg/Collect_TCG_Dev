@@ -1,7 +1,7 @@
 /** 2026-09-29-v10: Post Generator coordinator. */
 import { registerGiveawayPosts } from './posts-giveaway.js?v=2026-09-29-v09';
 import { registerMarketplacePosts } from './posts-marketplace.js?v=2026-11-22-v06';
-import { registerCardListPosts } from './posts-card-list.js?v=2026-11-23-v03';
+import { registerCardListPosts } from './posts-card-list.js?v=2026-11-24-v01';
 import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-23-v02';
 export function register(appContext){
 function compactGeneratedPostSpacing(value){
