@@ -1,0 +1,13 @@
+Version: 2026-11-24-v03
+Previous version: 2026-11-24-v02
+Source commit: be8d285c0c80d940e8e17b2e428f5bc17c13c1fe
+Purpose: Open the Owner sign-in dialog from a direct bookmark with existing authentication and permissions.
+Full ZIP: Collect-TCG-Dev-2026-11-24-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-24-v02-to-2026-11-24-v03-patch.zip
+Changed files: Owner authentication, startup and routing, app cache references, sign-in fixture, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+5b24aabd0e85980913e1d0e28983dbdfed256ae6a19ba0003a985a73a4097690  release/Collect-TCG-Dev-2026-11-24-v03-full.zip
+8a91dbd9d1c7fc41636cd47e4ff74e4b90b55071b9f84d941f768b23dee2d858  release/Collect-TCG-Dev-2026-11-24-v02-to-2026-11-24-v03-patch.zip
