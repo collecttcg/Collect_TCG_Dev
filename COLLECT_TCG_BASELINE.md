@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development Inventory feedback and release checks — 2026-11-24-v02
 
-- Inventory displays a loading message before its first filtered count. Quick filters expose the selected state to assistive technology. Three release exclusions now fail on forbidden text and read errors. No SQL or backend changes. Validation and packaging evidence is recorded by the [release workflow](.github/workflows/release-dev.yml) and its immutable manifest on success.
+- Inventory displays a loading message before its first filtered count. Quick filters expose the selected state to assistive technology. Three release exclusions now fail on forbidden text and read errors. No SQL or backend changes. All 89 tests passed. [Release CI and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45336274553), [archive checksums](release-manifests/2026-11-24-v02.txt) and [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45336317217) confirmed. Desktop Chrome with Dev analytics exclusion showed loading, 189 eBay listings, 319 on All, synchronized pressed states and zero results for an unmatched search. Mobile and Safari not tested. No Dev rollback ref verified.
 
 ## Development Facebook eBay 3×3 collages — 2026-11-24-v01
 
