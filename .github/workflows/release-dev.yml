@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-24-v02 — Improve Inventory loading and quick-filter accessibility, and enforce release exclusions.
+# 2026-11-24-v03 — Direct Owner sign-in bookmark.
 on:
   workflow_dispatch:
   push:
@@ -24,6 +24,7 @@ jobs:
       - name: Development validation
         run: |
           npm run validate
+          node tools/check-owner-login.mjs
           node tools/check-facebook-ebay-post.mjs
           node tools/check-private-facebook-listing.mjs
           node tools/check-sold-download-ribbon.mjs
@@ -39,9 +40,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-24-v02
-          PREVIOUS_VERSION: 2026-11-24-v01
-          PREVIOUS_COMMIT: 642c5b8ea145f82e535a1da10e063cb7ca6e8162
+          RELEASE_VERSION: 2026-11-24-v03
+          PREVIOUS_VERSION: 2026-11-24-v02
+          PREVIOUS_COMMIT: 4334e0969374abf321e19910caf9f9f1ca0c6bf2
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -58,28 +59,28 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-24-v02-packages
+          name: Collect-TCG-Dev-2026-11-24-v03-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-24-v02-full.zip
-            release/Collect-TCG-Dev-2026-11-24-v01-to-2026-11-24-v02-patch.zip
+            release/Collect-TCG-Dev-2026-11-24-v03-full.zip
+            release/Collect-TCG-Dev-2026-11-24-v02-to-2026-11-24-v03-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-24-v02.txt'
+          MANIFEST='release-manifests/2026-11-24-v03.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-24-v02'
-            echo 'Previous version: 2026-11-24-v01'
+            echo 'Version: 2026-11-24-v03'
+            echo 'Previous version: 2026-11-24-v02'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Show loading status before Inventory counts resolve, expose quick-filter state and enforce three source exclusions.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-24-v02-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-24-v01-to-2026-11-24-v02-patch.zip'
-            echo 'Changed files: Inventory shell and controller, app entry points and cache references, release contracts, baseline and release workflow.'
+            echo 'Purpose: Open the Owner sign-in dialog from a direct bookmark with existing authentication and permissions.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-24-v03-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-24-v02-to-2026-11-24-v03-patch.zip'
+            echo 'Changed files: Owner authentication, startup and routing, app cache references, sign-in fixture, baseline and release workflow.'
             echo 'SQL required: No.'
-            echo 'Validation: npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
+            echo 'Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
             echo
             cat release/checksums.txt
@@ -87,6 +88,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-24-v02: record package validation'
+          git commit -m 'Development 2026-11-24-v03: record package validation'
           git pull --rebase origin main
           git push

@@ -541,6 +541,7 @@ function updateListingUrlFromControls(){
   }
 
 function router(){
+    appContext.openOwnerLoginFromUrl();
     appContext.updateStatusNavCounts();
     const route=appContext.currentRoute();
 

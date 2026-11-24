@@ -82,6 +82,7 @@ async function startApp(){
       appContext.recordWebsiteVisit();
     }
 
+    appContext.openOwnerLoginFromUrl();
     const initialRoute=appContext.currentRoute();
     const directCardEntry=String(initialRoute||"").startsWith("card/");
 

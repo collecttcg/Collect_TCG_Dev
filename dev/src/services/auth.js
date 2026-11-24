@@ -505,6 +505,73 @@ async function openOwnerAccess(){
     const password = prompt("Owner password:");
     if(password === null) return;
 
+    await signInOwner(email,password);
+  }
+
+function openOwnerLoginFromUrl(){
+    if(location.hash !== "#/owner-login") return;
+
+    history.replaceState(history.state,"","#/home");
+    if(appContext.isOwnerAuthenticated() || document.getElementById("ownerLoginDialog")) return;
+
+    const dialog=document.createElement("dialog");
+    dialog.id="ownerLoginDialog";
+    dialog.setAttribute("aria-labelledby","ownerLoginTitle");
+    dialog.style.cssText="width:min(24rem,calc(100% - 2rem));box-sizing:border-box;padding:1.25rem;border:1px solid #cbd5e1;border-radius:12px;color:#0f172a;background:#fff";
+    dialog.innerHTML=`
+      <form style="display:grid;gap:1rem">
+        <h2 id="ownerLoginTitle">Owner sign in</h2>
+        <label style="display:grid;gap:.25rem">Email
+          <input type="email" name="email" autocomplete="username" required autofocus>
+        </label>
+        <label style="display:grid;gap:.25rem">Password
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <p role="alert" hidden></p>
+        <div style="display:flex;justify-content:flex-end;gap:.5rem">
+          <button type="button" class="btn-ghost">Cancel</button>
+          <button type="submit" class="btn-primary">Sign in</button>
+        </div>
+      </form>`;
+
+    const form=dialog.querySelector("form");
+    const submit=form.querySelector('button[type="submit"]');
+    const cancel=form.querySelector('button[type="button"]');
+    const password=form.elements.password;
+    const status=form.querySelector('[role="alert"]');
+    const showError=message=>{
+      status.hidden=false;
+      status.textContent=message;
+    };
+    cancel.addEventListener("click",()=>dialog.close());
+    dialog.addEventListener("cancel",event=>{
+      if(submit.disabled) event.preventDefault();
+    });
+    form.addEventListener("submit",async event=>{
+      event.preventDefault();
+      if(submit.disabled) return;
+      submit.disabled=cancel.disabled=true;
+      status.hidden=true;
+      try{
+        if(await signInOwner(form.elements.email.value,password.value,showError)){
+          dialog.close();
+          return;
+        }
+      }catch(error){
+        console.error("Owner sign-in error:",error);
+        showError("Could not complete Owner sign in");
+      }finally{
+        submit.disabled=cancel.disabled=false;
+        password.value="";
+        if(dialog.open) password.focus();
+      }
+    });
+    dialog.addEventListener("close",()=>dialog.remove(),{once:true});
+    document.body.append(dialog);
+    dialog.showModal();
+  }
+
+async function signInOwner(email,password,showError=appContext.showToast){
     const { data, error } = await appContext.supabaseClient.auth.signInWithPassword({
       email: email.trim(),
       password
@@ -512,8 +579,8 @@ async function openOwnerAccess(){
 
     if(error){
       console.error("Login error:", error);
-      appContext.showToast("Login failed");
-      return;
+      showError("Login failed");
+      return false;
     }
 
     appContext.ownerSession=data.session;
@@ -527,8 +594,8 @@ async function openOwnerAccess(){
       appContext.writeOwnerBuyerPreviewPreference(false);
       appContext.clearOwnerOnlyClientState();
       appContext.applyOwnerMode();
-      appContext.showToast("This account is not authorized as owner");
-      return;
+      showError("This account is not authorized as owner");
+      return false;
     }
 
     appContext.ownerBuyerPreview=false;
@@ -546,19 +613,20 @@ async function openOwnerAccess(){
       ]);
       appContext.router();
       appContext.showToast("Mobile rearrange access enabled");
-      return;
+      return true;
     }
 
     const loaded=await appContext.loadCards();
 
     if(!loaded && !appContext.cards.length){
       appContext.renderCatalogueLoadError();
-      return;
+      return true;
     }
 
     appContext.router();
     appContext.showToast("Owner login successful");
+    return true;
   }
 
-  Object.assign(appContext,{isMobileOwnerBlocked,isOwnerAuthenticated,isOwnerBuyerPreview,isOwnerMode,canManageCollectionOrder,readOwnerBuyerPreviewPreference,writeOwnerBuyerPreviewPreference,ensureOwnerBuyerPreviewToggle,syncOwnerBuyerPreviewToggle,setOwnerBuyerPreview,toggleOwnerBuyerPreview,requireCollectionOrderOwner,verifyOwnerSessionResult,verifyOwnerSession,clearOwnerOnlyClientState,applyOwnerMode,requireOwner,confirmOwnerAction,refreshOwnerSession,ownerPostHandoffNonce,currentOwnerPostHandoffNonce,removeOwnerPostHandoffParam,receiveOwnerPostGeneratorHandoff,openOwnerPostGenerator,openOwnerAccess});
+  Object.assign(appContext,{isMobileOwnerBlocked,isOwnerAuthenticated,isOwnerBuyerPreview,isOwnerMode,canManageCollectionOrder,readOwnerBuyerPreviewPreference,writeOwnerBuyerPreviewPreference,ensureOwnerBuyerPreviewToggle,syncOwnerBuyerPreviewToggle,setOwnerBuyerPreview,toggleOwnerBuyerPreview,requireCollectionOrderOwner,verifyOwnerSessionResult,verifyOwnerSession,clearOwnerOnlyClientState,applyOwnerMode,requireOwner,confirmOwnerAction,refreshOwnerSession,ownerPostHandoffNonce,currentOwnerPostHandoffNonce,removeOwnerPostHandoffParam,receiveOwnerPostGeneratorHandoff,openOwnerPostGenerator,openOwnerAccess,openOwnerLoginFromUrl});
 }

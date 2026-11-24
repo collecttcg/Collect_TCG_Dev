@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Owner sign-in bookmark — 2026-11-24-v03
+
+- Replaces `2026-11-24-v02`. The direct Owner sign-in URL opens a password-masked dialog. The existing Supabase login and Owner verification apply, including the mobile Collection ordering limit. No public navigation or sitemap link was added. No SQL or backend change.
+- Added a fixture for cancellation, rejected credentials and non-Owner access, successful sign-in, active-session revisits and desktop/mobile permission boundaries. See the release manifest and GitHub Actions for package and deployment evidence.
+
 ## Development Inventory feedback and release checks — 2026-11-24-v02
 
 - Inventory displays a loading message before its first filtered count. Quick filters expose the selected state to assistive technology. Three release exclusions now fail on forbidden text and read errors. No SQL or backend changes. All 89 tests passed. [Release CI and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45336274553), [archive checksums](release-manifests/2026-11-24-v02.txt) and [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45336317217) confirmed. Desktop Chrome with Dev analytics exclusion showed loading, 189 eBay listings, 319 on All, synchronized pressed states and zero results for an unmatched search. Mobile and Safari not tested. No Dev rollback ref verified.
