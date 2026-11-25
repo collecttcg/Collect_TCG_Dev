@@ -1048,8 +1048,40 @@ function toggleDetailsMoreMenu(){
     btn.setAttribute("aria-expanded",willOpen ? "true" : "false");
 
     if(willOpen){
+      renderDetailsPostActions(menu);
       const first=menu.querySelector('button:not([hidden])');
       first?.focus({preventScroll:true});
+    }
+  }
+
+function renderDetailsPostActions(menu){
+    menu.querySelectorAll("[data-details-post]").forEach(button=>button.remove());
+    if(!appContext.isOwnerMode()) return;
+
+    const card=appContext.getCardById(appContext.detailsCardId||"");
+    const before=menu.querySelector("#detailsCloneBtn");
+    if(!card || !before) return;
+
+    const actions=[
+      ["single","Generate FB Post",()=>true],
+      ["carousell","Generate Carousell Post",target=>appContext.cardLifecycle(target)!=="archived"],
+      ["ebay","Generate eBay Post",target=>appContext.isLiveLifecycle(target)]
+    ];
+
+    for(const [mode,label,isEligible] of actions){
+      if(!isEligible(card)) continue;
+      const button=document.createElement("button");
+      button.type="button";
+      button.className="owner-only";
+      button.dataset.detailsPost=mode;
+      button.setAttribute("role","menuitem");
+      button.textContent=label;
+      button.addEventListener("click",()=>{
+        if(!appContext.requireOwner(label) || appContext.detailsCardId!==card.id) return;
+        const current=appContext.getCardById(card.id);
+        if(current && isEligible(current)) appContext.openOwnerPostGenerator(mode,current.id);
+      });
+      menu.insertBefore(button,before);
     }
   }
 

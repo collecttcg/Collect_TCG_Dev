@@ -12,10 +12,15 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Card Details post generators — 2026-11-25-v02
+
+- Replaces `2026-11-25-v01`. Card Details → More offers the Facebook, Carousell and eBay Post Generator actions to owners using the current card and existing listing eligibility. No SQL required.
+- Regression coverage exercises the active listing, Owner gate, archived eligibility, and stale menu actions. Interactive layout and generator pop-ups were not tested.
+
 ## Development Owner sign-in completion — 2026-11-25-v01
 
 - Replaces `2026-11-24-v03`. The bookmark closes the dialog as soon as Owner verification succeeds. Errors loading the Owner view are reported separately. Existing Owner verification and mobile permission limits apply. No SQL required.
-- The regression fixture forces an Owner data loading failure after verification and checks that the dialog closes before loading, the session stays verified, and the notice describes the loading error. Browser sign-in with real credentials was not tested.
+- The regression fixture forces an Owner data loading failure after verification and checks that the dialog closes before loading, the session stays verified, and the notice describes the loading error. Browser sign-in with real credentials was not tested. [Validated release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45522898685) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45522960595).
 
 ## Development Owner sign-in bookmark — 2026-11-24-v03
 
