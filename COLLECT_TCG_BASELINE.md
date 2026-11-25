@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development private invoice archive — 2026-11-26-v09
 
-- Replaces v08. Explicit PDF uploads use the private Owner-only `owner-invoices-dev` Supabase bucket. Saved invoices are listed by number and upload date with search, viewing, and downloads. Legacy browser records remain visible and can be re-uploaded manually. The approved Dev bucket migration was applied and verified in Supabase. Chromium fixtures exercised upload, search, viewing, byte-exact download, duplicate handling, deletion, mobile list layout and an unavailable bucket. A signed-in live upload and Safari were not tested.
+- Replaces v08. Explicit PDF uploads use the private Owner-only `owner-invoices-dev` Supabase bucket. Saved invoices are listed by number and upload date with search, viewing, and downloads. Legacy browser records remain visible and can be re-uploaded manually. The approved Dev bucket migration was applied and verified in Supabase. Chromium fixtures exercised upload, search, viewing, byte-exact download, duplicate handling, deletion, mobile list layout and an unavailable bucket. A signed-in live upload and Safari were not tested. Repository validation, both ZIP checks, and six live file comparisons passed. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45660175387).
 
 ## Development manual invoice archive — 2026-11-26-v08
 
