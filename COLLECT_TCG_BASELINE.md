@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development private invoice archive — 2026-11-26-v09
+
+- Replaces v08. Explicit PDF uploads use the private Owner-only `owner-invoices-dev` Supabase bucket. Saved invoices are listed by number and upload date with search, viewing, and downloads. Legacy browser records remain visible and can be re-uploaded manually. The approved Dev bucket migration was applied and verified in Supabase. Chromium fixtures exercised upload, search, viewing, byte-exact download, duplicate handling, deletion, mobile list layout and an unavailable bucket. A signed-in live upload and Safari were not tested.
+
 ## Development manual invoice archive — 2026-11-26-v08
 
 - Replaces v07. Preview and print are read-only. Owners can manually upload a PDF with its original invoice number, open uploaded PDFs or legacy saved previews, and delete selected records. Suggested numbering uses the highest remaining local invoice number with a floor of 0000000001. Chromium verified legacy record deletion, preview without saving, upload and reopening, duplicate rejection and invalid-file handling. Safari was not tested. No SQL required. Release validation and both ZIP checks passed. Six live files matched the validated release. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45658216381).
