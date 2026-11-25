@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Post Generator consolidation — 2026-11-25-v04
+
+- Replaces `2026-11-25-v03`. Single Card Post automatically uses the dedicated Collection Showcase template for Collection (NFS) cards. Existing NFS bookmarks still prefilter Collection cards, and direct card links preselect the requested card.
+- Giveaway groups Announce Giveaway and Announce Winners while preserving both mode links and underlying workflows. “Share eBay Listings on Facebook” clarifies the distinction from the eBay Listing generator. No SQL required.
+
 ## Development home page title — 2026-11-25-v03
 
 - Replaces `2026-11-25-v02`. The browser tab and social share title now read “One Piece Cards in Malaysia & Singapore | Collect TCG.” The catalogue and card-specific titles retain their existing behavior. No SQL required.
