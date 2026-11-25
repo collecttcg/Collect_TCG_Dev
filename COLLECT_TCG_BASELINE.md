@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development invoice history — 2026-11-26-v07
 
-- Replaces v06. The Owner invoice generator saves invoice data in browser IndexedDB, reopens saved invoices for printing, allocates the next ten-digit number in one transaction, and offers five seller names. Numbering starts after the supplied invoice 0000000001. Chromium fixtures covered Owner access, seller choices, simultaneous tabs, persistence after reload, blocked-popup recovery and PDF output. Safari was not tested. No SQL required.
+- Replaces v06. The Owner invoice generator saves invoice data in browser IndexedDB, reopens saved invoices for printing, allocates the next ten-digit number in one transaction, and offers five seller names. Numbering starts after the supplied invoice 0000000001. Chromium fixtures covered Owner access, seller choices, simultaneous tabs, persistence after reload, blocked-popup recovery and PDF output. Safari was not tested. No SQL required. Release validation and both ZIP checks passed. All six live application files matched the validated source. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45656922937).
 
 ## Development invoice print margins — 2026-11-26-v06
 
