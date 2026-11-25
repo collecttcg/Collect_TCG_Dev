@@ -1,5 +1,5 @@
 /** 2026-09-29-v10: Post Generator coordinator. */
-import { registerGiveawayPosts } from './posts-giveaway.js?v=2026-09-29-v09';
+import { registerGiveawayPosts } from './posts-giveaway.js?v=2026-11-25-v05';
 import { registerMarketplacePosts } from './posts-marketplace.js?v=2026-11-22-v06';
 import { registerCardListPosts } from './posts-card-list.js?v=2026-11-24-v01';
 import { registerFacebookEbayPosts } from './posts-facebook-ebay.js?v=2026-11-23-v02';
@@ -486,8 +486,7 @@ function facebookToolsHeaderHTML(mode){
       single:"Create a Facebook post for a listing or a card from your personal collection.",
       nfs:"Create a showcase post for one Not For Sale card from your personal collection.",
       list:"Create a complete Facebook sales list from your available inventory.",
-      giveaway:"Create a reusable Facebook giveaway post from your giveaway template.",
-      winner:"Create a winner-announcement post from your saved Past Winners.",
+      giveaway:"Create a Facebook post for a giveaway or announce its winners.",
       carousell:"Create a ready-to-copy Carousell listing description from your card inventory.",
       "facebook-ebay":"Create a Facebook post from selected cards listed on eBay.",
       ebay:"Create an eBay-ready title, item specifics and listing description from one inventory card, with its listing photos ready to download."
@@ -498,7 +497,7 @@ function facebookToolsHeaderHTML(mode){
         <div>
           <div class="eyebrow">Owner Tools</div>
           <h2>Post Generator Tools</h2>
-          <p>${appContext.escapeHtml(descriptions[mode]||descriptions.single)}</p>
+          <p>${appContext.escapeHtml(descriptions[giveawayActive ? "giveaway" : mode]||descriptions.single)}</p>
         </div>
       </div>
       <div class="fb-tools-switcher" role="tablist" aria-label="Post generator type">
@@ -555,10 +554,39 @@ function facebookToolsHeaderHTML(mode){
       </div>
       ${giveawayActive ? `
         <nav aria-label="Giveaway post type" class="fb-post-copy-actions">
-          <a class="${mode==="giveaway" ? "btn-primary" : "btn-ghost"}" href="#/fb-tools?mode=giveaway"${mode==="giveaway" ? ' aria-current="page"' : ''}>Announce Giveaway</a>
-          <a class="${mode==="winner" ? "btn-primary" : "btn-ghost"}" href="#/fb-tools?mode=winner"${mode==="winner" ? ' aria-current="page"' : ''}>Announce Winners</a>
+          <a data-giveaway-post-mode="giveaway" class="${mode==="giveaway" ? "btn-primary" : "btn-ghost"}" href="#/fb-tools?mode=giveaway"${mode==="giveaway" ? ' aria-current="page"' : ''}>Announce Giveaway</a>
+          <a data-giveaway-post-mode="winner" class="${mode==="winner" ? "btn-primary" : "btn-ghost"}" href="#/fb-tools?mode=winner"${mode==="winner" ? ' aria-current="page"' : ''}>Announce Winners</a>
         </nav>` : ""}
     `);
+  }
+
+function renderGiveawayToolsPanel(mode){
+    const view=appContext.view;
+    let panel=view.querySelector("[data-giveaway-post-panel]");
+    if(!panel){
+      view.innerHTML=`${appContext.facebookToolsHeaderHTML(mode)}<div data-giveaway-post-panel></div>`;
+      panel=view.querySelector("[data-giveaway-post-panel]");
+      view.querySelectorAll("[data-giveaway-post-mode]").forEach(tab=>{
+        tab.addEventListener("click",event=>{
+          if(event.button!==0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+          if(!appContext.requireOwner("open giveaway post tools")) return;
+          event.preventDefault();
+          const next=tab.dataset.giveawayPostMode;
+          if(next===appContext.currentFacebookToolMode()) return;
+          history.pushState(history.state,"",tab.getAttribute("href"));
+          renderGiveawayToolsPanel(next);
+        });
+      });
+    }
+    view.querySelectorAll("[data-giveaway-post-mode]").forEach(tab=>{
+      const active=tab.dataset.giveawayPostMode===mode;
+      tab.classList.toggle("btn-primary",active);
+      tab.classList.toggle("btn-ghost",!active);
+      if(active) tab.setAttribute("aria-current","page");
+      else tab.removeAttribute("aria-current");
+    });
+    if(mode==="winner") appContext.renderGiveawayWinnerPostGeneratorPage(panel);
+    else appContext.renderFbGiveawayPostGeneratorPage(panel);
   }
 
 function renderFacebookToolsPage(){
@@ -568,10 +596,9 @@ function renderFacebookToolsPage(){
 
     if(mode==="list"){
       appContext.renderFbCardListGeneratorPage();
-    }else if(mode==="giveaway"){
-      appContext.renderFbGiveawayPostGeneratorPage();
-    }else if(mode==="winner"){
-      appContext.renderGiveawayWinnerPostGeneratorPage();
+    }else if(mode==="giveaway" || mode==="winner"){
+      renderGiveawayToolsPanel(mode);
+      return;
     }else if(mode==="carousell"){
       appContext.renderCarousellPostGeneratorPage();
     }else if(mode==="facebook-ebay"){

@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Giveaway panel switching — 2026-11-25-v05
+
+- Replaces `2026-11-25-v04`. Giveaway tabs retain the generator header and switch only the lower form and preview. Fixed an undefined listener that stopped the Winners form from initializing. No SQL required.
+
 ## Development Post Generator consolidation — 2026-11-25-v04
 
 - Replaces `2026-11-25-v03`. Single Card Post automatically uses the dedicated Collection Showcase template for Collection (NFS) cards. Existing NFS bookmarks still prefilter Collection cards, and direct card links preselect the requested card.

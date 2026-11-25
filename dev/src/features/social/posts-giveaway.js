@@ -149,21 +149,13 @@ function buildGiveawayWinnerAnnouncementPost(selectedWinners,language="en"){
     return appContext.compactGeneratedPostSpacing(lines.join("\n"));
   }
 
-function renderGiveawayWinnerPostGeneratorPage(){
+function renderGiveawayWinnerPostGeneratorPage(mount=appContext.view){
     if(!appContext.requireOwner("open giveaway winner post generator")) return;
 
     const pastWinners=appContext.sortedPastGiveawayWinners();
     const selectedIds=new Set();
 
-    appContext.view.innerHTML=`
-      <div class="page-head fb-post-page-head">
-        <div>
-          <div class="eyebrow">Owner Tool</div>
-          <h2>Giveaway Winner Post Generator</h2>
-          <p>Select saved Past Winners. Each selected winner is automatically matched with the prize and Facebook profile saved on that giveaway.</p>
-        </div>
-      </div>
-
+    mount.innerHTML=`
       <div class="fb-card-list-layout">
         <section class="panel fb-card-list-builder">
           <div class="fb-post-section-title">
@@ -331,8 +323,6 @@ function renderGiveawayWinnerPostGeneratorPage(){
       selectedIds.clear();
       renderList();
     });
-
-    postFormatInput.addEventListener("change",syncPostFormatUI);
 
     copyBtn.addEventListener("click",()=>{
       appContext.copyPlainText(output.value,"Winner announcement copied");
@@ -513,7 +503,7 @@ function buildFbGiveawayPost(values,sourceGiveaway=null){
     return appContext.compactGeneratedPostSpacing(lines.join("\n"));
   }
 
-function renderFbGiveawayPostGeneratorPage(){
+function renderFbGiveawayPostGeneratorPage(mount=appContext.view){
     if(!appContext.requireOwner("open giveaway post generator")) return;
 
     const prefs=appContext.getFbGiveawayPostPrefs();
@@ -521,15 +511,7 @@ function renderFbGiveawayPostGeneratorPage(){
       .slice()
       .sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
 
-    appContext.view.innerHTML=`
-      <div class="page-head fb-post-page-head">
-        <div>
-          <div class="eyebrow">Owner Tool</div>
-          <h2>Facebook Giveaway Post Generator</h2>
-          <p>Load an existing giveaway if useful, then edit the reusable Facebook giveaway template.</p>
-        </div>
-      </div>
-
+    mount.innerHTML=`
       <div class="fb-post-layout fb-giveaway-layout">
         <section class="panel fb-post-builder fb-giveaway-builder">
           <div class="fb-post-section-title">

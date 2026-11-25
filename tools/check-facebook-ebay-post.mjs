@@ -176,19 +176,44 @@ assert.match(field('fbPostTitle').value,/COLLECTION SHOWCASE/);
 assert.match(field('fbPostOutput').value,/NOT FOR SALE — PERSONAL COLLECTION/);
 assert.match(field('fbPostOutput').value,/#\/collection/);
 assert.equal(field('fbPostTemplateMode').disabled,true);
-for(const renderer of ['renderFbGiveawayPostGeneratorPage','renderGiveawayWinnerPostGeneratorPage']){
-  singleApp[renderer]=()=>{singleApp.view.rendered=renderer;};
-}
-singleApp.view.querySelector=()=>null;
-singleApp.view.insertAdjacentHTML=(_position,html)=>{singleApp.view.header=html;};
-for(const [mode,renderer] of [['giveaway','renderFbGiveawayPostGeneratorPage'],['winner','renderGiveawayWinnerPostGeneratorPage']]){
-  singleApp.currentHashParams=()=>new URLSearchParams('mode='+mode);
-  singleApp.renderFacebookToolsPage();
-  assert.equal(singleApp.view.rendered,renderer);
-  assert.equal((singleApp.view.header.match(/role="tab"/g)||[]).length,6);
-  assert.match(singleApp.view.header,/Announce Giveaway/);
-  assert.match(singleApp.view.header,/Announce Winners/);
-}
+const panel={};
+const tabs=['giveaway','winner'].map(mode=>({
+  dataset:{giveawayPostMode:mode},
+  classList:{toggle(){}},
+  addEventListener(_event,fn){this.click=fn;},
+  getAttribute:()=>"#/fb-tools?mode="+mode,
+  setAttribute(_key,value){this.current=value;},
+  removeAttribute(){delete this.current;}
+}));
+let mode='giveaway';
+let shellRenders=0;
+Object.assign(singleApp.view,{
+  querySelector:selector=>selector==="[data-giveaway-post-panel]" && shellRenders ? panel : null,
+  querySelectorAll:()=>tabs,
+  insertAdjacentHTML(_position,html){this.header=html;}
+});
+Object.defineProperty(singleApp.view,"innerHTML",{set(html){this.header=html;shellRenders++;}});
+singleApp.currentHashParams=()=>new URLSearchParams('mode='+mode);
+globalThis.history={pushState(_state,_title,hash){mode=hash.split('mode=')[1];}};
+singleApp.renderFbGiveawayPostGeneratorPage=mount=>{assert.equal(mount,panel);mount.rendered='giveaway';};
+singleApp.sortedPastGiveawayWinners=()=>[];
+field('winnerPostSelectionList').querySelectorAll=()=>[];
+singleApp.renderFacebookToolsPage();
+assert.equal(panel.rendered,'giveaway');
+assert.equal((singleApp.view.header.match(/role="tab"/g)||[]).length,6);
+assert.match(singleApp.view.header,/Announce Giveaway/);
+assert.match(singleApp.view.header,/Announce Winners/);
+tabs[1].click({button:0,preventDefault(){}});
+assert.equal(mode,'winner');
+assert.equal(shellRenders,1);
+assert.equal(tabs[1].current,'page');
+assert.match(panel.innerHTML,/Winner Announcement/);
+assert.match(field('winnerPostSelectionList').innerHTML,/No Past Winners/);
+tabs[0].click({button:0,preventDefault(){}});
+assert.equal(mode,'giveaway');
+assert.equal(shellRenders,1);
+assert.equal(tabs[0].current,'page');
+delete globalThis.history;
 singleApp.currentHashParams=()=>new URLSearchParams('mode=nfs');
 singleApp.renderFacebookToolsPage();
 assert.equal(field('fbPostStatusFilter').value,'Collection (NFS)');
