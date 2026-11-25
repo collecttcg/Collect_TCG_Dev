@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development printable invoice design — 2026-11-26-v03
+
+- Replaces `2026-11-26-v02`. The invoice preview and PDF have a stronger branded header, aligned invoice metadata, numbered item rows, and a distinct amount-paid summary. The print layout keeps existing invoice fields and addresses. No SQL required.
+
+
 ## Development invoice field visibility — 2026-11-26-v02
 
 - Replaces `2026-11-26-v01`. Invoice inputs, dropdown and description box have distinct borders and backgrounds, a keyboard focus outline, and theme-aware native controls. Optional seller and buyer addresses appear under their names on the invoice when entered. No SQL required. The Owner access, invoice fields, and printable layout are carried forward.
