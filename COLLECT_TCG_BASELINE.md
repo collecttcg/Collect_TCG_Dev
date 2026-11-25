@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development invoice field visibility — 2026-11-26-v02
 
 - Replaces `2026-11-26-v01`. Invoice inputs, dropdown and description box have distinct borders and backgrounds, a keyboard focus outline, and theme-aware native controls. Optional seller and buyer addresses appear under their names on the invoice when entered. No SQL required. The Owner access, invoice fields, and printable layout are carried forward.
+- Repository validation and both ZIP integrity checks passed. Local fixtures covered optional address output, escaping, and Owner access. Interactive desktop, mobile, and Safari checks were unavailable. The first Pages deployment returned HTTP 500. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45648672084).
 
 
 ## Development Owner-only invoice generator — 2026-11-26-v01
