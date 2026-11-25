@@ -1,0 +1,13 @@
+Version: 2026-11-26-v06
+Previous version: 2026-11-26-v05
+Source commit: 8a38a35bd1f3765f5920c26d613efae0e33b111a
+Purpose: Remove browser margin text from printed invoices.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v06-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v05-to-2026-11-26-v06-patch.zip
+Changed files: Printable invoice styling, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+7d4e242ad17694588f3263bfc93cbf228a24455734425360aa20438abd96f9f4  release/Collect-TCG-Dev-2026-11-26-v06-full.zip
+319002412d336bc6fd37ac4aa7ffed4c16099ad59261fee7d7d0c70e94d1a538  release/Collect-TCG-Dev-2026-11-26-v05-to-2026-11-26-v06-patch.zip
