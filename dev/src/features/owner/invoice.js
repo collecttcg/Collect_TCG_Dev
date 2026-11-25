@@ -29,19 +29,12 @@ function readHistory(db) {
   });
 }
 
-function saveInvoice(db, details) {
+function changeHistory(db, write) {
   return new Promise((resolve, reject) => {
-    // Read the latest numbers and insert in one read-write transaction, including across tabs.
     const transaction = db.transaction("invoices", "readwrite");
-    const store = transaction.objectStore("invoices");
-    const latest = store.openCursor(null, "prev");
-    let invoice;
-    latest.onsuccess = () => {
-      invoice = { ...details, sequence: Math.max(lastIssuedNumber, latest.result?.key ?? 0) + 1 };
-      store.add(invoice);
-    };
-    transaction.oncomplete = () => resolve(invoice);
-    transaction.onabort = () => reject(transaction.error);
+    const request = write(transaction.objectStore("invoices"));
+    transaction.oncomplete = () => resolve();
+    transaction.onabort = () => reject(request.error ?? transaction.error);
   });
 }
 
@@ -55,9 +48,9 @@ export function renderInvoiceGenerator(appContext) {
       ${appContext.inventoryToolsSwitcher("activity", "invoice")}
       <form class="panel" id="ownerInvoiceForm" autocomplete="off" style="max-width:780px;margin-top:20px;padding:20px">
         <style>
-          #ownerInvoiceForm .invoice-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
-          #ownerInvoiceForm label{display:grid;gap:6px}
-          #ownerInvoiceForm :is(input,select,textarea){box-sizing:border-box;width:100%;min-height:44px;padding:10px;border:1px solid #777f8c;border-radius:8px;background:var(--surface-2);color:var(--text);font:inherit}
+          :is(#ownerInvoiceForm,#ownerInvoiceUpload) .invoice-fields, #ownerInvoiceUpload{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
+          :is(#ownerInvoiceForm,#ownerInvoiceUpload) label{display:grid;gap:6px}
+          :is(#ownerInvoiceForm,#ownerInvoiceUpload) :is(input,select,textarea){box-sizing:border-box;width:100%;min-height:44px;padding:10px;border:1px solid #777f8c;border-radius:8px;background:var(--surface-2);color:var(--text);font:inherit}
           #ownerInvoiceForm :is(input,select,textarea):focus{outline:2px solid var(--invoice-focus);outline-offset:2px}
           #ownerInvoiceForm ::placeholder{color:var(--text-muted);opacity:1}
           #ownerInvoiceForm{--invoice-focus:var(--accent-teal);color-scheme:dark}
@@ -84,13 +77,20 @@ export function renderInvoiceGenerator(appContext) {
           </label>
         </div>
         <p role="status" data-invoice-status></p>
-        <button class="btn-primary" type="submit" disabled>Save &amp; Preview Invoice</button>
+        <button class="btn-primary" type="submit" disabled>Preview Invoice</button>
       </form>
       <section class="panel" aria-label="Saved invoices" style="max-width:780px;margin-top:20px;padding:20px">
         <h3>Saved invoices</h3>
-        <p class="muted">Invoice history is available in this browser.</p>
+        <p class="muted">Save the preview as a PDF, then upload it here when you want it added to this browser’s invoice history.</p>
+        <form id="ownerInvoiceUpload" class="invoice-fields">
+          <label>Invoice PDF <input name="pdf" type="file" accept=".pdf,application/pdf" required></label>
+          <label>Invoice number on PDF <input name="sequence" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required></label>
+          <button class="btn-primary" type="submit" disabled>Upload Invoice</button>
+        </form>
+        <p role="status" id="ownerInvoiceHistoryStatus"></p>
         <label>Invoice <select id="ownerSavedInvoice" disabled><option value="">Loading invoices…</option></select></label>
         <button class="btn-ghost" type="button" id="ownerOpenInvoice" disabled>Open Invoice</button>
+        <button class="btn-ghost" type="button" id="ownerDeleteInvoice" disabled>Delete Invoice</button>
       </section>
     </div>`;
 
@@ -107,24 +107,35 @@ export function renderInvoiceGenerator(appContext) {
   });
 
   const submit = form.querySelector("button[type=submit]");
+  const archive = appContext.$("ownerInvoiceUpload");
+  const upload = archive.querySelector("button[type=submit]");
+  const historyStatus = appContext.$("ownerInvoiceHistoryStatus");
   const savedInvoices = appContext.$("ownerSavedInvoice");
   const openInvoice = appContext.$("ownerOpenInvoice");
+  const deleteInvoice = appContext.$("ownerDeleteInvoice");
+  const fileInput = archive.elements.pdf;
+  const sequenceInput = archive.elements.sequence;
   let records = [];
   let db;
+  let writing = false;
+
+  function updateHistoryButtons() {
+    openInvoice.disabled = writing || !savedInvoices.value;
+    deleteInvoice.disabled = writing || !savedInvoices.value;
+    upload.disabled = writing;
+  }
 
   async function refreshHistory(selected = "") {
     records = await readHistory(db);
     fields.namedItem("number").value = invoiceNumber(nextSequence(records));
     savedInvoices.replaceChildren(new Option(records.length ? "Select an invoice" : "No saved invoices", ""));
     for (const invoice of [...records].reverse()) {
-      savedInvoices.add(new Option(
-        `${invoiceNumber(invoice.sequence)} · ${invoice.date} · ${invoice.client}`,
-        String(invoice.sequence)
-      ));
+      const label = invoice.pdf ? invoice.pdf.name : `${invoice.date} · ${invoice.client}`;
+      savedInvoices.add(new Option(`${invoiceNumber(invoice.sequence)} · ${label}`, String(invoice.sequence)));
     }
     savedInvoices.value = selected;
     savedInvoices.disabled = !records.length;
-    openInvoice.disabled = !savedInvoices.value;
+    updateHistoryButtons();
   }
 
   openHistory().then(connection => {
@@ -137,8 +148,10 @@ export function renderInvoiceGenerator(appContext) {
     savedInvoices.options[0].text = "Invoice history unavailable";
   });
 
-  savedInvoices.addEventListener("change", () => {
-    openInvoice.disabled = !savedInvoices.value;
+  savedInvoices.addEventListener("change", updateHistoryButtons);
+  fileInput.addEventListener("change", () => {
+    const filename = fileInput.files[0]?.name ?? "";
+    sequenceInput.value = filename.match(/^invoice[ _-]+([0-9]{1,10})(?:[ _]*\([0-9]+\))?\.pdf$/i)?.[1] ?? "";
   });
 
   openInvoice.addEventListener("click", () => {
@@ -146,54 +159,109 @@ export function renderInvoiceGenerator(appContext) {
     const invoice = records.find(item => String(item.sequence) === savedInvoices.value);
     if (!invoice) return;
     const preview = window.open("", "_blank");
-    if (preview) {
-      status.textContent = "";
-      renderPreview(appContext, invoice, preview);
-    } else {
-      status.textContent = "Allow pop-ups for this site to preview your saved invoice.";
+    if (!preview) {
+      historyStatus.textContent = "Allow pop-ups for this site to open your saved invoice.";
+      return;
     }
+    historyStatus.textContent = "";
+    if (invoice.pdf) {
+      const url = URL.createObjectURL(new Blob([invoice.pdf], { type: "application/pdf" }));
+      preview.opener = null;
+      preview.location.replace(url);
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } else {
+      renderPreview(appContext, invoice, preview);
+    }
+  });
+
+  async function updateHistory(write, selected, successMessage, failureMessage) {
+    writing = true;
+    updateHistoryButtons();
+    try {
+      await changeHistory(db, write);
+      historyStatus.textContent = successMessage;
+    } catch (error) {
+      historyStatus.textContent = error?.name === "ConstraintError"
+        ? "That invoice number is already saved."
+        : failureMessage;
+      return false;
+    } finally {
+      try {
+        await refreshHistory(selected);
+      } catch {
+        historyStatus.textContent += " Reload the page to refresh the list.";
+      }
+      writing = false;
+      updateHistoryButtons();
+    }
+    return true;
+  }
+
+  archive.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!appContext.requireOwner("upload an invoice") || !db || writing) return;
+    const pdf = fileInput.files[0];
+    const sequence = Number(sequenceInput.value);
+    if (!pdf || !archive.reportValidity() || sequence < 1) return;
+    writing = true;
+    updateHistoryButtons();
+    let signature;
+    try {
+      signature = await pdf.slice(0, 5).text();
+    } catch {
+      historyStatus.textContent = "The selected file could not be read.";
+      return;
+    } finally {
+      writing = false;
+      updateHistoryButtons();
+    }
+    if (signature !== "%PDF-") {
+      historyStatus.textContent = "Select a valid PDF file.";
+      return;
+    }
+    if (!appContext.requireOwner("store an uploaded invoice")) return;
+    const saved = await updateHistory(
+      store => store.add({ sequence, pdf }),
+      String(sequence),
+      `Invoice ${invoiceNumber(sequence)} uploaded.`,
+      "The invoice could not be uploaded."
+    );
+    if (saved) archive.reset();
+  });
+
+  deleteInvoice.addEventListener("click", async () => {
+    if (!appContext.requireOwner("delete a saved invoice") || writing || !savedInvoices.value) return;
+    const sequence = Number(savedInvoices.value);
+    const number = invoiceNumber(sequence);
+    if (!window.confirm(`Delete invoice ${number} from this browser’s history?`)) return;
+    await updateHistory(store => store.delete(sequence), "", `Invoice ${number} deleted.`, "The invoice could not be deleted.");
   });
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
-    if (!appContext.requireOwner("save an invoice") || submit.disabled) return;
+    if (!appContext.requireOwner("preview an invoice") || submit.disabled) return;
     status.textContent = "";
     fields.client.value = fields.client.value.trim();
     fields.description.value = fields.description.value.trim();
     if (!form.reportValidity() || !sellers.includes(fields.seller.value) || !currencies.includes(fields.currency.value)) return;
 
     const details = Object.fromEntries(invoiceFields.map(name => [name, fields.namedItem(name).value.trim()]));
-    submit.disabled = true;
     const preview = window.open("", "_blank");
-    let invoice;
+    if (!preview) {
+      status.textContent = "Allow pop-ups for this site to preview your invoice.";
+      return;
+    }
+    submit.disabled = true;
     try {
-      invoice = await saveInvoice(db, details);
+      await refreshHistory(savedInvoices.value);
+      if (appContext.isOwnerMode()) renderPreview(appContext, { ...details, sequence: nextSequence(records) }, preview);
+      else preview.close();
     } catch {
-      preview?.close();
-      status.textContent = "Invoice could not be saved. Your entries are still here.";
+      preview.close();
+      status.textContent = "The invoice preview could not open.";
+    } finally {
       submit.disabled = false;
-      return;
     }
-
-    for (const name of ["client", "amount", "buyerAddress", "description"]) fields.namedItem(name).value = "";
-    status.textContent = `Invoice ${invoiceNumber(invoice.sequence)} saved.`;
-    try {
-      if (preview && appContext.isOwnerMode()) renderPreview(appContext, invoice, preview);
-      else {
-        preview?.close();
-        status.textContent += " Open it from Saved invoices to preview and print.";
-      }
-    } catch {
-      preview?.close();
-      status.textContent += " The preview could not open. Try again from Saved invoices.";
-    }
-    try {
-      await refreshHistory(String(invoice.sequence));
-    } catch {
-      status.textContent += " Reload this page to refresh invoice history.";
-      return;
-    }
-    submit.disabled = false;
   });
 }
 
