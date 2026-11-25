@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development eBay seller profile links — 2026-11-25-v10
+
+- Replaces `2026-11-25-v09`. Collect TCG seller accounts 3–5 use ebay.com in the site shell, About and Contact pages, and Facebook card list and drop posts. No SQL required.
+
 ## Development Facebook Post Generator tile logos — 2026-11-25-v09
 
 - Replaces `2026-11-25-v08`. Single Card Post and Card List Post show Facebook’s blue logo. Share eBay Listings on Facebook pairs the locally hosted eBay and Facebook logos. No SQL required.

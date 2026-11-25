@@ -40,13 +40,13 @@ function renderAboutPage(){
           <a class="about-link" href="https://www.ebay.com/str/collecttcg2" target="_blank" rel="noopener noreferrer">
             <span><b>🛒 eBay COLLECT_TCG_2</b><small>Official Collect TCG account</small></span><span>↗</span>
           </a>
-          <a class="about-link" href="https://www.ebay.co.uk/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer">
+          <a class="about-link" href="https://www.ebay.com/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer">
             <span><b>🛒 eBay COLLECT_TCG_3</b><small>Official Collect TCG account</small></span><span>↗</span>
           </a>
-          <a class="about-link" href="https://www.ebay.co.uk/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer">
+          <a class="about-link" href="https://www.ebay.com/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer">
             <span><b>🛒 eBay COLLECT_TCG_4</b><small>Official Collect TCG account</small></span><span>↗</span>
           </a>
-          <a class="about-link" href="https://www.ebay.co.uk/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer">
+          <a class="about-link" href="https://www.ebay.com/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer">
             <span><b>🛒 eBay COLLECT_TCG_5</b><small>Official Collect TCG account</small></span><span>↗</span>
           </a>
         </div>
@@ -106,9 +106,9 @@ function renderContactPage(){
           <div class="contact-links official-ebay-links">
             <a class="contact-link" href="https://www.ebay.com/usr/COLLECT_TCG_1" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_1</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
             <a class="contact-link" href="https://www.ebay.com/str/collecttcg2" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_2</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.co.uk/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_3</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.co.uk/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_4</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.co.uk/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_5</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_3</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_4</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_5</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
           </div>
           <p class="official-ebay-note">Only the eBay accounts listed here should be considered official Collect TCG eBay accounts.</p>
         </section>
