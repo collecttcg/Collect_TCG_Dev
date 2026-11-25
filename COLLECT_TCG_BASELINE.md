@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development marketplace tile logos — 2026-11-25-v08
+
+- Replaces `2026-11-25-v07`. The eBay Listing and Carousell Post tiles use locally hosted marks sourced from the eBay Playbook and Carousell Press. The visible labels supply the accessible names. No SQL required.
+
 ## Development Post Generator tile icons — 2026-11-25-v07
 
 - Replaces `2026-11-25-v06`. The six tiles have distinct emoji icons. Each icon is hidden from assistive technology because the adjacent label names the tool. No SQL required.

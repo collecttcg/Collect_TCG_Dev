@@ -534,7 +534,7 @@ function facebookToolsHeaderHTML(mode){
           </span>
         </a>
 
-        <a href="#/fb-tools?mode=ebay" class="fb-tools-switch ${mode==="ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="ebay" ? "true" : "false"}"><span class="fb-tools-switch-icon" aria-hidden="true">🏷️</span><span><strong>eBay Listing</strong><small>Choose one card · title · item specifics · description · image ZIP</small></span></a>
+        <a href="#/fb-tools?mode=ebay" class="fb-tools-switch ${mode==="ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="ebay" ? "true" : "false"}"><span class="fb-tools-switch-icon" aria-hidden="true"><img src="./assets/ebay-post-generator.svg" alt="" width="30" height="15"></span><span><strong>eBay Listing</strong><small>Choose one card · title · item specifics · description · image ZIP</small></span></a>
 
         <a href="#/fb-tools?mode=facebook-ebay" class="fb-tools-switch ${mode==="facebook-ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="facebook-ebay" ? "true" : "false"}">
           <span class="fb-tools-switch-icon" aria-hidden="true">📣</span>
@@ -545,7 +545,7 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${mode==="carousell" ? "active" : ""}"
            role="tab"
            aria-selected="${mode==="carousell" ? "true" : "false"}">
-          <span class="fb-tools-switch-icon" aria-hidden="true">🛍️</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true"><img src="./assets/carousell-post-generator.png" alt="" width="22" height="22"></span>
           <span>
             <strong>Carousell Post</strong>
             <small>Choose a card or giveaway prize · edit Product Details · copy listing template</small>
