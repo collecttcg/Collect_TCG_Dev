@@ -1,0 +1,13 @@
+Version: 2026-11-25-v09
+Previous version: 2026-11-25-v08
+Source commit: 6e98e627743323607838bc33149a4cfb2920ba98
+Purpose: Show Facebook marks on Single Card, Card List and Facebook eBay sharing tiles.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v09-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v08-to-2026-11-25-v09-patch.zip
+Changed files: Post Generator markup, brand assets, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+b2fb0d22c257ccb933d6e0fa978d7ffa0afb67b0b88f84ed73aaf8a865976034  release/Collect-TCG-Dev-2026-11-25-v09-full.zip
+eaa8abbc798399731b080f9d1e200bc209994f648e0b55a94b7f5c9775dc54a6  release/Collect-TCG-Dev-2026-11-25-v08-to-2026-11-25-v09-patch.zip
