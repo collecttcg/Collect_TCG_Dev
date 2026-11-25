@@ -92,35 +92,40 @@ export function renderInvoiceGenerator(appContext) {
         *{box-sizing:border-box}
         body{margin:0;background:#edefef;color:#20252b;font:15px/1.5 system-ui,sans-serif;overflow-wrap:anywhere}
         main{max-width:794px;margin:24px auto;background:#fff;padding:clamp(22px,6vw,54px);border:1px solid #ccd0d2;border-top:6px solid #9a641b}
-        header{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,4vw,38px);align-items:start;padding:0 0 25px;border-bottom:1px solid #bcc1c4}
-        .brand{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:0 0 13px}
-        .brand img{width:76px;height:76px;object-fit:contain}
+        header{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,4vw,38px);align-items:start;padding:20px 24px;background:#262a2e;color:white;border-bottom:3px solid #9a641b}
+        .brand{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:0}
+        .brand img{width:76px;height:76px;object-fit:contain;background:white;border-radius:50%}
         .brand strong{font-size:1.15rem}
         h1{margin:0 0 12px;font-size:clamp(1.9rem,5vw,3.15rem);font-weight:780;line-height:1.05;letter-spacing:.09em;text-transform:uppercase;text-align:right}
         dl{margin:0}
-        .metadata div{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;padding:7px 0;border-bottom:1px solid #dde0e1}
+        .metadata div{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;padding:7px 0;border-bottom:1px solid #72767a}
         dt,.section-label{color:#4a5056;font-size:.74rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase}
+        .metadata dt{color:#e6e8ea}
         dd{margin:0;text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
         p{margin:4px 0}
         .seller-name,.client-name{font-size:1.08rem;font-weight:700}
         .address{white-space:pre-wrap;color:#41474d}
-        .recipient{margin:24px 0;break-inside:avoid}
+        .parties{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0;break-inside:avoid}
+        .party{padding:12px 14px;border-left:3px solid #9a641b;background:#f5f5f4;min-width:0}
         table{border-collapse:collapse;width:100%;table-layout:fixed}
         th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #c8ccd2}
         thead th{background:#e9ebeb;border-top:2px solid #383e43;color:#252a2f;font-weight:750}
         th:first-child,td:first-child{width:3.3rem;text-align:center}
+        tbody tr:nth-child(even){background:#f5f5f4}
         tbody td:first-child{color:#515860;font-variant-numeric:tabular-nums}
         .paid{display:flex;justify-content:space-between;gap:12px 22px;align-items:baseline;flex-wrap:wrap;width:max-content;max-width:100%;margin:24px 0 0 auto;padding:12px 16px;border:1px solid #969a9d;border-top:3px solid #9a641b;background:#f4eee4;break-inside:avoid}
         .paid strong{font-size:1.24rem;font-variant-numeric:tabular-nums}
         footer{margin-top:46px;padding-top:13px;border-top:2px solid #383e43;text-align:center;color:#42484e;font-size:.85rem;break-inside:avoid}
         .print-controls{text-align:center;margin:20px auto;padding:0 12px;color:#42484e;font-size:.88rem}
         button{padding:10px 16px;border:1px solid #32373d;border-radius:6px;background:#252a2f;color:#fff;font:inherit;font-weight:650;cursor:pointer}
-        @media screen and (max-width:520px){main{margin:0}header{grid-template-columns:1fr}h1{text-align:left}.brand img{width:64px;height:64px}}
+        @media screen and (max-width:520px){main{margin:0}header,.parties{grid-template-columns:1fr}h1{text-align:left}.brand img{width:64px;height:64px}}
         @media print{
           body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
           main{margin:0;padding:12px 0 0;max-width:none;border-width:5px 0 0}
           .print-controls{display:none}
           header,tr{break-inside:avoid}
+          header{background:#eee;color:#20252b}
+          .metadata dt{color:#4a5056}
           thead{display:table-header-group}
         }
       </style></head><body>
@@ -130,10 +135,7 @@ export function renderInvoiceGenerator(appContext) {
       </div>
       <main>
         <header>
-          <div>
-            <div class="brand"><img src="${escape(logo.href)}" alt="Collect TCG logo"><strong>Collect TCG MY &amp; SG</strong></div>
-            <p class="section-label">Seller</p><p class="seller-name">${escape(fields.seller.value)}</p>${addressMarkup("sellerAddress")}
-          </div>
+          <div class="brand"><img src="${escape(logo.href)}" alt="Collect TCG logo"><strong>Collect TCG MY &amp; SG</strong></div>
           <div>
             <h1>Invoice</h1>
             <dl class="metadata">
@@ -142,7 +144,10 @@ export function renderInvoiceGenerator(appContext) {
             </dl>
           </div>
         </header>
-        <section class="recipient"><p class="section-label">Invoice to</p><p class="client-name">${escape(fields.client.value)}</p>${addressMarkup("buyerAddress")}</section>
+        <div class="parties">
+          <section class="party"><p class="section-label">Bill to</p><p class="client-name">${escape(fields.client.value)}</p>${addressMarkup("buyerAddress")}</section>
+          <section class="party"><p class="section-label">From</p><p class="seller-name">${escape(fields.seller.value)}</p>${addressMarkup("sellerAddress")}</section>
+        </div>
         <table><thead><tr><th scope="col">No.</th><th scope="col">Product or service description</th></tr></thead>
           <tbody>${descriptions.map((line,index) => `<tr><td>${index+1}</td><td>${escape(line)}</td></tr>`).join("")}</tbody>
         </table>

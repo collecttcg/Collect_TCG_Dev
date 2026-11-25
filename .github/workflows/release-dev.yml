@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-26-v03 — Refine the printable invoice layout.
+# 2026-11-26-v04 — Add an invoice banner, billing columns and alternating item rows.
 on:
   workflow_dispatch:
   push:
@@ -40,9 +40,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-26-v03
-          PREVIOUS_VERSION: 2026-11-26-v02
-          PREVIOUS_COMMIT: 0f5dced49386a1bda75a61c3028b650691d5c58e
+          RELEASE_VERSION: 2026-11-26-v04
+          PREVIOUS_VERSION: 2026-11-26-v03
+          PREVIOUS_COMMIT: 04313640ddb193e8b64015d0fc3349c7e8ce32cb
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -59,25 +59,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-26-v03-packages
+          name: Collect-TCG-Dev-2026-11-26-v04-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-26-v03-full.zip
-            release/Collect-TCG-Dev-2026-11-26-v02-to-2026-11-26-v03-patch.zip
+            release/Collect-TCG-Dev-2026-11-26-v04-full.zip
+            release/Collect-TCG-Dev-2026-11-26-v03-to-2026-11-26-v04-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-26-v03.txt'
+          MANIFEST='release-manifests/2026-11-26-v04.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-26-v03'
-            echo 'Previous version: 2026-11-26-v02'
+            echo 'Version: 2026-11-26-v04'
+            echo 'Previous version: 2026-11-26-v03'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Refine the printable invoice layout.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-26-v03-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-26-v02-to-2026-11-26-v03-patch.zip'
+            echo 'Purpose: Add an invoice banner, billing columns and alternating item rows.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-26-v04-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-26-v03-to-2026-11-26-v04-patch.zip'
             echo 'Changed files: Printable invoice styling, module cache references, baseline and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
@@ -88,6 +88,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-26-v03: record package validation'
+          git commit -m 'Development 2026-11-26-v04: record package validation'
           git pull --rebase origin main
           git push

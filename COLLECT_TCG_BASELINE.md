@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development invoice banner and billing columns — 2026-11-26-v04
+
+- Replaces `2026-11-26-v03`. Uses a charcoal branded preview banner and a print-friendly equivalent, side-by-side Bill to and From sections, and alternating item rows. No SQL required.
+
+
 ## Development printable invoice design — 2026-11-26-v03
 
 - Replaces `2026-11-26-v02`. The invoice preview and PDF have a stronger branded header, aligned invoice metadata, numbered item rows, and a distinct amount-paid summary. The print layout keeps existing invoice fields and addresses. No SQL required.
