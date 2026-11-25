@@ -1,5 +1,6 @@
 /** Module: features/content/information. Shared dependencies are explicit on appContext. */
 export function register(appContext){
+  const ebayLogo='<img src="./assets/ebay-post-generator.svg" alt="" width="34" height="17" style="vertical-align:middle">';
 function renderAboutPage(){
     appContext.view.innerHTML = `
       <div class="page-head information-page-head">
@@ -35,19 +36,19 @@ function renderAboutPage(){
             <span><b>Facebook</b><small>Collect TCG MY &amp; SG</small></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.ebay.com/usr/COLLECT_TCG_1" target="_blank" rel="noopener noreferrer">
-            <span><b>🛒 eBay COLLECT_TCG_1</b><small>Official Collect TCG account</small></span><span>↗</span>
+            <span><b>${ebayLogo} Collect TCG 1</b></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.ebay.com/str/collecttcg2" target="_blank" rel="noopener noreferrer">
-            <span><b>🛒 eBay COLLECT_TCG_2</b><small>Official Collect TCG account</small></span><span>↗</span>
+            <span><b>${ebayLogo} Collect TCG 2</b></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.ebay.com/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer">
-            <span><b>🛒 eBay COLLECT_TCG_3</b><small>Official Collect TCG account</small></span><span>↗</span>
+            <span><b>${ebayLogo} Collect TCG 3</b></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.ebay.com/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer">
-            <span><b>🛒 eBay COLLECT_TCG_4</b><small>Official Collect TCG account</small></span><span>↗</span>
+            <span><b>${ebayLogo} Collect TCG 4</b></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.ebay.com/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer">
-            <span><b>🛒 eBay COLLECT_TCG_5</b><small>Official Collect TCG account</small></span><span>↗</span>
+            <span><b>${ebayLogo} Collect TCG 5</b></span><span>↗</span>
           </a>
         </div>
 
@@ -104,11 +105,11 @@ function renderContactPage(){
           </div>
           <p>Collect TCG operates multiple official eBay accounts. All accounts listed below are owned and operated by Collect TCG MY &amp; SG.</p>
           <div class="contact-links official-ebay-links">
-            <a class="contact-link" href="https://www.ebay.com/usr/COLLECT_TCG_1" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_1</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.com/str/collecttcg2" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_2</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_3</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_4</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
-            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer"><span><b>COLLECT_TCG_5</b><small>Official Collect TCG eBay account</small></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/COLLECT_TCG_1" target="_blank" rel="noopener noreferrer"><span><b>${ebayLogo} Collect TCG 1</b></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/str/collecttcg2" target="_blank" rel="noopener noreferrer"><span><b>${ebayLogo} Collect TCG 2</b></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_3" target="_blank" rel="noopener noreferrer"><span><b>${ebayLogo} Collect TCG 3</b></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_4" target="_blank" rel="noopener noreferrer"><span><b>${ebayLogo} Collect TCG 4</b></span><span class="contact-arrow">↗</span></a>
+            <a class="contact-link" href="https://www.ebay.com/usr/collect_tcg_5" target="_blank" rel="noopener noreferrer"><span><b>${ebayLogo} Collect TCG 5</b></span><span class="contact-arrow">↗</span></a>
           </div>
           <p class="official-ebay-note">Only the eBay accounts listed here should be considered official Collect TCG eBay accounts.</p>
         </section>

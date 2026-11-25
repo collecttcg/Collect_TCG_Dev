@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development eBay account labels — 2026-11-25-v11
+
+- Replaces `2026-11-25-v10`. About and Contact show Collect TCG 1–5 with the existing eBay wordmark and remove repeated subtitles. Seller destinations and external-link arrows are retained. No SQL required.
+
 ## Development eBay seller profile links — 2026-11-25-v10
 
 - Replaces `2026-11-25-v09`. Collect TCG seller accounts 3–5 use ebay.com in the site shell, About and Contact pages, and Facebook card list and drop posts. No SQL required.
