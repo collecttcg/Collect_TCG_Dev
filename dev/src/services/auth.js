@@ -505,7 +505,7 @@ async function openOwnerAccess(){
     const password = prompt("Owner password:");
     if(password === null) return;
 
-    await signInOwner(email,password);
+    if(await signInOwner(email,password)) await finishOwnerSignIn();
   }
 
 function openOwnerLoginFromUrl(){
@@ -553,18 +553,18 @@ function openOwnerLoginFromUrl(){
       submit.disabled=cancel.disabled=true;
       status.hidden=true;
       try{
-        if(await signInOwner(form.elements.email.value,password.value,showError)){
-          dialog.close();
-          return;
-        }
+        if(!await signInOwner(form.elements.email.value,password.value,showError)) return;
+        dialog.close();
       }catch(error){
         console.error("Owner sign-in error:",error);
         showError("Could not complete Owner sign in");
+        return;
       }finally{
         submit.disabled=cancel.disabled=false;
         password.value="";
         if(dialog.open) password.focus();
       }
+      await finishOwnerSignIn();
     });
     dialog.addEventListener("close",()=>dialog.remove(),{once:true});
     document.body.append(dialog);
@@ -598,34 +598,44 @@ async function signInOwner(email,password,showError=appContext.showToast){
       return false;
     }
 
-    appContext.ownerBuyerPreview=false;
-    appContext.writeOwnerBuyerPreviewPreference(false);
-    appContext.applyOwnerMode();
-
-    if(appContext.isMobileOwnerBlocked()){
-      // Mobile remains on the public catalogue; only Collection ordering RPCs
-      // are authorized by this verified session.
-      await Promise.all([
-        appContext.loadCollectionCardOrder(),
-        appContext.loadCollectionGameOrder(),
-        appContext.loadInventoryCardOrder(),
-        appContext.loadInventoryGameOrder()
-      ]);
-      appContext.router();
-      appContext.showToast("Mobile rearrange access enabled");
-      return true;
-    }
-
-    const loaded=await appContext.loadCards();
-
-    if(!loaded && !appContext.cards.length){
-      appContext.renderCatalogueLoadError();
-      return true;
-    }
-
-    appContext.router();
-    appContext.showToast("Owner login successful");
     return true;
+  }
+
+async function finishOwnerSignIn(){
+    try{
+      appContext.ownerBuyerPreview=false;
+      appContext.writeOwnerBuyerPreviewPreference(false);
+      appContext.applyOwnerMode();
+
+      if(appContext.isMobileOwnerBlocked()){
+        // Mobile remains on the public catalogue; only Collection ordering RPCs
+        // are authorized by this verified session.
+        await Promise.all([
+          appContext.loadCollectionCardOrder(),
+          appContext.loadCollectionGameOrder(),
+          appContext.loadInventoryCardOrder(),
+          appContext.loadInventoryGameOrder()
+        ]);
+        appContext.router();
+        appContext.showToast("Mobile rearrange access enabled");
+        return;
+      }
+
+      const loaded=await appContext.loadCards();
+
+      if(!loaded && !appContext.cards.length){
+        appContext.renderCatalogueLoadError();
+        return;
+      }
+
+      appContext.router();
+      appContext.showToast("Owner login successful");
+    }catch(error){
+      console.error("Owner view failed to load after sign-in:",error);
+      appContext.showToast(appContext.isOwnerAuthenticated()
+        ? "Signed in, but the Owner view could not load. Refresh to try again."
+        : "Owner access could not be confirmed. Refresh to try again.");
+    }
   }
 
   Object.assign(appContext,{isMobileOwnerBlocked,isOwnerAuthenticated,isOwnerBuyerPreview,isOwnerMode,canManageCollectionOrder,readOwnerBuyerPreviewPreference,writeOwnerBuyerPreviewPreference,ensureOwnerBuyerPreviewToggle,syncOwnerBuyerPreviewToggle,setOwnerBuyerPreview,toggleOwnerBuyerPreview,requireCollectionOrderOwner,verifyOwnerSessionResult,verifyOwnerSession,clearOwnerOnlyClientState,applyOwnerMode,requireOwner,confirmOwnerAction,refreshOwnerSession,ownerPostHandoffNonce,currentOwnerPostHandoffNonce,removeOwnerPostHandoffParam,receiveOwnerPostGeneratorHandoff,openOwnerPostGenerator,openOwnerAccess,openOwnerLoginFromUrl});

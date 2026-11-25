@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Owner sign-in completion — 2026-11-25-v01
+
+- Replaces `2026-11-24-v03`. The bookmark closes the dialog as soon as Owner verification succeeds. Errors loading the Owner view are reported separately. Existing Owner verification and mobile permission limits apply. No SQL required.
+- The regression fixture forces an Owner data loading failure after verification and checks that the dialog closes before loading, the session stays verified, and the notice describes the loading error. Browser sign-in with real credentials was not tested.
+
 ## Development Owner sign-in bookmark — 2026-11-24-v03
 
 - Replaces `2026-11-24-v02`. The direct Owner sign-in URL opens a password-masked dialog. The existing Supabase login and Owner verification apply, including the mobile Collection ordering limit. No public navigation or sitemap link was added. No SQL or backend change.

@@ -21,6 +21,7 @@ let mobile=false;
 let attempts=0;
 let signouts=0;
 let routes=0;
+let toast;
 let outcome='invalid';
 const location={hash:'#/home'};
 globalThis.location=location;
@@ -53,7 +54,7 @@ Object.assign(context,{
   applyOwnerMode(){},
   clearOwnerOnlyClientState(){},
   writeOwnerBuyerPreviewPreference(){},
-  showToast(){},
+  showToast(message){toast=message;},
   loadCards:async()=>true,
   verifyOwnerSession:async()=>outcome==='owner',
   loadCollectionCardOrder:async()=>{},
@@ -118,5 +119,24 @@ assert.equal(context.canManageCollectionOrder(),true);
 assert.equal(context.isOwnerMode(),false);
 open();
 assert.equal(dialog,undefined);
+assert.equal(signouts,1);
+context.ownerSession=null;
+context.ownerVerified=false;
+mobile=false;
+let failLoad;
+const loading=new Promise((_resolve,reject)=>{failLoad=reject;});
+context.loadCards=()=>{
+  assert.equal(dialog,undefined,"The dialog closes before loading Owner data");
+  return loading;
+};
+open();
+const submission=submitCredentials();
+await new Promise(resolve=>setImmediate(resolve));
+assert.equal(dialog,undefined);
+assert.equal(context.isOwnerMode(),true);
+failLoad(new Error('Owner data load fixture'));
+await submission;
+assert.match(toast,/^Signed in, but the Owner view could not load/);
+assert.equal(context.isOwnerMode(),true);
 assert.equal(signouts,1);
 console.log('Owner sign-in URL, retry, cancellation, verification, and desktop/mobile permission fixtures passed.');

@@ -1,7 +1,7 @@
 import * as module0 from '../features/core/utilities.js?v=2026-11-22-v05';
 import * as module1 from '../features/cards/favorites.js?v=2026-09-29-v09';
 import * as module2 from '../features/inventory/ordering.js?v=2026-09-29-v09';
-import * as module3 from '../services/auth.js?v=2026-11-24-v03';
+import * as module3 from '../services/auth.js?v=2026-11-25-v01';
 import * as module4 from '../features/media/collage.js?v=2026-09-29-v09';
 import * as module5 from '../features/cards/repository.js?v=2026-11-11-v01';
 import * as module6 from '../app/navigation.js?v=2026-11-15-v06';
