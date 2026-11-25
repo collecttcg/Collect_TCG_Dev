@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `f1364ab8246b9ed9db7b86ca44511e4dd650ce78`.
+- Development latest non-baseline commit: `14a8496b57162a2bf5875d3601b27bd53c4a2c0b`.
 - Production latest non-baseline commit: `f332dd318123f7da0bdc8f313d20e0ba722b608c`.
 - Production rollback ref: `f332dd318123f7da0bdc8f313d20e0ba722b608c`.
-- Latest local release manifest: [`2026-11-25-v07`](release-manifests/2026-11-25-v07.txt) from `0b2677f81728e221a4b88295418b7ba54911fbdf`.
-- Latest local change: `f1364ab8246b9ed9db7b86ca44511e4dd650ce78` · Development 2026-11-25-v08: use eBay and Carousell tile logos.
+- Latest local release manifest: [`2026-11-25-v08`](release-manifests/2026-11-25-v08.txt) from `f1364ab8246b9ed9db7b86ca44511e4dd650ce78`.
+- Latest local change: `14a8496b57162a2bf5875d3601b27bd53c4a2c0b` · Development 2026-11-25-v08: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
