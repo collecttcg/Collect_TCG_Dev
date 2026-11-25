@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development marketplace tile logos — 2026-11-25-v08
 
 - Replaces `2026-11-25-v07`. The eBay Listing and Carousell Post tiles use locally hosted marks sourced from the eBay Playbook and Carousell Press. The visible labels supply the accessible names. No SQL required.
+- The Development suite and both ZIP integrity checks passed. Pages deployment succeeded. Browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45543980988) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45544017047).
 
 ## Development Post Generator tile icons — 2026-11-25-v07
 
