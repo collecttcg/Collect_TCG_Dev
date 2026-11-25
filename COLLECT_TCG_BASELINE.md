@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `8435a60b808fe1f9aef2779404dc5f2ac2bd743b`.
+- Development latest non-baseline commit: `13a6aa9bbf89b850647a6037a4f1d6c5401e47f1`.
 - Production latest non-baseline commit: `9a2b6c1c235ecd6be0389604afdf018f6a70c4a0`.
 - Production rollback ref: `24d2eb20e3494624e92d54c0a3839dbee2c966ef`.
-- Latest local release manifest: [`2026-11-26-v08`](release-manifests/2026-11-26-v08.txt) from `5f66de8a16ab32e8bf30085a92ff52bc1bce71b2`.
-- Latest local change: `8435a60b808fe1f9aef2779404dc5f2ac2bd743b` · Development 2026-11-26-v09: add private Supabase invoice archive.
+- Latest local release manifest: [`2026-11-26-v09`](release-manifests/2026-11-26-v09.txt) from `8435a60b808fe1f9aef2779404dc5f2ac2bd743b`.
+- Latest local change: `13a6aa9bbf89b850647a6037a4f1d6c5401e47f1` · Development 2026-11-26-v09: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
