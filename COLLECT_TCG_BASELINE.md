@@ -16,7 +16,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 - Adds Invoice Generator under Owner Inventory Tools → Activity. The printable invoice includes the Collect TCG logo, seller and client names, invoice number, date, item descriptions, and amount paid in USD, MYR, SGD, or JPY.
 - Invoice data stays in the form and its preview. No database or eBay connection and no SQL required. The existing verified desktop Owner gate also protects invoice generation.
-- Local validation covered JavaScript syntax, the repository validation suite, and invoice output and permission fixtures. Interactive browser and Safari testing were unavailable. Release packaging and deployment status are recorded separately once confirmed.
+- Local validation covered JavaScript syntax, the repository validation suite, and invoice output and permission fixtures. Interactive browser and Safari testing were unavailable. The release workflow passed, both ZIPs passed integrity checks, and the deployed invoice module matched the validated source. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45647864859) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45647944968).
 
 ## Development centered About buying example — 2026-11-25-v15
 
