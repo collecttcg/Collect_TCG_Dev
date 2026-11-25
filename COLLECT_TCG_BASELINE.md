@@ -15,10 +15,12 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development About and Contact platform logos — 2026-11-25-v12
 
 - Replaces `2026-11-25-v11`. Adds Facebook, Messenger, Instagram and Carousell logos to their About and Contact links. No SQL required.
+- Development validation and ZIP integrity checks passed. Pages deployed successfully. Interactive browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45549846883) · [Deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45549883075).
 
 ## Development eBay account labels — 2026-11-25-v11
 
 - Replaces `2026-11-25-v10`. About and Contact show Collect TCG 1–5 with the existing eBay wordmark and remove repeated subtitles. Seller destinations and external-link arrows are retained. No SQL required.
+- Development validation and ZIP integrity checks passed. Pages deployed successfully. Interactive browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45549684799) · [Deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45549744536).
 
 ## Development eBay seller profile links — 2026-11-25-v10
 
