@@ -1,0 +1,13 @@
+Version: 2026-11-25-v03
+Previous version: 2026-11-25-v02
+Source commit: c0470767362fa6e7560f493596484a249b91ac8c
+Purpose: Feature One Piece in the home page browser and sharing titles.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v02-to-2026-11-25-v03-patch.zip
+Changed files: Home page HTML, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+f2d08e838397fd1929481d78b6401962eee50095c714a7d70d6de9701c6d5589  release/Collect-TCG-Dev-2026-11-25-v03-full.zip
+181ae8d469a9df2b2c4f01e2c2948d1f9a726cd03343b5a61168e90e13023367  release/Collect-TCG-Dev-2026-11-25-v02-to-2026-11-25-v03-patch.zip
