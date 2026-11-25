@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development manual invoice archive — 2026-11-26-v08
 
-- Replaces v07. Preview and print are read-only. Owners can manually upload a PDF with its original invoice number, open uploaded PDFs or legacy saved previews, and delete selected records. Suggested numbering uses the highest remaining local invoice number with a floor of 0000000001. Chromium verified legacy record deletion, preview without saving, upload and reopening, duplicate rejection and invalid-file handling. Safari was not tested. No SQL required.
+- Replaces v07. Preview and print are read-only. Owners can manually upload a PDF with its original invoice number, open uploaded PDFs or legacy saved previews, and delete selected records. Suggested numbering uses the highest remaining local invoice number with a floor of 0000000001. Chromium verified legacy record deletion, preview without saving, upload and reopening, duplicate rejection and invalid-file handling. Safari was not tested. No SQL required. Release validation and both ZIP checks passed. Six live files matched the validated release. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45658216381).
 
 ## Development invoice history — 2026-11-26-v07
 

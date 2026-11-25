@@ -1,0 +1,14 @@
+Version: 2026-11-26-v08
+Previous version: 2026-11-26-v07
+Source commit: 5f66de8a16ab32e8bf30085a92ff52bc1bce71b2
+Purpose: Allow PDF uploads and deletion while keeping previews out of invoice history.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v08-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v07-to-2026-11-26-v08-patch.zip
+Changed files: Invoice preview and archive, app version references, baseline and release workflow.
+SQL required: No.
+Validation: Repository validation, Chromium preview/PDF, manual upload, duplicate, invalid file, legacy deletion, persistence and reopen checks, ZIP integrity, and six live file comparisons. Safari was not tested.
+Package run: https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45658216381
+Manifest recovered after the workflow push collided with another repository update.
+
+35beb8821b3db3e083d167ca98244de2d08accd4f261f2bdd81b7485c5a223b2  release/Collect-TCG-Dev-2026-11-26-v08-full.zip
+56dd58ba1e72f4b28a1e6e8140a450c7919d73ee18929da7fe5657846de22d95  release/Collect-TCG-Dev-2026-11-26-v07-to-2026-11-26-v08-patch.zip
