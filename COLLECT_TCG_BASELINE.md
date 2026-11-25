@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Post Generator tile icons — 2026-11-25-v07
+
+- Replaces `2026-11-25-v06`. The six tiles have distinct emoji icons. Each icon is hidden from assistive technology because the adjacent label names the tool. No SQL required.
+
 ## Development Facebook eBay post sort note — 2026-11-25-v06
 
 - Replaces `2026-11-25-v05`. “Share eBay Listings on Facebook” now states in the generated post that listings are sorted by year, oldest first. No SQL required.

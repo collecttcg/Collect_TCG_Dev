@@ -505,7 +505,7 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${singleActive ? "active" : ""}"
            role="tab"
            aria-selected="${singleActive ? "true" : "false"}">
-          <span class="fb-tools-switch-icon">▣</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true">🃏</span>
           <span>
             <strong>Single Card Post</strong>
             <small>Sales, sold and collection showcase posts · download images as ZIP</small>
@@ -516,7 +516,7 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${mode==="list" ? "active" : ""}"
            role="tab"
            aria-selected="${mode==="list" ? "true" : "false"}">
-          <span class="fb-tools-switch-icon">☷</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true">📋</span>
           <span>
             <strong>Card List Post</strong>
             <small>Choose available cards · full list · first images ZIP</small>
@@ -527,17 +527,17 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${giveawayActive ? "active" : ""}"
            role="tab"
            aria-selected="${giveawayActive ? "true" : "false"}">
-          <span class="fb-tools-switch-icon">🎁</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true">🎁</span>
           <span>
             <strong>Giveaway</strong>
             <small>Announce a giveaway or its winners</small>
           </span>
         </a>
 
-        <a href="#/fb-tools?mode=ebay" class="fb-tools-switch ${mode==="ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="ebay" ? "true" : "false"}"><span class="fb-tools-switch-icon">e</span><span><strong>eBay Listing</strong><small>Choose one card · title · item specifics · description · image ZIP</small></span></a>
+        <a href="#/fb-tools?mode=ebay" class="fb-tools-switch ${mode==="ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="ebay" ? "true" : "false"}"><span class="fb-tools-switch-icon" aria-hidden="true">🏷️</span><span><strong>eBay Listing</strong><small>Choose one card · title · item specifics · description · image ZIP</small></span></a>
 
         <a href="#/fb-tools?mode=facebook-ebay" class="fb-tools-switch ${mode==="facebook-ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="facebook-ebay" ? "true" : "false"}">
-          <span class="fb-tools-switch-icon">f</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true">📣</span>
           <span><strong>Share eBay Listings on Facebook</strong><small>Owner and era filters · Facebook photo ZIP</small></span>
         </a>
 
@@ -545,7 +545,7 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${mode==="carousell" ? "active" : ""}"
            role="tab"
            aria-selected="${mode==="carousell" ? "true" : "false"}">
-          <span class="fb-tools-switch-icon">C</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true">🛍️</span>
           <span>
             <strong>Carousell Post</strong>
             <small>Choose a card or giveaway prize · edit Product Details · copy listing template</small>
