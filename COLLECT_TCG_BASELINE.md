@@ -16,6 +16,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 - Replaces `2026-11-25-v03`. Single Card Post automatically uses the dedicated Collection Showcase template for Collection (NFS) cards. Existing NFS bookmarks still prefilter Collection cards, and direct card links preselect the requested card.
 - Giveaway groups Announce Giveaway and Announce Winners while preserving both mode links and underlying workflows. “Share eBay Listings on Facebook” clarifies the distinction from the eBay Listing generator. No SQL required.
+- All 90 tests and the Post Generator fixtures passed. Both ZIPs passed integrity checks. Pages deployment succeeded and the deployed generator matched the validated source. Interactive desktop, mobile and Safari were not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45526493599) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45526535961).
 
 ## Development home page title — 2026-11-25-v03
 
