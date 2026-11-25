@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `c0470767362fa6e7560f493596484a249b91ac8c`.
+- Development latest non-baseline commit: `35df10b72e23beb013c124034608fb96ddce4373`.
 - Production latest non-baseline commit: `4a703ca72ebbcf77aa3649a63398cb37637152f4`.
 - Production rollback ref: `4a703ca72ebbcf77aa3649a63398cb37637152f4`.
-- Latest local release manifest: [`2026-11-25-v02`](release-manifests/2026-11-25-v02.txt) from `0d059a947d243be8346c4854f3ef9f6e27d8f387`.
-- Latest local change: `c0470767362fa6e7560f493596484a249b91ac8c` · Development 2026-11-25-v03: feature One Piece in the site title.
+- Latest local release manifest: [`2026-11-25-v03`](release-manifests/2026-11-25-v03.txt) from `c0470767362fa6e7560f493596484a249b91ac8c`.
+- Latest local change: `35df10b72e23beb013c124034608fb96ddce4373` · Development 2026-11-25-v03: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
