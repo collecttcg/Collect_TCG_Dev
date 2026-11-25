@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development eBay seller profile links — 2026-11-25-v10
 
 - Replaces `2026-11-25-v09`. Collect TCG seller accounts 3–5 use ebay.com in the site shell, About and Contact pages, and Facebook card list and drop posts. No SQL required.
+- Development tests and both ZIP integrity checks passed. Pages deployment and SEO regeneration succeeded. Seller profiles were not opened interactively. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45545767245) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45545816350).
 
 ## Development Facebook Post Generator tile logos — 2026-11-25-v09
 
