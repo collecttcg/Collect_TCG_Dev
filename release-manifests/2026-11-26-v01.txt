@@ -1,0 +1,13 @@
+Version: 2026-11-26-v01
+Previous version: 2026-11-25-v15
+Source commit: 95d45aa03da921dcc20a66c1d85c7255e11aef22
+Purpose: Add the Owner-only invoice generator table and caption.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v15-to-2026-11-26-v01-patch.zip
+Changed files: Invoice module; Owner dashboard and activity tabs; app entry point and module cache references; baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+8f3f66323ea75785e34014da040f226823bb3aa7fdf028f2c352603c0cfbee2d  release/Collect-TCG-Dev-2026-11-26-v01-full.zip
+1e032b3554ab986d7fb3414911c20009245497fbdd43dfeb5fc3b06f5b8345d2  release/Collect-TCG-Dev-2026-11-25-v15-to-2026-11-26-v01-patch.zip
