@@ -1,0 +1,13 @@
+Version: 2026-11-25-v07
+Previous version: 2026-11-25-v06
+Source commit: 0b2677f81728e221a4b88295418b7ba54911fbdf
+Purpose: Add distinct icons for the six Post Generator tiles.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v07-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v06-to-2026-11-25-v07-patch.zip
+Changed files: Post Generator markup, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+5b1cd54a8b93da286a5363cbd6e9d6239ad99e02b71fc237915aac49639526f2  release/Collect-TCG-Dev-2026-11-25-v07-full.zip
+607b5d7370217389c4f29f69774726161fb23cd99bdbfc3be3b02b7823cd4a88  release/Collect-TCG-Dev-2026-11-25-v06-to-2026-11-25-v07-patch.zip
