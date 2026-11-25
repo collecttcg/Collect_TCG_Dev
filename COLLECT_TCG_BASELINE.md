@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `a44fd73a7af5117423fe66ab090a854c58247794`.
-- Production latest non-baseline commit: `3dd47ee48af2bd050dc6452a75cbf2e3366c0f46`.
+- Development latest non-baseline commit: `ceae9dd65d8de3c466a8b125111340c352ead36f`.
+- Production latest non-baseline commit: `4cf526802ece2cf6b45f2b14788f4c5e62b27b66`.
 - Production rollback ref: `3dd47ee48af2bd050dc6452a75cbf2e3366c0f46`.
-- Latest local release manifest: [`2026-11-25-v11`](release-manifests/2026-11-25-v11.txt) from `128c3abd55d4f9fc25ab11121f4950db1933edbe`.
-- Latest local change: `a44fd73a7af5117423fe66ab090a854c58247794` · Development 2026-11-25-v12: add About and Contact platform logos.
+- Latest local release manifest: [`2026-11-25-v12`](release-manifests/2026-11-25-v12.txt) from `a44fd73a7af5117423fe66ab090a854c58247794`.
+- Latest local change: `ceae9dd65d8de3c466a8b125111340c352ead36f` · Development 2026-11-25-v12: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
