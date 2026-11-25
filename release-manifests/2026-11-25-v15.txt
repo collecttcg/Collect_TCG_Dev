@@ -1,0 +1,13 @@
+Version: 2026-11-25-v15
+Previous version: 2026-11-25-v14
+Source commit: 5f7a2410998d2be3629661c57a262d4d8c515900
+Purpose: Center the About buying example table and caption.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v15-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v14-to-2026-11-25-v15-patch.zip
+Changed files: About buying styles, stylesheet cache reference, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+c3a2936dd34310b8e0a2c9dfb66bd26655605147d1560c9108069cb666cff121  release/Collect-TCG-Dev-2026-11-25-v15-full.zip
+6526d14aaab8f12b4bc17a089896cf2b0e215418b4f9a127296e29a339c186f4  release/Collect-TCG-Dev-2026-11-25-v14-to-2026-11-25-v15-patch.zip
