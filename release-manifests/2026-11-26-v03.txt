@@ -1,0 +1,13 @@
+Version: 2026-11-26-v03
+Previous version: 2026-11-26-v02
+Source commit: 04313640ddb193e8b64015d0fc3349c7e8ce32cb
+Purpose: Refine the printable invoice layout.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v02-to-2026-11-26-v03-patch.zip
+Changed files: Printable invoice styling, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+7602a301f9f9cdfbfcb351792182d10c630c19e1a5dabd9965a6adbc690cc4d6  release/Collect-TCG-Dev-2026-11-26-v03-full.zip
+ec89b391cf414fcc8dd7671868e2bf93d52a1b0d2d2095c87f6485d8f0010d89  release/Collect-TCG-Dev-2026-11-26-v02-to-2026-11-26-v03-patch.zip
