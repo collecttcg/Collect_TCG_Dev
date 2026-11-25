@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `5f66de8a16ab32e8bf30085a92ff52bc1bce71b2`.
+- Development latest non-baseline commit: `fa214d11ac3124c06f15201c81a34c1b419a6bf2`.
 - Production latest non-baseline commit: `9a2b6c1c235ecd6be0389604afdf018f6a70c4a0`.
 - Production rollback ref: `24d2eb20e3494624e92d54c0a3839dbee2c966ef`.
-- Latest local release manifest: [`2026-11-26-v07`](release-manifests/2026-11-26-v07.txt) from `433d45c259320a2e2ad0e663599e3f18e65807f8`.
-- Latest local change: `5f66de8a16ab32e8bf30085a92ff52bc1bce71b2` · Development 2026-11-26-v08: save invoice PDFs only by manual upload.
+- Latest local release manifest: [`2026-11-26-v08`](release-manifests/2026-11-26-v08.txt) from `5f66de8a16ab32e8bf30085a92ff52bc1bce71b2`.
+- Latest local change: `fa214d11ac3124c06f15201c81a34c1b419a6bf2` · docs: record verified Dev v08 invoice release.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
