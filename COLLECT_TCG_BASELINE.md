@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development centered About buying example — 2026-11-25-v15
 
 - Replaces `2026-11-25-v14`. Centers the direct purchase example table and caption, with the prices still right-aligned. No SQL required.
+- Release validation and ZIP integrity checks passed on retry. Pages deployed and the served stylesheet matched the release. Interactive browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45552323207) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45552441016).
 
 ## Development About buying example formatting — 2026-11-25-v14
 
