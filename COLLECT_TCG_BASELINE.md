@@ -15,10 +15,12 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development Facebook eBay post sort note — 2026-11-25-v06
 
 - Replaces `2026-11-25-v05`. “Share eBay Listings on Facebook” now states in the generated post that listings are sorted by year, oldest first. No SQL required.
+- All 90 tests and the generated-text fixture passed. Both ZIPs passed integrity checks and Pages deployed. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45530260819) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45530306964).
 
 ## Development Giveaway panel switching — 2026-11-25-v05
 
 - Replaces `2026-11-25-v04`. Giveaway tabs retain the generator header and switch only the lower form and preview. Fixed an undefined listener that stopped the Winners form from initializing. No SQL required.
+- The regression fixture verifies both tab directions and a stable header. Both ZIPs passed integrity checks and Pages deployed. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45529884430) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45529950709).
 
 ## Development Post Generator consolidation — 2026-11-25-v04
 
