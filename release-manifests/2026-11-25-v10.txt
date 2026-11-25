@@ -1,0 +1,13 @@
+Version: 2026-11-25-v10
+Previous version: 2026-11-25-v09
+Source commit: a4838537e0a63f2773f7f273c81583ca358b7d81
+Purpose: Use ebay.com for Collect TCG seller accounts 3, 4 and 5.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v10-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v09-to-2026-11-25-v10-patch.zip
+Changed files: Site navigation, About, Contact, Facebook post footer, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+1adf3481b003c40ea71bc3d2a619409d64fa7cfa9c373bbcc63125e77a304321  release/Collect-TCG-Dev-2026-11-25-v10-full.zip
+49498a230b9e90a596a70502816cf5e51ca7bb5633367a1334951f71bcf3d219  release/Collect-TCG-Dev-2026-11-25-v09-to-2026-11-25-v10-patch.zip
