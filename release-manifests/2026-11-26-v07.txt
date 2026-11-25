@@ -1,0 +1,13 @@
+Version: 2026-11-26-v07
+Previous version: 2026-11-26-v06
+Source commit: 433d45c259320a2e2ad0e663599e3f18e65807f8
+Purpose: Save invoices locally and assign invoice numbers automatically.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v07-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v06-to-2026-11-26-v07-patch.zip
+Changed files: Invoice storage, numbering, seller dropdown, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+8a033c4348b191ae1e33cb1340c7d40934b7adbb1c2076880722f16f75813532  release/Collect-TCG-Dev-2026-11-26-v07-full.zip
+ff80d44c9a8de9c9b9469a61695a19eefd979ef4da68b56906056983528828d2  release/Collect-TCG-Dev-2026-11-26-v06-to-2026-11-26-v07-patch.zip
