@@ -1,0 +1,13 @@
+Version: 2026-11-25-v02
+Previous version: 2026-11-25-v01
+Source commit: 0d059a947d243be8346c4854f3ef9f6e27d8f387
+Purpose: Add Owner-only Facebook, Carousell and eBay Post Generator actions to Card Details.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v01-to-2026-11-25-v02-patch.zip
+Changed files: Card Details, app cache references, post-action fixture, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+b3c7951357dfe12062c00305c7a8c8ee33abc04ebab59d426dd6aa0eeac6deee  release/Collect-TCG-Dev-2026-11-25-v02-full.zip
+2883b5c9584c9c38cc6e61590317b163c1c706e0310f0562a844ed9d34834c6c  release/Collect-TCG-Dev-2026-11-25-v01-to-2026-11-25-v02-patch.zip
