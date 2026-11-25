@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development About buying example formatting — 2026-11-25-v14
 
 - Replaces `2026-11-25-v13`. The buying guide matches About body typography, including the discount list. Direct purchases apply 12% to the first US$2,500 of each item and 3% to the portion above that. The tabulated example totals US$6,380 before shipping, including the US$5 multi-item discount. No SQL required.
+- Release checks and both ZIP integrity checks passed. A rendered-markup check verified the table and calculation. Pages deployed successfully. Interactive browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45551765431) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45551814968).
 
 ## Development About buying options — 2026-11-25-v13
 
