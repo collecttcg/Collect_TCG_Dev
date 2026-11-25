@@ -26,6 +26,18 @@ function renderAboutPage(){
           <p>While we strive to keep our Facebook/Carousell/eBay posts up to date, pricing and availability may occasionally change. In the event of any discrepancy, please refer to our listings here for the latest information.</p>
         </div>
 
+        <h3 class="about-subhead">How to Buy</h3>
+        <div class="about-copy">
+          <p><strong>Shop on eBay.</strong> Most of our cards are listed on eBay. Browse our listings for prices, condition, and availability, then buy directly through eBay.</p>
+          <p><strong>Buy Direct &amp; Save.</strong> Message us on <a href="https://m.me/61590041416102" target="_blank" rel="noopener noreferrer">Facebook Messenger</a> or <a href="https://www.instagram.com/collecttcg.mysg/" target="_blank" rel="noopener noreferrer">Instagram</a> to buy directly from Collect TCG. The discount is based on each item’s listed eBay price.</p>
+          <ul>
+            <li><strong>Under US$2,500</strong> — 12% off.</li>
+            <li><strong>US$2,500 and above</strong> — 8% off.</li>
+            <li><strong>Multi-item orders</strong> — Take an extra US$5 off each additional item after the first.</li>
+          </ul>
+          <p><strong>Example.</strong> A US$2,000 card comes to US$1,760 after 12% off. A US$5,000 card comes to US$4,600 after 8% off. Buy both in one order and take another US$5 off. <strong>Your total is US$6,355 before shipping, a saving of US$645 off the combined eBay listing prices.</strong></p>
+        </div>
+
         <h3 class="about-subhead">Browse Our Collection</h3>
         <div class="about-links">
           <a class="about-link" href="https://www.carousell.com.my/u/collect_tcg_my_sg/" target="_blank" rel="noopener noreferrer">

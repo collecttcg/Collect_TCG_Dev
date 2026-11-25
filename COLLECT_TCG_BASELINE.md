@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development About buying options — 2026-11-25-v13
+
+- Replaces `2026-11-25-v12`. About explains buying on eBay and buying directly, including 12% below US$2,500, 8% at or above US$2,500, and US$5 off each additional item. The two-card example totals US$6,355 before shipping. No SQL required.
+
 ## Development About and Contact platform logos — 2026-11-25-v12
 
 - Replaces `2026-11-25-v11`. Adds Facebook, Messenger, Instagram and Carousell logos to their About and Contact links. No SQL required.
