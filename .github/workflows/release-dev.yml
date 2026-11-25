@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-25-v08 — Use eBay and Carousell marketplace marks.
+# 2026-11-25-v09 — Add Facebook marks to generator tiles.
 on:
   workflow_dispatch:
   push:
@@ -40,9 +40,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-25-v08
-          PREVIOUS_VERSION: 2026-11-25-v07
-          PREVIOUS_COMMIT: 0b2677f81728e221a4b88295418b7ba54911fbdf
+          RELEASE_VERSION: 2026-11-25-v09
+          PREVIOUS_VERSION: 2026-11-25-v08
+          PREVIOUS_COMMIT: f1364ab8246b9ed9db7b86ca44511e4dd650ce78
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -59,25 +59,25 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-25-v08-packages
+          name: Collect-TCG-Dev-2026-11-25-v09-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-25-v08-full.zip
-            release/Collect-TCG-Dev-2026-11-25-v07-to-2026-11-25-v08-patch.zip
+            release/Collect-TCG-Dev-2026-11-25-v09-full.zip
+            release/Collect-TCG-Dev-2026-11-25-v08-to-2026-11-25-v09-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-25-v08.txt'
+          MANIFEST='release-manifests/2026-11-25-v09.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-25-v08'
-            echo 'Previous version: 2026-11-25-v07'
+            echo 'Version: 2026-11-25-v09'
+            echo 'Previous version: 2026-11-25-v08'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Use the official eBay and Carousell marks on their generator tiles.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-25-v08-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-25-v07-to-2026-11-25-v08-patch.zip'
+            echo 'Purpose: Show Facebook marks on Single Card, Card List and Facebook eBay sharing tiles.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-25-v09-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-25-v08-to-2026-11-25-v09-patch.zip'
             echo 'Changed files: Post Generator markup, brand assets, cache references, baseline and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
@@ -88,6 +88,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-25-v08: record package validation'
+          git commit -m 'Development 2026-11-25-v09: record package validation'
           git pull --rebase origin main
           git push

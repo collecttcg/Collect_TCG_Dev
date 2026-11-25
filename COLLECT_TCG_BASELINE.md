@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook Post Generator tile logos — 2026-11-25-v09
+
+- Replaces `2026-11-25-v08`. Single Card Post and Card List Post show Facebook’s blue logo. Share eBay Listings on Facebook pairs the locally hosted eBay and Facebook logos. No SQL required.
+
 ## Development marketplace tile logos — 2026-11-25-v08
 
 - Replaces `2026-11-25-v07`. The eBay Listing and Carousell Post tiles use locally hosted marks sourced from the eBay Playbook and Carousell Press. The visible labels supply the accessible names. No SQL required.

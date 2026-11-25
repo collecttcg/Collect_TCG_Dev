@@ -505,7 +505,7 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${singleActive ? "active" : ""}"
            role="tab"
            aria-selected="${singleActive ? "true" : "false"}">
-          <span class="fb-tools-switch-icon" aria-hidden="true">🃏</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true"><img src="./assets/facebook-post-generator.svg" alt="" width="22" height="22"></span>
           <span>
             <strong>Single Card Post</strong>
             <small>Sales, sold and collection showcase posts · download images as ZIP</small>
@@ -516,7 +516,7 @@ function facebookToolsHeaderHTML(mode){
            class="fb-tools-switch ${mode==="list" ? "active" : ""}"
            role="tab"
            aria-selected="${mode==="list" ? "true" : "false"}">
-          <span class="fb-tools-switch-icon" aria-hidden="true">📋</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true"><img src="./assets/facebook-post-generator.svg" alt="" width="22" height="22"></span>
           <span>
             <strong>Card List Post</strong>
             <small>Choose available cards · full list · first images ZIP</small>
@@ -537,7 +537,10 @@ function facebookToolsHeaderHTML(mode){
         <a href="#/fb-tools?mode=ebay" class="fb-tools-switch ${mode==="ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="ebay" ? "true" : "false"}"><span class="fb-tools-switch-icon" aria-hidden="true"><img src="./assets/ebay-post-generator.svg" alt="" width="30" height="15"></span><span><strong>eBay Listing</strong><small>Choose one card · title · item specifics · description · image ZIP</small></span></a>
 
         <a href="#/fb-tools?mode=facebook-ebay" class="fb-tools-switch ${mode==="facebook-ebay" ? "active" : ""}" role="tab" aria-selected="${mode==="facebook-ebay" ? "true" : "false"}">
-          <span class="fb-tools-switch-icon" aria-hidden="true">📣</span>
+          <span class="fb-tools-switch-icon" aria-hidden="true" style="flex-direction:column;gap:1px">
+            <img src="./assets/ebay-post-generator.svg" alt="" width="28" height="14">
+            <img src="./assets/facebook-post-generator.svg" alt="" width="13" height="13">
+          </span>
           <span><strong>Share eBay Listings on Facebook</strong><small>Owner and era filters · Facebook photo ZIP</small></span>
         </a>
 
