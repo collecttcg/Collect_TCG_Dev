@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development About buying options — 2026-11-25-v13
 
 - Replaces `2026-11-25-v12`. About explains buying on eBay and buying directly, including 12% below US$2,500, 8% at or above US$2,500, and US$5 off each additional item. The two-card example totals US$6,355 before shipping. No SQL required.
+- Development checks and both ZIP integrity checks passed. A rendered-markup check verified the section and discount example. Pages deployed successfully. Interactive browser testing was not performed. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45551070140) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45551117551).
 
 ## Development About and Contact platform logos — 2026-11-25-v12
 
