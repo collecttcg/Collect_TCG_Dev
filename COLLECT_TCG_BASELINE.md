@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `a3302bf57710f2f1877673828632293ddf4d7842`.
+- Development latest non-baseline commit: `085ea8e55fc6d2a17e99dcca100cb6de3ee8fcfa`.
 - Production latest non-baseline commit: `9a2b6c1c235ecd6be0389604afdf018f6a70c4a0`.
 - Production rollback ref: `24d2eb20e3494624e92d54c0a3839dbee2c966ef`.
-- Latest local release manifest: [`2026-11-26-v04`](release-manifests/2026-11-26-v04.txt) from `749461244d389656278c9c9a75523b9256753ad7`.
-- Latest local change: `a3302bf57710f2f1877673828632293ddf4d7842` · Development 2026-11-26-v05: redesign Collect TCG invoice stationery.
+- Latest local release manifest: [`2026-11-26-v05`](release-manifests/2026-11-26-v05.txt) from `a3302bf57710f2f1877673828632293ddf4d7842`.
+- Latest local change: `085ea8e55fc6d2a17e99dcca100cb6de3ee8fcfa` · Development 2026-11-26-v05: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
