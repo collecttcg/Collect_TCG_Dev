@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development home page title — 2026-11-25-v03
 
 - Replaces `2026-11-25-v02`. The browser tab and social share title now read “One Piece Cards in Malaysia & Singapore | Collect TCG.” The catalogue and card-specific titles retain their existing behavior. No SQL required.
+- All 90 tests and release checks passed. Both ZIPs passed integrity checks and Pages deployment succeeded. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45523782278) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45523847682).
 
 ## Development Card Details post generators — 2026-11-25-v02
 
