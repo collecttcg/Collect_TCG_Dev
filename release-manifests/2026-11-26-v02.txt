@@ -1,0 +1,13 @@
+Version: 2026-11-26-v02
+Previous version: 2026-11-26-v01
+Source commit: 0f5dced49386a1bda75a61c3028b650691d5c58e
+Purpose: Improve invoice field contrast and add optional seller and buyer addresses.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v01-to-2026-11-26-v02-patch.zip
+Changed files: Invoice form styling, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+e76a66298f3513a63e3463181cdcdd2bbd038f1659f14fee7f47835b84d2dc14  release/Collect-TCG-Dev-2026-11-26-v02-full.zip
+bb7ba197d7dcad71d2ea9048cb8508d2096855dbb06599cd5ebae31e14f7596a  release/Collect-TCG-Dev-2026-11-26-v01-to-2026-11-26-v02-patch.zip
