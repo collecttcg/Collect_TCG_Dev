@@ -12,9 +12,13 @@ export function renderInvoiceGenerator(appContext) {
         <style>
           #ownerInvoiceForm .invoice-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
           #ownerInvoiceForm label{display:grid;gap:6px}
-          #ownerInvoiceForm :is(input,select,textarea){box-sizing:border-box;width:100%;min-height:44px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);font:inherit}
+          #ownerInvoiceForm :is(input,select,textarea){box-sizing:border-box;width:100%;min-height:44px;padding:10px;border:1px solid #777f8c;border-radius:8px;background:var(--surface-2);color:var(--text);font:inherit}
+          #ownerInvoiceForm :is(input,select,textarea):focus{outline:2px solid var(--invoice-focus);outline-offset:2px}
+          #ownerInvoiceForm ::placeholder{color:var(--text-muted);opacity:1}
+          #ownerInvoiceForm{--invoice-focus:var(--accent-teal);color-scheme:dark}
+          .light-mode #ownerInvoiceForm{--invoice-focus:#14675e;color-scheme:light}
           #ownerInvoiceForm textarea{resize:vertical}
-          #ownerInvoiceForm .invoice-description{grid-column:1/-1}
+          #ownerInvoiceForm .invoice-wide{grid-column:1/-1}
         </style>
         <div class="invoice-fields">
           <label>Seller name <input name="seller" required maxlength="120" value="Collect TCG MY &amp; SG"></label>
@@ -23,7 +27,11 @@ export function renderInvoiceGenerator(appContext) {
           <label>Date <input name="date" type="date" required></label>
           <label>Currency <select name="currency">${currencies.map(code => `<option>${code}</option>`).join("")}</select></label>
           <label>Amount paid <input name="amount" type="number" inputmode="decimal" min="0.01" max="999999999.99" step="0.01" required></label>
-          <label class="invoice-description">Product or service description
+          <div class="invoice-fields invoice-wide">
+            <label>Seller address (optional) <textarea name="sellerAddress" rows="3" maxlength="400"></textarea></label>
+            <label>Buyer address (optional) <textarea name="buyerAddress" rows="3" maxlength="400"></textarea></label>
+          </div>
+          <label class="invoice-wide">Product or service description
             <textarea name="description" rows="5" required maxlength="2400" placeholder="Enter one product or service per line"></textarea>
           </label>
         </div>
@@ -58,6 +66,10 @@ export function renderInvoiceGenerator(appContext) {
     if (!currencies.includes(currency)) return;
 
     const escape = appContext.escapeHtml;
+    const addressMarkup = name => {
+      const address = fields.namedItem(name).value.trim();
+      return address ? `<p class="address">${escape(address)}</p>` : "";
+    };
     const number = escape(fields.namedItem("number").value);
     const descriptions = fields.description.value.split("\n").map(line => line.trim()).filter(Boolean);
     const amount = new Intl.NumberFormat("en", {
@@ -85,6 +97,7 @@ export function renderInvoiceGenerator(appContext) {
         header img{width:72px;height:72px;object-fit:contain;display:block;margin-bottom:10px}
         h1{margin:0 0 10px;font-size:2.2rem;letter-spacing:.08em;text-transform:uppercase}
         p{margin:4px 0}
+        .address{white-space:pre-wrap}
         section{margin:22px 0}
         table{border-collapse:collapse;width:100%;table-layout:fixed}
         th,td{text-align:left;padding:10px;border-bottom:1px solid #c8ccd2}
@@ -96,10 +109,10 @@ export function renderInvoiceGenerator(appContext) {
       <button type="button" id="printInvoice">Print / Save as PDF</button>
       <main>
         <header>
-          <div><img src="${escape(logo.href)}" alt="Collect TCG logo"><strong>${escape(fields.seller.value)}</strong></div>
+          <div><img src="${escape(logo.href)}" alt="Collect TCG logo"><strong>${escape(fields.seller.value)}</strong>${addressMarkup("sellerAddress")}</div>
           <div><h1>Invoice</h1><p><strong>Invoice number:</strong> ${number}</p><p><strong>Date:</strong> <time>${escape(fields.date.value)}</time></p></div>
         </header>
-        <section><strong>Invoice to</strong><p>${escape(fields.client.value)}</p></section>
+        <section><strong>Invoice to</strong><p>${escape(fields.client.value)}</p>${addressMarkup("buyerAddress")}</section>
         <table><thead><tr><th scope="col">Product or service description</th></tr></thead>
           <tbody>${descriptions.map(line => `<tr><td>${escape(line)}</td></tr>`).join("")}</tbody>
         </table>

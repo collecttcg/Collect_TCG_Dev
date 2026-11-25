@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development invoice field visibility — 2026-11-26-v02
+
+- Replaces `2026-11-26-v01`. Invoice inputs, dropdown and description box have distinct borders and backgrounds, a keyboard focus outline, and theme-aware native controls. Optional seller and buyer addresses appear under their names on the invoice when entered. No SQL required. The Owner access, invoice fields, and printable layout are carried forward.
+
+
 ## Development Owner-only invoice generator — 2026-11-26-v01
 
 - Adds Invoice Generator under Owner Inventory Tools → Activity. The printable invoice includes the Collect TCG logo, seller and client names, invoice number, date, item descriptions, and amount paid in USD, MYR, SGD, or JPY.
