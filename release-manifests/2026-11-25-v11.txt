@@ -1,0 +1,13 @@
+Version: 2026-11-25-v11
+Previous version: 2026-11-25-v10
+Source commit: 128c3abd55d4f9fc25ab11121f4950db1933edbe
+Purpose: Show readable Collect TCG names and the eBay logo on About and Contact.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v11-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v10-to-2026-11-25-v11-patch.zip
+Changed files: About and Contact markup, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+fb880075e0c35d0b38f770cfe5dc6fb88845abfad8ed0c6e2f841dfc54fa5ee4  release/Collect-TCG-Dev-2026-11-25-v11-full.zip
+f960131e7abcc64b418a472edb74b1fdd206994969b341865264cafb3e4068ec  release/Collect-TCG-Dev-2026-11-25-v10-to-2026-11-25-v11-patch.zip
