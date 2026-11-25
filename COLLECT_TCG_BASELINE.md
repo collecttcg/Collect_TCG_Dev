@@ -15,7 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development invoice banner and billing columns — 2026-11-26-v04
 
 - Replaces `2026-11-26-v03`. Uses a charcoal branded preview banner and a print-friendly equivalent, side-by-side Bill to and From sections, and alternating item rows. No SQL required.
-- Repository validation, invoice output fixtures and both ZIP integrity checks passed. Interactive browser testing was unavailable. The initial Pages deployment failed. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45649872542).
+- Repository validation, invoice output fixtures and both ZIP integrity checks passed. Interactive browser testing was unavailable. Pages deployment succeeded on retry. All six live invoice and entry-point files matched the validated v04 source. [Verified deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45650777780/job/139342839105). [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45649872542).
 
 
 ## Development printable invoice design — 2026-11-26-v03
