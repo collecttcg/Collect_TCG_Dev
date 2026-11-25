@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development Post Generator tile icons — 2026-11-25-v07
 
 - Replaces `2026-11-25-v06`. The six tiles have distinct emoji icons. Each icon is hidden from assistive technology because the adjacent label names the tool. No SQL required.
+- All 90 tests passed, both ZIPs passed integrity checks, and the Pages deployment succeeded. Interactive browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45543269201) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45543310968).
 
 ## Development Facebook eBay post sort note — 2026-11-25-v06
 
