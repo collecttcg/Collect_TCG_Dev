@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-25-v14 — Match About typography and tabulate the buying example.
+# 2026-11-25-v15 — Center the About buying example.
 on:
   workflow_dispatch:
   push:
@@ -40,9 +40,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-25-v14
-          PREVIOUS_VERSION: 2026-11-25-v13
-          PREVIOUS_COMMIT: 69813bc9e1ddcffdb6c919a2a233d49765bd0ff5
+          RELEASE_VERSION: 2026-11-25-v15
+          PREVIOUS_VERSION: 2026-11-25-v14
+          PREVIOUS_COMMIT: 02ae3c447518956f5556001329fc05cf3bf99645
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -59,26 +59,26 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-25-v14-packages
+          name: Collect-TCG-Dev-2026-11-25-v15-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-25-v14-full.zip
-            release/Collect-TCG-Dev-2026-11-25-v13-to-2026-11-25-v14-patch.zip
+            release/Collect-TCG-Dev-2026-11-25-v15-full.zip
+            release/Collect-TCG-Dev-2026-11-25-v14-to-2026-11-25-v15-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-25-v14.txt'
+          MANIFEST='release-manifests/2026-11-25-v15.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-25-v14'
-            echo 'Previous version: 2026-11-25-v13'
+            echo 'Version: 2026-11-25-v15'
+            echo 'Previous version: 2026-11-25-v14'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Match About typography, show the updated direct purchase tiers and tabulate the example.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-25-v14-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-25-v13-to-2026-11-25-v14-patch.zip'
-            echo 'Changed files: About markup, typography styles, cache references, baseline and release workflow.'
+            echo 'Purpose: Center the About buying example table and caption.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-25-v15-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-25-v14-to-2026-11-25-v15-patch.zip'
+            echo 'Changed files: About buying styles, stylesheet cache reference, baseline and release workflow.'
             echo 'SQL required: No.'
             echo 'Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
@@ -88,6 +88,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-25-v14: record package validation'
+          git commit -m 'Development 2026-11-25-v15: record package validation'
           git pull --rebase origin main
           git push

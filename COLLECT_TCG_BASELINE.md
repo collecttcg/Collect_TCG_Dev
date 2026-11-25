@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development centered About buying example — 2026-11-25-v15
+
+- Replaces `2026-11-25-v14`. Centers the direct purchase example table and caption, with the prices still right-aligned. No SQL required.
+
 ## Development About buying example formatting — 2026-11-25-v14
 
 - Replaces `2026-11-25-v13`. The buying guide matches About body typography, including the discount list. Direct purchases apply 12% to the first US$2,500 of each item and 3% to the portion above that. The tabulated example totals US$6,380 before shipping, including the US$5 multi-item discount. No SQL required.
