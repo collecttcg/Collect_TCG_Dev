@@ -1,0 +1,14 @@
+Version: 2026-11-26-v04
+Previous version: 2026-11-26-v03
+Source commit: 749461244d389656278c9c9a75523b9256753ad7
+Purpose: Add a branded invoice banner, billing columns and alternating item rows.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v03-to-2026-11-26-v04-patch.zip
+Changed files: Printable invoice layout, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Development release job passed validation and uploaded both integrity-checked ZIPs. The job's manifest push raced with a separate workflow and this record was recovered using observed package checksums. Local fixtures exercised invoice output and Owner actions.
+Validation limitations: Interactive browser testing was unavailable. Initial Pages deployment failed.
+Package run: https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45649872542
+
+c3e1bea5082c5fa3371771c9e9aa349c8cb56c5ab97b1bc5d1febe69e8a1e119  release/Collect-TCG-Dev-2026-11-26-v04-full.zip
+a1eb9911ea0fa69e6eadf99123e801d8c0f74384edcc84d83c61334363643048  release/Collect-TCG-Dev-2026-11-26-v03-to-2026-11-26-v04-patch.zip
