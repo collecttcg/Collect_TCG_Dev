@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development invoice print margins — 2026-11-26-v06
 
-- Replaces v05. The invoice supplies its own print padding and removes the browser margin area used for the preview URL. Chromium PDF output with headers and footers enabled reproduced about:blank with the old margins and omitted it on one- and five-page invoices with the new margins. Safari was not tested. No SQL required.
+- Replaces v05. The invoice supplies its own print padding and removes the browser margin area used for the preview URL. Chromium PDF output with headers and footers enabled reproduced about:blank with the old margins and omitted it on one- and five-page invoices with the new margins. Safari was not tested. No SQL required. Release validation and both ZIP checks passed. Six live Dev files matched the approved source. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45655017193).
 
 ## Development invoice stationery — 2026-11-26-v05
 
