@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `0f5dced49386a1bda75a61c3028b650691d5c58e`.
-- Production latest non-baseline commit: `33486e5cf0cb1a4ff95cd259038d96a3f397b71e`.
+- Development latest non-baseline commit: `bf27064e22c04ac1127b616c6a5124e7073d368b`.
+- Production latest non-baseline commit: `9a2b6c1c235ecd6be0389604afdf018f6a70c4a0`.
 - Production rollback ref: `b212c7e0334a026f1e116bfdf267bc43afab7d25`.
-- Latest local release manifest: [`2026-11-26-v01`](release-manifests/2026-11-26-v01.txt) from `95d45aa03da921dcc20a66c1d85c7255e11aef22`.
-- Latest local change: `0f5dced49386a1bda75a61c3028b650691d5c58e` · Development 2026-11-26-v02: improve invoice fields and add addresses.
+- Latest local release manifest: [`2026-11-26-v02`](release-manifests/2026-11-26-v02.txt) from `0f5dced49386a1bda75a61c3028b650691d5c58e`.
+- Latest local change: `bf27064e22c04ac1127b616c6a5124e7073d368b` · Development 2026-11-26-v02: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
