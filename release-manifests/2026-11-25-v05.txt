@@ -1,0 +1,13 @@
+Version: 2026-11-25-v05
+Previous version: 2026-11-25-v04
+Source commit: 9b92b144a97b4453c7b7f507213616c08137f36d
+Purpose: Keep Giveaway navigation visible and switch only the form and preview.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v04-to-2026-11-25-v05-patch.zip
+Changed files: Post Generator, cache references, regression fixtures, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+5e156941424e4564faae24bcdaad1aa5bb5b35784df5d1ecd5f0baeb49549526  release/Collect-TCG-Dev-2026-11-25-v05-full.zip
+03c9b9b5502e06888f7efbd365293980a97efaa3e78ea0b6b601dc2f396f8b65  release/Collect-TCG-Dev-2026-11-25-v04-to-2026-11-25-v05-patch.zip
