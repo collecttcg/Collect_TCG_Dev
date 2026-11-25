@@ -1,0 +1,13 @@
+Version: 2026-11-25-v08
+Previous version: 2026-11-25-v07
+Source commit: f1364ab8246b9ed9db7b86ca44511e4dd650ce78
+Purpose: Use the official eBay and Carousell marks on their generator tiles.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v08-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v07-to-2026-11-25-v08-patch.zip
+Changed files: Post Generator markup, brand assets, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+3db832eb4a6244b0b2a04add11770b5e6b8a1865ef2e50b44ebf98c9ab475d58  release/Collect-TCG-Dev-2026-11-25-v08-full.zip
+20008ba27fff44755e497b81caa0b747197d5fc24140b782988a69f2d916022e  release/Collect-TCG-Dev-2026-11-25-v07-to-2026-11-25-v08-patch.zip
