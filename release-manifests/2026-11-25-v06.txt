@@ -1,0 +1,13 @@
+Version: 2026-11-25-v06
+Previous version: 2026-11-25-v05
+Source commit: 70880edb870bc1e710d07baa46786e1340af00db
+Purpose: Mention the existing oldest-first year order in generated Facebook eBay posts.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v06-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v05-to-2026-11-25-v06-patch.zip
+Changed files: Post Generator, cache references, regression fixtures, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+ef7b182a7f9f239b24a87214656852b21ae7f86f7f7d1cd128a3236ba288a9d8  release/Collect-TCG-Dev-2026-11-25-v06-full.zip
+af94c196019adac63898b5d0c496525d6674960097c33d31698dec93e539e94f  release/Collect-TCG-Dev-2026-11-25-v05-to-2026-11-25-v06-patch.zip
