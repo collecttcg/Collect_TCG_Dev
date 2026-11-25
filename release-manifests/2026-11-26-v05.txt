@@ -1,0 +1,13 @@
+Version: 2026-11-26-v05
+Previous version: 2026-11-26-v04
+Source commit: a3302bf57710f2f1877673828632293ddf4d7842
+Purpose: Redesign the printed invoice as Collect TCG stationery.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v04-to-2026-11-26-v05-patch.zip
+Changed files: Printable invoice styling, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+95853ddaad11929ddf20af85dac779d965510acb6b78a905674c9da9e8b7b34c  release/Collect-TCG-Dev-2026-11-26-v05-full.zip
+158c7df58f51bfe8bcc748fc2b92d3bccb52f249f9da65c544c1333603ba3428  release/Collect-TCG-Dev-2026-11-26-v04-to-2026-11-26-v05-patch.zip
