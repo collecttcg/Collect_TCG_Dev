@@ -1,3 +1,5 @@
+import { renderInvoiceGenerator } from './invoice.js?v=2026-11-26-v01';
+
 /** Module: features/owner/dashboard. Routes Owner inventory entry to the established Inventory Tools workspace. */
 export function register(appContext){
   const renderInventoryToolsPage=typeof appContext.renderInventoryToolsPage==="function"
@@ -49,16 +51,6 @@ Collect TCG`;
     link.href='#/inventory-tools?mode=bulk&sub=unassigned';
     link.dataset.ownerUnassigned='true';
     link.textContent=`Unassigned Owners (${count})`;
-    subnav.appendChild(link);
-  }
-
-  function addBuyerMessagesLink(){
-    const subnav=appContext.view?.querySelector?.('.inventory-tools-subnav');
-    if(!subnav || subnav.querySelector('[data-owner-buyer-messages]')) return;
-    const link=document.createElement('a');
-    link.href='#/inventory-tools?mode=activity&sub=buyer-messages';
-    link.dataset.ownerBuyerMessages='true';
-    link.textContent='Buyer Messages';
     subnav.appendChild(link);
   }
 
@@ -200,12 +192,7 @@ Collect TCG`;
         <div class="eyebrow">Owner Tools</div>
         <h2>Buyer Messages</h2>
         <p class="muted">Approved reusable messages for buyer communication.</p>
-        <div class="inventory-tools-subnav">
-          <a href="#/inventory-tools?mode=activity&sub=recent">Recently Edited</a>
-          <a href="#/inventory-tools?mode=activity&sub=history">Edit History</a>
-          <a href="#/inventory-tools?mode=activity&sub=qr">QR Generator</a>
-          <a class="active" data-owner-buyer-messages="true" href="#/inventory-tools?mode=activity&sub=buyer-messages">Buyer Messages</a>
-        </div>
+        ${appContext.inventoryToolsSwitcher("activity", "buyer-messages")}
         <section class="card" style="box-sizing:border-box;width:min(100%,920px);margin-top:22px;padding:24px;">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:18px;">
             <div style="min-width:0;flex:1 1 420px;">
@@ -268,9 +255,12 @@ Collect TCG`;
       renderBuyerMessages();
       return;
     }
+    if(params.get('mode')==='activity' && params.get('sub')==='invoice'){
+      renderInvoiceGenerator(appContext);
+      return;
+    }
     if(renderInventoryToolsPage){
       renderInventoryToolsPage();
-      if(params.get('mode')==='activity') addBuyerMessagesLink();
       if((params.get('mode')||'bulk')==='bulk') addUnassignedOwnersLink();
       return;
     }
