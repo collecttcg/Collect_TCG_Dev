@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `b4e3c05254e313df621dde96ce5480b8732afde4`.
-- Production latest non-baseline commit: `b212c7e0334a026f1e116bfdf267bc43afab7d25`.
+- Development latest non-baseline commit: `95d45aa03da921dcc20a66c1d85c7255e11aef22`.
+- Production latest non-baseline commit: `33486e5cf0cb1a4ff95cd259038d96a3f397b71e`.
 - Production rollback ref: `b212c7e0334a026f1e116bfdf267bc43afab7d25`.
 - Latest local release manifest: [`2026-11-25-v15`](release-manifests/2026-11-25-v15.txt) from `5f7a2410998d2be3629661c57a262d4d8c515900`.
-- Latest local change: `b4e3c05254e313df621dde96ce5480b8732afde4` · Development 2026-11-25-v15: record package validation.
+- Latest local change: `95d45aa03da921dcc20a66c1d85c7255e11aef22` · Development 2026-11-26-v01: add Owner-only invoice generator.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
