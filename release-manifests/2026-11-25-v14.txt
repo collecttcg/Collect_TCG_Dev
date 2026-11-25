@@ -1,0 +1,13 @@
+Version: 2026-11-25-v14
+Previous version: 2026-11-25-v13
+Source commit: 02ae3c447518956f5556001329fc05cf3bf99645
+Purpose: Match About typography, show the updated direct purchase tiers and tabulate the example.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v14-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v13-to-2026-11-25-v14-patch.zip
+Changed files: About markup, typography styles, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+1ba0dd8ad687251a136f698500139a09a17fdead1965699bd058809cdde92b55  release/Collect-TCG-Dev-2026-11-25-v14-full.zip
+367d45096c648d0d2989d0af8a96aae27a0a906b3bc65619ea8d36d700fc4a30  release/Collect-TCG-Dev-2026-11-25-v13-to-2026-11-25-v14-patch.zip
