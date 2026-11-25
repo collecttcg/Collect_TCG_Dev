@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `70f415ee142f509f6e4b45b0a7b9753d0a44abfb`.
+- Development latest non-baseline commit: `0d059a947d243be8346c4854f3ef9f6e27d8f387`.
 - Production latest non-baseline commit: `4a703ca72ebbcf77aa3649a63398cb37637152f4`.
 - Production rollback ref: `4a703ca72ebbcf77aa3649a63398cb37637152f4`.
-- Latest local release manifest: [`2026-11-24-v03`](release-manifests/2026-11-24-v03.txt) from `be8d285c0c80d940e8e17b2e428f5bc17c13c1fe`.
-- Latest local change: `70f415ee142f509f6e4b45b0a7b9753d0a44abfb` · Development 2026-11-25-v01: close Owner dialog after verification.
+- Latest local release manifest: [`2026-11-25-v01`](release-manifests/2026-11-25-v01.txt) from `70f415ee142f509f6e4b45b0a7b9753d0a44abfb`.
+- Latest local change: `0d059a947d243be8346c4854f3ef9f6e27d8f387` · Development 2026-11-25-v02: add Owner post generators to Card Details.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
