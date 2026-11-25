@@ -1,0 +1,13 @@
+Version: 2026-11-26-v09
+Previous version: 2026-11-26-v08
+Source commit: 8435a60b808fe1f9aef2779404dc5f2ac2bd743b
+Purpose: Archive manually uploaded invoice PDFs in private Supabase Storage.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v09-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v08-to-2026-11-26-v09-patch.zip
+Changed files: Invoice archive, private Storage migration, module cache references, baseline and release workflow.
+SQL required: 2026-11-26-v09-OWNER-INVOICES-DEV.sql.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+6d6daa4c7eb874e0e85bcf96693d29c2c7018df8a6f58e918f5c1f8677333d26  release/Collect-TCG-Dev-2026-11-26-v09-full.zip
+40f3f56946afe8a17374e7f372b9842faafe17e51c052bd53f30be0da7e1c247  release/Collect-TCG-Dev-2026-11-26-v08-to-2026-11-26-v09-patch.zip
