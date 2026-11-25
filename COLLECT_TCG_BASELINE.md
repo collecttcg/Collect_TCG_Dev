@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `128c3abd55d4f9fc25ab11121f4950db1933edbe`.
+- Development latest non-baseline commit: `a44fd73a7af5117423fe66ab090a854c58247794`.
 - Production latest non-baseline commit: `3dd47ee48af2bd050dc6452a75cbf2e3366c0f46`.
 - Production rollback ref: `3dd47ee48af2bd050dc6452a75cbf2e3366c0f46`.
-- Latest local release manifest: [`2026-11-25-v10`](release-manifests/2026-11-25-v10.txt) from `a4838537e0a63f2773f7f273c81583ca358b7d81`.
-- Latest local change: `128c3abd55d4f9fc25ab11121f4950db1933edbe` · Development 2026-11-25-v11: polish eBay account labels.
+- Latest local release manifest: [`2026-11-25-v11`](release-manifests/2026-11-25-v11.txt) from `128c3abd55d4f9fc25ab11121f4950db1933edbe`.
+- Latest local change: `a44fd73a7af5117423fe66ab090a854c58247794` · Development 2026-11-25-v12: add About and Contact platform logos.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
