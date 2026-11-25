@@ -12,10 +12,14 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development home page title — 2026-11-25-v03
+
+- Replaces `2026-11-25-v02`. The browser tab and social share title now read “One Piece Cards in Malaysia & Singapore | Collect TCG.” The catalogue and card-specific titles retain their existing behavior. No SQL required.
+
 ## Development Card Details post generators — 2026-11-25-v02
 
 - Replaces `2026-11-25-v01`. Card Details → More offers the Facebook, Carousell and eBay Post Generator actions to owners using the current card and existing listing eligibility. No SQL required.
-- Regression coverage exercises the active listing, Owner gate, archived eligibility, and stale menu actions. Interactive layout and generator pop-ups were not tested.
+- Regression coverage exercises the active listing, Owner gate, archived eligibility, and stale menu actions. Desktop Chrome confirmed the signed-out Card Details menu excludes the post actions. Owner browser pop-ups, mobile and Safari were not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45523373163) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45523417645).
 
 ## Development Owner sign-in completion — 2026-11-25-v01
 
