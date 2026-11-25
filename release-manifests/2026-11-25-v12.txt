@@ -1,0 +1,13 @@
+Version: 2026-11-25-v12
+Previous version: 2026-11-25-v11
+Source commit: a44fd73a7af5117423fe66ab090a854c58247794
+Purpose: Add Facebook, Messenger, Instagram and Carousell logos on About and Contact.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v12-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v11-to-2026-11-25-v12-patch.zip
+Changed files: About and Contact markup, platform assets, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+1d8c9833c85dcf2b903c1b4306593300fe34accf49023f8ba57be3fbd4a3a16e  release/Collect-TCG-Dev-2026-11-25-v12-full.zip
+92ac4d3f340402605fcfe655b2374a8f636deeaf0ec208d8664290566ec4a2da  release/Collect-TCG-Dev-2026-11-25-v11-to-2026-11-25-v12-patch.zip
