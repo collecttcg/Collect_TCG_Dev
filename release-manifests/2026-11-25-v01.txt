@@ -1,0 +1,13 @@
+Version: 2026-11-25-v01
+Previous version: 2026-11-24-v03
+Source commit: 70f415ee142f509f6e4b45b0a7b9753d0a44abfb
+Purpose: Close the Owner sign-in dialog once verified and separately report Owner view loading failures.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-24-v03-to-2026-11-25-v01-patch.zip
+Changed files: Owner authentication, app cache references, sign-in fixture, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+9157c1fd2195c88725ed43b1d8502b8499bf06f21cd8a6e417972c8ef44a7c21  release/Collect-TCG-Dev-2026-11-25-v01-full.zip
+60fff466208ef68298d5e57f3d2718eb21246895fc1e2b6ea9be755f977914c9  release/Collect-TCG-Dev-2026-11-24-v03-to-2026-11-25-v01-patch.zip
