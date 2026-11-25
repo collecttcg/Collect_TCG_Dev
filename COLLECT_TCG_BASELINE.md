@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development invoice stationery — 2026-11-26-v05
 
 - Replaces v04. The print and preview layout uses a compact shop letterhead, serif invoice title, ruled item table, separate billing details and a catalogue link. Owner permissions and transaction fields are preserved. No SQL required.
+- A sample was rendered and inspected on A4. Repository validation, invoice fixtures and both ZIP integrity checks passed. Six live application files matched the approved release. Safari print output was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45653882510).
 
 ## Development invoice banner and billing columns — 2026-11-26-v04
 
