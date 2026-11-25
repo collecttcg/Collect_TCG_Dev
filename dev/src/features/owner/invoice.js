@@ -88,45 +88,45 @@ export function renderInvoiceGenerator(appContext) {
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Invoice ${number}</title>
       <style>
-        @page{size:A4;margin:16mm}
-        *{box-sizing:border-box}
-        body{margin:0;background:#edefef;color:#20252b;font:15px/1.5 system-ui,sans-serif;overflow-wrap:anywhere}
-        main{max-width:794px;margin:24px auto;background:#fff;padding:clamp(22px,6vw,54px);border:1px solid #ccd0d2;border-top:6px solid #9a641b}
-        header{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,4vw,38px);align-items:start;padding:20px 24px;background:#262a2e;color:white;border-bottom:3px solid #9a641b}
-        .brand{display:flex;align-items:center;flex-wrap:wrap;gap:14px;margin:0}
-        .brand img{width:76px;height:76px;object-fit:contain;background:white;border-radius:50%}
-        .brand strong{font-size:1.15rem}
-        h1{margin:0 0 12px;font-size:clamp(1.9rem,5vw,3.15rem);font-weight:780;line-height:1.05;letter-spacing:.09em;text-transform:uppercase;text-align:right}
-        dl{margin:0}
-        .metadata div{display:grid;grid-template-columns:1fr 1.25fr;gap:10px;padding:7px 0;border-bottom:1px solid #72767a}
-        dt,.section-label{color:#4a5056;font-size:.74rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase}
-        .metadata dt{color:#e6e8ea}
-        dd{margin:0;text-align:right;font-weight:650;font-variant-numeric:tabular-nums}
-        p{margin:4px 0}
-        .seller-name,.client-name{font-size:1.08rem;font-weight:700}
-        .address{white-space:pre-wrap;color:#41474d}
-        .parties{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0;break-inside:avoid}
-        .party{padding:12px 14px;border-left:3px solid #9a641b;background:#f5f5f4;min-width:0}
-        table{border-collapse:collapse;width:100%;table-layout:fixed}
-        th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #c8ccd2}
-        thead th{background:#e9ebeb;border-top:2px solid #383e43;color:#252a2f;font-weight:750}
-        th:first-child,td:first-child{width:3.3rem;text-align:center}
-        tbody tr:nth-child(even){background:#f5f5f4}
-        tbody td:first-child{color:#515860;font-variant-numeric:tabular-nums}
-        .paid{display:flex;justify-content:space-between;gap:12px 22px;align-items:baseline;flex-wrap:wrap;width:max-content;max-width:100%;margin:24px 0 0 auto;padding:12px 16px;border:1px solid #969a9d;border-top:3px solid #9a641b;background:#f4eee4;break-inside:avoid}
-        .paid strong{font-size:1.24rem;font-variant-numeric:tabular-nums}
-        footer{margin-top:46px;padding-top:13px;border-top:2px solid #383e43;text-align:center;color:#42484e;font-size:.85rem;break-inside:avoid}
-        .print-controls{text-align:center;margin:20px auto;padding:0 12px;color:#42484e;font-size:.88rem}
-        button{padding:10px 16px;border:1px solid #32373d;border-radius:6px;background:#252a2f;color:#fff;font:inherit;font-weight:650;cursor:pointer}
-        @media screen and (max-width:520px){main{margin:0}header,.parties{grid-template-columns:1fr}h1{text-align:left}.brand img{width:64px;height:64px}}
-        @media print{
-          body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-          main{margin:0;padding:12px 0 0;max-width:none;border-width:5px 0 0}
+        @page { size: A4; margin: 18mm; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #edece8; color: #202928; font: 15px/1.55 Arial, sans-serif; overflow-wrap: anywhere; }
+        main { max-width: 794px; margin: 24px auto; padding: clamp(24px, 7vw, 68px); background: white; box-shadow: 0 8px 32px #24272414; }
+        p, dl, dd, h1 { margin: 0; }
+        .brand { display: flex; align-items: center; gap: 14px; padding-bottom: 18px; border-bottom: 2px solid #253632; }
+        .brand img { width: 52px; height: 52px; object-fit: contain; }
+        .brand strong { font: 600 22px/1.1 Georgia, serif; }
+        .brand small { display: block; margin-top: 5px; color: #5e635e; font-size: 11px; letter-spacing: .09em; }
+        .heading, .parties { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 36px; }
+        .heading { align-items: end; margin: 36px 0; }
+        h1 { font: normal 64px/.98 Georgia, serif; letter-spacing: -.045em; color: #20332e; }
+        .metadata div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; }
+        .metadata dt, .section-label, th { font-size: 11px; letter-spacing: .07em; font-weight: 700; text-transform: uppercase; color: #555e58; }
+        dd { text-align: right; font-variant-numeric: tabular-nums; }
+        .parties { border-top: 1px solid #c6cac4; padding-top: 20px; margin-bottom: 38px; }
+        .seller-name, .client-name { margin-top: 5px; font-size: 17px; font-weight: 700; }
+        .address { margin-top: 4px; color: #414943; white-space: pre-wrap; }
+        table { border-collapse: collapse; width: 100%; table-layout: fixed; text-align: left; }
+        th { padding: 9px 0; border-top: 1px solid #828b83; border-bottom: 1px solid #828b83; }
+        td { padding: 13px 0; vertical-align: top; border-bottom: 1px solid #d7dad5; }
+        th:first-child, td:first-child { width: 3.2rem; color: #616a64; font-variant-numeric: tabular-nums; }
+        .paid { margin: 22px 0 0 auto; width: 19rem; max-width: 100%; padding-top: 10px; border-top: 2px solid #99763c; text-align: right; break-inside: avoid; }
+        .paid strong { display: block; margin-top: 2px; font: normal 32px/1.25 Georgia, serif; font-variant-numeric: lining-nums tabular-nums; }
+        footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 54px; border-top: 1px solid #afb7af; padding-top: 10px; color: #536157; font-size: 12px; }
+        footer a { color: inherit; }
+        .print-controls { margin: 18px auto; text-align: center; font-size: 13px; }
+        button { padding: 10px 18px; margin-bottom: 5px; background: #20332e; color: white; border: 0; border-radius: 5px; font: inherit; cursor: pointer; }
+        @media screen and (max-width: 520px) {
+          main { margin: 0; }
+          .heading, .parties { grid-template-columns: 1fr; gap: 18px; }
+          h1 { font-size: 48px; }
+        }
+        @media print {
+          body, main { background: white; }
+          main { max-width: none; margin: 0; padding: 0; box-shadow: none; }
           .print-controls{display:none}
-          header,tr{break-inside:avoid}
-          header{background:#eee;color:#20252b}
-          .metadata dt{color:#4a5056}
-          thead{display:table-header-group}
+          .brand, .heading, .party, tr, footer { break-inside: avoid; }
+          thead { display: table-header-group; }
         }
       </style></head><body>
       <div class="print-controls">
@@ -135,8 +135,8 @@ export function renderInvoiceGenerator(appContext) {
       </div>
       <main>
         <header>
-          <div class="brand"><img src="${escape(logo.href)}" alt="Collect TCG logo"><strong>Collect TCG MY &amp; SG</strong></div>
-          <div>
+          <div class="brand"><img src="${escape(logo.href)}" alt="Collect TCG logo"><div><strong>Collect TCG</strong><small>Malaysia &amp; Singapore</small></div></div>
+          <div class="heading">
             <h1>Invoice</h1>
             <dl class="metadata">
               <div><dt>Invoice number</dt><dd>${number}</dd></div>
@@ -152,7 +152,7 @@ export function renderInvoiceGenerator(appContext) {
           <tbody>${descriptions.map((line,index) => `<tr><td>${index+1}</td><td>${escape(line)}</td></tr>`).join("")}</tbody>
         </table>
         <p class="paid"><span class="section-label">Amount paid</span><strong>${escape(amount)}</strong></p>
-        <footer>Thank you for your business</footer>
+        <footer><span>Thank you for your business.</span><a href="https://collecttcg.github.io/Collect_TCG/">Collect TCG catalogue</a></footer>
       </main></body></html>`);
     preview.document.close();
     preview.document.getElementById("printInvoice").addEventListener("click", () => {

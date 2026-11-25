@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development invoice stationery — 2026-11-26-v05
+
+- Replaces v04. The print and preview layout uses a compact shop letterhead, serif invoice title, ruled item table, separate billing details and a catalogue link. Owner permissions and transaction fields are preserved. No SQL required.
+
 ## Development invoice banner and billing columns — 2026-11-26-v04
 
 - Replaces `2026-11-26-v03`. Uses a charcoal branded preview banner and a print-friendly equivalent, side-by-side Bill to and From sections, and alternating item rows. No SQL required.
