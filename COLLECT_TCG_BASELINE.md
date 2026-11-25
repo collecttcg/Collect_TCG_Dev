@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `60b08d8a69ee9c8878f6d0c335afcab03b7d8630`.
+- Development latest non-baseline commit: `9b92b144a97b4453c7b7f507213616c08137f36d`.
 - Production latest non-baseline commit: `2e7bbed971a4cdd8e592d96f1630db5db1b48aab`.
 - Production rollback ref: `2e7bbed971a4cdd8e592d96f1630db5db1b48aab`.
 - Latest local release manifest: [`2026-11-25-v04`](release-manifests/2026-11-25-v04.txt) from `33125b93da71af6c20001841e486d5efcf6f592e`.
-- Latest local change: `60b08d8a69ee9c8878f6d0c335afcab03b7d8630` · Development 2026-11-25-v04: record package validation.
+- Latest local change: `9b92b144a97b4453c7b7f507213616c08137f36d` · Development 2026-11-25-v05: switch Giveaway panels in place.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
