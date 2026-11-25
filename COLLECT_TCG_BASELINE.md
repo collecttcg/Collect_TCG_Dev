@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `8a38a35bd1f3765f5920c26d613efae0e33b111a`.
+- Development latest non-baseline commit: `1cdb0b5dabcf22d77493237aaff11dba2768bea3`.
 - Production latest non-baseline commit: `9a2b6c1c235ecd6be0389604afdf018f6a70c4a0`.
 - Production rollback ref: `24d2eb20e3494624e92d54c0a3839dbee2c966ef`.
-- Latest local release manifest: [`2026-11-26-v05`](release-manifests/2026-11-26-v05.txt) from `a3302bf57710f2f1877673828632293ddf4d7842`.
-- Latest local change: `8a38a35bd1f3765f5920c26d613efae0e33b111a` · Development 2026-11-26-v06: remove browser footer from invoice printouts.
+- Latest local release manifest: [`2026-11-26-v06`](release-manifests/2026-11-26-v06.txt) from `8a38a35bd1f3765f5920c26d613efae0e33b111a`.
+- Latest local change: `1cdb0b5dabcf22d77493237aaff11dba2768bea3` · Development 2026-11-26-v06: record package validation.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
