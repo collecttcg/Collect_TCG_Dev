@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development About and Contact platform logos — 2026-11-25-v12
+
+- Replaces `2026-11-25-v11`. Adds Facebook, Messenger, Instagram and Carousell logos to their About and Contact links. No SQL required.
+
 ## Development eBay account labels — 2026-11-25-v11
 
 - Replaces `2026-11-25-v10`. About and Contact show Collect TCG 1–5 with the existing eBay wordmark and remove repeated subtitles. Seller destinations and external-link arrows are retained. No SQL required.

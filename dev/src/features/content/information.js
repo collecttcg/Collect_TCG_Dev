@@ -1,5 +1,10 @@
 /** Module: features/content/information. Shared dependencies are explicit on appContext. */
 export function register(appContext){
+  const socialLogo=file=>`<img src="./assets/${file}" alt="" width="18" height="18" style="vertical-align:middle">`;
+  const facebookLogo=socialLogo("facebook-post-generator.svg");
+  const messengerLogo=socialLogo("messenger-contact.svg");
+  const instagramLogo=socialLogo("instagram-contact.svg");
+  const carousellLogo=socialLogo("carousell-post-generator.png");
   const ebayLogo='<img src="./assets/ebay-post-generator.svg" alt="" width="34" height="17" style="vertical-align:middle">';
 function renderAboutPage(){
     appContext.view.innerHTML = `
@@ -24,16 +29,16 @@ function renderAboutPage(){
         <h3 class="about-subhead">Browse Our Collection</h3>
         <div class="about-links">
           <a class="about-link" href="https://www.carousell.com.my/u/collect_tcg_my_sg/" target="_blank" rel="noopener noreferrer">
-            <span><b>🇲🇾 Carousell Malaysia</b><small>collect_tcg_my_sg</small></span><span>↗</span>
+            <span><b>${carousellLogo} Carousell Malaysia</b><small>collect_tcg_my_sg</small></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.carousell.sg/u/collect_tcg_sg/" target="_blank" rel="noopener noreferrer">
-            <span><b>🇸🇬 Carousell Singapore</b><small>collect_tcg_sg</small></span><span>↗</span>
+            <span><b>${carousellLogo} Carousell Singapore</b><small>collect_tcg_sg</small></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.instagram.com/collecttcg.mysg/" target="_blank" rel="noopener noreferrer">
-            <span><b>📸 Instagram</b><small>@collecttcg.mysg</small></span><span>↗</span>
+            <span><b>${instagramLogo} Instagram</b><small>@collecttcg.mysg</small></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.facebook.com/profile.php?id=61590041416102" target="_blank" rel="noopener noreferrer">
-            <span><b>Facebook</b><small>Collect TCG MY &amp; SG</small></span><span>↗</span>
+            <span><b>${facebookLogo} Facebook</b><small>Collect TCG MY &amp; SG</small></span><span>↗</span>
           </a>
           <a class="about-link" href="https://www.ebay.com/usr/COLLECT_TCG_1" target="_blank" rel="noopener noreferrer">
             <span><b>${ebayLogo} Collect TCG 1</b></span><span>↗</span>
@@ -85,16 +90,16 @@ function renderContactPage(){
         <h3>Collect TCG MY & SG</h3>
         <div class="contact-links">
           <a class="contact-link" href="https://m.me/61590041416102" target="_blank" rel="noopener noreferrer">
-            <span>Facebook Messenger</span><span class="contact-arrow">↗</span>
+            <span>${messengerLogo} Facebook Messenger</span><span class="contact-arrow">↗</span>
           </a>
           <a class="contact-link" href="https://www.instagram.com/collecttcg.mysg" target="_blank" rel="noopener noreferrer">
-            <span>Instagram</span><span class="contact-arrow">↗</span>
+            <span>${instagramLogo} Instagram</span><span class="contact-arrow">↗</span>
           </a>
           <a class="contact-link" href="https://www.carousell.com.my/u/collect_tcg_my_sg/" target="_blank" rel="noopener noreferrer">
-            <span>Carousell Malaysia</span><span class="contact-arrow">↗</span>
+            <span>${carousellLogo} Carousell Malaysia</span><span class="contact-arrow">↗</span>
           </a>
           <a class="contact-link" href="https://www.carousell.sg/u/collect_tcg_sg/" target="_blank" rel="noopener noreferrer">
-            <span>Carousell Singapore</span><span class="contact-arrow">↗</span>
+            <span>${carousellLogo} Carousell Singapore</span><span class="contact-arrow">↗</span>
           </a>
         </div>
 
