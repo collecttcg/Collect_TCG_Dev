@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development printable invoice design — 2026-11-26-v03
 
 - Replaces `2026-11-26-v02`. The invoice preview and PDF have a stronger branded header, aligned invoice metadata, numbered item rows, and a distinct amount-paid summary. The print layout keeps existing invoice fields and addresses. No SQL required.
+- Repository validation, invoice output fixtures and both ZIP integrity checks passed. Interactive desktop, mobile and Safari checks were unavailable. GitHub Pages returned HTTP 500 on its first attempt. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45649329731).
 
 
 ## Development invoice field visibility — 2026-11-26-v02
