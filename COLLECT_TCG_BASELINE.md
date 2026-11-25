@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development invoice print margins — 2026-11-26-v06
+
+- Replaces v05. The invoice supplies its own print padding and removes the browser margin area used for the preview URL. Chromium PDF output with headers and footers enabled reproduced about:blank with the old margins and omitted it on one- and five-page invoices with the new margins. Safari was not tested. No SQL required.
+
 ## Development invoice stationery — 2026-11-26-v05
 
 - Replaces v04. The print and preview layout uses a compact shop letterhead, serif invoice title, ruled item table, separate billing details and a catalogue link. Owner permissions and transaction fields are preserved. No SQL required.

@@ -88,7 +88,7 @@ export function renderInvoiceGenerator(appContext) {
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Invoice ${number}</title>
       <style>
-        @page { size: A4; margin: 18mm; }
+        @page { size: A4; margin: 0; }
         * { box-sizing: border-box; }
         body { margin: 0; background: #edece8; color: #202928; font: 15px/1.55 Arial, sans-serif; overflow-wrap: anywhere; }
         main { max-width: 794px; margin: 24px auto; padding: clamp(24px, 7vw, 68px); background: white; box-shadow: 0 8px 32px #24272414; }
@@ -123,7 +123,7 @@ export function renderInvoiceGenerator(appContext) {
         }
         @media print {
           body, main { background: white; }
-          main { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+          main { max-width: none; margin: 0; padding: 18mm; box-shadow: none; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
           .print-controls{display:none}
           .brand, .heading, .party, tr, footer { break-inside: avoid; }
           thead { display: table-header-group; }
@@ -131,7 +131,6 @@ export function renderInvoiceGenerator(appContext) {
       </style></head><body>
       <div class="print-controls">
         <button type="button" id="printInvoice">Print / Save as PDF</button>
-        <p>Turn off Headers and footers in the print dialog for a clean PDF.</p>
       </div>
       <main>
         <header>
