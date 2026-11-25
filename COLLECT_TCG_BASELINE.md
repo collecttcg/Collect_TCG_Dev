@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development Facebook Post Generator tile logos — 2026-11-25-v09
 
 - Replaces `2026-11-25-v08`. Single Card Post and Card List Post show Facebook’s blue logo. Share eBay Listings on Facebook pairs the locally hosted eBay and Facebook logos. No SQL required.
+- The Development suite and both ZIP integrity checks passed. Pages deployment succeeded. Interactive browser rendering was not tested. [Release and ZIPs](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45544367069) · [Pages deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45544414938).
 
 ## Development marketplace tile logos — 2026-11-25-v08
 
