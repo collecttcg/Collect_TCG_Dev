@@ -28,7 +28,7 @@ export function registerFacebookEbayPosts(appContext){
     });
     return [
       `WTS | ${heading}`,
-      "A few cards from my collection are available on eBay. Tap a listing below to see the price, condition, and full photo gallery.",
+      "A few cards from my collection are available on eBay. Listings are sorted by year, oldest first. Tap a listing below to see the price, condition, and full photo gallery.",
       ...lines,
       "See a card you like? Feel free to message me with any questions.\n\n— Collect TCG MY & SG"
     ].join("\n\n");

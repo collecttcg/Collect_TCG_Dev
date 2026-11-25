@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Facebook eBay post sort note — 2026-11-25-v06
+
+- Replaces `2026-11-25-v05`. “Share eBay Listings on Facebook” now states in the generated post that listings are sorted by year, oldest first. No SQL required.
+
 ## Development Giveaway panel switching — 2026-11-25-v05
 
 - Replaces `2026-11-25-v04`. Giveaway tabs retain the generator header and switch only the lower form and preview. Fixed an undefined listener that stopped the Winners form from initializing. No SQL required.

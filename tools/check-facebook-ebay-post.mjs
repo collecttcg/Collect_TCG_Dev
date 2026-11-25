@@ -29,6 +29,7 @@ assert.deepEqual(
   [14,6,13,7,12]
 );
 assert.equal(a.buildFacebookEbayListingsPost([]),'');
+assert.match(a.buildFacebookEbayListingsPost(a.facebookEbayListingEntries([vivi,zoro])),/Listings are sorted by year, oldest first\./);
 a.currentHashParams=()=>new URLSearchParams('mode=facebook-ebay');
 assert.equal(a.currentFacebookToolMode(),'facebook-ebay');
 assert.match(a.facebookToolsHeaderHTML('facebook-ebay'),/Share eBay Listings on Facebook/);
