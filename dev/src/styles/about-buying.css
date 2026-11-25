@@ -1,0 +1,6 @@
+.about-buying{color:var(--text-muted);font-size:13.5px;line-height:1.75;}
+  .about-buying ul{margin:0 0 13px;padding-inline-start:1.4em;}
+  .about-buying-example{width:100%;max-width:520px;border-collapse:collapse;font:inherit;color:inherit;}
+  .about-buying-example caption{text-align:left;margin-bottom:4px;}
+  .about-buying-example th,.about-buying-example td{padding:6px;border-bottom:1px solid var(--border);font:inherit;text-align:left;}
+  .about-buying-example tr > :last-child{text-align:right;white-space:nowrap;}

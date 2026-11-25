@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development About buying example formatting — 2026-11-25-v14
+
+- Replaces `2026-11-25-v13`. The buying guide matches About body typography, including the discount list. Direct purchases apply 12% to the first US$2,500 of each item and 3% to the portion above that. The tabulated example totals US$6,380 before shipping, including the US$5 multi-item discount. No SQL required.
+
 ## Development About buying options — 2026-11-25-v13
 
 - Replaces `2026-11-25-v12`. About explains buying on eBay and buying directly, including 12% below US$2,500, 8% at or above US$2,500, and US$5 off each additional item. The two-card example totals US$6,355 before shipping. No SQL required.

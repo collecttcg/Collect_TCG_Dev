@@ -27,15 +27,29 @@ function renderAboutPage(){
         </div>
 
         <h3 class="about-subhead">How to Buy</h3>
-        <div class="about-copy">
-          <p><strong>Shop on eBay.</strong> Most of our cards are listed on eBay. Browse our listings for prices, condition, and availability, then buy directly through eBay.</p>
-          <p><strong>Buy Direct &amp; Save.</strong> Message us on <a href="https://m.me/61590041416102" target="_blank" rel="noopener noreferrer">Facebook Messenger</a> or <a href="https://www.instagram.com/collecttcg.mysg/" target="_blank" rel="noopener noreferrer">Instagram</a> to buy directly from Collect TCG. The discount is based on each item’s listed eBay price.</p>
+        <div class="about-copy about-buying">
+          <p>Shop on eBay. Most of our cards are listed on eBay. Browse our listings for prices, condition, and availability, then buy directly through eBay.</p>
+          <p>Buy Direct &amp; Save. Message us on <a href="https://m.me/61590041416102" target="_blank" rel="noopener noreferrer">Facebook Messenger</a> or <a href="https://www.instagram.com/collecttcg.mysg/" target="_blank" rel="noopener noreferrer">Instagram</a> to buy directly from Collect TCG. The discount is based on each item’s listed eBay price.</p>
           <ul>
-            <li><strong>Under US$2,500</strong> — 12% off.</li>
-            <li><strong>US$2,500 and above</strong> — 8% off.</li>
-            <li><strong>Multi-item orders</strong> — Take an extra US$5 off each additional item after the first.</li>
+            <li>12% off the first US$2,500 of each item.</li>
+            <li>3% off any portion of an item’s price above US$2,500.</li>
+            <li>Multi-item orders — Take an extra US$5 off each additional item after the first.</li>
           </ul>
-          <p><strong>Example.</strong> A US$2,000 card comes to US$1,760 after 12% off. A US$5,000 card comes to US$4,600 after 8% off. Buy both in one order and take another US$5 off. <strong>Your total is US$6,355 before shipping, a saving of US$645 off the combined eBay listing prices.</strong></p>
+          <table class="about-buying-example">
+            <caption>Example · Two cards bought directly</caption>
+            <thead>
+              <tr><th scope="col">eBay price</th><th scope="col">Discount</th><th scope="col">Direct price</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">US$2,000</th><td>12% off</td><td>US$1,760</td></tr>
+              <tr><th scope="row">US$5,000</th><td>US$300 + US$75 off</td><td>US$4,625</td></tr>
+            </tbody>
+            <tfoot>
+              <tr><th scope="row" colspan="2">Additional-item discount</th><td>−US$5</td></tr>
+              <tr><th scope="row" colspan="2">Total before shipping</th><td>US$6,380</td></tr>
+              <tr><th scope="row" colspan="2">Total savings</th><td>US$620</td></tr>
+            </tfoot>
+          </table>
         </div>
 
         <h3 class="about-subhead">Browse Our Collection</h3>
