@@ -1,0 +1,13 @@
+Version: 2026-11-25-v13
+Previous version: 2026-11-25-v12
+Source commit: 69813bc9e1ddcffdb6c919a2a233d49765bd0ff5
+Purpose: Add eBay and direct buying options, discount tiers and a worked example to About.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v13-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v12-to-2026-11-25-v13-patch.zip
+Changed files: About markup, cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+43256a5e0d4828d2917e2f2a32a591d5872c205ee141dabbffdabc48076b5a62  release/Collect-TCG-Dev-2026-11-25-v13-full.zip
+922669621e8cdc188fd875ec42b84292dba0a9611c76f722cc8539c48f6b8457  release/Collect-TCG-Dev-2026-11-25-v12-to-2026-11-25-v13-patch.zip
