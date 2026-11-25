@@ -1,0 +1,13 @@
+Version: 2026-11-25-v04
+Previous version: 2026-11-25-v03
+Source commit: 33125b93da71af6c20001841e486d5efcf6f592e
+Purpose: Combine Single Card and NFS posts, group the giveaway workflows, and clarify the Facebook eBay sharing label.
+Full ZIP: Collect-TCG-Dev-2026-11-25-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-25-v03-to-2026-11-25-v04-patch.zip
+Changed files: Post Generator, cache references, regression fixtures, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+06ecae33ebbb12277d59381ff69b399fe34e586cd82673fae30c3184147cc166  release/Collect-TCG-Dev-2026-11-25-v04-full.zip
+86b5c7aec67515d93d47d58bcfab88a82efcbc31f9cb419e5a317d398fec359c  release/Collect-TCG-Dev-2026-11-25-v03-to-2026-11-25-v04-patch.zip
