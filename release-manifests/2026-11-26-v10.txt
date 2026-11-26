@@ -1,0 +1,13 @@
+Version: 2026-11-26-v10
+Previous version: 2026-11-26-v09
+Source commit: 5f0cf8d27d9daf1b6d4418f03fbf970887c44064
+Purpose: Show printed invoice details and add a dedicated Invoices tile.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v10-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v09-to-2026-11-26-v10-patch.zip
+Changed files: Invoice details, PDF reader, Invoices navigation, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+a8575911915631242c21f2ae877107ee13a437bdd83191e09b26a9ef6699fb62  release/Collect-TCG-Dev-2026-11-26-v10-full.zip
+cceb5dcb0573198909c29860b203b7b837aab52d5c3838ac729c0992cad9a990  release/Collect-TCG-Dev-2026-11-26-v09-to-2026-11-26-v10-patch.zip
