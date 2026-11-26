@@ -15,7 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development invoice workspace styling — 2026-11-27-v02
 
 - Replaces `2026-11-27-v01`. Invoice inputs, selectors, upload controls and search have consistent heights. Duplicate-number feedback sits below its own field. The create form and saved archive share panel spacing, section headings and action styling. The PDF template, invoice rules and owner-only shared storage are unchanged. No SQL required.
-- Repository validation and Chromium fixtures passed, including alignment at 1100, 720, 375 and 320 pixels, light theme, owner gating, manual numbering, duplicate handling, preview, save and PDF download. The fixture used mock storage. Safari was not tested.
+- Repository validation and Chromium fixtures passed, including alignment at 1100, 720, 375 and 320 pixels, light theme, owner gating, manual numbering, duplicate handling, preview, save and PDF download. The fixture used mock storage. Safari was not tested. CI validated both ZIPs and recorded the immutable manifest. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45846754450).
 
 ## Development count-based invoice suggestions — 2026-11-27-v01
 
