@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development sold listings in invoice descriptions — 2026-11-27-v03
+
+- Replaces `2026-11-27-v02`. The Owner invoice form can search Sold Listings by card name, code, set and other listing details. Each selection appends an editable line to the description, respecting its existing character limit. The picker uses the same listing scope and search rules as the catalogue. No SQL required.
+- Chromium verified Sold Listings filtering, multi-term and code search, empty and no-match states, adding multiple lines, the description length limit, mobile and desktop layout, PDF preview, save and download with mock storage, and the Owner gate. Safari was not tested.
+
 ## Development invoice workspace styling — 2026-11-27-v02
 
 - Replaces `2026-11-27-v01`. Invoice inputs, selectors, upload controls and search have consistent heights. Duplicate-number feedback sits below its own field. The create form and saved archive share panel spacing, section headings and action styling. The PDF template, invoice rules and owner-only shared storage are unchanged. No SQL required.

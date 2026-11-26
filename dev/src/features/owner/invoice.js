@@ -61,6 +61,65 @@ function actionButton(label, action) {
   return button;
 }
 
+function wireSoldListingPicker(appContext, form, description) {
+  const picker = form.querySelector(".invoice-sold-picker");
+  const search = picker.querySelector("input");
+  const select = picker.querySelector("select");
+  const add = picker.querySelector("button");
+  const status = picker.querySelector("[role=status]");
+  let matches = [];
+
+  function renderOptions() {
+    const soldCards = appContext.cards.filter(card => appContext.cardMatchesListingScope(card, "sold"));
+    matches = soldCards
+      .filter(card => appContext.cardMatchesSmartSearch(card, search.value))
+      .map(card => {
+        const grading = Array.isArray(card.grading) ? card.grading : [];
+        const grades = grading.filter(grade => grade?.company)
+          .map(grade => `${grade.company} ${grade.grade ?? ""}`.trim()).join(", ");
+        return [card.name, card.card_code, card.series || card.set, grades]
+          .filter(Boolean).join(" · ").replace(/\s+/g, " ").trim();
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b));
+
+    select.replaceChildren(new Option("Select a sold listing", ""));
+    for (const [index, title] of matches.entries()) {
+      select.add(new Option(title, String(index)));
+    }
+    select.disabled = !matches.length;
+    add.disabled = true;
+    status.textContent = matches.length
+      ? `${matches.length} sold listing${matches.length === 1 ? "" : "s"}`
+      : soldCards.length ? "No sold listings match your search." : "No sold listings are available.";
+  }
+
+  picker.addEventListener("toggle", () => {
+    if (picker.open) renderOptions();
+  });
+  search.addEventListener("input", renderOptions);
+  search.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.isComposing) event.preventDefault();
+  });
+  select.addEventListener("change", () => { add.disabled = !select.value; });
+  add.addEventListener("click", () => {
+    if (!select.value) return;
+    const title = matches[Number(select.value)];
+    if (!title) return;
+    const separator = description.value && !description.value.endsWith("\n") ? "\n" : "";
+    const next = description.value + separator + title;
+    if (next.length > description.maxLength) {
+      status.textContent = "This listing would exceed the description limit. Shorten the description and try again.";
+      return;
+    }
+    description.value = next;
+    select.value = "";
+    add.disabled = true;
+    status.textContent = `Added ${title}.`;
+    select.focus();
+  });
+}
+
 export function renderInvoiceGenerator(appContext) {
   if (!appContext.requireOwner("open the invoice generator")) return;
 
@@ -167,6 +226,29 @@ export function renderInvoiceGenerator(appContext) {
           .invoice-workspace #ownerInvoiceUpload { align-items:end; }
           .invoice-workspace [role=status] { margin:0 0 12px; }
           .invoice-workspace [role=status]:empty { display:none; }
+          .invoice-workspace .invoice-sold-picker {
+            margin-bottom:12px;
+            padding:10px 12px;
+            border:1px solid var(--border);
+            border-radius:9px;
+          }
+          .invoice-workspace .invoice-sold-picker summary { cursor:pointer; font-weight:600; }
+          .invoice-workspace .invoice-sold-picker summary:focus-visible {
+            outline:2px solid var(--accent-teal);
+            outline-offset:2px;
+          }
+          .invoice-workspace .invoice-sold-fields {
+            grid-template-columns:repeat(2,minmax(0,1fr)) auto;
+            align-items:end;
+            gap:10px;
+            margin-top:12px;
+          }
+          .invoice-workspace .invoice-sold-picker [role=status] {
+            margin:8px 0 0;
+            color:var(--text-muted);
+            font-size:.8125rem;
+            overflow-wrap:anywhere;
+          }
           .invoice-workspace #ownerInvoiceHistoryStatus { margin:12px 0 0; }
           .invoice-workspace .invoice-search { margin-top:18px; }
           .invoice-workspace #ownerInvoiceRows { list-style:none; padding:0; margin:14px 0 0; }
@@ -189,11 +271,11 @@ export function renderInvoiceGenerator(appContext) {
           .invoice-workspace .invoice-summary small { color:var(--text-muted); }
           @media (max-width:740px) {
             .invoice-workspace .invoice-fields { grid-template-columns:repeat(2,minmax(0,1fr)); }
-            .invoice-workspace #ownerInvoiceUpload button { grid-column:1/-1; justify-self:start; }
+            .invoice-workspace :is(#ownerInvoiceUpload,.invoice-sold-fields) button { grid-column:1/-1; justify-self:start; }
           }
           @media (max-width:520px) {
             .invoice-workspace .invoice-fields { grid-template-columns:minmax(0,1fr); }
-            .invoice-workspace #ownerInvoiceUpload button { justify-self:stretch; }
+            .invoice-workspace :is(#ownerInvoiceUpload,.invoice-sold-fields) button { justify-self:stretch; }
             .invoice-workspace .invoice-form-footer button { flex:1 1 auto; }
           }
         </style>
@@ -215,9 +297,20 @@ export function renderInvoiceGenerator(appContext) {
               <label>Seller address (optional) <textarea name="sellerAddress" rows="3" maxlength="400"></textarea></label>
               <label>Buyer address (optional) <textarea name="buyerAddress" rows="3" maxlength="400"></textarea></label>
             </div>
-            <label class="invoice-wide">Product or service description
-              <textarea name="description" rows="5" required maxlength="2400" placeholder="Enter one product or service per line"></textarea>
-            </label>
+            <div class="invoice-wide">
+              <details class="invoice-sold-picker">
+                <summary>Add from sold listings</summary>
+                <div class="invoice-fields invoice-sold-fields">
+                  <label>Search sold listings <input type="search" placeholder="Card name, code or set"></label>
+                  <label>Sold listing <select disabled><option value="">Select a sold listing</option></select></label>
+                  <button class="btn-ghost" type="button" disabled>Add to description</button>
+                </div>
+                <p role="status"></p>
+              </details>
+              <label>Product or service description
+                <textarea name="description" rows="5" required maxlength="2400" placeholder="Enter one product or service per line"></textarea>
+              </label>
+            </div>
           </div>
           <div class="invoice-form-footer">
             <p role="status" data-invoice-status></p>
@@ -247,6 +340,7 @@ export function renderInvoiceGenerator(appContext) {
   const form = appContext.$("ownerInvoiceForm");
   const status = form.querySelector("[data-invoice-status]");
   const fields = form.elements;
+  wireSoldListingPicker(appContext, form, fields.description);
   const numberField = fields.namedItem("number");
   const numberHint = appContext.$("ownerInvoiceNumberHint");
   let numberEdited = false;
