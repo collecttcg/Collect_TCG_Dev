@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development count-based invoice suggestions — 2026-11-27-v01
 
-- Replaces `2026-11-26-v12`. The suggested invoice number is the count of PDFs in the shared archive plus one. Browser-only records do not count. The form still accepts a manual number and flags a number already in the shared archive. No SQL required.
+- Replaces `2026-11-26-v12`. The suggested invoice number is the count of PDFs in the shared archive plus one. Browser-only records do not count. The form still accepts a manual number and flags a number already in the shared archive. No SQL required. Chromium fixtures verified empty, two- and five-PDF archives, non-PDF filtering, duplicate protection, manual preview and save, mobile layout and Owner gating. The workflow and both ZIP checks passed and six live files matched. Safari was not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45844891313).
 
 
 ## Development manual invoice numbers — 2026-11-26-v12
