@@ -1,0 +1,13 @@
+Version: 2026-11-26-v11
+Previous version: 2026-11-26-v10
+Source commit: 35d0da77fb2662560e691b199c2cb2dbc240e360
+Purpose: Generate and save created invoice PDFs.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v11-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v10-to-2026-11-26-v11-patch.zip
+Changed files: Invoice generator, PDF export and archive metadata, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+8746eb4df3319d661f0d4e41a3f9119056ab00f53e71e53a1b60c484f99cc9cb  release/Collect-TCG-Dev-2026-11-26-v11-full.zip
+4bcf847b355b47f7bfdc7ddef544ae2213a0afd098db3a189299f7be89e606bd  release/Collect-TCG-Dev-2026-11-26-v10-to-2026-11-26-v11-patch.zip
