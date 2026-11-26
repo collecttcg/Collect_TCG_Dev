@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development manual invoice numbers — 2026-11-26-v12
 
-- Replaces v11. The seller option is Lim Poh Yeap. The invoice form suggests the next number and accepts an override of 1 to 10 digits. Preview, the saved PDF and the archive key use the same normalized number. Existing invoices cannot be overwritten. No SQL required.
+- Replaces v11. The seller option is Lim Poh Yeap. The invoice form suggests the next number and accepts an override of 1 to 10 digits. Preview, the saved PDF and the archive key use the same normalized number. Existing invoices cannot be overwritten. No SQL required. Repository validation, both ZIP checks and six live file checks passed. Chromium verified manual, invalid and duplicate numbers, preview, PDF, download, next number, archived seller names, mobile layout and Owner gating. Safari was not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45842079000).
 
 
 ## Development automatic invoice PDF saving — 2026-11-26-v11
