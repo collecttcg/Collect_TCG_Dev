@@ -1,0 +1,13 @@
+Version: 2026-11-27-v02
+Previous version: 2026-11-27-v01
+Source commit: 955de2969c17563d5ba58f4699cafa441193f262
+Purpose: Align invoice form controls and refine the saved-invoice archive.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v02-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-27-v01-to-2026-11-27-v02-patch.zip
+Changed files: Invoice workspace, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+1a81fd54f54552a23db9b695be96160025da33de295cbef3b3c24c2f93387838  release/Collect-TCG-Dev-2026-11-27-v02-full.zip
+681821e200c014971fb5a4e01d4b2eb521d1ebc2d9fdb3dfbbdcb925fc4d00d4  release/Collect-TCG-Dev-2026-11-27-v01-to-2026-11-27-v02-patch.zip
