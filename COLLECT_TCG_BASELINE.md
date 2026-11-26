@@ -4,8 +4,8 @@
 ## GitHub state
 
 - Development latest non-baseline commit: `3ef4af7211050a87445db8d30dff4d22cae11621`.
-- Production latest non-baseline commit: `c06342eb180e9a2743cd539fc58657fa29d63148`.
-- Production rollback ref: `5ca75b6853393b4fe9f3d2234ae4353c1412e183`.
+- Production latest non-baseline commit: `608d6f58a4fdfccd8db8c4dc7b3eba6f7d55e774`.
+- Production rollback ref: `608d6f58a4fdfccd8db8c4dc7b3eba6f7d55e774`.
 - Latest local release manifest: [`2026-11-26-v11`](release-manifests/2026-11-26-v11.txt) from `35d0da77fb2662560e691b199c2cb2dbc240e360`.
 - Latest local change: `3ef4af7211050a87445db8d30dff4d22cae11621` · Development 2026-11-26-v11: record package validation.
 
