@@ -1,0 +1,13 @@
+Version: 2026-11-27-v03
+Previous version: 2026-11-27-v02
+Source commit: c93db649c42a6266e33e1f86330c83b3b1181ad2
+Purpose: Add searchable sold listings to invoice descriptions.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v03-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-27-v02-to-2026-11-27-v03-patch.zip
+Changed files: Invoice sold-listing picker, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+8ed362547bea558258ccc3e3782d3506ab9dfcb48480ab66da81dcefcfed49eb  release/Collect-TCG-Dev-2026-11-27-v03-full.zip
+8e4c5b2e163f90468cac037257e8aa3aaa8190cc8b7944e2e1ca3005619170bf  release/Collect-TCG-Dev-2026-11-27-v02-to-2026-11-27-v03-patch.zip
