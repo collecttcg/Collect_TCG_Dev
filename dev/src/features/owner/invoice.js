@@ -1,3 +1,5 @@
+import { readInvoiceDetails } from "./invoice-pdf.js?v=2026-11-26-v10";
+
 const currencies = ["USD", "MYR", "SGD", "JPY"];
 
 const sellers = ["Zakwan Zahid", "Daniel Lim Poh Yeap", "Jack Wong Tiong Kiat", "Foo Xiang Yen", "Shue"];
@@ -48,7 +50,7 @@ async function listCloudInvoices(bucket) {
     if (error) throw error;
     for (const file of data) {
       if (/^[0-9]{10}\.pdf$/.test(file.name)) {
-        records.push({ sequence: Number(file.name.slice(0, 10)), path: file.name, uploaded: file.created_at });
+        records.push({ sequence: Number(file.name.slice(0, 10)), path: file.name, revision: file.id || file.created_at });
       }
     }
     if (data.length < limit) return records;
@@ -71,7 +73,7 @@ export function renderInvoiceGenerator(appContext) {
     <div class="inventory-tools-page">
       <div class="eyebrow">Owner Tools</div>
       <h2>Invoice Generator</h2>
-      ${appContext.inventoryToolsSwitcher("activity", "invoice")}
+      ${appContext.inventoryToolsSwitcher("invoices", "invoice")}
       <form class="panel" id="ownerInvoiceForm" autocomplete="off" style="max-width:780px;margin-top:20px;padding:20px">
         <style>
           :is(#ownerInvoiceForm,#ownerInvoiceUpload) .invoice-fields, #ownerInvoiceUpload{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
@@ -84,8 +86,10 @@ export function renderInvoiceGenerator(appContext) {
           #ownerInvoiceHistory label{display:grid;gap:6px;margin:12px 0}
           #ownerInvoiceHistory input{max-width:100%}
           #ownerInvoiceRows{list-style:none;padding:0;margin:0}
+          #ownerInvoiceRows li[hidden]{display:none}
           #ownerInvoiceRows li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-          #ownerInvoiceRows li span{flex:1 1 190px;overflow-wrap:anywhere}
+          #ownerInvoiceRows .invoice-summary{flex:1 1 250px;display:grid;gap:3px;overflow-wrap:anywhere}
+          #ownerInvoiceRows .invoice-summary small{color:var(--text-muted)}
           #ownerInvoiceRows li div{display:flex;flex-wrap:wrap;gap:6px}
           #ownerInvoiceForm textarea{resize:vertical}
           #ownerInvoiceForm .invoice-wide{grid-column:1/-1}
@@ -120,7 +124,7 @@ export function renderInvoiceGenerator(appContext) {
           <button class="btn-primary" type="submit" disabled>Upload Invoice</button>
         </form>
         <p role="status" id="ownerInvoiceHistoryStatus"></p>
-        <label>Search invoices <input id="ownerInvoiceSearch" type="search" placeholder="Invoice number or date"></label>
+        <label>Search invoices <input id="ownerInvoiceSearch" type="search" placeholder="Seller, description, number or date"></label>
         <ul id="ownerInvoiceRows"><li>Loading invoices…</li></ul>
       </section>
     </div>`;
@@ -150,6 +154,44 @@ export function renderInvoiceGenerator(appContext) {
   let db;
   let writing = false;
   let cloudReady = false;
+  let detailsRun = 0;
+  const detailsByFile = new Map();
+
+  async function loadPDFDetails() {
+    const run = ++detailsRun;
+    for (const invoice of records) {
+      if (run !== detailsRun || !rows.isConnected || !appContext.isOwnerMode()) return;
+      if (!(invoice.path || invoice.pdf)) continue;
+      const key = invoice.path
+        ? `collect-tcg.invoice-details.v1:${invoice.path}:${invoice.revision}`
+        : `browser:${invoice.sequence}`;
+      try {
+        let details = detailsByFile.get(key);
+        if (!details && invoice.revision) {
+          try { details = JSON.parse(sessionStorage.getItem(key)); } catch {}
+        }
+        if (!details) {
+          const { data, error } = invoice.pdf ? { data: invoice.pdf } : await bucket.download(invoice.path);
+          if (error) throw error;
+          if (run !== detailsRun || !rows.isConnected || !appContext.isOwnerMode()) return;
+          details = await readInvoiceDetails(data, sellers);
+          detailsByFile.set(key, details);
+          if (invoice.revision) {
+            try { sessionStorage.setItem(key, JSON.stringify(details)); } catch {}
+          }
+        }
+        if (run !== detailsRun || !rows.isConnected || !appContext.isOwnerMode()) return;
+        invoice.details = details;
+        updateInvoiceRow(invoice);
+        updateEmptyMessage();
+      } catch {
+        if (run !== detailsRun || !rows.isConnected || !appContext.isOwnerMode()) return;
+        invoice.details = {};
+        updateInvoiceRow(invoice);
+        updateEmptyMessage();
+      }
+    }
+  }
 
   async function openSavedInvoice(invoice, download = false) {
     if (!appContext.requireOwner("access a saved invoice")) return;
@@ -192,31 +234,53 @@ export function renderInvoiceGenerator(appContext) {
     }
   }
 
-  function renderHistory() {
-    const query = search.value.trim().toLowerCase();
-    rows.replaceChildren();
-    for (const invoice of records) {
-      const number = invoiceNumber(invoice.sequence);
-      const date = invoice.path ? invoice.uploaded?.slice(0, 10) : invoice.date;
-      const source = invoice.path ? "Supabase" : "This browser";
-      const label = [number, date, source, invoice.client].filter(Boolean).join(" · ");
-      if (!label.toLowerCase().includes(query)) continue;
+  const rowsByInvoice = new Map();
+  const empty = document.createElement("li");
 
+  function updateInvoiceRow(invoice) {
+    const { row, title, subtitle } = rowsByInvoice.get(invoice);
+    const number = invoiceNumber(invoice.sequence);
+    const pdf = invoice.path || invoice.pdf;
+    const details = pdf ? invoice.details : invoice;
+    const date = details?.date;
+    const displayedDate = date && /^\d{4}-\d{2}-\d{2}$/.test(date)
+      ? new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeZone: "UTC" }).format(new Date(date))
+      : "";
+    title.textContent = [details?.seller, details?.description].filter(Boolean).join(" · ") || `Invoice ${number}`;
+    subtitle.textContent = [
+      number,
+      displayedDate || (details ? "Transaction date unavailable" : "Reading invoice details…"),
+      invoice.path ? "" : "This browser"
+    ].filter(Boolean).join(" · ");
+    const haystack = [title.textContent, subtitle.textContent, date].join(" ").toLowerCase();
+    row.hidden = !haystack.includes(search.value.trim().toLowerCase());
+  }
+
+  function updateEmptyMessage() {
+    empty.hidden = [...rowsByInvoice.values()].some(entry => !entry.row.hidden);
+    empty.textContent = search.value.trim() ? "No matching invoices." : "No saved invoices.";
+  }
+
+  function renderHistory() {
+    rowsByInvoice.clear();
+    rows.replaceChildren(empty);
+    for (const invoice of records) {
       const row = document.createElement("li");
-      const details = document.createElement("span");
-      details.textContent = label;
+      const summary = document.createElement("span");
+      summary.className = "invoice-summary";
+      const title = document.createElement("strong");
+      const subtitle = document.createElement("small");
+      summary.append(title, subtitle);
       const actions = document.createElement("div");
       actions.append(actionButton("View", () => openSavedInvoice(invoice)));
       if (invoice.path || invoice.pdf) actions.append(actionButton("Download PDF", () => openSavedInvoice(invoice, true)));
       actions.append(actionButton("Delete", () => removeSavedInvoice(invoice)));
-      row.append(details, actions);
-      rows.append(row);
+      row.append(summary, actions);
+      rowsByInvoice.set(invoice, { row, title, subtitle });
+      rows.insertBefore(row, empty);
+      updateInvoiceRow(invoice);
     }
-    if (!rows.children.length) {
-      const empty = document.createElement("li");
-      empty.textContent = query ? "No matching invoices." : "No saved invoices.";
-      rows.append(empty);
-    }
+    updateEmptyMessage();
   }
 
   async function refreshHistory() {
@@ -230,6 +294,7 @@ export function renderInvoiceGenerator(appContext) {
     upload.disabled = !cloudReady;
     submit.disabled = !cloudReady;
     renderHistory();
+    void loadPDFDetails();
     if (!cloudReady) throw cloud.reason;
   }
 
@@ -275,7 +340,10 @@ export function renderInvoiceGenerator(appContext) {
     historyStatus.textContent = "Could not load invoices from Supabase. Reload to try again.";
   });
 
-  search.addEventListener("input", renderHistory);
+  search.addEventListener("input", () => {
+    records.forEach(updateInvoiceRow);
+    updateEmptyMessage();
+  });
   fileInput.addEventListener("change", () => {
     const filename = fileInput.files[0]?.name ?? "";
     sequenceInput.value = filename.match(/^invoice[ _-]+([0-9]{1,10})(?:[ _]*\([0-9]+\))?\.pdf$/i)?.[1] ?? "";

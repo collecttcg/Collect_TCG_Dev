@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-26-v09 — Archive manually uploaded invoice PDFs in private Supabase Storage.
+# 2026-11-26-v10 — Show printed invoice details and add a dedicated Invoices tile.
 on:
   workflow_dispatch:
   push:
@@ -40,9 +40,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-26-v09
-          PREVIOUS_VERSION: 2026-11-26-v08
-          PREVIOUS_COMMIT: 5f66de8a16ab32e8bf30085a92ff52bc1bce71b2
+          RELEASE_VERSION: 2026-11-26-v10
+          PREVIOUS_VERSION: 2026-11-26-v09
+          PREVIOUS_COMMIT: 8435a60b808fe1f9aef2779404dc5f2ac2bd743b
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -59,27 +59,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-26-v09-packages
+          name: Collect-TCG-Dev-2026-11-26-v10-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-26-v09-full.zip
-            release/Collect-TCG-Dev-2026-11-26-v08-to-2026-11-26-v09-patch.zip
+            release/Collect-TCG-Dev-2026-11-26-v10-full.zip
+            release/Collect-TCG-Dev-2026-11-26-v09-to-2026-11-26-v10-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-26-v09.txt'
+          MANIFEST='release-manifests/2026-11-26-v10.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-26-v09'
-            echo 'Previous version: 2026-11-26-v08'
+            echo 'Version: 2026-11-26-v10'
+            echo 'Previous version: 2026-11-26-v09'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Archive manually uploaded invoice PDFs in private Supabase Storage.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-26-v09-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-26-v08-to-2026-11-26-v09-patch.zip'
-            echo 'Changed files: Invoice archive, private Storage migration, module cache references, baseline and release workflow.'
-            echo 'SQL required: 2026-11-26-v09-OWNER-INVOICES-DEV.sql.'
+            echo 'Purpose: Show printed invoice details and add a dedicated Invoices tile.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-26-v10-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-26-v09-to-2026-11-26-v10-patch.zip'
+            echo 'Changed files: Invoice details, PDF reader, Invoices navigation, module cache references, baseline and release workflow.'
+            echo 'SQL required: No.'
             echo 'Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
             echo
@@ -88,6 +88,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-26-v09: record package validation'
+          git commit -m 'Development 2026-11-26-v10: record package validation'
           git pull --rebase origin main
           git push

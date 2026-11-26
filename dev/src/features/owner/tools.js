@@ -14,14 +14,15 @@ function currentInventoryToolMode(){
       lifecycle:"lifecycle",
       migration:"storage"
     };
-    return aliases[mode] || (["bulk","activity","quality","lifecycle","storage"].includes(mode) ? mode : "bulk");
+    return aliases[mode] || (["bulk","activity","quality","lifecycle","storage","invoices"].includes(mode) ? mode : "bulk");
   }
 
 function currentInventoryToolSubmode(mode){
     const requested=String(appContext.currentHashParams().get("sub")||"");
     const allowed={
       bulk:["prices","metadata","status","images","psa","missing-certs"],
-      activity:["recent","history","qr","buyer-messages","invoice"],
+      activity:["recent","history","qr","buyer-messages"],
+      invoices:["invoice"],
       quality:["audit","images","duplicates","reprocess"],
       lifecycle:["lifecycle"],
       storage:["health","storage-audit","storage-optimizer","migration","backup"]
@@ -38,6 +39,7 @@ function inventoryToolsSwitcher(mode,submode){
     const tabs=[
       ["bulk","Bulk Edit","Prices · metadata · status · images","prices"],
       ["activity","Activity","Recent · history","recent"],
+      ["invoices","Invoices","Generator · saved PDFs","invoice"],
       ["quality","Quality","Audit · images · duplicates · reprocess","audit"],
       ["lifecycle","Lifecycle","Drafts · archive","lifecycle"],
       ["storage","Storage","Capacity · audit · optimizer · migration · backup","health"]
@@ -45,7 +47,7 @@ function inventoryToolsSwitcher(mode,submode){
 
     const subtabs={
       bulk:[["prices","Bulk Prices"],["metadata","Bulk Metadata"],["status","Bulk Status"],["images","Bulk Images"],["psa","PSA POP"],["missing-certs","Missing Certs"]],
-      activity:[["recent","Recently Edited"],["history","Edit History"],["qr","QR Generator"],["buyer-messages","Buyer Messages"],["invoice","Invoice Generator"]],
+      activity:[["recent","Recently Edited"],["history","Edit History"],["qr","QR Generator"],["buyer-messages","Buyer Messages"]],
       quality:[["audit","Catalogue Audit"],["images","Image Health"],["duplicates","Duplicates"],["reprocess","Reprocess Images"]],
       lifecycle:[["lifecycle","Drafts & Archive"]],
       storage:[["health","Database & Storage"],["storage-audit","Storage Audit"],["storage-optimizer","Storage Optimizer"],["migration","Image Migration"],["backup","Backup"]]

@@ -1,4 +1,4 @@
-import { renderInvoiceGenerator } from './invoice.js?v=2026-11-26-v09';
+import { renderInvoiceGenerator } from './invoice.js?v=2026-11-26-v10';
 
 /** Module: features/owner/dashboard. Routes Owner inventory entry to the established Inventory Tools workspace. */
 export function register(appContext){
@@ -255,7 +255,7 @@ Collect TCG`;
       renderBuyerMessages();
       return;
     }
-    if(params.get('mode')==='activity' && params.get('sub')==='invoice'){
+    if(params.get('mode')==='invoices' || (params.get('mode')==='activity' && params.get('sub')==='invoice')){
       renderInvoiceGenerator(appContext);
       return;
     }
