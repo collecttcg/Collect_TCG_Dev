@@ -15,7 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development sold listings in invoice descriptions — 2026-11-27-v03
 
 - Replaces `2026-11-27-v02`. The Owner invoice form can search Sold Listings by card name, code, set and other listing details. Each selection appends an editable line to the description, respecting its existing character limit. The picker uses the same listing scope and search rules as the catalogue. No SQL required.
-- Chromium verified Sold Listings filtering, multi-term and code search, empty and no-match states, adding multiple lines, the description length limit, mobile and desktop layout, PDF preview, save and download with mock storage, and the Owner gate. Safari was not tested.
+- Chromium verified Sold Listings filtering, multi-term and code search, empty and no-match states, adding multiple lines, the description length limit, mobile and desktop layout, PDF preview, save and download with mock storage, and the Owner gate. Safari was not tested. CI passed repository validation and both ZIP integrity checks. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45853187903).
 
 ## Development invoice workspace styling — 2026-11-27-v02
 
