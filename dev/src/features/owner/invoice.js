@@ -69,62 +69,179 @@ export function renderInvoiceGenerator(appContext) {
       <div class="eyebrow">Owner Tools</div>
       <h2>Invoice Generator</h2>
       ${appContext.inventoryToolsSwitcher("invoices", "invoice")}
-      <form class="panel" id="ownerInvoiceForm" autocomplete="off" style="max-width:780px;margin-top:20px;padding:20px">
+      <div class="invoice-workspace">
         <style>
-          :is(#ownerInvoiceForm,#ownerInvoiceUpload) .invoice-fields, #ownerInvoiceUpload{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px}
-          :is(#ownerInvoiceForm,#ownerInvoiceUpload) label{display:grid;gap:6px}
-          :is(#ownerInvoiceForm,#ownerInvoiceUpload) :is(input,select,textarea){box-sizing:border-box;width:100%;min-height:44px;padding:10px;border:1px solid #777f8c;border-radius:8px;background:var(--surface-2);color:var(--text);font:inherit}
-          #ownerInvoiceForm :is(input,select,textarea):focus{outline:2px solid var(--invoice-focus);outline-offset:2px}
-          #ownerInvoiceForm ::placeholder{color:var(--text-muted);opacity:1}
-          #ownerInvoiceForm{--invoice-focus:var(--accent-teal);color-scheme:dark}
-          .light-mode #ownerInvoiceForm{--invoice-focus:#14675e;color-scheme:light}
-          #ownerInvoiceHistory label{display:grid;gap:6px;margin:12px 0}
-          #ownerInvoiceHistory input{max-width:100%}
-          #ownerInvoiceRows{list-style:none;padding:0;margin:0}
-          #ownerInvoiceRows li[hidden]{display:none}
-          #ownerInvoiceRows li{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-          #ownerInvoiceRows .invoice-summary{flex:1 1 250px;display:grid;gap:3px;overflow-wrap:anywhere}
-          #ownerInvoiceRows .invoice-summary small{color:var(--text-muted)}
-          #ownerInvoiceRows li div{display:flex;flex-wrap:wrap;gap:6px}
-          #ownerInvoiceForm textarea{resize:vertical}
-          #ownerInvoiceForm .invoice-wide{grid-column:1/-1}
+          .invoice-workspace {
+            --invoice-control-height:44px;
+            --invoice-control-border:#777f8c;
+            --invoice-warning:#f6bd7c;
+            display:grid;
+            gap:20px;
+            max-width:940px;
+            margin-top:20px;
+            color-scheme:dark;
+          }
+          .light-mode .invoice-workspace { --invoice-warning:#8a431b; color-scheme:light; }
+          .invoice-workspace .invoice-panel {
+            min-width:0;
+            margin:0;
+            padding:clamp(16px, 3vw, 28px);
+            border-radius:16px;
+            box-shadow:0 10px 24px rgb(0 0 0 / 8%);
+          }
+          .invoice-workspace .invoice-panel-header { margin-bottom:20px; }
+          .invoice-workspace h3 { margin:0; font-size:1.45rem; }
+          .invoice-workspace .invoice-panel-header p {
+            margin:6px 0 0;
+            color:var(--text-muted);
+            line-height:1.5;
+          }
+          .invoice-workspace .invoice-fields {
+            display:grid;
+            grid-template-columns:repeat(3,minmax(0,1fr));
+            align-items:start;
+            gap:16px;
+          }
+          .invoice-workspace .invoice-addresses { grid-template-columns:repeat(2,minmax(0,1fr)); }
+          .invoice-workspace .invoice-wide { grid-column:1/-1; }
+          .invoice-workspace label {
+            display:grid;
+            align-content:start;
+            gap:7px;
+            min-width:0;
+            font-weight:600;
+          }
+          .invoice-workspace :is(input,select,textarea) {
+            box-sizing:border-box;
+            width:100%;
+            min-width:0;
+            border:1px solid var(--invoice-control-border);
+            border-radius:9px;
+            padding:0 12px;
+            background:var(--surface-2);
+            color:var(--text);
+            font:inherit;
+            font-weight:400;
+          }
+          .invoice-workspace :is(input,select) { height:var(--invoice-control-height); }
+          .invoice-workspace input[type=file] { padding:5px; text-overflow:ellipsis; }
+          .invoice-workspace input::file-selector-button {
+            min-height:30px;
+            margin-inline-end:8px;
+            padding:0 8px;
+            border:1px solid var(--invoice-control-border);
+            border-radius:5px;
+            background:var(--surface);
+            color:var(--text);
+            font:inherit;
+            font-size:.875rem;
+            cursor:pointer;
+          }
+          .invoice-workspace textarea { padding:10px 12px; resize:vertical; }
+          .invoice-workspace :is(input,select,textarea,button):focus-visible {
+            outline:2px solid var(--accent-teal);
+            outline-offset:2px;
+          }
+          .invoice-workspace ::placeholder { color:var(--text-muted); opacity:1; }
+          .invoice-workspace #ownerInvoiceNumberHint {
+            display:block;
+            margin-top:6px;
+            color:var(--text-muted);
+            font-size:.8125rem;
+            line-height:1.4;
+          }
+          .invoice-workspace #ownerInvoiceNumberHint[data-duplicate] { color:var(--invoice-warning); }
+          .invoice-workspace input[name=number][aria-invalid=true] { border-color:var(--invoice-warning); }
+          .invoice-workspace .invoice-actions {
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+          }
+          .invoice-workspace .invoice-form-footer {
+            margin-top:20px;
+            padding-top:16px;
+            border-top:1px solid var(--border);
+          }
+          .invoice-workspace button { min-height:var(--invoice-control-height); }
+          .invoice-workspace .btn-ghost { color:var(--text); }
+          .invoice-workspace #ownerInvoiceUpload { align-items:end; }
+          .invoice-workspace [role=status] { margin:0 0 12px; }
+          .invoice-workspace [role=status]:empty { display:none; }
+          .invoice-workspace #ownerInvoiceHistoryStatus { margin:12px 0 0; }
+          .invoice-workspace .invoice-search { margin-top:18px; }
+          .invoice-workspace #ownerInvoiceRows { list-style:none; padding:0; margin:14px 0 0; }
+          .invoice-workspace #ownerInvoiceRows li[hidden] { display:none; }
+          .invoice-workspace #ownerInvoiceRows li {
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            gap:12px;
+            padding:12px 0;
+            border-top:1px solid var(--border);
+          }
+          .invoice-workspace .invoice-summary {
+            flex:1 1 240px;
+            min-width:0;
+            display:grid;
+            gap:3px;
+            overflow-wrap:anywhere;
+          }
+          .invoice-workspace .invoice-summary small { color:var(--text-muted); }
+          @media (max-width:740px) {
+            .invoice-workspace .invoice-fields { grid-template-columns:repeat(2,minmax(0,1fr)); }
+            .invoice-workspace #ownerInvoiceUpload button { grid-column:1/-1; justify-self:start; }
+          }
+          @media (max-width:520px) {
+            .invoice-workspace .invoice-fields { grid-template-columns:minmax(0,1fr); }
+            .invoice-workspace #ownerInvoiceUpload button { justify-self:stretch; }
+            .invoice-workspace .invoice-form-footer button { flex:1 1 auto; }
+          }
         </style>
-        <div class="invoice-fields">
-          <label>Seller name <select name="seller" required>
-            <option value="">Select a seller</option>
-            ${sellers.map(seller => `<option>${seller}</option>`).join("")}
-          </select></label>
-          <label>Client name <input name="client" required maxlength="120"></label>
-          <div><label>Invoice number <input name="number" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required aria-describedby="ownerInvoiceNumberHint"></label>
-            <small id="ownerInvoiceNumberHint">Suggested from the saved PDF count plus one. You can enter up to 10 digits.</small>
+        <form class="panel invoice-panel" id="ownerInvoiceForm" autocomplete="off" aria-labelledby="ownerInvoiceFormTitle">
+          <header class="invoice-panel-header"><h3 id="ownerInvoiceFormTitle">Create invoice</h3></header>
+          <div class="invoice-fields">
+            <label>Seller name <select name="seller" required>
+              <option value="">Select a seller</option>
+              ${sellers.map(seller => `<option>${seller}</option>`).join("")}
+            </select></label>
+            <label>Client name <input name="client" required maxlength="120"></label>
+            <div><label>Invoice number <input name="number" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required aria-describedby="ownerInvoiceNumberHint"></label>
+              <small id="ownerInvoiceNumberHint">Suggested from the saved PDF count plus one. You can enter up to 10 digits.</small>
+            </div>
+            <label>Date <input name="date" type="date" required></label>
+            <label>Currency <select name="currency">${currencies.map(code => `<option>${code}</option>`).join("")}</select></label>
+            <label>Amount paid <input name="amount" type="number" inputmode="decimal" min="0.01" max="999999999.99" step="0.01" required></label>
+            <div class="invoice-fields invoice-addresses invoice-wide">
+              <label>Seller address (optional) <textarea name="sellerAddress" rows="3" maxlength="400"></textarea></label>
+              <label>Buyer address (optional) <textarea name="buyerAddress" rows="3" maxlength="400"></textarea></label>
+            </div>
+            <label class="invoice-wide">Product or service description
+              <textarea name="description" rows="5" required maxlength="2400" placeholder="Enter one product or service per line"></textarea>
+            </label>
           </div>
-          <label>Date <input name="date" type="date" required></label>
-          <label>Currency <select name="currency">${currencies.map(code => `<option>${code}</option>`).join("")}</select></label>
-          <label>Amount paid <input name="amount" type="number" inputmode="decimal" min="0.01" max="999999999.99" step="0.01" required></label>
-          <div class="invoice-fields invoice-wide">
-            <label>Seller address (optional) <textarea name="sellerAddress" rows="3" maxlength="400"></textarea></label>
-            <label>Buyer address (optional) <textarea name="buyerAddress" rows="3" maxlength="400"></textarea></label>
+          <div class="invoice-form-footer">
+            <p role="status" data-invoice-status></p>
+            <div class="invoice-actions">
+              <button class="btn-primary" type="submit" disabled>Create and Save PDF</button>
+              <button class="btn-ghost" id="ownerInvoicePreview" type="submit" value="preview" disabled>Preview Invoice</button>
+            </div>
           </div>
-          <label class="invoice-wide">Product or service description
-            <textarea name="description" rows="5" required maxlength="2400" placeholder="Enter one product or service per line"></textarea>
-          </label>
-        </div>
-        <p role="status" data-invoice-status></p>
-        <button class="btn-primary" type="submit" disabled>Create and Save PDF</button>
-        <button class="btn-ghost" id="ownerInvoicePreview" type="submit" value="preview" disabled>Preview Invoice</button>
-      </form>
-      <section class="panel" id="ownerInvoiceHistory" aria-label="Saved invoices" style="max-width:780px;margin-top:20px;padding:20px">
-        <h3>Saved invoices</h3>
-        <p class="muted">Created invoices are saved here automatically. You can also upload an existing PDF.</p>
-        <form id="ownerInvoiceUpload" class="invoice-fields">
-          <label>Invoice PDF <input name="pdf" type="file" accept=".pdf,application/pdf" required></label>
-          <label>Invoice number on PDF <input name="sequence" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required></label>
-          <button class="btn-primary" type="submit" disabled>Upload Invoice</button>
         </form>
-        <p role="status" id="ownerInvoiceHistoryStatus"></p>
-        <label>Search invoices <input id="ownerInvoiceSearch" type="search" placeholder="Seller, description, number or date"></label>
-        <ul id="ownerInvoiceRows"><li>Loading invoices…</li></ul>
-      </section>
+        <section class="panel invoice-panel" id="ownerInvoiceHistory" aria-labelledby="ownerInvoiceHistoryTitle">
+          <header class="invoice-panel-header">
+            <h3 id="ownerInvoiceHistoryTitle">Saved invoices</h3>
+            <p>Created invoices are saved here automatically. You can also upload an existing PDF.</p>
+          </header>
+          <form id="ownerInvoiceUpload" class="invoice-fields">
+            <label>Invoice PDF <input name="pdf" type="file" accept=".pdf,application/pdf" required></label>
+            <label>Invoice number on PDF <input name="sequence" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required></label>
+            <button class="btn-primary" type="submit" disabled>Upload Invoice</button>
+          </form>
+          <p role="status" id="ownerInvoiceHistoryStatus"></p>
+          <label class="invoice-search">Search invoices <input id="ownerInvoiceSearch" type="search" placeholder="Seller, description, number or date"></label>
+          <ul id="ownerInvoiceRows"><li>Loading invoices…</li></ul>
+        </section>
+      </div>
     </div>`;
 
   const form = appContext.$("ownerInvoiceForm");
@@ -279,6 +396,7 @@ export function renderInvoiceGenerator(appContext) {
       const subtitle = document.createElement("small");
       summary.append(title, subtitle);
       const actions = document.createElement("div");
+      actions.className = "invoice-actions";
       actions.append(actionButton("View", () => openSavedInvoice(invoice)));
       if (invoice.path || invoice.pdf) actions.append(actionButton("Download PDF", () => openSavedInvoice(invoice, true)));
       actions.append(actionButton("Delete", () => removeSavedInvoice(invoice)));
@@ -292,6 +410,8 @@ export function renderInvoiceGenerator(appContext) {
 
   function updateNumberHint() {
     const taken = records.some(invoice => invoice.path && invoice.sequence === Number(numberField.value));
+    numberField.setAttribute("aria-invalid", String(taken));
+    numberHint.toggleAttribute("data-duplicate", taken);
     numberHint.textContent = taken
       ? "This number is already saved. Enter a different number before saving."
       : "Suggested from the saved PDF count plus one. You can enter up to 10 digits.";

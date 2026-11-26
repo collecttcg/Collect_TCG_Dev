@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development invoice workspace styling — 2026-11-27-v02
+
+- Replaces `2026-11-27-v01`. Invoice inputs, selectors, upload controls and search have consistent heights. Duplicate-number feedback sits below its own field. The create form and saved archive share panel spacing, section headings and action styling. The PDF template, invoice rules and owner-only shared storage are unchanged. No SQL required.
+- Repository validation and Chromium fixtures passed, including alignment at 1100, 720, 375 and 320 pixels, light theme, owner gating, manual numbering, duplicate handling, preview, save and PDF download. The fixture used mock storage. Safari was not tested.
+
 ## Development count-based invoice suggestions — 2026-11-27-v01
 
 - Replaces `2026-11-26-v12`. The suggested invoice number is the count of PDFs in the shared archive plus one. Browser-only records do not count. The form still accepts a manual number and flags a number already in the shared archive. No SQL required. Chromium fixtures verified empty, two- and five-PDF archives, non-PDF filtering, duplicate protection, manual preview and save, mobile layout and Owner gating. The workflow and both ZIP checks passed and six live files matched. Safari was not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45844891313).
