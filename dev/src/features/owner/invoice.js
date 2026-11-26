@@ -6,7 +6,6 @@ const sellers = ["Zakwan Zahid", "Lim Poh Yeap", "Jack Wong Tiong Kiat", "Foo Xi
 const invoiceFields = ["seller", "client", "date", "currency", "amount", "sellerAddress", "buyerAddress", "description"];
 const invoiceBucket = "owner-invoices-dev";
 const maxPDFBytes = 20 * 1024 * 1024;
-const lastIssuedNumber = 1; // The supplied invoice, 0000000001, was issued before local history existed.
 
 function openHistory() {
   return new Promise((resolve, reject) => {
@@ -19,10 +18,6 @@ function openHistory() {
 
 function invoiceNumber(sequence) {
   return String(sequence).padStart(10, "0");
-}
-
-function nextSequence(records) {
-  return records.reduce((last, invoice) => Math.max(last, invoice.sequence), lastIssuedNumber) + 1;
 }
 
 function readHistory(db) {
@@ -101,7 +96,7 @@ export function renderInvoiceGenerator(appContext) {
           </select></label>
           <label>Client name <input name="client" required maxlength="120"></label>
           <div><label>Invoice number <input name="number" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required aria-describedby="ownerInvoiceNumberHint"></label>
-            <small id="ownerInvoiceNumberHint">Use the suggested number or enter up to 10 digits.</small>
+            <small id="ownerInvoiceNumberHint">Suggested from the saved PDF count plus one. You can enter up to 10 digits.</small>
           </div>
           <label>Date <input name="date" type="date" required></label>
           <label>Currency <select name="currency">${currencies.map(code => `<option>${code}</option>`).join("")}</select></label>
@@ -136,10 +131,12 @@ export function renderInvoiceGenerator(appContext) {
   const status = form.querySelector("[data-invoice-status]");
   const fields = form.elements;
   const numberField = fields.namedItem("number");
+  const numberHint = appContext.$("ownerInvoiceNumberHint");
   let numberEdited = false;
   let suggestedNumber = "";
   numberField.addEventListener("input", () => {
     numberEdited = true;
+    updateNumberHint();
   });
   const date = new Date();
   fields.date.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -293,6 +290,13 @@ export function renderInvoiceGenerator(appContext) {
     updateEmptyMessage();
   }
 
+  function updateNumberHint() {
+    const taken = records.some(invoice => invoice.path && invoice.sequence === Number(numberField.value));
+    numberHint.textContent = taken
+      ? "This number is already saved. Enter a different number before saving."
+      : "Suggested from the saved PDF count plus one. You can enter up to 10 digits.";
+  }
+
   async function refreshHistory() {
     const [cloud, local] = await Promise.allSettled([
       listCloudInvoices(bucket),
@@ -300,9 +304,9 @@ export function renderInvoiceGenerator(appContext) {
     ]);
     cloudReady = cloud.status === "fulfilled";
     records = [...(cloud.value ?? []), ...(local.value ?? [])].sort((a, b) => b.sequence - a.sequence);
-    const next = nextSequence(records);
-    suggestedNumber = cloudReady && next <= 9999999999 ? invoiceNumber(next) : "";
+    suggestedNumber = cloudReady ? invoiceNumber(cloud.value.length + 1) : "";
     if (!numberEdited) numberField.value = suggestedNumber;
+    updateNumberHint();
     upload.disabled = !cloudReady;
     submit.disabled = previewButton.disabled = !cloudReady;
     renderHistory();
@@ -414,6 +418,7 @@ export function renderInvoiceGenerator(appContext) {
         if (numberField.value === enteredNumber || !numberEdited) {
           numberField.value = suggestedNumber;
           numberEdited = false;
+          updateNumberHint();
         }
         for (const name of ["client", "buyerAddress", "amount", "description"]) {
           const field = fields.namedItem(name);

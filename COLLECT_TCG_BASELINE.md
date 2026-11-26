@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development count-based invoice suggestions — 2026-11-27-v01
+
+- Replaces `2026-11-26-v12`. The suggested invoice number is the count of PDFs in the shared archive plus one. Browser-only records do not count. The form still accepts a manual number and flags a number already in the shared archive. No SQL required.
+
+
 ## Development manual invoice numbers — 2026-11-26-v12
 
 - Replaces v11. The seller option is Lim Poh Yeap. The invoice form suggests the next number and accepts an override of 1 to 10 digits. Preview, the saved PDF and the archive key use the same normalized number. Existing invoices cannot be overwritten. No SQL required. Repository validation, both ZIP checks and six live file checks passed. Chromium verified manual, invalid and duplicate numbers, preview, PDF, download, next number, archived seller names, mobile layout and Owner gating. Safari was not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45842079000).
