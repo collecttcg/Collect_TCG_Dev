@@ -2,7 +2,7 @@ import { readInvoiceDetails } from "./invoice-pdf.js?v=2026-11-26-v11";
 
 const currencies = ["USD", "MYR", "SGD", "JPY"];
 
-const sellers = ["Zakwan Zahid", "Daniel Lim Poh Yeap", "Jack Wong Tiong Kiat", "Foo Xiang Yen", "Shue"];
+const sellers = ["Zakwan Zahid", "Lim Poh Yeap", "Jack Wong Tiong Kiat", "Foo Xiang Yen", "Shue"];
 const invoiceFields = ["seller", "client", "date", "currency", "amount", "sellerAddress", "buyerAddress", "description"];
 const invoiceBucket = "owner-invoices-dev";
 const maxPDFBytes = 20 * 1024 * 1024;
@@ -100,7 +100,9 @@ export function renderInvoiceGenerator(appContext) {
             ${sellers.map(seller => `<option>${seller}</option>`).join("")}
           </select></label>
           <label>Client name <input name="client" required maxlength="120"></label>
-          <label>Next invoice number <input name="number" readonly></label>
+          <div><label>Invoice number <input name="number" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required aria-describedby="ownerInvoiceNumberHint"></label>
+            <small id="ownerInvoiceNumberHint">Use the suggested number or enter up to 10 digits.</small>
+          </div>
           <label>Date <input name="date" type="date" required></label>
           <label>Currency <select name="currency">${currencies.map(code => `<option>${code}</option>`).join("")}</select></label>
           <label>Amount paid <input name="amount" type="number" inputmode="decimal" min="0.01" max="999999999.99" step="0.01" required></label>
@@ -133,6 +135,12 @@ export function renderInvoiceGenerator(appContext) {
   const form = appContext.$("ownerInvoiceForm");
   const status = form.querySelector("[data-invoice-status]");
   const fields = form.elements;
+  const numberField = fields.namedItem("number");
+  let numberEdited = false;
+  let suggestedNumber = "";
+  numberField.addEventListener("input", () => {
+    numberEdited = true;
+  });
   const date = new Date();
   fields.date.value = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   fields.currency.addEventListener("change", () => {
@@ -176,7 +184,7 @@ export function renderInvoiceGenerator(appContext) {
           const { data, error } = invoice.pdf ? { data: invoice.pdf } : await bucket.download(invoice.path);
           if (error) throw error;
           if (run !== detailsRun || !rows.isConnected || !appContext.isOwnerMode()) return;
-          details = await readInvoiceDetails(data, sellers);
+          details = await readInvoiceDetails(data, [...sellers, "Daniel Lim Poh Yeap"]);
           detailsByFile.set(key, details);
           if (invoice.revision) {
             try { sessionStorage.setItem(key, JSON.stringify(details)); } catch {}
@@ -292,7 +300,9 @@ export function renderInvoiceGenerator(appContext) {
     ]);
     cloudReady = cloud.status === "fulfilled";
     records = [...(cloud.value ?? []), ...(local.value ?? [])].sort((a, b) => b.sequence - a.sequence);
-    fields.namedItem("number").value = cloudReady ? invoiceNumber(nextSequence(records)) : "";
+    const next = nextSequence(records);
+    suggestedNumber = cloudReady && next <= 9999999999 ? invoiceNumber(next) : "";
+    if (!numberEdited) numberField.value = suggestedNumber;
     upload.disabled = !cloudReady;
     submit.disabled = previewButton.disabled = !cloudReady;
     renderHistory();
@@ -382,8 +392,13 @@ export function renderInvoiceGenerator(appContext) {
     if (!form.reportValidity() || !sellers.includes(fields.seller.value) || !currencies.includes(fields.currency.value)) return;
 
     const details = Object.fromEntries(invoiceFields.map(name => [name, fields.namedItem(name).value.trim()]));
+    const enteredNumber = numberField.value;
+    const sequence = Number(enteredNumber);
+    if (sequence < 1) {
+      status.textContent = "Enter an invoice number greater than zero.";
+      return;
+    }
     if (event.submitter !== previewButton) {
-      const sequence = nextSequence(records);
       const number = invoiceNumber(sequence);
       status.textContent = "Creating and saving the PDF…";
       const saved = await updateHistory(async () => {
@@ -396,6 +411,10 @@ export function renderInvoiceGenerator(appContext) {
       }, `Invoice ${number} saved.`, "The invoice could not be saved. Your entries are still here.");
       status.textContent = saved ? `Invoice ${number} is ready in Saved invoices.` : historyStatus.textContent;
       if (saved) {
+        if (numberField.value === enteredNumber || !numberEdited) {
+          numberField.value = suggestedNumber;
+          numberEdited = false;
+        }
         for (const name of ["client", "buyerAddress", "amount", "description"]) {
           const field = fields.namedItem(name);
           if (field.value.trim() === details[name]) field.value = "";
@@ -410,16 +429,11 @@ export function renderInvoiceGenerator(appContext) {
       status.textContent = "Allow pop-ups for this site to preview your invoice.";
       return;
     }
-    submit.disabled = previewButton.disabled = true;
     try {
-      await refreshHistory();
-      if (appContext.isOwnerMode()) renderPreview(appContext, { ...details, sequence: nextSequence(records) }, preview);
-      else preview.close();
+      renderPreview(appContext, { ...details, sequence }, preview);
     } catch {
       preview.close();
       status.textContent = "The invoice preview could not open.";
-    } finally {
-      submit.disabled = previewButton.disabled = !cloudReady;
     }
   });
 }
