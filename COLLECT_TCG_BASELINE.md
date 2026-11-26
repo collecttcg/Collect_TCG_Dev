@@ -14,7 +14,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development automatic invoice PDF saving — 2026-11-26-v11
 
-- Replaces v10. Create and Save PDF generates an A4 invoice in-browser and uploads it directly to the private shared archive. Preview and manual uploads remain available. The PDF carries archive details internally and uploads never overwrite an existing invoice number. No SQL required.
+- Replaces v10. Create and Save PDF generates an A4 invoice in-browser and uploads it directly to the private shared archive. Preview and manual uploads remain available. The PDF carries archive details internally and uploads never overwrite an existing invoice number. No SQL required. Chromium fixtures verified preview, duplicate rejection and retry, A4 PDF generation and rendering, archive details, byte-exact downloads, and mobile list fit. Repository validation, both ZIP checks and eight live file checks passed. Safari and signed-in live upload were not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45814410553).
 
 
 ## Development invoice details and navigation — 2026-11-26-v10
