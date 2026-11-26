@@ -1,0 +1,13 @@
+Version: 2026-11-26-v12
+Previous version: 2026-11-26-v11
+Source commit: 73ead33e3a586f188d1ec5a75b93100c7acf1af7
+Purpose: Allow manual invoice numbers and rename the seller.
+Full ZIP: Collect-TCG-Dev-2026-11-26-v12-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v11-to-2026-11-26-v12-patch.zip
+Changed files: Invoice form and seller list, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+02d822b213c4473dc769338ee019ae25e4026f1eef107d903d9fcf696eed7e43  release/Collect-TCG-Dev-2026-11-26-v12-full.zip
+6b0c6bd0c2d74e2b221e872c7ece6448e1a568be59657f10a7240401175212a3  release/Collect-TCG-Dev-2026-11-26-v11-to-2026-11-26-v12-patch.zip
