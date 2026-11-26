@@ -1,0 +1,13 @@
+Version: 2026-11-27-v01
+Previous version: 2026-11-26-v12
+Source commit: ee3cd9fa5dbb0d226d17a2fb15dab71cbdbf54cf
+Purpose: Suggest invoice numbers from the shared archive count.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v01-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-26-v12-to-2026-11-27-v01-patch.zip
+Changed files: Invoice numbering, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+05907db3145d80612883f7c1f8f6cc5c1ec76ea358285cd09e5f4d6d57404b22  release/Collect-TCG-Dev-2026-11-27-v01-full.zip
+38c6b23d7ee24dbcd920d81f8d4e8e217898ba5ba39ed2833b07c5e29c380446  release/Collect-TCG-Dev-2026-11-26-v12-to-2026-11-27-v01-patch.zip
