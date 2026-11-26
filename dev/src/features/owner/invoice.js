@@ -1,4 +1,4 @@
-import { readInvoiceDetails } from "./invoice-pdf.js?v=2026-11-26-v10";
+import { readInvoiceDetails } from "./invoice-pdf.js?v=2026-11-26-v11";
 
 const currencies = ["USD", "MYR", "SGD", "JPY"];
 
@@ -113,11 +113,12 @@ export function renderInvoiceGenerator(appContext) {
           </label>
         </div>
         <p role="status" data-invoice-status></p>
-        <button class="btn-primary" type="submit" disabled>Preview Invoice</button>
+        <button class="btn-primary" type="submit" disabled>Create and Save PDF</button>
+        <button class="btn-ghost" id="ownerInvoicePreview" type="submit" value="preview" disabled>Preview Invoice</button>
       </form>
       <section class="panel" id="ownerInvoiceHistory" aria-label="Saved invoices" style="max-width:780px;margin-top:20px;padding:20px">
         <h3>Saved invoices</h3>
-        <p class="muted">Save the preview as a PDF, then upload it here to access it on your other devices.</p>
+        <p class="muted">Created invoices are saved here automatically. You can also upload an existing PDF.</p>
         <form id="ownerInvoiceUpload" class="invoice-fields">
           <label>Invoice PDF <input name="pdf" type="file" accept=".pdf,application/pdf" required></label>
           <label>Invoice number on PDF <input name="sequence" inputmode="numeric" pattern="[0-9]{1,10}" maxlength="10" required></label>
@@ -142,6 +143,7 @@ export function renderInvoiceGenerator(appContext) {
   });
 
   const submit = form.querySelector("button[type=submit]");
+  const previewButton = appContext.$("ownerInvoicePreview");
   const archive = appContext.$("ownerInvoiceUpload");
   const upload = archive.querySelector("button[type=submit]");
   const historyStatus = appContext.$("ownerInvoiceHistoryStatus");
@@ -292,7 +294,7 @@ export function renderInvoiceGenerator(appContext) {
     records = [...(cloud.value ?? []), ...(local.value ?? [])].sort((a, b) => b.sequence - a.sequence);
     fields.namedItem("number").value = cloudReady ? invoiceNumber(nextSequence(records)) : "";
     upload.disabled = !cloudReady;
-    submit.disabled = !cloudReady;
+    submit.disabled = previewButton.disabled = !cloudReady;
     renderHistory();
     void loadPDFDetails();
     if (!cloudReady) throw cloud.reason;
@@ -316,7 +318,7 @@ export function renderInvoiceGenerator(appContext) {
   async function updateHistory(write, successMessage, failureMessage) {
     writing = true;
     upload.disabled = true;
-    submit.disabled = true;
+    submit.disabled = previewButton.disabled = true;
     try {
       await write();
       historyStatus.textContent = successMessage;
@@ -373,19 +375,42 @@ export function renderInvoiceGenerator(appContext) {
 
   form.addEventListener("submit", async event => {
     event.preventDefault();
-    if (!appContext.requireOwner("preview an invoice") || submit.disabled) return;
+    if (!appContext.requireOwner("create an invoice") || submit.disabled || writing) return;
     status.textContent = "";
     fields.client.value = fields.client.value.trim();
     fields.description.value = fields.description.value.trim();
     if (!form.reportValidity() || !sellers.includes(fields.seller.value) || !currencies.includes(fields.currency.value)) return;
 
     const details = Object.fromEntries(invoiceFields.map(name => [name, fields.namedItem(name).value.trim()]));
+    if (event.submitter !== previewButton) {
+      const sequence = nextSequence(records);
+      const number = invoiceNumber(sequence);
+      status.textContent = "Creating and saving the PDF…";
+      const saved = await updateHistory(async () => {
+        const { createInvoicePDF } = await import("./invoice-export.js?v=2026-11-26-v11");
+        const pdf = await createInvoicePDF(details, number, new URL("../../../assets/shop-logo.png", import.meta.url).href);
+        if (!appContext.requireOwner("save a created invoice")) throw new Error("Owner access ended");
+        if (pdf.size > maxPDFBytes) throw new Error("Invoice PDF exceeds the upload limit");
+        const { error } = await bucket.upload(`${number}.pdf`, pdf, { contentType: "application/pdf", upsert: false });
+        if (error) throw error;
+      }, `Invoice ${number} saved.`, "The invoice could not be saved. Your entries are still here.");
+      status.textContent = saved ? `Invoice ${number} is ready in Saved invoices.` : historyStatus.textContent;
+      if (saved) {
+        for (const name of ["client", "buyerAddress", "amount", "description"]) {
+          const field = fields.namedItem(name);
+          if (field.value.trim() === details[name]) field.value = "";
+        }
+        search.value = "";
+        renderHistory();
+      }
+      return;
+    }
     const preview = window.open("", "_blank");
     if (!preview) {
       status.textContent = "Allow pop-ups for this site to preview your invoice.";
       return;
     }
-    submit.disabled = true;
+    submit.disabled = previewButton.disabled = true;
     try {
       await refreshHistory();
       if (appContext.isOwnerMode()) renderPreview(appContext, { ...details, sequence: nextSequence(records) }, preview);
@@ -394,7 +419,7 @@ export function renderInvoiceGenerator(appContext) {
       preview.close();
       status.textContent = "The invoice preview could not open.";
     } finally {
-      submit.disabled = !cloudReady;
+      submit.disabled = previewButton.disabled = !cloudReady;
     }
   });
 }

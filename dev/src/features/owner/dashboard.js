@@ -1,4 +1,4 @@
-import { renderInvoiceGenerator } from './invoice.js?v=2026-11-26-v10';
+import { renderInvoiceGenerator } from './invoice.js?v=2026-11-26-v11';
 
 /** Module: features/owner/dashboard. Routes Owner inventory entry to the established Inventory Tools workspace. */
 export function register(appContext){

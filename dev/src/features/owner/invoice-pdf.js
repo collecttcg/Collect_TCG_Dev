@@ -32,7 +32,18 @@ export async function readInvoiceDetails(blob, sellers) {
     useWasm: false
   });
   try {
-    const page = await (await task.promise).getPage(1);
+    const document = await task.promise;
+    const { info } = await document.getMetadata();
+    const prefix = "Collect TCG invoice v1 ";
+    if (typeof info.Subject === "string" && info.Subject.startsWith(prefix)) {
+      const fields = JSON.parse(decodeURIComponent(info.Subject.slice(prefix.length)));
+      return {
+        date: normalizeDate(String(fields.date ?? "")),
+        seller: String(fields.seller ?? "").slice(0, 120),
+        description: String(fields.description ?? "").slice(0, 120)
+      };
+    }
+    const page = await document.getPage(1);
     return extractInvoiceDetails((await page.getTextContent()).items, sellers);
   } finally {
     await task.destroy();
