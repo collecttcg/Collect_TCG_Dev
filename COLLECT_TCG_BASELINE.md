@@ -16,6 +16,7 @@ This section records GitHub state. The release manifest and workflow results det
 
 - Adds an optional Owner-only Add/Edit dropdown below Card Owner. Trading and Long Term are stored in a dedicated nullable column on the existing private owner table. Existing cards start unassigned. The column is omitted from public card writes, and the dropdown is gated on the private column capability.
 - SQL applied to the shared private owner table. The allowed values, Owner RLS and disabled anonymous SELECT were verified. Replaces Dev 2026-11-27-v04.
+- Dev CI and both package integrity checks passed. A local fixture verified private save, reload, clear, legacy schema and Owner access. All nine changed Dev app files matched after deployment. Interactive desktop, mobile and Safari rendering were not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/46001312514). [Deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/46001368479).
 
 ## Development eBay buyer messages — 2026-11-27-v04
 
