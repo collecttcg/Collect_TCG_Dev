@@ -5,7 +5,8 @@ export function register(appContext){
     : null;
 
   const PURCHASE_MESSAGE=`Hi! Thank you very much for your purchase from Collect TCG!\n\nWe really appreciate your support. Your item will be carefully packed to ensure it is well protected during shipping. It will be shipped over the weekend.\n\nFor additional security and documentation, the entire packaging process will also be video recorded before the parcel is handed over to the shipping carrier.\n\nOnce the package has been shipped, the tracking information will be updated on eBay.\n\nPlease note that any applicable import duties, tariffs, taxes, customs clearance fees, or other import-related charges are not included in the item price or shipping cost and are the buyer’s responsibility. We recommend checking your local import requirements and applicable charges.\n\nIf you have any questions about your order, please feel free to message us anytime.\n\nThank you again for your purchase, and we hope you enjoy your new card!\n\nCollect TCG`;
-  const AFTER_SHIPPED_MESSAGE=`Hello,\n\nYour order has been shipped and the tracking information has been uploaded to eBay.\n\nThank you again for purchasing from Collect TCG. We hope your order arrives safely and that you enjoy your new addition to the collection!\n\nOnce your order arrives, if you're happy with your purchase, we would really appreciate it if you could leave positive feedback for our store. Your feedback really helps support us.\n\nThank you for your support!\n\nCollect TCG`;
+  const AFTER_SHIPPED_MESSAGE=`Hello,\n\nYour order has shipped, and we've uploaded the tracking information to eBay. You can follow the shipment from your order details.\n\nCollect TCG`;
+  const AFTER_DELIVERY_MESSAGE=`Hello,\n\nTracking shows that your order has been delivered. Thank you again for buying from Collect TCG! We hope you're enjoying the new addition to your collection.\n\nIf you're happy with your purchase, we'd really appreciate it if you could leave us feedback on eBay. Your feedback goes a long way in supporting our shop.\n\nCollect TCG`;
 
   function addEbayCategory(active=false){
     const switcher=appContext.view?.querySelector?.('.inventory-tools-category-switcher');
@@ -91,10 +92,12 @@ export function register(appContext){
     if(!appContext.requireOwner('open Owner eBay messages')) return;
     basePage('eBay Messages','Reusable eBay buyer communication templates.',
       messageCard('After Purchase','Send after a buyer completes a purchase.','ownerEbayPurchaseMessage','ownerCopyEbayPurchaseMessage',PURCHASE_MESSAGE,390)+
-      messageCard('After Shipped','Send after the order has shipped and tracking has been uploaded.','ownerEbayAfterShippedMessage','ownerCopyEbayAfterShippedMessage',AFTER_SHIPPED_MESSAGE,330),
+      messageCard('After Shipment','Send after the order has shipped and tracking has been uploaded.','ownerEbayAfterShippedMessage','ownerCopyEbayAfterShippedMessage',AFTER_SHIPPED_MESSAGE,165)+
+      messageCard('After Delivery','Send after tracking confirms delivery.','ownerEbayAfterDeliveryMessage','ownerCopyEbayAfterDeliveryMessage',AFTER_DELIVERY_MESSAGE,250),
       'messages');
     copyHandler('ownerCopyEbayPurchaseMessage','ownerEbayPurchaseMessage',PURCHASE_MESSAGE);
     copyHandler('ownerCopyEbayAfterShippedMessage','ownerEbayAfterShippedMessage',AFTER_SHIPPED_MESSAGE);
+    copyHandler('ownerCopyEbayAfterDeliveryMessage','ownerEbayAfterDeliveryMessage',AFTER_DELIVERY_MESSAGE);
   }
 
   function renderEbayListingStatus(){
@@ -123,6 +126,9 @@ export function register(appContext){
       const sub=params.get('sub')||'messages';
       if(sub==='banlist'){ renderEbayBanlist(); return; }
       if(sub==='listing-status'){ renderEbayListingStatus(); return; }
+      renderEbayMessages(); return;
+    }
+    if(params.get('mode')==='activity' && params.get('sub')==='buyer-messages'){
       renderEbayMessages(); return;
     }
     if(previousRender) previousRender();

@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development eBay buyer messages — 2026-11-27-v04
+
+- Owner Tools → eBay Messages has separate copyable After Shipment and After Delivery templates. Shipment confirms dispatch and uploaded tracking. Delivery thanks the buyer and requests feedback to support the shop. The previous buyer-message URL opens the same templates. No SQL required.
+
 ## Development sold listings in invoice descriptions — 2026-11-27-v03
 
 - Replaces `2026-11-27-v02`. The Owner invoice form can search Sold Listings by card name, code, set and other listing details. Each selection appends an editable line to the description, respecting its existing character limit. The picker uses the same listing scope and search rules as the catalogue. No SQL required.
