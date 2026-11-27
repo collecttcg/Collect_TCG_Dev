@@ -3,11 +3,11 @@
 <!-- BEGIN AUTOMATED BASELINE STATE -->
 ## GitHub state
 
-- Development latest non-baseline commit: `5a9bc8814d715eb975cf103c7f5506b9be9dd453`.
-- Production latest non-baseline commit: `039368db1c0607ed55ee8a91548da886e37d0fae`.
-- Production rollback ref: `37dda387f7f5ec674263ad69a16e4e6d7ee9826b`.
+- Development latest non-baseline commit: `24dfaaa404718a4f0eba9f9268930a09352c5224`.
+- Production latest non-baseline commit: `81a9db7be44269ae672cfd1a28a47aa0f63784df`.
+- Production rollback ref: `81a9db7be44269ae672cfd1a28a47aa0f63784df`.
 - Latest local release manifest: [`2026-11-27-v05`](release-manifests/2026-11-27-v05.txt) from `738fb6362c1a845757d217b88b5029617f8a5475`.
-- Latest local change: `5a9bc8814d715eb975cf103c7f5506b9be9dd453` · Development 2026-11-27-v05: record package validation.
+- Latest local change: `24dfaaa404718a4f0eba9f9268930a09352c5224` · Development 2026-11-27-v06: show Holding Strategy on owner Card Details.
 
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
