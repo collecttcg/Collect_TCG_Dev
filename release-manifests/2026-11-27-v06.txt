@@ -1,0 +1,13 @@
+Version: 2026-11-27-v06
+Previous version: 2026-11-27-v05
+Source commit: 24dfaaa404718a4f0eba9f9268930a09352c5224
+Purpose: Show Holding Strategy in private Card Details.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v06-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-27-v05-to-2026-11-27-v06-patch.zip
+Changed files: Card Details, module cache references, baseline and release workflow.
+SQL required: No new migration.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+72b90235f9471e2791802c1426ed0941a9da2b1d061b89b73a54f6232746ebaa  release/Collect-TCG-Dev-2026-11-27-v06-full.zip
+5130b9bc2a708e8eb5367cb9c3d39d9b8e7e7595489522f7b4b3e362df84a7a0  release/Collect-TCG-Dev-2026-11-27-v05-to-2026-11-27-v06-patch.zip
