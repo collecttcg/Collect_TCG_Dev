@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Holding Strategy on Card Details — 2026-11-27-v06
+
+- Replaces Dev `2026-11-27-v05`. Card Details displays Holding Strategy in the existing Private Owner Info panel, including Unassigned when the value is blank. The existing private metadata query and Owner gate are reused. No new SQL required.
+
 ## Development Holding Strategy — 2026-11-27-v05
 
 - Adds an optional Owner-only Add/Edit dropdown below Card Owner. Trading and Long Term are stored in a dedicated nullable column on the existing private owner table. Existing cards start unassigned. The column is omitted from public card writes, and the dropdown is gated on the private column capability.

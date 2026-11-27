@@ -1,5 +1,5 @@
 name: Development Release
-# 2026-11-27-v05 — Add private card Holding Strategy.
+# 2026-11-27-v06 — Show Holding Strategy in private Card Details.
 on:
   workflow_dispatch:
   push:
@@ -40,9 +40,9 @@ jobs:
           grep -q '/dev/collections/one-piece-carddass-hyper-battle/' dev/sitemap.xml
       - name: Create and verify packages
         env:
-          RELEASE_VERSION: 2026-11-27-v05
-          PREVIOUS_VERSION: 2026-11-27-v04
-          PREVIOUS_COMMIT: 6e35e1df4995c9531eec921eea7c585788d6da00
+          RELEASE_VERSION: 2026-11-27-v06
+          PREVIOUS_VERSION: 2026-11-27-v05
+          PREVIOUS_COMMIT: 738fb6362c1a845757d217b88b5029617f8a5475
         run: |
           set -euo pipefail
           rm -rf .release-patch release
@@ -59,27 +59,27 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: Collect-TCG-Dev-2026-11-27-v05-packages
+          name: Collect-TCG-Dev-2026-11-27-v06-packages
           path: |
-            release/Collect-TCG-Dev-2026-11-27-v05-full.zip
-            release/Collect-TCG-Dev-2026-11-27-v04-to-2026-11-27-v05-patch.zip
+            release/Collect-TCG-Dev-2026-11-27-v06-full.zip
+            release/Collect-TCG-Dev-2026-11-27-v05-to-2026-11-27-v06-patch.zip
             release/checksums.txt
           if-no-files-found: error
           retention-days: 30
       - name: Record immutable release manifest
         run: |
           set -euo pipefail
-          MANIFEST='release-manifests/2026-11-27-v05.txt'
+          MANIFEST='release-manifests/2026-11-27-v06.txt'
           test ! -e "$MANIFEST"
           {
-            echo 'Version: 2026-11-27-v05'
-            echo 'Previous version: 2026-11-27-v04'
+            echo 'Version: 2026-11-27-v06'
+            echo 'Previous version: 2026-11-27-v05'
             echo "Source commit: $(git rev-parse HEAD)"
-            echo 'Purpose: Add private card Holding Strategy.'
-            echo 'Full ZIP: Collect-TCG-Dev-2026-11-27-v05-full.zip'
-            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-27-v04-to-2026-11-27-v05-patch.zip'
-            echo 'Changed files: Owner card forms and saves, private catalogue metadata, migration, cache references, baseline and release workflow.'
-            echo 'SQL required: 2026-11-27-v05-OWNER-HOLDING-STRATEGY.sql applied and verified on shared Supabase.'
+            echo 'Purpose: Show Holding Strategy in private Card Details.'
+            echo 'Full ZIP: Collect-TCG-Dev-2026-11-27-v06-full.zip'
+            echo 'Patch ZIP: Collect-TCG-Dev-2026-11-27-v05-to-2026-11-27-v06-patch.zip'
+            echo 'Changed files: Card Details, module cache references, baseline and release workflow.'
+            echo 'SQL required: No new migration.'
             echo 'Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.'
             echo 'Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.'
             echo
@@ -88,6 +88,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "$MANIFEST"
-          git commit -m 'Development 2026-11-27-v05: record package validation'
+          git commit -m 'Development 2026-11-27-v06: record package validation'
           git pull --rebase origin main
           git push

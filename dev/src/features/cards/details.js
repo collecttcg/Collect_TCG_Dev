@@ -1576,15 +1576,17 @@ async function openDetailsModal(card){
     // This avoids per-render handlers competing with the fixed mobile footer CTA.
 
     if(appContext.isOwnerMode() && appContext.ownerPrivateSupported){
+      const info=appContext.detailsMount.querySelector(".detail-info");
       appContext.fetchOwnerPrivateMeta(card.id).then(meta=>{
         if(!appContext.isOwnerMode() || String(appContext.detailsCardId)!==String(card.id)) return;
-        if(!meta.tags.length && !meta.notes) return;
-        const info=appContext.detailsMount.querySelector(".detail-info");
-        if(!info) return;
+        if(!info?.isConnected || meta.failed) return;
+        const strategy=appContext.holdingStrategySupported ? meta.holding_strategy || "Unassigned" : "";
+        if(!strategy && !meta.tags.length && !meta.notes) return;
         const panel=document.createElement("div");
-        panel.className="detail-section owner-private-detail";
+        panel.className="detail-section owner-private-detail owner-only";
         panel.innerHTML=`
           <h3>Private Owner Info</h3>
+          ${strategy ? `<div class="detail-item"><div class="detail-label">Holding Strategy</div><div class="detail-value">${appContext.escapeHtml(strategy)}</div></div>` : ""}
           ${meta.tags.length ? `<div class="owner-private-detail-tags">${meta.tags.map(tag=>`<span>${appContext.escapeHtml(tag)}</span>`).join("")}</div>` : ""}
           ${meta.notes ? `<div class="owner-private-detail-notes">${appContext.escapeHtml(meta.notes)}</div>` : ""}
         `;
