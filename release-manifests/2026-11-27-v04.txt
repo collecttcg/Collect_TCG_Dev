@@ -1,0 +1,13 @@
+Version: 2026-11-27-v04
+Previous version: 2026-11-27-v03
+Source commit: 6e35e1df4995c9531eec921eea7c585788d6da00
+Purpose: Split eBay shipment and delivery messages.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v04-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-27-v03-to-2026-11-27-v04-patch.zip
+Changed files: Owner eBay messages, module cache references, baseline and release workflow.
+SQL required: No.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+10d5d50236a9eb37a627070861bbe655a019de0ab81959535a9e04ddffb01476  release/Collect-TCG-Dev-2026-11-27-v04-full.zip
+4eb06feff9d9e0fb81bdb8ea47666a53d03c5f85bfd2c76beb6795bb69e86173  release/Collect-TCG-Dev-2026-11-27-v03-to-2026-11-27-v04-patch.zip
