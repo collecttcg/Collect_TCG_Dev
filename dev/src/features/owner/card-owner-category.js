@@ -74,7 +74,16 @@ export function register(appContext){
     if(!html.includes(marker)) return html;
     const required=prefix==="add" ? " required" : "";
     const categoryField=`<div class="field owner-card-category-field">\n          <label for="${prefix}OwnerCategory">Card owner${prefix==="add" ? ` <span class="field-required-note">required*</span>` : ""}</label>\n          <select id="${prefix}OwnerCategory"${required}>\n            ${ownerCategoryOptionsHTML("",prefix!=="add")}\n          </select>\n          <div class="hint">Owner-only category. Stored in private metadata and never included in public card data.</div>\n        </div>\n        `;
-    return html.replace(marker,categoryField+marker);
+    const strategyField=appContext.isOwnerMode() && appContext.holdingStrategySupported ? `<div class="field">
+          <label for="${prefix}HoldingStrategy">Holding Strategy</label>
+          <select id="${prefix}HoldingStrategy">
+            <option value="">Unassigned</option>
+            <option value="Trading">Trading</option>
+            <option value="Long Term">Long Term</option>
+          </select>
+        </div>
+        ` : "";
+    return html.replace(marker,categoryField+strategyField+marker);
   };
 
   const originalPopulateFields=appContext.populateFields;
@@ -103,7 +112,7 @@ export function register(appContext){
       const card=appContext.getCardById?.(id);
       if(card) card._owner_category=category;
     }
-    return {tags:ownerTagsWithoutCategory(meta?.tags||[]),notes:meta?.notes||"",owner_category:category};
+    return {...meta,tags:ownerTagsWithoutCategory(meta?.tags||[]),notes:meta?.notes||"",owner_category:category};
   };
 
   async function loadOwnerCategoriesIntoCards(){

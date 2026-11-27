@@ -12,6 +12,11 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Holding Strategy — pending shared migration approval
+
+- The candidate adds an optional Owner-only Add/Edit dropdown below Card Owner. Trading and Long Term are stored in a dedicated nullable column on the existing private owner table. Existing cards start unassigned. The column is omitted from public card writes, and the dropdown is gated on the private column capability.
+- SQL required and not applied. Dev and Production share the private owner table. This candidate is staged on a Development branch pending explicit approval to apply the migration. No release or deployment has been completed.
+
 ## Development eBay buyer messages — 2026-11-27-v04
 
 - Replaces `2026-11-27-v03`. Owner Tools → eBay Messages has separate copyable After Shipment and After Delivery templates. Shipment confirms dispatch and uploaded tracking. Delivery thanks the buyer and requests feedback to support the shop. The previous buyer-message URL opens the same templates. No SQL required.

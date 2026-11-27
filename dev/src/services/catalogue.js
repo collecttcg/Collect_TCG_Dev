@@ -300,15 +300,17 @@ async function probeOwnerCardCapabilities(){
     if(!appContext.isOwnerMode()){
       appContext.lifecycleSupported=false;
       appContext.ownerPrivateSupported=false;
+      appContext.holdingStrategySupported=false;
       appContext.cardImageVariantsSupported=false;
       appContext.editHistorySupported=false;
       return;
     }
 
-    const [lifecycleProbe,languageDetailsProbe,privateProbe,imageVariantsProbe,historyProbe]=await Promise.all([
+    const [lifecycleProbe,languageDetailsProbe,privateProbe,holdingStrategyProbe,imageVariantsProbe,historyProbe]=await Promise.all([
       appContext.supabaseClient.from("cards").select("lifecycle_status").limit(1),
       appContext.supabaseClient.from("cards").select("language_details").limit(1),
       appContext.supabaseClient.from("card_owner_private").select("card_id").limit(1),
+      appContext.supabaseClient.from("card_owner_private").select("holding_strategy").limit(1),
       appContext.supabaseClient.from("card_image_variants").select("card_id,image_key").limit(1),
       appContext.supabaseClient.from("card_edit_history").select("id").limit(1)
     ]);
@@ -316,6 +318,7 @@ async function probeOwnerCardCapabilities(){
     appContext.lifecycleSupported=!lifecycleProbe.error;
     appContext.languageDetailsSupported=!languageDetailsProbe.error;
     appContext.ownerPrivateSupported=!privateProbe.error;
+    appContext.holdingStrategySupported=appContext.ownerPrivateSupported && !holdingStrategyProbe.error;
     appContext.cardImageVariantsSupported=!imageVariantsProbe.error;
     appContext.editHistorySupported=!historyProbe.error;
   }
@@ -436,7 +439,7 @@ async function fetchOwnerPrivateMeta(cardId){
 
     const {data,error}=await appContext.supabaseClient
       .from("card_owner_private")
-      .select("tags,notes")
+      .select(appContext.holdingStrategySupported ? "tags,notes,holding_strategy" : "tags,notes")
       .eq("card_id",id)
       .maybeSingle();
 
@@ -447,7 +450,8 @@ async function fetchOwnerPrivateMeta(cardId){
 
     return {
       tags:appContext.sanitizeOwnerTags(data?.tags||[]),
-      notes:appContext.sanitizeOwnerPrivateNotes(data?.notes||"")
+      notes:appContext.sanitizeOwnerPrivateNotes(data?.notes||""),
+      holding_strategy:data?.holding_strategy ?? null
     };
   }
 
@@ -547,7 +551,7 @@ async function saveOwnerCardImageVariants(cardId,variantRecords){
     };
   }
 
-async function saveOwnerPrivateMeta(cardId,tags,notes){
+async function saveOwnerPrivateMeta(cardId,tags,notes,holdingStrategy){
     if(!appContext.requireOwner("save private card metadata")) return false;
     const id=appContext.safeCardId(cardId);
     if(!id) return false;
@@ -562,6 +566,10 @@ async function saveOwnerPrivateMeta(cardId,tags,notes){
       tags:appContext.sanitizeOwnerTags(tags),
       notes:appContext.sanitizeOwnerPrivateNotes(notes)
     };
+    if(holdingStrategy!==undefined){
+      if(!appContext.holdingStrategySupported || ![null,"Trading","Long Term"].includes(holdingStrategy)) return false;
+      payload.holding_strategy=holdingStrategy;
+    }
 
     const {error}=await appContext.supabaseClient
       .from("card_owner_private")
@@ -569,7 +577,7 @@ async function saveOwnerPrivateMeta(cardId,tags,notes){
 
     if(error){
       console.error("Private metadata save error:",error);
-      appContext.showToast("Could not save private owner notes/tags");
+      appContext.showToast("Could not save private owner information");
       return false;
     }
     return true;
