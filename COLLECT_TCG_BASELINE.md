@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development Holding Strategy on Card Details — 2026-11-27-v06
 
 - Replaces Dev `2026-11-27-v05`. Card Details displays Holding Strategy in the existing Private Owner Info panel, including Unassigned when the value is blank. The existing private metadata query and Owner gate are reused. No new SQL required.
+- Dev CI and both ZIP integrity checks passed. A local fixture covered assigned and unassigned values, public and Buyer Preview suppression, and detached renders. The deployed Card Details module matched the release. Interactive desktop, mobile and Safari rendering were not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/46002247428).
 
 ## Development Holding Strategy — 2026-11-27-v05
 
