@@ -15,6 +15,7 @@ This section records GitHub state. The release manifest and workflow results det
 ## Development Private Owner Info layout — 2026-11-27-v07
 
 - Replaces Dev `2026-11-27-v06`. The private Card Details panel stacks its heading, strategy, tags and notes. Holding Strategy uses a compact row and long note URLs can wrap. The existing Owner gate and Buyer Preview behavior are retained. No SQL required.
+- Dev CI and both ZIP integrity checks passed. A local fixture verified owner-only markup with a long note URL, and all six live app files matched. Interactive desktop, mobile and Safari rendering were not tested. [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/46002688420).
 
 ## Development Holding Strategy on Card Details — 2026-11-27-v06
 
