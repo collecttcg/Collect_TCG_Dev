@@ -1,0 +1,13 @@
+Version: 2026-11-27-v05
+Previous version: 2026-11-27-v04
+Source commit: 738fb6362c1a845757d217b88b5029617f8a5475
+Purpose: Add private card Holding Strategy.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v05-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-27-v04-to-2026-11-27-v05-patch.zip
+Changed files: Owner card forms and saves, private catalogue metadata, migration, cache references, baseline and release workflow.
+SQL required: 2026-11-27-v05-OWNER-HOLDING-STRATEGY.sql applied and verified on shared Supabase.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+0ac8530880266e4e23802a2c0743487f239e5aec5b0238b0e67592b34946cbb3  release/Collect-TCG-Dev-2026-11-27-v05-full.zip
+87737b6a6cb858e0389dfc00e7795a657c015eba426c2e153dd5526ef9b42a64  release/Collect-TCG-Dev-2026-11-27-v04-to-2026-11-27-v05-patch.zip
