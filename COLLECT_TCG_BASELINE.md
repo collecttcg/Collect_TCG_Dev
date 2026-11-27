@@ -14,7 +14,8 @@ This section records GitHub state. The release manifest and workflow results det
 
 ## Development eBay buyer messages — 2026-11-27-v04
 
-- Owner Tools → eBay Messages has separate copyable After Shipment and After Delivery templates. Shipment confirms dispatch and uploaded tracking. Delivery thanks the buyer and requests feedback to support the shop. The previous buyer-message URL opens the same templates. No SQL required.
+- Replaces `2026-11-27-v03`. Owner Tools → eBay Messages has separate copyable After Shipment and After Delivery templates. Shipment confirms dispatch and uploaded tracking. Delivery thanks the buyer and requests feedback to support the shop. The previous buyer-message URL opens the same templates. No SQL required.
+- Repository validation and both ZIP integrity checks passed. A local fixture verified Owner gating, copy output, and the legacy URL. Desktop, mobile, and Safari browser rendering were not tested. GitHub Pages deployed successfully, and all five changed live app files matched the release source. [Dev deployment](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45928675570). [Release and packages](https://github.com/collecttcg/Collect_TCG_Dev/actions/runs/45928619538).
 
 ## Development sold listings in invoice descriptions — 2026-11-27-v03
 
