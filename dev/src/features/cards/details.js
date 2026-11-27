@@ -1586,7 +1586,7 @@ async function openDetailsModal(card){
         panel.className="detail-section owner-private-detail owner-only";
         panel.innerHTML=`
           <h3>Private Owner Info</h3>
-          ${strategy ? `<div class="detail-item"><div class="detail-label">Holding Strategy</div><div class="detail-value">${appContext.escapeHtml(strategy)}</div></div>` : ""}
+          ${strategy ? `<div class="owner-private-detail-strategy"><div class="detail-label">Holding Strategy</div><div class="detail-value">${appContext.escapeHtml(strategy)}</div></div>` : ""}
           ${meta.tags.length ? `<div class="owner-private-detail-tags">${meta.tags.map(tag=>`<span>${appContext.escapeHtml(tag)}</span>`).join("")}</div>` : ""}
           ${meta.notes ? `<div class="owner-private-detail-notes">${appContext.escapeHtml(meta.notes)}</div>` : ""}
         `;

@@ -5527,14 +5527,26 @@
     border-color:rgba(95,212,196,.22)!important;
     background:rgba(95,212,196,.025)!important;
   }
+  body.owner-mode .detail-section.owner-private-detail.owner-only{
+    display:block !important;
+    min-width:0;
+  }
   .owner-private-detail h3{color:var(--accent-teal);}
+  .owner-private-detail-strategy{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:4px 12px;
+  }
+  .owner-private-detail-strategy .detail-label{margin:0;}
+  .owner-private-detail-strategy + *{margin-top:10px;}
   .owner-private-detail-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
   .owner-private-detail-tags span{
     padding:3px 6px;border:1px solid rgba(95,212,196,.22);border-radius:999px;
     background:rgba(95,212,196,.06);color:var(--accent-teal);font-size:7.5px;font-weight:700;
   }
   .owner-private-detail-notes{
-    white-space:pre-wrap;color:var(--text-muted);font-size:8.5px;line-height:1.5;
+    white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text-muted);font-size:8.5px;line-height:1.5;
   }
 
 

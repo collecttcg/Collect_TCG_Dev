@@ -12,6 +12,10 @@
 This section records GitHub state. The release manifest and workflow results determine validation and deployment status.
 <!-- END AUTOMATED BASELINE STATE -->
 
+## Development Private Owner Info layout — 2026-11-27-v07
+
+- Replaces Dev `2026-11-27-v06`. The private Card Details panel stacks its heading, strategy, tags and notes. Holding Strategy uses a compact row and long note URLs can wrap. The existing Owner gate and Buyer Preview behavior are retained. No SQL required.
+
 ## Development Holding Strategy on Card Details — 2026-11-27-v06
 
 - Replaces Dev `2026-11-27-v05`. Card Details displays Holding Strategy in the existing Private Owner Info panel, including Unassigned when the value is blank. The existing private metadata query and Owner gate are reused. No new SQL required.
