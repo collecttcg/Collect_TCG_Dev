@@ -1,0 +1,13 @@
+Version: 2026-11-27-v07
+Previous version: 2026-11-27-v06
+Source commit: 9d679e6a15d6019f8b8265dba8a42b50a83e2080
+Purpose: Fix Private Owner Info layout in Card Details.
+Full ZIP: Collect-TCG-Dev-2026-11-27-v07-full.zip
+Patch ZIP: Collect-TCG-Dev-2026-11-27-v06-to-2026-11-27-v07-patch.zip
+Changed files: Card Details, foundation CSS, cache references, baseline and release workflow.
+SQL required: No new migration.
+Validation: Owner sign-in interaction and verification fixtures; npm run validate; SOLD ribbon, private Facebook URL, eBay cleanup and Facebook eBay fixtures; SEO workflow guard and generator self-test; full and patch ZIP integrity.
+Validation limitations: Interactive desktop, mobile and Safari rendering checks were not exercised by CI.
+
+5fbeaff65ccc6e0027f92075a1183df12fb7c12e4f9ca0acb7133136e4dc3180  release/Collect-TCG-Dev-2026-11-27-v07-full.zip
+25d851feecff22a5866dea0c033f881ac71689ab53d218d7ff1afa68483769c8  release/Collect-TCG-Dev-2026-11-27-v06-to-2026-11-27-v07-patch.zip
