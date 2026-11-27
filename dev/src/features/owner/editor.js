@@ -49,6 +49,11 @@ async function openEditModal(card){
     appContext.$("editFieldsMount").innerHTML = appContext.fieldsTemplate("edit");
     appContext.populateFields("edit", card);
     if(appContext.$("editOwnerTags")) appContext.$("editOwnerTags").value=privateMeta.tags.join(", ");
+    const strategyField=appContext.$("editHoldingStrategy");
+    if(strategyField){
+      strategyField.value=privateMeta.holding_strategy ?? "";
+      strategyField.disabled=Boolean(privateMeta.failed);
+    }
     const facebook=appContext.splitFacebookListingNote(privateMeta.notes);
     const facebookField=appContext.$("editFacebookListingUrl");
     if(facebookField){
@@ -236,13 +241,13 @@ appContext.editForm.addEventListener("submit", async (e)=>{
       let privateMetaSaved=!appContext.editFormState.privateMetaReadFailed;
       if(appContext.ownerPrivateSupported && privateMetaSaved){
         postSaveStep="saving private owner information";
-        privateMetaSaved=await appContext.saveOwnerPrivateMeta(id,data._owner_tags,data._owner_notes);
+        privateMetaSaved=await appContext.saveOwnerPrivateMeta(id,data._owner_tags,data._owner_notes,data._holding_strategy);
       }
 
       if(!variantResult.ok && preparedImages.variantRecords?.length){
         appContext.showToast("Card updated · reversible watermark metadata was not saved");
       }else if(!privateMetaSaved){
-        appContext.showToast("Card updated · private notes/tags were not saved");
+        appContext.showToast("Card updated · private owner information was not saved");
       }else if(!cleanupSaved){
         appContext.showToast("Card updated · removed photo cleanup was skipped; files were retained safely");
       }else if(appContext.hasPsaCert(data)){

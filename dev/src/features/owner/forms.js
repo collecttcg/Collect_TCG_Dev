@@ -1742,6 +1742,7 @@ function ownerNotesWithFacebookListing(notes,value){
   }
 
 function collectFields(p, id, formState){
+    const holdingStrategyField=appContext.$(p + "HoldingStrategy");
     return {
       id: id || appContext.uid(),
       name: appContext.formatPreErrataErrorName(appContext.$(p + "Name").value.trim(), Boolean(appContext.$(p + "PreErrataError")?.checked)).toUpperCase(),
@@ -1788,6 +1789,7 @@ function collectFields(p, id, formState){
         pop_higher: g.pop_higher == null ? null : Number(g.pop_higher),
         pop_updated_at: g.pop_updated_at || null
       })),
+      _holding_strategy: holdingStrategyField ? holdingStrategyField.value || null : undefined,
       _owner_tags: appContext.sanitizeOwnerTags(appContext.$(p + "OwnerTags")?.value || ""),
       _owner_notes: ownerNotesWithFacebookListing(appContext.$(p + "OwnerNotes")?.value, appContext.$(p + "FacebookListingUrl")?.value)
     };

@@ -120,12 +120,13 @@ function renderAddPage(){
         }
 
         let privateMetaSaved=true;
-        if(appContext.ownerPrivateSupported && (data._owner_tags.length || data._owner_notes)){
+        if(appContext.ownerPrivateSupported && (data._owner_tags.length || data._owner_notes || data._holding_strategy)){
           postSaveStep="saving private owner information";
           privateMetaSaved=await appContext.saveOwnerPrivateMeta(
             saved.id,
             data._owner_tags,
-            data._owner_notes
+            data._owner_notes,
+            data._holding_strategy
           );
         }
 
@@ -137,13 +138,13 @@ function renderAddPage(){
         }else if(appContext.hasPsaCert(data)){
           appContext.showToast(privateMetaSaved
             ? "Card added · use the PSA browser helper to sync POP"
-            : "Card added · private notes/tags were not saved");
+            : "Card added · private owner information was not saved");
         }else{
           appContext.showToast(!imageVariantsSaved
             ? "Card added · reversible watermark metadata was not saved"
             : (privateMetaSaved
                 ? "Card added · images stored in Supabase Storage"
-                : "Card added · images stored in Supabase Storage · private notes/tags were not saved"));
+                : "Card added · images stored in Supabase Storage · private owner information was not saved"));
         }
 
         postSaveStep="opening the updated inventory";
